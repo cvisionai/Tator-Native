@@ -6,7 +6,7 @@ Created on Fri Aug 14 07:28:11 2015
 """
 
 class Fish(object):
-    def __init__(self,fishType=0,subTypeLabels):
+    def __init__(self,fishType=0,subTypeLabels=[]):
         self.__fishLabels = dict([(0,'Unknown'),(1,'Flounder'),(2,'Skate')])
         self._subTypeLabels = subTypeLabels
         self.fishType = self.fishLabels[fishType]
