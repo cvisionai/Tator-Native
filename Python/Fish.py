@@ -4,13 +4,14 @@ Created on Fri Aug 14 07:28:11 2015
 
 @author: Benjamin Woodward
 
-This module contains the definition for the fish object class and fish object list
-class, which will be used to keep statistics on the fish in a video. 
+This module contains the definition for the fish object class and fish object 
+list class, which will be used to keep statistics on the fish in a video. 
 """
 
 class Fish(object):
     def __init__(self,fishType=0, subType=0, frameCounted=0):
-        self.__fishLabels = dict([(0,'Unknown'),(1,'Flounder'),(2,'Skate'),(3,'Cod'),(4,'Haddock')])        
+        self.__fishLabels = dict([(0,'Unknown'),(1,'Flounder'), \
+            (2,'Skate'),(3,'Cod'),(4,'Haddock')])        
         self.fishType = self.setFishType(fishType)
         self._subTypeLabels = self.__setSubTypeLabels()
         self.subType = self.setSubType(subType)
@@ -49,20 +50,40 @@ class Fish(object):
         if self.fishType == 'Unknown':
             subTypeLabelDict = []
         elif self.fishType == 'Flounder':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),(2,'subType2')])
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+                (2,'subType2')])
         elif self.fishType == 'Skate':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),(2,'subType2')])
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+                (2,'subType2')])
         elif self.fishType == 'Cod':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),(2,'subType2')])
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+                (2,'subType2')])
         elif self.fishType == 'Haddock':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),(2,'subType2')])
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+                (2,'subType2')])
         self._subTypeLabels = subTypeLabelDict
 
 class FishList(object):
     def __init__(self):
         #initialize empty list
-        self.data = []        
-#Need method for adding entry
-#Need method for sorting all entries by time, type, etc.
-#Need to define properties
-#Need method to read list from .csv
+        self.data = []
+        
+    def addEntry(self,fType,sType,frame):
+        newEntry = Fish(fType,sType,frame)
+        self.data.append(newEntry)
+
+    def sortByTime(self):
+        pass
+
+    def sortByType(self):
+        pass
+
+    def readListFromCSV(self,filename):
+        pass
+    
+    def writeListToCSV(self,filename):
+        pass
+
+    def getStatsbyType(self,fType):
+        pass
+        
