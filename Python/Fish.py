@@ -12,19 +12,19 @@ class Fish(object):
     def __init__(self,fishType=0, subType=0, frameCounted=0):
         self.__fishLabels = dict([(0,'Unknown'),(1,'Flounder'), \
             (2,'Skate'),(3,'Cod'),(4,'Haddock')])        
-        self.fishType = self.setFishType(fishType)
-        self._subTypeLabels = self.__setSubTypeLabels()
-        self.subType = self.setSubType(subType)
+        self.setFishType(fishType)
+        self.__setSubTypeLabels()
+        self.setSubType(subType)
         self.frameCounted = frameCounted
   
     def setFishType(self,fishType=0):
         #accessor to set fish type
-        self.fishType = self.fishLabels[fishType]
+        self.fishType = self.__fishLabels[fishType]
         self._fishIndex = fishType
         
     def setSubType(self,subType=0):
         #accessor to set fish subtype
-        self.subType = self._subTypeLabels[subType]
+        self._subType = self._subTypeLabels[subType]
         
     def setFrameCounted(self,frameCounted=0):
         #accessor to set frame where fish is counted
@@ -40,7 +40,7 @@ class Fish(object):
         
     def getFishSubType(self):
         #accessor to get fish subtype
-        return self.subType
+        return self._subType
         
     def getFrameCounted(self):
         #accessor to get frame where fish was counted
