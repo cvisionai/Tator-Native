@@ -10,7 +10,7 @@ list class, which will be used to keep statistics on the fish in a video.
 
 class Fish(object):
     def __init__(self,fishType=0, subType=0, frameCounted=0):
-        self.__fishLabels = dict([(0,'Unknown'),(1,'Flounder'), \
+        self.__fishLabels = dict([(0,'Unknown'),(1,'Flounder'),
             (2,'Skate'),(3,'Cod'),(4,'Haddock')])        
         self.setFishType(fishType)
         self.__setSubTypeLabels()
@@ -50,16 +50,16 @@ class Fish(object):
         if self.fishType == 'Unknown':
             subTypeLabelDict = []
         elif self.fishType == 'Flounder':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),
                 (2,'subType2')])
         elif self.fishType == 'Skate':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),
                 (2,'subType2')])
         elif self.fishType == 'Cod':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),
                 (2,'subType2')])
         elif self.fishType == 'Haddock':
-            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'), \
+            subTypeLabelDict = dict([(0,'Unknown'),(1,'subType1'),
                 (2,'subType2')])
         self._subTypeLabels = subTypeLabelDict
 
