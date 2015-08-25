@@ -6,7 +6,7 @@ Player::Player(QObject *parent)
 		stop = true;
 	}
 
-Player::loadVideo(string filename) {
+bool Player::loadVideo(std::string filename) {
 	capture.open(filename);
 	if (capture.isOpened())
 	{
@@ -15,6 +15,18 @@ Player::loadVideo(string filename) {
 	}
 	else
 		return false;
+}
+
+void Player::Play()
+{
+	if (!isRunning()) 
+	{
+		if (isStopped())
+		{
+			stop = false;
+		}
+		start(LowPriority);
+	}
 }
 
 void Player::run()
@@ -28,7 +40,7 @@ void Player::run()
 		if (frame.channels() == 3)
 		{
 			cv::cvtColor(frame, RGBframe, CV_BGR2RGB);
-			img = QImage((cont unsigned char*)(RGBframe.data),
+			img = QImage((const unsigned char*)(RGBframe.data),
 				RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
 		}
 		else

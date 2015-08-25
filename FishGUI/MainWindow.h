@@ -8,17 +8,18 @@ namespace Ui {
 	class MainWindow;
 }
 
-class MainWindow : public QWidget, private Ui::MainWindow
+class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
  public:
- 	MainWindow(QWidget *parent = 0);
+ 	explicit MainWindow(QWidget *parent = 0);
+ 	~MainWindow();
 
  private slots:
   	void updatePlayerUI(QImage img);
-  	void on_pushButton_clicked();
-  	void on_pushButton2_clicked();
+  	void on_Play_clicked();
+  	void on_LoadVideo_clicked();
  private:
  	Ui::MainWindow *ui;
  	Player* myPlayer;
