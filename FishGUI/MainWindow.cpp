@@ -1,8 +1,8 @@
 #include <MainWindow.h>
 
 MainWindow::MainWindow(QWidget *parent)
-	:QMainWindow(parent),
-	ui(new Ui::MainWindow)
+	:QWidget(parent),
+	ui(new Ui::MainWidget)
 	{
 		myPlayer = new Player();
 		QObject::connect(myPlayer, SIGNAL(processedImage(QImage)),

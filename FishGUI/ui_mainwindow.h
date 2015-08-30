@@ -16,20 +16,16 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
-#include <QtGui/QMainWindow>
-#include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
-#include <QtGui/QStatusBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_MainWindow
+class Ui_MainWidget
 {
 public:
-    QWidget *centralwidget;
     QWidget *horizontalLayoutWidget_5;
     QHBoxLayout *horizontalLayout_6;
     QVBoxLayout *verticalLayout_4;
@@ -63,19 +59,15 @@ public:
     QSpacerItem *verticalSpacer_6;
     QPushButton *pushButton_5;
     QSpacerItem *verticalSpacer_2;
-    QMenuBar *menubar;
-    QStatusBar *statusbar;
 
-    void setupUi(QMainWindow *MainWindow)
+    void setupUi(QWidget *MainWidget)
     {
-        if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1322, 925);
-        centralwidget = new QWidget(MainWindow);
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        horizontalLayoutWidget_5 = new QWidget(centralwidget);
+        if (MainWidget->objectName().isEmpty())
+            MainWidget->setObjectName(QString::fromUtf8("MainWidget"));
+        MainWidget->resize(867, 654);
+        horizontalLayoutWidget_5 = new QWidget(MainWidget);
         horizontalLayoutWidget_5->setObjectName(QString::fromUtf8("horizontalLayoutWidget_5"));
-        horizontalLayoutWidget_5->setGeometry(QRect(350, 170, 691, 491));
+        horizontalLayoutWidget_5->setGeometry(QRect(80, 70, 691, 491));
         horizontalLayout_6 = new QHBoxLayout(horizontalLayoutWidget_5);
         horizontalLayout_6->setSpacing(0);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
@@ -259,41 +251,32 @@ public:
         horizontalLayout_6->setStretch(0, 1);
         horizontalLayout_6->setStretch(1, 7);
         horizontalLayout_6->setStretch(2, 2);
-        MainWindow->setCentralWidget(centralwidget);
-        menubar = new QMenuBar(MainWindow);
-        menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1322, 26));
-        MainWindow->setMenuBar(menubar);
-        statusbar = new QStatusBar(MainWindow);
-        statusbar->setObjectName(QString::fromUtf8("statusbar"));
-        MainWindow->setStatusBar(statusbar);
 
-        retranslateUi(MainWindow);
-        QObject::connect(Play, SIGNAL(clicked()), VideoWindow, SLOT(update()));
+        retranslateUi(MainWidget);
 
-        QMetaObject::connectSlotsByName(MainWindow);
+        QMetaObject::connectSlotsByName(MainWidget);
     } // setupUi
 
-    void retranslateUi(QMainWindow *MainWindow)
+    void retranslateUi(QWidget *MainWidget)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
-        LoadVideo->setText(QApplication::translate("MainWindow", "Load Video", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWindow", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
-        VideoWindow->setText(QApplication::translate("MainWindow", "Video Will Load Here", 0, QApplication::UnicodeUTF8));
-        Rewind->setText(QApplication::translate("MainWindow", "<<", 0, QApplication::UnicodeUTF8));
-        Play->setText(QApplication::translate("MainWindow", "Play", 0, QApplication::UnicodeUTF8));
-        FastForward->setText(QApplication::translate("MainWindow", ">>", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Add Flounder", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Add Cod", 0, QApplication::UnicodeUTF8));
-        pushButton_3->setText(QApplication::translate("MainWindow", "Add Haddock", 0, QApplication::UnicodeUTF8));
-        pushButton_4->setText(QApplication::translate("MainWindow", "Add Skate", 0, QApplication::UnicodeUTF8));
-        pushButton_5->setText(QApplication::translate("MainWindow", "Add Unknown", 0, QApplication::UnicodeUTF8));
+        MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0, QApplication::UnicodeUTF8));
+        LoadVideo->setText(QApplication::translate("MainWidget", "Load Video", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
+        VideoWindow->setText(QApplication::translate("MainWidget", "Video Will Load Here", 0, QApplication::UnicodeUTF8));
+        Rewind->setText(QApplication::translate("MainWidget", "<<", 0, QApplication::UnicodeUTF8));
+        Play->setText(QApplication::translate("MainWidget", "Play", 0, QApplication::UnicodeUTF8));
+        FastForward->setText(QApplication::translate("MainWidget", ">>", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWidget", "Add Flounder", 0, QApplication::UnicodeUTF8));
+        pushButton_2->setText(QApplication::translate("MainWidget", "Add Cod", 0, QApplication::UnicodeUTF8));
+        pushButton_3->setText(QApplication::translate("MainWidget", "Add Haddock", 0, QApplication::UnicodeUTF8));
+        pushButton_4->setText(QApplication::translate("MainWidget", "Add Skate", 0, QApplication::UnicodeUTF8));
+        pushButton_5->setText(QApplication::translate("MainWidget", "Add Unknown", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class MainWindow: public Ui_MainWindow {};
+    class MainWidget: public Ui_MainWidget {};
 } // namespace Ui
 
 QT_END_NAMESPACE

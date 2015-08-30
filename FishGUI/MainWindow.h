@@ -1,14 +1,14 @@
-#include <QMainWindow>
+#include <QWidget>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <player.h>
 #include "ui_mainwindow.h"
 
 namespace Ui {
-	class MainWindow;
+	class MainWidget;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
 	Q_OBJECT
 
@@ -21,6 +21,6 @@ class MainWindow : public QMainWindow
   	void on_Play_clicked();
   	void on_LoadVideo_clicked();
  private:
- 	Ui::MainWindow *ui;
+ 	Ui::MainWidget *ui;
  	Player* myPlayer;
 };
