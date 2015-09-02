@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWidget
 {
 public:
-    QWidget *horizontalLayoutWidget_5;
+    QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_6;
     QVBoxLayout *verticalLayout_4;
     QSpacerItem *verticalSpacer_7;
@@ -65,20 +65,18 @@ public:
         if (MainWidget->objectName().isEmpty())
             MainWidget->setObjectName(QString::fromUtf8("MainWidget"));
         MainWidget->resize(867, 654);
-        horizontalLayoutWidget_5 = new QWidget(MainWidget);
-        horizontalLayoutWidget_5->setObjectName(QString::fromUtf8("horizontalLayoutWidget_5"));
-        horizontalLayoutWidget_5->setGeometry(QRect(80, 70, 691, 491));
-        horizontalLayout_6 = new QHBoxLayout(horizontalLayoutWidget_5);
+        verticalLayout = new QVBoxLayout(MainWidget);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(0);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        horizontalLayout_6->setContentsMargins(0, 0, 0, 0);
         verticalLayout_4 = new QVBoxLayout();
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         verticalSpacer_7 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_4->addItem(verticalSpacer_7);
 
-        LoadVideo = new QPushButton(horizontalLayoutWidget_5);
+        LoadVideo = new QPushButton(MainWidget);
         LoadVideo->setObjectName(QString::fromUtf8("LoadVideo"));
 
         verticalLayout_4->addWidget(LoadVideo);
@@ -101,7 +99,7 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(0);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(horizontalLayoutWidget_5);
+        label_2 = new QLabel(MainWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         horizontalLayout_2->addWidget(label_2);
@@ -115,9 +113,9 @@ public:
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        VideoWindow = new QLabel(horizontalLayoutWidget_5);
+        VideoWindow = new QLabel(MainWidget);
         VideoWindow->setObjectName(QString::fromUtf8("VideoWindow"));
-        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(VideoWindow->sizePolicy().hasHeightForWidth());
@@ -141,7 +139,7 @@ public:
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(2);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        Rewind = new QPushButton(horizontalLayoutWidget_5);
+        Rewind = new QPushButton(MainWidget);
         Rewind->setObjectName(QString::fromUtf8("Rewind"));
         QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
@@ -152,14 +150,14 @@ public:
 
         horizontalLayout->addWidget(Rewind);
 
-        Play = new QPushButton(horizontalLayoutWidget_5);
+        Play = new QPushButton(MainWidget);
         Play->setObjectName(QString::fromUtf8("Play"));
         sizePolicy1.setHeightForWidth(Play->sizePolicy().hasHeightForWidth());
         Play->setSizePolicy(sizePolicy1);
 
         horizontalLayout->addWidget(Play);
 
-        FastForward = new QPushButton(horizontalLayoutWidget_5);
+        FastForward = new QPushButton(MainWidget);
         FastForward->setObjectName(QString::fromUtf8("FastForward"));
         FastForward->setEnabled(true);
         sizePolicy1.setHeightForWidth(FastForward->sizePolicy().hasHeightForWidth());
@@ -200,7 +198,7 @@ public:
 
         verticalLayout_3->addItem(horizontalSpacer_4);
 
-        pushButton = new QPushButton(horizontalLayoutWidget_5);
+        pushButton = new QPushButton(MainWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
 
         verticalLayout_3->addWidget(pushButton);
@@ -209,7 +207,7 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer_3);
 
-        pushButton_2 = new QPushButton(horizontalLayoutWidget_5);
+        pushButton_2 = new QPushButton(MainWidget);
         pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
 
         verticalLayout_3->addWidget(pushButton_2);
@@ -218,7 +216,7 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer_4);
 
-        pushButton_3 = new QPushButton(horizontalLayoutWidget_5);
+        pushButton_3 = new QPushButton(MainWidget);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
 
         verticalLayout_3->addWidget(pushButton_3);
@@ -227,7 +225,7 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer_5);
 
-        pushButton_4 = new QPushButton(horizontalLayoutWidget_5);
+        pushButton_4 = new QPushButton(MainWidget);
         pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
 
         verticalLayout_3->addWidget(pushButton_4);
@@ -236,8 +234,13 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer_6);
 
-        pushButton_5 = new QPushButton(horizontalLayoutWidget_5);
+        pushButton_5 = new QPushButton(MainWidget);
         pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
+        pushButton_5->setSizePolicy(sizePolicy2);
 
         verticalLayout_3->addWidget(pushButton_5);
 
@@ -251,6 +254,9 @@ public:
         horizontalLayout_6->setStretch(0, 1);
         horizontalLayout_6->setStretch(1, 7);
         horizontalLayout_6->setStretch(2, 2);
+
+        verticalLayout->addLayout(horizontalLayout_6);
+
 
         retranslateUi(MainWidget);
 
