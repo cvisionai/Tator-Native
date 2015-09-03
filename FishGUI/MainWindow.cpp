@@ -56,6 +56,16 @@ void MainWindow::on_Play_clicked()
 	}
 }
 
+void MainWindow::on_SpeedUp_clicked()
+{
+	myPlayer->speedUp();
+}
+
+void MainWindow::on_SlowDown_clicked()
+{
+	myPlayer->slowDown();
+}
+
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);

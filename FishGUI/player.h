@@ -32,4 +32,6 @@ public:
   void Play();
   void Stop();
   bool isStopped() const;
+  void speedUp();
+  void slowDown();
 };

@@ -20,6 +20,8 @@ class MainWindow : public QWidget
   	void updatePlayerUI(QImage img);
   	void on_Play_clicked();
   	void on_LoadVideo_clicked();
+	void on_SpeedUp_clicked();
+	void on_SlowDown_clicked();
  private:
  	Ui::MainWidget *ui;
  	Player* myPlayer;
