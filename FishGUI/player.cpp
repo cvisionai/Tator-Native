@@ -11,6 +11,7 @@ bool Player::loadVideo(std::string filename) {
 	if (capture.isOpened())
 	{
 		frameRate = (int) capture.get(CV_CAP_PROP_FPS);
+		delay = (1000/frameRate);
 		return true;
 	}
 	else
@@ -31,7 +32,6 @@ void Player::Play()
 
 void Player::run()
 {
-	int delay = (1000/frameRate);
 	while(!stop) {
 		if (!capture.read(frame))
 		{
