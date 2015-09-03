@@ -77,3 +77,13 @@ void Player::msleep(int ms)
 bool Player::isStopped() const{
 	return this->stop;
 }
+
+void Player::speedUp()
+{
+	delay = delay*2;
+}
+
+void Player::slowDown()
+{
+	delay = delay/2;
+}
