@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>867</width>
+    <width>963</width>
     <height>654</height>
    </rect>
   </property>
@@ -63,7 +63,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="VideoLayout" stretch="1,17,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="VideoLayout" stretch="0,10,0">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -71,12 +71,12 @@
         <enum>QLayout::SetNoConstraint</enum>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="videoTitleLayout">
          <property name="spacing">
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="videoTitle">
            <property name="text">
             <string>Video Title Goes Here</string>
            </property>
@@ -98,7 +98,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QHBoxLayout" name="videoWindowLayout">
          <item>
           <widget class="QLabel" name="VideoWindow">
            <property name="sizePolicy">
@@ -128,191 +128,198 @@ color: rgb(255, 249, 251);</string>
         </layout>
        </item>
        <item>
-        <widget class="QSlider" name="videoSlider">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+        <layout class="QVBoxLayout" name="videoControlLayout">
+         <property name="spacing">
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,4,2">
          <item>
-          <spacer name="horizontalSpacer">
+          <widget class="QSlider" name="videoSlider">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,1">
-           <property name="spacing">
-            <number>2</number>
-           </property>
-           <item>
-            <widget class="QPushButton" name="SlowDown">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>1</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>&lt;&lt;</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="Play">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Play</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="SpeedUp">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>1</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>1</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>&gt;&gt;</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_9">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="LoadVideo">
-           <property name="minimumSize">
-            <size>
-             <width>80</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Load Video</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_6">
+          <layout class="QHBoxLayout" name="playLayout" stretch="2,4,2">
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="playControlsLayout" stretch="1,2,1">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="SlowDown">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>1</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>&lt;&lt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="Play">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Play</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="SpeedUp">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>1</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="sizeIncrement">
+                <size>
+                 <width>1</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>&gt;&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_9">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>40</width>
-             <height>20</height>
+             <width>20</width>
+             <height>5</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="loadVideoLayout">
+           <item>
+            <spacer name="horizontalSpacer_7">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="LoadVideo">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Load Video</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_11">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
             </size>
            </property>
           </spacer>
          </item>
         </layout>
        </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="countingControlsLayout">
        <item>
         <spacer name="verticalSpacer_10">
          <property name="orientation">
@@ -340,7 +347,7 @@ color: rgb(255, 249, 251);</string>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="addFlounder">
          <property name="text">
           <string>Add Flounder</string>
          </property>
@@ -363,7 +370,7 @@ color: rgb(255, 249, 251);</string>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="addCod">
          <property name="text">
           <string>Add Cod</string>
          </property>
@@ -386,7 +393,7 @@ color: rgb(255, 249, 251);</string>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="addHaddock">
          <property name="text">
           <string>Add Haddock</string>
          </property>
@@ -409,7 +416,7 @@ color: rgb(255, 249, 251);</string>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="addSkate">
          <property name="text">
           <string>Add Skate</string>
          </property>
@@ -432,7 +439,7 @@ color: rgb(255, 249, 251);</string>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="addUnknown">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
