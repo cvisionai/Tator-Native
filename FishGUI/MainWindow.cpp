@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui(new Ui::MainWidget)
 	{
 		myPlayer = new Player();
-		QObject::connect(myPlayer, SIGNAL(processedImage(QImage)),
+		QObject::connect(myPlayer, 									SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
 	}
@@ -24,6 +24,8 @@ MainWindow::~MainWindow()
 {
 	delete myPlayer;
 	delete ui;
+	delete myFishList;
+	delete tempFish;
 }
 
 void MainWindow::on_LoadVideo_clicked()
@@ -64,6 +66,26 @@ void MainWindow::on_SpeedUp_clicked()
 void MainWindow::on_SlowDown_clicked()
 {
 	myPlayer->slowDown();
+}
+
+void MainWindow::on_addFlounder_clicked()
+{
+	pass;
+}
+
+void MainWindow::on_addCod_clicked()
+{
+	pass;
+}
+
+void MainWindow::on_addHaddock_clicked()
+{
+	pass;
+}
+
+void MainWindow::on_addSkate_clicked()
+{
+	pass;
 }
 
 int main(int argc, char *argv[])
