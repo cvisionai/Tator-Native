@@ -13,10 +13,12 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QDockWidget>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QSlider>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -30,41 +32,51 @@ public:
     QHBoxLayout *horizontalLayout_6;
     QVBoxLayout *verticalLayout_4;
     QSpacerItem *verticalSpacer_7;
-    QPushButton *LoadVideo;
     QSpacerItem *horizontalSpacer_5;
     QSpacerItem *verticalSpacer_8;
     QVBoxLayout *VideoLayout;
-    QHBoxLayout *horizontalLayout_2;
-    QLabel *label_2;
+    QHBoxLayout *videoTitleLayout;
+    QLabel *videoTitle;
     QSpacerItem *horizontalSpacer_3;
-    QHBoxLayout *horizontalLayout_4;
+    QHBoxLayout *videoWindowLayout;
     QLabel *VideoWindow;
-    QHBoxLayout *horizontalLayout_5;
+    QDockWidget *dockWidget;
+    QWidget *videoControlsDockWidget;
+    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *videoControlLayout;
+    QSlider *videoSlider;
+    QHBoxLayout *playLayout;
     QSpacerItem *horizontalSpacer;
-    QHBoxLayout *horizontalLayout;
-    QPushButton *Rewind;
+    QHBoxLayout *playControlsLayout;
+    QPushButton *SlowDown;
     QPushButton *Play;
-    QPushButton *FastForward;
+    QPushButton *SpeedUp;
     QSpacerItem *horizontalSpacer_2;
-    QSpacerItem *verticalSpacer;
-    QVBoxLayout *verticalLayout_3;
-    QSpacerItem *horizontalSpacer_4;
-    QPushButton *pushButton;
+    QSpacerItem *verticalSpacer_9;
+    QHBoxLayout *loadVideoLayout;
+    QSpacerItem *horizontalSpacer_7;
+    QPushButton *LoadVideo;
+    QSpacerItem *horizontalSpacer_6;
+    QSpacerItem *verticalSpacer_11;
+    QVBoxLayout *countingControlsLayout;
+    QSpacerItem *verticalSpacer_10;
+    QPushButton *addFlounder;
     QSpacerItem *verticalSpacer_3;
-    QPushButton *pushButton_2;
+    QPushButton *addCod;
     QSpacerItem *verticalSpacer_4;
-    QPushButton *pushButton_3;
+    QPushButton *addHaddock;
     QSpacerItem *verticalSpacer_5;
-    QPushButton *pushButton_4;
+    QPushButton *addSkate;
     QSpacerItem *verticalSpacer_6;
-    QPushButton *pushButton_5;
+    QPushButton *addUnknown;
     QSpacerItem *verticalSpacer_2;
 
     void setupUi(QWidget *MainWidget)
     {
         if (MainWidget->objectName().isEmpty())
             MainWidget->setObjectName(QString::fromUtf8("MainWidget"));
-        MainWidget->resize(867, 654);
+        MainWidget->resize(963, 654);
+        MainWidget->setAutoFillBackground(true);
         verticalLayout = new QVBoxLayout(MainWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         horizontalLayout_6 = new QHBoxLayout();
@@ -75,11 +87,6 @@ public:
         verticalSpacer_7 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_4->addItem(verticalSpacer_7);
-
-        LoadVideo = new QPushButton(MainWidget);
-        LoadVideo->setObjectName(QString::fromUtf8("LoadVideo"));
-
-        verticalLayout_4->addWidget(LoadVideo);
 
         horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -96,23 +103,23 @@ public:
         VideoLayout->setSpacing(0);
         VideoLayout->setObjectName(QString::fromUtf8("VideoLayout"));
         VideoLayout->setSizeConstraint(QLayout::SetNoConstraint);
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(0);
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(MainWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        videoTitleLayout = new QHBoxLayout();
+        videoTitleLayout->setSpacing(0);
+        videoTitleLayout->setObjectName(QString::fromUtf8("videoTitleLayout"));
+        videoTitle = new QLabel(MainWidget);
+        videoTitle->setObjectName(QString::fromUtf8("videoTitle"));
 
-        horizontalLayout_2->addWidget(label_2);
+        videoTitleLayout->addWidget(videoTitle);
 
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_2->addItem(horizontalSpacer_3);
+        videoTitleLayout->addItem(horizontalSpacer_3);
 
 
-        VideoLayout->addLayout(horizontalLayout_2);
+        VideoLayout->addLayout(videoTitleLayout);
 
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        videoWindowLayout = new QHBoxLayout();
+        videoWindowLayout->setObjectName(QString::fromUtf8("videoWindowLayout"));
         VideoWindow = new QLabel(MainWidget);
         VideoWindow->setObjectName(QString::fromUtf8("VideoWindow"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -125,134 +132,240 @@ public:
 "color: rgb(255, 249, 251);"));
         VideoWindow->setAlignment(Qt::AlignCenter);
 
-        horizontalLayout_4->addWidget(VideoWindow);
+        videoWindowLayout->addWidget(VideoWindow);
 
 
-        VideoLayout->addLayout(horizontalLayout_4);
+        VideoLayout->addLayout(videoWindowLayout);
 
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        dockWidget = new QDockWidget(MainWidget);
+        dockWidget->setObjectName(QString::fromUtf8("dockWidget"));
+        dockWidget->setLayoutDirection(Qt::LeftToRight);
+        videoControlsDockWidget = new QWidget();
+        videoControlsDockWidget->setObjectName(QString::fromUtf8("videoControlsDockWidget"));
+        videoControlsDockWidget->setLayoutDirection(Qt::LeftToRight);
+        videoControlsDockWidget->setAutoFillBackground(false);
+        verticalLayout_2 = new QVBoxLayout(videoControlsDockWidget);
+        verticalLayout_2->setSpacing(0);
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        videoControlLayout = new QVBoxLayout();
+        videoControlLayout->setSpacing(0);
+        videoControlLayout->setObjectName(QString::fromUtf8("videoControlLayout"));
+        videoSlider = new QSlider(videoControlsDockWidget);
+        videoSlider->setObjectName(QString::fromUtf8("videoSlider"));
+        videoSlider->setOrientation(Qt::Horizontal);
+
+        videoControlLayout->addWidget(videoSlider);
+
+        playLayout = new QHBoxLayout();
+        playLayout->setObjectName(QString::fromUtf8("playLayout"));
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_5->addItem(horizontalSpacer);
+        playLayout->addItem(horizontalSpacer);
 
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(2);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        Rewind = new QPushButton(MainWidget);
-        Rewind->setObjectName(QString::fromUtf8("Rewind"));
+        playControlsLayout = new QHBoxLayout();
+        playControlsLayout->setSpacing(2);
+        playControlsLayout->setObjectName(QString::fromUtf8("playControlsLayout"));
+        SlowDown = new QPushButton(videoControlsDockWidget);
+        SlowDown->setObjectName(QString::fromUtf8("SlowDown"));
         QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(Rewind->sizePolicy().hasHeightForWidth());
-        Rewind->setSizePolicy(sizePolicy1);
-        Rewind->setMinimumSize(QSize(1, 0));
+        sizePolicy1.setHeightForWidth(SlowDown->sizePolicy().hasHeightForWidth());
+        SlowDown->setSizePolicy(sizePolicy1);
+        SlowDown->setMinimumSize(QSize(1, 0));
 
-        horizontalLayout->addWidget(Rewind);
+        playControlsLayout->addWidget(SlowDown);
 
-        Play = new QPushButton(MainWidget);
+        Play = new QPushButton(videoControlsDockWidget);
         Play->setObjectName(QString::fromUtf8("Play"));
         sizePolicy1.setHeightForWidth(Play->sizePolicy().hasHeightForWidth());
         Play->setSizePolicy(sizePolicy1);
 
-        horizontalLayout->addWidget(Play);
+        playControlsLayout->addWidget(Play);
 
-        FastForward = new QPushButton(MainWidget);
-        FastForward->setObjectName(QString::fromUtf8("FastForward"));
-        FastForward->setEnabled(true);
-        sizePolicy1.setHeightForWidth(FastForward->sizePolicy().hasHeightForWidth());
-        FastForward->setSizePolicy(sizePolicy1);
-        FastForward->setMinimumSize(QSize(1, 0));
-        FastForward->setSizeIncrement(QSize(1, 0));
+        SpeedUp = new QPushButton(videoControlsDockWidget);
+        SpeedUp->setObjectName(QString::fromUtf8("SpeedUp"));
+        SpeedUp->setEnabled(true);
+        sizePolicy1.setHeightForWidth(SpeedUp->sizePolicy().hasHeightForWidth());
+        SpeedUp->setSizePolicy(sizePolicy1);
+        SpeedUp->setMinimumSize(QSize(1, 0));
+        SpeedUp->setSizeIncrement(QSize(1, 0));
 
-        horizontalLayout->addWidget(FastForward);
+        playControlsLayout->addWidget(SpeedUp);
 
-        horizontalLayout->setStretch(0, 1);
-        horizontalLayout->setStretch(1, 2);
-        horizontalLayout->setStretch(2, 1);
+        playControlsLayout->setStretch(0, 1);
+        playControlsLayout->setStretch(1, 2);
+        playControlsLayout->setStretch(2, 1);
 
-        horizontalLayout_5->addLayout(horizontalLayout);
+        playLayout->addLayout(playControlsLayout);
 
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_5->addItem(horizontalSpacer_2);
+        playLayout->addItem(horizontalSpacer_2);
 
-        horizontalLayout_5->setStretch(0, 1);
-        horizontalLayout_5->setStretch(1, 2);
-        horizontalLayout_5->setStretch(2, 1);
+        playLayout->setStretch(0, 2);
+        playLayout->setStretch(1, 4);
+        playLayout->setStretch(2, 2);
 
-        VideoLayout->addLayout(horizontalLayout_5);
+        videoControlLayout->addLayout(playLayout);
 
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_9 = new QSpacerItem(20, 13, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        VideoLayout->addItem(verticalSpacer);
+        videoControlLayout->addItem(verticalSpacer_9);
 
-        VideoLayout->setStretch(0, 1);
-        VideoLayout->setStretch(1, 17);
+        loadVideoLayout = new QHBoxLayout();
+        loadVideoLayout->setObjectName(QString::fromUtf8("loadVideoLayout"));
+        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        loadVideoLayout->addItem(horizontalSpacer_7);
+
+        LoadVideo = new QPushButton(videoControlsDockWidget);
+        LoadVideo->setObjectName(QString::fromUtf8("LoadVideo"));
+        LoadVideo->setMinimumSize(QSize(80, 0));
+        LoadVideo->setMaximumSize(QSize(16777215, 16777215));
+
+        loadVideoLayout->addWidget(LoadVideo);
+
+        horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        loadVideoLayout->addItem(horizontalSpacer_6);
+
+
+        videoControlLayout->addLayout(loadVideoLayout);
+
+        verticalSpacer_11 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        videoControlLayout->addItem(verticalSpacer_11);
+
+
+        verticalLayout_2->addLayout(videoControlLayout);
+
+        dockWidget->setWidget(videoControlsDockWidget);
+
+        VideoLayout->addWidget(dockWidget);
+
+        VideoLayout->setStretch(1, 10);
+        VideoLayout->setStretch(2, 3);
 
         horizontalLayout_6->addLayout(VideoLayout);
 
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        countingControlsLayout = new QVBoxLayout();
+        countingControlsLayout->setSpacing(3);
+        countingControlsLayout->setObjectName(QString::fromUtf8("countingControlsLayout"));
+        verticalSpacer_10 = new QSpacerItem(20, 30, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_3->addItem(horizontalSpacer_4);
+        countingControlsLayout->addItem(verticalSpacer_10);
 
-        pushButton = new QPushButton(MainWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        addFlounder = new QPushButton(MainWidget);
+        addFlounder->setObjectName(QString::fromUtf8("addFlounder"));
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(addFlounder->sizePolicy().hasHeightForWidth());
+        addFlounder->setSizePolicy(sizePolicy2);
+        addFlounder->setMinimumSize(QSize(0, 50));
+        addFlounder->setBaseSize(QSize(0, 0));
+        QFont font;
+        font.setPointSize(13);
+        font.setBold(true);
+        font.setWeight(75);
+        addFlounder->setFont(font);
+        addFlounder->setAutoFillBackground(false);
+        addFlounder->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
+"selection-background-color: rgb(1, 207, 111);"));
+        addFlounder->setIconSize(QSize(16, 16));
 
-        verticalLayout_3->addWidget(pushButton);
+        countingControlsLayout->addWidget(addFlounder);
 
         verticalSpacer_3 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        verticalLayout_3->addItem(verticalSpacer_3);
+        countingControlsLayout->addItem(verticalSpacer_3);
 
-        pushButton_2 = new QPushButton(MainWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        addCod = new QPushButton(MainWidget);
+        addCod->setObjectName(QString::fromUtf8("addCod"));
+        sizePolicy2.setHeightForWidth(addCod->sizePolicy().hasHeightForWidth());
+        addCod->setSizePolicy(sizePolicy2);
+        addCod->setMinimumSize(QSize(0, 50));
+        addCod->setFont(font);
+        addCod->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
+"selection-background-color: rgb(1, 207, 111);"));
 
-        verticalLayout_3->addWidget(pushButton_2);
+        countingControlsLayout->addWidget(addCod);
 
         verticalSpacer_4 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        verticalLayout_3->addItem(verticalSpacer_4);
+        countingControlsLayout->addItem(verticalSpacer_4);
 
-        pushButton_3 = new QPushButton(MainWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        addHaddock = new QPushButton(MainWidget);
+        addHaddock->setObjectName(QString::fromUtf8("addHaddock"));
+        sizePolicy2.setHeightForWidth(addHaddock->sizePolicy().hasHeightForWidth());
+        addHaddock->setSizePolicy(sizePolicy2);
+        addHaddock->setMinimumSize(QSize(0, 50));
+        addHaddock->setFont(font);
+        addHaddock->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
+"selection-background-color: rgb(1, 207, 111);"));
 
-        verticalLayout_3->addWidget(pushButton_3);
+        countingControlsLayout->addWidget(addHaddock);
 
         verticalSpacer_5 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        verticalLayout_3->addItem(verticalSpacer_5);
+        countingControlsLayout->addItem(verticalSpacer_5);
 
-        pushButton_4 = new QPushButton(MainWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        addSkate = new QPushButton(MainWidget);
+        addSkate->setObjectName(QString::fromUtf8("addSkate"));
+        sizePolicy2.setHeightForWidth(addSkate->sizePolicy().hasHeightForWidth());
+        addSkate->setSizePolicy(sizePolicy2);
+        addSkate->setMinimumSize(QSize(0, 50));
+        addSkate->setFont(font);
+        addSkate->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
+"selection-background-color: rgb(1, 207, 111);"));
 
-        verticalLayout_3->addWidget(pushButton_4);
+        countingControlsLayout->addWidget(addSkate);
 
         verticalSpacer_6 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        verticalLayout_3->addItem(verticalSpacer_6);
+        countingControlsLayout->addItem(verticalSpacer_6);
 
-        pushButton_5 = new QPushButton(MainWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
-        pushButton_5->setSizePolicy(sizePolicy2);
+        addUnknown = new QPushButton(MainWidget);
+        addUnknown->setObjectName(QString::fromUtf8("addUnknown"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(addUnknown->sizePolicy().hasHeightForWidth());
+        addUnknown->setSizePolicy(sizePolicy3);
+        addUnknown->setMinimumSize(QSize(0, 50));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("MS Shell Dlg 2"));
+        font1.setPointSize(13);
+        font1.setBold(true);
+        font1.setWeight(75);
+        addUnknown->setFont(font1);
+        addUnknown->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
+"selection-background-color: rgb(1, 207, 111);"));
 
-        verticalLayout_3->addWidget(pushButton_5);
+        countingControlsLayout->addWidget(addUnknown);
 
-        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_2 = new QSpacerItem(20, 50, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_3->addItem(verticalSpacer_2);
+        countingControlsLayout->addItem(verticalSpacer_2);
 
+        countingControlsLayout->setStretch(0, 1);
+        countingControlsLayout->setStretch(1, 3);
+        countingControlsLayout->setStretch(2, 1);
+        countingControlsLayout->setStretch(3, 3);
+        countingControlsLayout->setStretch(4, 1);
+        countingControlsLayout->setStretch(5, 3);
+        countingControlsLayout->setStretch(6, 1);
+        countingControlsLayout->setStretch(7, 3);
+        countingControlsLayout->setStretch(8, 1);
+        countingControlsLayout->setStretch(9, 3);
+        countingControlsLayout->setStretch(10, 5);
 
-        horizontalLayout_6->addLayout(verticalLayout_3);
+        horizontalLayout_6->addLayout(countingControlsLayout);
 
         horizontalLayout_6->setStretch(0, 1);
-        horizontalLayout_6->setStretch(1, 7);
+        horizontalLayout_6->setStretch(1, 10);
         horizontalLayout_6->setStretch(2, 2);
 
         verticalLayout->addLayout(horizontalLayout_6);
@@ -266,17 +379,17 @@ public:
     void retranslateUi(QWidget *MainWidget)
     {
         MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0, QApplication::UnicodeUTF8));
-        LoadVideo->setText(QApplication::translate("MainWidget", "Load Video", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
+        videoTitle->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
         VideoWindow->setText(QApplication::translate("MainWidget", "Video Will Load Here", 0, QApplication::UnicodeUTF8));
-        Rewind->setText(QApplication::translate("MainWidget", "<<", 0, QApplication::UnicodeUTF8));
+        SlowDown->setText(QApplication::translate("MainWidget", "<<", 0, QApplication::UnicodeUTF8));
         Play->setText(QApplication::translate("MainWidget", "Play", 0, QApplication::UnicodeUTF8));
-        FastForward->setText(QApplication::translate("MainWidget", ">>", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWidget", "Add Flounder", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWidget", "Add Cod", 0, QApplication::UnicodeUTF8));
-        pushButton_3->setText(QApplication::translate("MainWidget", "Add Haddock", 0, QApplication::UnicodeUTF8));
-        pushButton_4->setText(QApplication::translate("MainWidget", "Add Skate", 0, QApplication::UnicodeUTF8));
-        pushButton_5->setText(QApplication::translate("MainWidget", "Add Unknown", 0, QApplication::UnicodeUTF8));
+        SpeedUp->setText(QApplication::translate("MainWidget", ">>", 0, QApplication::UnicodeUTF8));
+        LoadVideo->setText(QApplication::translate("MainWidget", "Load Video", 0, QApplication::UnicodeUTF8));
+        addFlounder->setText(QApplication::translate("MainWidget", "Flounder", 0, QApplication::UnicodeUTF8));
+        addCod->setText(QApplication::translate("MainWidget", "Cod", 0, QApplication::UnicodeUTF8));
+        addHaddock->setText(QApplication::translate("MainWidget", "Haddock", 0, QApplication::UnicodeUTF8));
+        addSkate->setText(QApplication::translate("MainWidget", "Skate", 0, QApplication::UnicodeUTF8));
+        addUnknown->setText(QApplication::translate("MainWidget", "Unknown", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
