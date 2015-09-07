@@ -6,17 +6,17 @@ Fish::Fish(FishTypeEnum ftype, int frame)
 	frameCounted = frame;
 }
 
-Fish::setFishType(FishTypeEnum type)
+void Fish::setFishType(FishTypeEnum ftype)
 {
 	fishType = ftype;
 }
 
-Fish::setFishSubType(int sType)
+void Fish::setFishSubType(int sType)
 {
 	subType = sType;
 }
 
-Fish::setXYLoc(int row, int col)
+void Fish::setXYLoc(int row, int col)
 {
 	fishLoc = std::make_pair(row,col);
 }

@@ -1,15 +1,17 @@
+#include <utility>
+
 typedef std::pair<int, int> xyLoc;
+enum FishTypeEnum
+{
+  Unknown,
+  Flounder,
+  Skate,
+  Cod,
+  Haddock
+};
+
 class Fish
 {
-public:
-	enum FishTypeEnum
-	{
-	  Unknown,
-	  Flounder,
-	  Skate,
-	  Cod,
-	  Haddock
-	};
 private:
 	FishTypeEnum fishType;
 	int subType;
