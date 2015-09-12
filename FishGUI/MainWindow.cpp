@@ -24,6 +24,8 @@ MainWindow::~MainWindow()
 {
 	delete myPlayer;
 	delete ui;
+	delete imgPointer;
+	delete scene;
 	myFishList.clear();
 	delete tempFish;
 }
@@ -43,12 +45,12 @@ void MainWindow::on_LoadVideo_clicked()
 		}
 		else
 		{
-			//Grab first frame here
+			Qimage firstImage = myPlayer->getFirstImage();
 			scene = new QGraphicsScene(this);
-			imgPointer = scene->addPixmap();
-			scene->setSceneRect(image.rect);
+			imgPointer = scene->addPixmap(firstImage);
+			scene->setSceneRect(firstImage.rect);
 			videoWindow->setScene(scene);
-			
+			videoWindow->show();
 		}
 	}
 

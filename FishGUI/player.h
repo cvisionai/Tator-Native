@@ -34,4 +34,5 @@ public:
   bool isStopped() const;
   void speedUp();
   void slowDown();
+  QImage getFirstFrame();
 };

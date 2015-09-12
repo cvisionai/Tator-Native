@@ -53,6 +53,24 @@ void Player::run()
 	}
 }
 
+QImage Player::getFirstFrame()
+{
+	capture.read(frame);
+	if (frame.channels() == 3)
+	{
+		cv::cvtColor(frame, RGBframe, CV_BGR2RGB);
+		img = QImage((const unsigned char*)(RGBframe.data),
+			RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
+	}
+	else
+	{
+		img = QImage((const unsigned char*)(frame.data),
+			frame.cols, frame.rows, QImage::Format_Indexed8);
+	}
+
+	return img;
+}
+
 Player::~Player()
 {
 	mutex.lock();
