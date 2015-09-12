@@ -1,6 +1,8 @@
 #include <QWidget>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPainter>
+#include <QGraphicsPixmapItem>
 #include <vector>
 #include <player.h>
 #include <iostream>
