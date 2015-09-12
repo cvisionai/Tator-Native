@@ -1,11 +1,13 @@
 #include <QWidget>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <vector>
 #include <player.h>
+#include <iostream>
 #include "ui_mainwindow.h"
 #include "fish.h"
-#include <vector>
 
+using namespace std;
 namespace Ui {
 	class MainWidget;
 }
@@ -25,7 +27,7 @@ class MainWindow : public QWidget
 	void on_SpeedUp_clicked();
 	void on_SlowDown_clicked();
 	void on_addFlounder_clicked();
-	void on_addCod_clicked()
+	void on_addCod_clicked();
 	void on_addHaddock_clicked();
 	void on_addSkate_clicked();
  private:

@@ -24,7 +24,7 @@ MainWindow::~MainWindow()
 {
 	delete myPlayer;
 	delete ui;
-	delete myFishList;
+	myFishList.clear();
 	delete tempFish;
 }
 
@@ -80,22 +80,29 @@ void MainWindow::on_SlowDown_clicked()
 
 void MainWindow::on_addFlounder_clicked()
 {
-	pass;
+	FishTypeEnum fType = (FishTypeEnum) 0;
+	tempFish = new Fish(fType,1);
+	myFishList.push_back(*tempFish);
+	for (int i=0; i<myFishList.size();i++)
+	{
+	  fType = myFishList[i].getFishType();
+	  std::cout << fType << endl;
+	}
 }
 
 void MainWindow::on_addCod_clicked()
 {
-	pass;
+	return;
 }
 
 void MainWindow::on_addHaddock_clicked()
 {
-	pass;
+	return;
 }
 
 void MainWindow::on_addSkate_clicked()
 {
-	pass;
+	return;
 }
 
 int main(int argc, char *argv[])
