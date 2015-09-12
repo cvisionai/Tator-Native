@@ -1,9 +1,9 @@
 CONFIG += qt
 SOURCES = player.cpp \
-	  MainWindow.cpp \
+	  mainwindow.cpp \
 	  fish.cpp
 HEADERS = player.h \
-	  MainWindow.h \
+	  mainwindow.h \
 	  fish.h
 FORMS = mainwindow.ui
 
