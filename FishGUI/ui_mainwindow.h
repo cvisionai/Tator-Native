@@ -14,6 +14,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDockWidget>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -39,7 +40,7 @@ public:
     QLabel *videoTitle;
     QSpacerItem *horizontalSpacer_3;
     QHBoxLayout *videoWindowLayout;
-    QLabel *VideoWindow;
+    QGraphicsView *videoWindow;
     QDockWidget *dockWidget;
     QWidget *videoControlsDockWidget;
     QVBoxLayout *verticalLayout_2;
@@ -120,19 +121,10 @@ public:
 
         videoWindowLayout = new QHBoxLayout();
         videoWindowLayout->setObjectName(QString::fromUtf8("videoWindowLayout"));
-        VideoWindow = new QLabel(MainWidget);
-        VideoWindow->setObjectName(QString::fromUtf8("VideoWindow"));
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(VideoWindow->sizePolicy().hasHeightForWidth());
-        VideoWindow->setSizePolicy(sizePolicy);
-        VideoWindow->setMinimumSize(QSize(420, 360));
-        VideoWindow->setStyleSheet(QString::fromUtf8("background-color: rgb(44, 29, 255);\n"
-"color: rgb(255, 249, 251);"));
-        VideoWindow->setAlignment(Qt::AlignCenter);
+        videoWindow = new QGraphicsView(MainWidget);
+        videoWindow->setObjectName(QString::fromUtf8("videoWindow"));
 
-        videoWindowLayout->addWidget(VideoWindow);
+        videoWindowLayout->addWidget(videoWindow);
 
 
         VideoLayout->addLayout(videoWindowLayout);
@@ -168,27 +160,27 @@ public:
         playControlsLayout->setObjectName(QString::fromUtf8("playControlsLayout"));
         SlowDown = new QPushButton(videoControlsDockWidget);
         SlowDown->setObjectName(QString::fromUtf8("SlowDown"));
-        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(SlowDown->sizePolicy().hasHeightForWidth());
-        SlowDown->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(SlowDown->sizePolicy().hasHeightForWidth());
+        SlowDown->setSizePolicy(sizePolicy);
         SlowDown->setMinimumSize(QSize(1, 0));
 
         playControlsLayout->addWidget(SlowDown);
 
         Play = new QPushButton(videoControlsDockWidget);
         Play->setObjectName(QString::fromUtf8("Play"));
-        sizePolicy1.setHeightForWidth(Play->sizePolicy().hasHeightForWidth());
-        Play->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(Play->sizePolicy().hasHeightForWidth());
+        Play->setSizePolicy(sizePolicy);
 
         playControlsLayout->addWidget(Play);
 
         SpeedUp = new QPushButton(videoControlsDockWidget);
         SpeedUp->setObjectName(QString::fromUtf8("SpeedUp"));
         SpeedUp->setEnabled(true);
-        sizePolicy1.setHeightForWidth(SpeedUp->sizePolicy().hasHeightForWidth());
-        SpeedUp->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(SpeedUp->sizePolicy().hasHeightForWidth());
+        SpeedUp->setSizePolicy(sizePolicy);
         SpeedUp->setMinimumSize(QSize(1, 0));
         SpeedUp->setSizeIncrement(QSize(1, 0));
 
@@ -259,11 +251,11 @@ public:
 
         addFlounder = new QPushButton(MainWidget);
         addFlounder->setObjectName(QString::fromUtf8("addFlounder"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(addFlounder->sizePolicy().hasHeightForWidth());
-        addFlounder->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(addFlounder->sizePolicy().hasHeightForWidth());
+        addFlounder->setSizePolicy(sizePolicy1);
         addFlounder->setMinimumSize(QSize(0, 50));
         addFlounder->setBaseSize(QSize(0, 0));
         QFont font;
@@ -284,8 +276,8 @@ public:
 
         addCod = new QPushButton(MainWidget);
         addCod->setObjectName(QString::fromUtf8("addCod"));
-        sizePolicy2.setHeightForWidth(addCod->sizePolicy().hasHeightForWidth());
-        addCod->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(addCod->sizePolicy().hasHeightForWidth());
+        addCod->setSizePolicy(sizePolicy1);
         addCod->setMinimumSize(QSize(0, 50));
         addCod->setFont(font);
         addCod->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
@@ -299,8 +291,8 @@ public:
 
         addHaddock = new QPushButton(MainWidget);
         addHaddock->setObjectName(QString::fromUtf8("addHaddock"));
-        sizePolicy2.setHeightForWidth(addHaddock->sizePolicy().hasHeightForWidth());
-        addHaddock->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(addHaddock->sizePolicy().hasHeightForWidth());
+        addHaddock->setSizePolicy(sizePolicy1);
         addHaddock->setMinimumSize(QSize(0, 50));
         addHaddock->setFont(font);
         addHaddock->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
@@ -314,8 +306,8 @@ public:
 
         addSkate = new QPushButton(MainWidget);
         addSkate->setObjectName(QString::fromUtf8("addSkate"));
-        sizePolicy2.setHeightForWidth(addSkate->sizePolicy().hasHeightForWidth());
-        addSkate->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(addSkate->sizePolicy().hasHeightForWidth());
+        addSkate->setSizePolicy(sizePolicy1);
         addSkate->setMinimumSize(QSize(0, 50));
         addSkate->setFont(font);
         addSkate->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
@@ -329,11 +321,11 @@ public:
 
         addUnknown = new QPushButton(MainWidget);
         addUnknown->setObjectName(QString::fromUtf8("addUnknown"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Minimum);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(addUnknown->sizePolicy().hasHeightForWidth());
-        addUnknown->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(addUnknown->sizePolicy().hasHeightForWidth());
+        addUnknown->setSizePolicy(sizePolicy2);
         addUnknown->setMinimumSize(QSize(0, 50));
         QFont font1;
         font1.setFamily(QString::fromUtf8("MS Shell Dlg 2"));
@@ -380,7 +372,6 @@ public:
     {
         MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0, QApplication::UnicodeUTF8));
         videoTitle->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
-        VideoWindow->setText(QApplication::translate("MainWidget", "Video Will Load Here", 0, QApplication::UnicodeUTF8));
         SlowDown->setText(QApplication::translate("MainWidget", "<<", 0, QApplication::UnicodeUTF8));
         Play->setText(QApplication::translate("MainWidget", "Play", 0, QApplication::UnicodeUTF8));
         SpeedUp->setText(QApplication::translate("MainWidget", ">>", 0, QApplication::UnicodeUTF8));

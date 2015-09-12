@@ -1,4 +1,4 @@
-#include <MainWindow.h>
+#include <mainwindow.h>
 
 MainWindow::MainWindow(QWidget *parent)
 	:QWidget(parent),
@@ -14,9 +14,9 @@ void MainWindow::updatePlayerUI(QImage img)
 {
 	if (!img.isNull())
 	{
-		ui->videoWindow->setAlignment(Qt::AlignCenter);
-		imgPointer->setPixmap(QPixmap::fromImage(img).scaled(ui->VideoWindow->size(),
-			Qt::KeepAspectRatio, Qt::FastTransformation));
+		imgPointer->setPixmap(QPixmap::fromImage(img));
+		scene->setSceneRect(img.rect());
+		ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
 	}
 }
 
@@ -24,8 +24,8 @@ MainWindow::~MainWindow()
 {
 	delete myPlayer;
 	delete ui;
-	delete imgPointer;
-	delete scene;
+	//delete imgPointer;
+	//delete scene;
 	myFishList.clear();
 	delete tempFish;
 }
@@ -45,12 +45,13 @@ void MainWindow::on_LoadVideo_clicked()
 		}
 		else
 		{
-			Qimage firstImage = myPlayer->getFirstImage();
+			QImage firstImage = myPlayer->getFirstFrame();
 			scene = new QGraphicsScene(this);
-			imgPointer = scene->addPixmap(firstImage);
-			scene->setSceneRect(firstImage.rect);
-			videoWindow->setScene(scene);
-			videoWindow->show();
+			imgPointer = scene->addPixmap(QPixmap::fromImage(firstImage));
+			scene->setSceneRect(firstImage.rect());
+			ui->videoWindow->setScene(scene);
+			ui->videoWindow->fitInView(scene->sceneRect());
+			ui->videoWindow->show();
 		}
 	}
 
@@ -85,7 +86,7 @@ void MainWindow::on_addFlounder_clicked()
 	FishTypeEnum fType = (FishTypeEnum) 0;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
-	for (int i=0; i<myFishList.size();i++)
+	for (int i=0; i < (int) myFishList.size();i++)
 	{
 	  fType = myFishList[i].getFishType();
 	  std::cout << fType << endl;
