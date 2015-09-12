@@ -103,30 +103,7 @@
        <item>
         <layout class="QHBoxLayout" name="videoWindowLayout">
          <item>
-          <widget class="QLabel" name="VideoWindow">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>420</width>
-             <height>360</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(44, 29, 255);
-color: rgb(255, 249, 251);</string>
-           </property>
-           <property name="text">
-            <string>Video Will Load Here</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
+          <widget class="QGraphicsView" name="videoWindow"/>
          </item>
         </layout>
        </item>
