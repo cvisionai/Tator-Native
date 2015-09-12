@@ -14,8 +14,8 @@ void MainWindow::updatePlayerUI(QImage img)
 {
 	if (!img.isNull())
 	{
-		ui->VideoWindow->setAlignment(Qt::AlignCenter);
-		ui->VideoWindow->setPixmap(QPixmap::fromImage(img).scaled(ui->VideoWindow->size(),
+		ui->videoWindow->setAlignment(Qt::AlignCenter);
+		imgPointer->setPixmap(QPixmap::fromImage(img).scaled(ui->VideoWindow->size(),
 			Qt::KeepAspectRatio, Qt::FastTransformation));
 	}
 }
@@ -41,7 +41,17 @@ void MainWindow::on_LoadVideo_clicked()
 			msgBox.setText("The selected video could not be opened!");
 			msgBox.exec();
 		}
+		else
+		{
+			//Grab first frame here
+			scene = new QGraphicsScene(this);
+			imgPointer = scene->addPixmap();
+			scene->setSceneRect(image.rect);
+			videoWindow->setScene(scene);
+			
+		}
 	}
+
 }
 
 void MainWindow::on_Play_clicked()

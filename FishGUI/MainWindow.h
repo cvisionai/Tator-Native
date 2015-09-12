@@ -33,4 +33,6 @@ class MainWindow : public QWidget
  	Player* myPlayer;
 	Fish* tempFish;
 	vector<Fish> myFishList;
+	QGraphicsPixmapItem* imgPointer;
+	QGraphicsScene *scene;
 };
