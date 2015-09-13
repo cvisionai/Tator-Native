@@ -36,7 +36,8 @@ public:
   bool isStopped() const;
   void speedUp();
   void slowDown();
-  QImage getFirstFrame();
+  void minusOneFrame();
+  QImage getOneFrame();
   void setCurrentFrame(int frameNumber);
   double getFrameRate();
   double getCurrentFrame();

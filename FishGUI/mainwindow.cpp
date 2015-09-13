@@ -58,7 +58,7 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->videoSlider->setMaximum(myPlayer->getNumberOfFrames());
 			ui->totalTime->setText(getFormattedTime((int)myPlayer-> 
 				getNumberOfFrames() / (int)myPlayer->getFrameRate()));
-			QImage firstImage = myPlayer->getFirstFrame();
+			QImage firstImage = myPlayer->getOneFrame();
 			scene = new QGraphicsScene(this);
 			imgPointer = scene->addPixmap(QPixmap::fromImage(firstImage));
 			scene->setSceneRect(firstImage.rect());
@@ -121,6 +121,46 @@ void MainWindow::on_SpeedUp_clicked()
 void MainWindow::on_SlowDown_clicked()
 {
 	myPlayer->slowDown();
+}
+
+void MainWindow::on_minusOneFrame_clicked()
+{
+	if (!myPlayer->isStopped())
+	{
+		myPlayer->Stop();
+		ui->Play->setText(tr("Play"));
+	}
+	myPlayer->minusOneFrame();
+	QImage thisFrame = myPlayer->getOneFrame();
+	if (!thisFrame.isNull())
+	{
+        	imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
+		scene->setSceneRect(thisFrame.rect());
+        	ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
+		ui->videoSlider->setValue(myPlayer->getCurrentFrame());
+		ui->currentTime->setText(getFormattedTime((int)myPlayer->
+			getCurrentFrame() / (int)myPlayer->getFrameRate()));
+	}
+}
+
+void MainWindow::on_plusOneFrame_clicked()
+{
+	if (!myPlayer->isStopped())
+	{
+		myPlayer->Stop();
+		ui->Play->setText(tr("Play"));
+	}
+	QImage thisFrame = myPlayer->getOneFrame();
+	if (!thisFrame.isNull())
+	{
+		imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
+		scene->setSceneRect(thisFrame.rect());
+		ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
+		ui->videoSlider->setValue(myPlayer->getCurrentFrame());
+		ui->currentTime->setText(getFormattedTime((int)myPlayer->
+			getCurrentFrame() / (int)myPlayer->getFrameRate()));
+	}
+
 }
 
 void MainWindow::on_addFlounder_clicked()

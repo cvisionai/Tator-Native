@@ -52,9 +52,11 @@ public:
     QHBoxLayout *playLayout;
     QSpacerItem *horizontalSpacer;
     QHBoxLayout *playControlsLayout;
-    QPushButton *SlowDown;
     QPushButton *Play;
+    QPushButton *SlowDown;
     QPushButton *SpeedUp;
+    QPushButton *minusOneFrame;
+    QPushButton *plusOneFrame;
     QSpacerItem *horizontalSpacer_2;
     QSpacerItem *verticalSpacer_9;
     QHBoxLayout *loadVideoLayout;
@@ -177,37 +179,49 @@ public:
         playControlsLayout = new QHBoxLayout();
         playControlsLayout->setSpacing(2);
         playControlsLayout->setObjectName(QString::fromUtf8("playControlsLayout"));
-        SlowDown = new QPushButton(videoControlsDockWidget);
-        SlowDown->setObjectName(QString::fromUtf8("SlowDown"));
+        Play = new QPushButton(videoControlsDockWidget);
+        Play->setObjectName(QString::fromUtf8("Play"));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(SlowDown->sizePolicy().hasHeightForWidth());
-        SlowDown->setSizePolicy(sizePolicy);
-        SlowDown->setMinimumSize(QSize(1, 0));
-
-        playControlsLayout->addWidget(SlowDown);
-
-        Play = new QPushButton(videoControlsDockWidget);
-        Play->setObjectName(QString::fromUtf8("Play"));
         sizePolicy.setHeightForWidth(Play->sizePolicy().hasHeightForWidth());
         Play->setSizePolicy(sizePolicy);
 
         playControlsLayout->addWidget(Play);
+
+        SlowDown = new QPushButton(videoControlsDockWidget);
+        SlowDown->setObjectName(QString::fromUtf8("SlowDown"));
+        sizePolicy.setHeightForWidth(SlowDown->sizePolicy().hasHeightForWidth());
+        SlowDown->setSizePolicy(sizePolicy);
+        SlowDown->setMinimumSize(QSize(0, 0));
+
+        playControlsLayout->addWidget(SlowDown);
 
         SpeedUp = new QPushButton(videoControlsDockWidget);
         SpeedUp->setObjectName(QString::fromUtf8("SpeedUp"));
         SpeedUp->setEnabled(true);
         sizePolicy.setHeightForWidth(SpeedUp->sizePolicy().hasHeightForWidth());
         SpeedUp->setSizePolicy(sizePolicy);
-        SpeedUp->setMinimumSize(QSize(1, 0));
-        SpeedUp->setSizeIncrement(QSize(1, 0));
+        SpeedUp->setMinimumSize(QSize(0, 0));
+        SpeedUp->setSizeIncrement(QSize(0, 0));
 
         playControlsLayout->addWidget(SpeedUp);
 
-        playControlsLayout->setStretch(0, 1);
-        playControlsLayout->setStretch(1, 2);
+        minusOneFrame = new QPushButton(videoControlsDockWidget);
+        minusOneFrame->setObjectName(QString::fromUtf8("minusOneFrame"));
+
+        playControlsLayout->addWidget(minusOneFrame);
+
+        plusOneFrame = new QPushButton(videoControlsDockWidget);
+        plusOneFrame->setObjectName(QString::fromUtf8("plusOneFrame"));
+
+        playControlsLayout->addWidget(plusOneFrame);
+
+        playControlsLayout->setStretch(0, 2);
+        playControlsLayout->setStretch(1, 1);
         playControlsLayout->setStretch(2, 1);
+        playControlsLayout->setStretch(3, 1);
+        playControlsLayout->setStretch(4, 1);
 
         playLayout->addLayout(playControlsLayout);
 
@@ -216,7 +230,7 @@ public:
         playLayout->addItem(horizontalSpacer_2);
 
         playLayout->setStretch(0, 2);
-        playLayout->setStretch(1, 4);
+        playLayout->setStretch(1, 6);
         playLayout->setStretch(2, 2);
 
         videoControlLayout->addLayout(playLayout);
@@ -393,9 +407,11 @@ public:
         videoTitle->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
         currentTime->setText(QString());
         totalTime->setText(QString());
-        SlowDown->setText(QApplication::translate("MainWidget", "<<", 0, QApplication::UnicodeUTF8));
         Play->setText(QApplication::translate("MainWidget", "Play", 0, QApplication::UnicodeUTF8));
-        SpeedUp->setText(QApplication::translate("MainWidget", ">>", 0, QApplication::UnicodeUTF8));
+        SlowDown->setText(QApplication::translate("MainWidget", "Slower", 0, QApplication::UnicodeUTF8));
+        SpeedUp->setText(QApplication::translate("MainWidget", "Faster", 0, QApplication::UnicodeUTF8));
+        minusOneFrame->setText(QApplication::translate("MainWidget", "-1 Frame", 0, QApplication::UnicodeUTF8));
+        plusOneFrame->setText(QApplication::translate("MainWidget", "+1 Frame", 0, QApplication::UnicodeUTF8));
         LoadVideo->setText(QApplication::translate("MainWidget", "Load Video", 0, QApplication::UnicodeUTF8));
         addFlounder->setText(QApplication::translate("MainWidget", "Flounder", 0, QApplication::UnicodeUTF8));
         addCod->setText(QApplication::translate("MainWidget", "Cod", 0, QApplication::UnicodeUTF8));

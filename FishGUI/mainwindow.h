@@ -34,6 +34,8 @@ class MainWindow : public QWidget
   	void on_LoadVideo_clicked();
 	void on_SpeedUp_clicked();
 	void on_SlowDown_clicked();
+	void on_minusOneFrame_clicked();
+	void on_plusOneFrame_clicked();
 	void on_addFlounder_clicked();
 	void on_addCod_clicked();
 	void on_addHaddock_clicked();

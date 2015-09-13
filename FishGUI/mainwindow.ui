@@ -240,14 +240,14 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="oneFrameBack">
+                  <widget class="QPushButton" name="minusOneFrame">
                    <property name="text">
                     <string>-1 Frame</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="oneFrameForward">
+                  <widget class="QPushButton" name="plusOneFrame">
                    <property name="text">
                     <string>+1 Frame</string>
                    </property>

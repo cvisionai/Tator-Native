@@ -53,7 +53,7 @@ void Player::run()
 	}
 }
 
-QImage Player::getFirstFrame()
+QImage Player::getOneFrame()
 {
 	capture->read(frame);
 	if (frame.channels() == 3)
@@ -105,6 +105,13 @@ void Player::speedUp()
 void Player::slowDown()
 {
 	delay = delay*2;
+}
+
+void Player::minusOneFrame()
+{
+	double currentFrame = getCurrentFrame();
+	currentFrame = currentFrame - (double)2;
+	setCurrentFrame((int)currentFrame);
 }
 
 double Player::getCurrentFrame()
