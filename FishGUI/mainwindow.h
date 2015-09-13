@@ -3,7 +3,7 @@
 #include <QWidget>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QPTime>
+#include <QTime>
 #include <QGraphicsPixmapItem>
 #include <vector>
 #include <player.h>

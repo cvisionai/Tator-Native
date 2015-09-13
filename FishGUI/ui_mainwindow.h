@@ -45,7 +45,10 @@ public:
     QWidget *videoControlsDockWidget;
     QVBoxLayout *verticalLayout_2;
     QVBoxLayout *videoControlLayout;
+    QHBoxLayout *videoSliderLayout;
+    QLabel *currentTime;
     QSlider *videoSlider;
+    QLabel *totalTime;
     QHBoxLayout *playLayout;
     QSpacerItem *horizontalSpacer;
     QHBoxLayout *playControlsLayout;
@@ -143,11 +146,27 @@ public:
         videoControlLayout = new QVBoxLayout();
         videoControlLayout->setSpacing(0);
         videoControlLayout->setObjectName(QString::fromUtf8("videoControlLayout"));
+        videoSliderLayout = new QHBoxLayout();
+        videoSliderLayout->setObjectName(QString::fromUtf8("videoSliderLayout"));
+        videoSliderLayout->setContentsMargins(-1, 0, -1, -1);
+        currentTime = new QLabel(videoControlsDockWidget);
+        currentTime->setObjectName(QString::fromUtf8("currentTime"));
+
+        videoSliderLayout->addWidget(currentTime);
+
         videoSlider = new QSlider(videoControlsDockWidget);
         videoSlider->setObjectName(QString::fromUtf8("videoSlider"));
         videoSlider->setOrientation(Qt::Horizontal);
 
-        videoControlLayout->addWidget(videoSlider);
+        videoSliderLayout->addWidget(videoSlider);
+
+        totalTime = new QLabel(videoControlsDockWidget);
+        totalTime->setObjectName(QString::fromUtf8("totalTime"));
+
+        videoSliderLayout->addWidget(totalTime);
+
+
+        videoControlLayout->addLayout(videoSliderLayout);
 
         playLayout = new QHBoxLayout();
         playLayout->setObjectName(QString::fromUtf8("playLayout"));
@@ -372,6 +391,8 @@ public:
     {
         MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0, QApplication::UnicodeUTF8));
         videoTitle->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
+        currentTime->setText(QString());
+        totalTime->setText(QString());
         SlowDown->setText(QApplication::translate("MainWidget", "<<", 0, QApplication::UnicodeUTF8));
         Play->setText(QApplication::translate("MainWidget", "Play", 0, QApplication::UnicodeUTF8));
         SpeedUp->setText(QApplication::translate("MainWidget", ">>", 0, QApplication::UnicodeUTF8));
