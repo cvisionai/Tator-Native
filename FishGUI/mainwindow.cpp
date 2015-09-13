@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
 		QObject::connect(myPlayer, 									SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
+		ui->Play->setEnabled(false);
+		ui->videoSlider->setEnabled(false);
 	}
 
 void MainWindow::updatePlayerUI(QImage img)
@@ -17,6 +19,9 @@ void MainWindow::updatePlayerUI(QImage img)
 		imgPointer->setPixmap(QPixmap::fromImage(img));
 		scene->setSceneRect(img.rect());
 		ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
+		ui->videoSlider->setValue(myPlayer - getCurrentFrame());
+		ui->currentTime->setText(getFormattedTime((int)myPlayer - 
+			getCurrentFrame() / (int)myPlayer->getFrameRate()));
 	}
 }
 
@@ -35,6 +40,8 @@ void MainWindow::on_LoadVideo_clicked()
 	QString filename = QFileDialog::getOpenFileName(this,
 		tr("Open Video"), ".",
 		tr("Video Files (*.avi *.mpg *.mp4)"));
+
+	QFileInfo name = filename;
 	if (!filename.isEmpty())
 	{
 		if (!myPlayer->loadVideo(filename.toAscii().data()))
@@ -45,6 +52,12 @@ void MainWindow::on_LoadVideo_clicked()
 		}
 		else
 		{
+			this->setWindowTitle(name.fileName());
+			ui->Play->setEnabled(true);
+			ui->videoSlider->setEnabled(true);
+			ui->videoSlider->setMaximum(myPlayer->getNumberOfFrames());
+			ui->totalTime->setText(getFormattedTime((int)myPlayer - 
+				getNumberOfFrames() / (int)myPlayer->getFrameRate()));
 			QImage firstImage = myPlayer->getFirstFrame();
 			scene = new QGraphicsScene(this);
 			imgPointer = scene->addPixmap(QPixmap::fromImage(firstImage));
@@ -69,6 +82,35 @@ void MainWindow::on_Play_clicked()
 		myPlayer->Stop();
 		ui->Play->setText(tr("Play"));
 	}
+}
+
+QString MainWindow::getFormattedTime(int timeInSeconds)
+{
+	int seconds = (int) (timeInSeconds) % 60;
+	int minutes = (int)((timeInSeconds / 60) % 60);
+	int hours = (int)((timeInSeconds / (60 * 60)) % 24);
+
+	QTime t(hours, minutes, seconds);
+	if (hours == 0)
+		return t.toString("mm:ss");
+	else
+		return t.toString("h:mm:ss");
+}
+
+void MainWindow::on_videoSlider_sliderPressed()
+{
+	myPlayer->Stop();
+}
+
+void MainWindow::on_videoSlider_sliderReleased()
+{
+	myPlayer->Play();
+}
+
+void MainWindow::on_videoSlider_sliderMoved(int position)
+{
+	myPlayer->setCurrentFrame(position);
+	ui->currentTime->setText(getFormattedTime(position / (int)myPlayer->getFrameRate()));
 }
 
 void MainWindow::on_SpeedUp_clicked()

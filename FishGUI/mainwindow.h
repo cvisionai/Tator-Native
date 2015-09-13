@@ -1,7 +1,9 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 #include <QWidget>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QPainter>
+#include <QPTime>
 #include <QGraphicsPixmapItem>
 #include <vector>
 #include <player.h>
@@ -24,6 +26,10 @@ class MainWindow : public QWidget
 
  private slots:
   	void updatePlayerUI(QImage img);
+	QString getFormattedTime(int timeInSeconds);
+	void on_videoSlider_sliderPressed();
+	void on_videoSlider_sliderReleased();
+	void on_videoSlider_sliderMoved(int position);
   	void on_Play_clicked();
   	void on_LoadVideo_clicked();
 	void on_SpeedUp_clicked();
@@ -40,3 +46,4 @@ class MainWindow : public QWidget
 	QGraphicsPixmapItem* imgPointer;
 	QGraphicsScene *scene;
 };
+#endif
