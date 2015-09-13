@@ -19,8 +19,8 @@ void MainWindow::updatePlayerUI(QImage img)
 		imgPointer->setPixmap(QPixmap::fromImage(img));
 		scene->setSceneRect(img.rect());
 		ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-		ui->videoSlider->setValue(myPlayer - getCurrentFrame());
-		ui->currentTime->setText(getFormattedTime((int)myPlayer - 
+		ui->videoSlider->setValue(myPlayer->getCurrentFrame());
+		ui->currentTime->setText(getFormattedTime((int)myPlayer->
 			getCurrentFrame() / (int)myPlayer->getFrameRate()));
 	}
 }
@@ -56,7 +56,7 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->Play->setEnabled(true);
 			ui->videoSlider->setEnabled(true);
 			ui->videoSlider->setMaximum(myPlayer->getNumberOfFrames());
-			ui->totalTime->setText(getFormattedTime((int)myPlayer - 
+			ui->totalTime->setText(getFormattedTime((int)myPlayer-> 
 				getNumberOfFrames() / (int)myPlayer->getFrameRate()));
 			QImage firstImage = myPlayer->getFirstFrame();
 			scene = new QGraphicsScene(this);

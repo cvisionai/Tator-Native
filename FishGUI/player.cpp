@@ -55,7 +55,7 @@ void Player::run()
 
 QImage Player::getFirstFrame()
 {
-	capture.read(frame);
+	capture->read(frame);
 	if (frame.channels() == 3)
 	{
 		cv::cvtColor(frame, RGBframe, CV_BGR2RGB);
@@ -75,7 +75,7 @@ Player::~Player()
 {
 	mutex.lock();
 	stop = true;
-	capture.release();
+	capture->release();
 	delete capture;
 	condition.wakeOne();
 	mutex.unlock();
@@ -124,5 +124,5 @@ double Player::getFrameRate()
 
 void Player::setCurrentFrame(int frameNumber)
 {
-	capture->set(CV_PROP_POS_FRAMES, frameNumber);
+	capture->set(CV_CAP_PROP_POS_FRAMES, frameNumber);
 }
