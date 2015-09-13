@@ -160,7 +160,7 @@
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="playLayout" stretch="2,4,2">
+              <layout class="QHBoxLayout" name="playLayout" stretch="2,6,2">
                <item>
                 <spacer name="horizontalSpacer">
                  <property name="orientation">
@@ -175,29 +175,10 @@
                 </spacer>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="playControlsLayout" stretch="1,2,1">
+                <layout class="QHBoxLayout" name="playControlsLayout" stretch="2,1,1,1,1">
                  <property name="spacing">
                   <number>2</number>
                  </property>
-                 <item>
-                  <widget class="QPushButton" name="SlowDown">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>1</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>&lt;&lt;</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item>
                   <widget class="QPushButton" name="Play">
                    <property name="sizePolicy">
@@ -208,6 +189,25 @@
                    </property>
                    <property name="text">
                     <string>Play</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="SlowDown">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Slower</string>
                    </property>
                   </widget>
                  </item>
@@ -224,18 +224,32 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>1</width>
+                     <width>0</width>
                      <height>0</height>
                     </size>
                    </property>
                    <property name="sizeIncrement">
                     <size>
-                     <width>1</width>
+                     <width>0</width>
                      <height>0</height>
                     </size>
                    </property>
                    <property name="text">
-                    <string>&gt;&gt;</string>
+                    <string>Faster</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="oneFrameBack">
+                   <property name="text">
+                    <string>-1 Frame</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="oneFrameForward">
+                   <property name="text">
+                    <string>+1 Frame</string>
                    </property>
                   </widget>
                  </item>
