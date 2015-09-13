@@ -1,3 +1,5 @@
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <QMutex>
 #include <QThread>
 #include <QImage>
@@ -16,7 +18,7 @@ private:
  	QWaitCondition condition;
  	Mat frame;
  	int frameRate;
- 	VideoCapture capture;
+ 	VideoCapture *capture;
  	Mat RGBframe;
  	QImage img;
 	int delay;
@@ -35,4 +37,9 @@ public:
   void speedUp();
   void slowDown();
   QImage getFirstFrame();
+  void setCurrentFrame(int frameNumber);
+  double getFrameRate();
+  double getCurrentFrame();
+  double getNumberOfFrames();
 };
+#endif
