@@ -168,11 +168,11 @@ void MainWindow::on_addFlounder_clicked()
 	FishTypeEnum fType = (FishTypeEnum) 0;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
-	for (int i=0; i < (int) myFishList.size();i++)
-	{
-	  fType = myFishList[i].getFishType();
-	  std::cout << fType << endl;
-	}
+//	for (int i=0; i < (int) myFishList.size();i++)
+//	{
+//	  fType = myFishList[i].getFishType();
+//	  std::cout << fType << endl;
+//	}
 }
 
 void MainWindow::on_addCod_clicked()

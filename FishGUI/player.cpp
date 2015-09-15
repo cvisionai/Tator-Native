@@ -100,6 +100,8 @@ bool Player::isStopped() const{
 void Player::speedUp()
 {
 	delay = delay/2;
+	if (delay<1)
+	  delay = 1;
 }
 
 void Player::slowDown()

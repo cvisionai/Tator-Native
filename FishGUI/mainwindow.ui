@@ -206,6 +206,9 @@
                      <height>0</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="text">
                     <string>Slower</string>
                    </property>
@@ -234,6 +237,9 @@
                      <height>0</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="text">
                     <string>Faster</string>
                    </property>
@@ -241,6 +247,9 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="minusOneFrame">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="text">
                     <string>-1 Frame</string>
                    </property>
@@ -248,6 +257,9 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="plusOneFrame">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="text">
                     <string>+1 Frame</string>
                    </property>
@@ -376,6 +388,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="addFlounder">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -401,12 +416,14 @@
            <bold>true</bold>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="autoFillBackground">
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(208, 255, 228);
-selection-background-color: rgb(1, 207, 111);</string>
+          <string notr="true">background-color: rgb(208, 255, 228);</string>
          </property>
          <property name="text">
           <string>Flounder</string>
@@ -456,9 +473,11 @@ selection-background-color: rgb(1, 207, 111);</string>
            <bold>true</bold>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(208, 255, 228);
-selection-background-color: rgb(1, 207, 111);</string>
+          <string notr="true">background-color: rgb(208, 255, 228);</string>
          </property>
          <property name="text">
           <string>Cod</string>
@@ -502,9 +521,11 @@ selection-background-color: rgb(1, 207, 111);</string>
            <bold>true</bold>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(208, 255, 228);
-selection-background-color: rgb(1, 207, 111);</string>
+          <string notr="true">background-color: rgb(208, 255, 228);</string>
          </property>
          <property name="text">
           <string>Haddock</string>
@@ -548,9 +569,11 @@ selection-background-color: rgb(1, 207, 111);</string>
            <bold>true</bold>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(208, 255, 228);
-selection-background-color: rgb(1, 207, 111);</string>
+          <string notr="true">background-color: rgb(208, 255, 228);</string>
          </property>
          <property name="text">
           <string>Skate</string>
@@ -595,9 +618,11 @@ selection-background-color: rgb(1, 207, 111);</string>
            <bold>true</bold>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(208, 255, 228);
-selection-background-color: rgb(1, 207, 111);</string>
+          <string notr="true">background-color: rgb(208, 255, 228);</string>
          </property>
          <property name="text">
           <string>Unknown</string>

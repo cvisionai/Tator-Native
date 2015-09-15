@@ -194,6 +194,7 @@ public:
         sizePolicy.setHeightForWidth(SlowDown->sizePolicy().hasHeightForWidth());
         SlowDown->setSizePolicy(sizePolicy);
         SlowDown->setMinimumSize(QSize(0, 0));
+        SlowDown->setFocusPolicy(Qt::NoFocus);
 
         playControlsLayout->addWidget(SlowDown);
 
@@ -204,16 +205,19 @@ public:
         SpeedUp->setSizePolicy(sizePolicy);
         SpeedUp->setMinimumSize(QSize(0, 0));
         SpeedUp->setSizeIncrement(QSize(0, 0));
+        SpeedUp->setFocusPolicy(Qt::NoFocus);
 
         playControlsLayout->addWidget(SpeedUp);
 
         minusOneFrame = new QPushButton(videoControlsDockWidget);
         minusOneFrame->setObjectName(QString::fromUtf8("minusOneFrame"));
+        minusOneFrame->setFocusPolicy(Qt::NoFocus);
 
         playControlsLayout->addWidget(minusOneFrame);
 
         plusOneFrame = new QPushButton(videoControlsDockWidget);
         plusOneFrame->setObjectName(QString::fromUtf8("plusOneFrame"));
+        plusOneFrame->setFocusPolicy(Qt::NoFocus);
 
         playControlsLayout->addWidget(plusOneFrame);
 
@@ -284,6 +288,7 @@ public:
 
         addFlounder = new QPushButton(MainWidget);
         addFlounder->setObjectName(QString::fromUtf8("addFlounder"));
+        addFlounder->setEnabled(true);
         QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -296,9 +301,9 @@ public:
         font.setBold(true);
         font.setWeight(75);
         addFlounder->setFont(font);
+        addFlounder->setFocusPolicy(Qt::NoFocus);
         addFlounder->setAutoFillBackground(false);
-        addFlounder->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
-"selection-background-color: rgb(1, 207, 111);"));
+        addFlounder->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
         addFlounder->setIconSize(QSize(16, 16));
 
         countingControlsLayout->addWidget(addFlounder);
@@ -313,8 +318,8 @@ public:
         addCod->setSizePolicy(sizePolicy1);
         addCod->setMinimumSize(QSize(0, 50));
         addCod->setFont(font);
-        addCod->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
-"selection-background-color: rgb(1, 207, 111);"));
+        addCod->setFocusPolicy(Qt::NoFocus);
+        addCod->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
         countingControlsLayout->addWidget(addCod);
 
@@ -328,8 +333,8 @@ public:
         addHaddock->setSizePolicy(sizePolicy1);
         addHaddock->setMinimumSize(QSize(0, 50));
         addHaddock->setFont(font);
-        addHaddock->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
-"selection-background-color: rgb(1, 207, 111);"));
+        addHaddock->setFocusPolicy(Qt::NoFocus);
+        addHaddock->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
         countingControlsLayout->addWidget(addHaddock);
 
@@ -343,8 +348,8 @@ public:
         addSkate->setSizePolicy(sizePolicy1);
         addSkate->setMinimumSize(QSize(0, 50));
         addSkate->setFont(font);
-        addSkate->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
-"selection-background-color: rgb(1, 207, 111);"));
+        addSkate->setFocusPolicy(Qt::NoFocus);
+        addSkate->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
         countingControlsLayout->addWidget(addSkate);
 
@@ -366,8 +371,8 @@ public:
         font1.setBold(true);
         font1.setWeight(75);
         addUnknown->setFont(font1);
-        addUnknown->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);\n"
-"selection-background-color: rgb(1, 207, 111);"));
+        addUnknown->setFocusPolicy(Qt::NoFocus);
+        addUnknown->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
         countingControlsLayout->addWidget(addUnknown);
 
