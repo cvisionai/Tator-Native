@@ -5,12 +5,20 @@ MainWindow::MainWindow(QWidget *parent)
 	ui(new Ui::MainWidget)
 	{
 		myPlayer = new Player();
-		QObject::connect(myPlayer, 									SIGNAL(processedImage(QImage)),
+		QObject::connect(myPlayer, 										 SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
 		ui->Play->setEnabled(false);
 		ui->videoSlider->setEnabled(false);
 	}
+
+MainWindow::~MainWindow()
+{
+	delete myPlayer;
+	delete ui;
+	//myFishList.clear();
+	delete tempFish;
+}
 
 void MainWindow::updatePlayerUI(QImage img)
 {
@@ -25,14 +33,22 @@ void MainWindow::updatePlayerUI(QImage img)
 	}
 }
 
-MainWindow::~MainWindow()
+void MainWindow::updateSubTypeMenu(int typeIndex)
 {
-	delete myPlayer;
-	delete ui;
-	//delete imgPointer;
-	//delete scene;
-	myFishList.clear();
-	delete tempFish;
+	return;
+}
+
+QString MainWindow::getFormattedTime(int timeInSeconds)
+{
+	int seconds = (int) (timeInSeconds) % 60;
+	int minutes = (int)((timeInSeconds / 60) % 60);
+	int hours = (int)((timeInSeconds / (60 * 60)) % 24);
+
+	QTime t(hours, minutes, seconds);
+	if (hours == 0)
+		return t.toString("mm:ss");
+	else
+		return t.toString("h:mm:ss");
 }
 
 void MainWindow::on_LoadVideo_clicked()
@@ -82,19 +98,6 @@ void MainWindow::on_Play_clicked()
 		myPlayer->Stop();
 		ui->Play->setText(tr("Play"));
 	}
-}
-
-QString MainWindow::getFormattedTime(int timeInSeconds)
-{
-	int seconds = (int) (timeInSeconds) % 60;
-	int minutes = (int)((timeInSeconds / 60) % 60);
-	int hours = (int)((timeInSeconds / (60 * 60)) % 24);
-
-	QTime t(hours, minutes, seconds);
-	if (hours == 0)
-		return t.toString("mm:ss");
-	else
-		return t.toString("h:mm:ss");
 }
 
 void MainWindow::on_videoSlider_sliderPressed()
@@ -163,31 +166,25 @@ void MainWindow::on_plusOneFrame_clicked()
 
 }
 
-void MainWindow::on_addFlounder_clicked()
+void MainWindow::on_addRound_clicked()
 {
 	FishTypeEnum fType = (FishTypeEnum) 0;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
-//	for (int i=0; i < (int) myFishList.size();i++)
-//	{
-//	  fType = myFishList[i].getFishType();
-//	  std::cout << fType << endl;
-//	}
 }
 
-void MainWindow::on_addCod_clicked()
+void MainWindow::on_addFlat_clicked()
 {
-	return;
-}
-
-void MainWindow::on_addHaddock_clicked()
-{
-	return;
+	FishTypeEnum fType = (FishTypeEnum) 1;
+	tempFish = new Fish(fType,1);
+	myFishList.push_back(*tempFish);
 }
 
 void MainWindow::on_addSkate_clicked()
 {
-	return;
+	FishTypeEnum fType = (FishTypeEnum) 2;
+	tempFish = new Fish(fType,1);
+	myFishList.push_back(*tempFish);
 }
 
 int main(int argc, char *argv[])

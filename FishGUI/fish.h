@@ -3,11 +3,9 @@
 typedef std::pair<int, int> xyLoc;
 enum FishTypeEnum
 {
-  Unknown,
-  Flounder,
-  Skate,
-  Cod,
-  Haddock
+  Round,
+  Flat,
+  Skate
 };
 
 class Fish

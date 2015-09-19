@@ -26,6 +26,7 @@ class MainWindow : public QWidget
 
  private slots:
   	void updatePlayerUI(QImage img);
+	void updateSubTypeMenu(int typeIndex);
 	QString getFormattedTime(int timeInSeconds);
 	void on_videoSlider_sliderPressed();
 	void on_videoSlider_sliderReleased();
@@ -36,9 +37,8 @@ class MainWindow : public QWidget
 	void on_SlowDown_clicked();
 	void on_minusOneFrame_clicked();
 	void on_plusOneFrame_clicked();
-	void on_addFlounder_clicked();
-	void on_addCod_clicked();
-	void on_addHaddock_clicked();
+	void on_addRound_clicked();
+	void on_addFlat_clicked();
 	void on_addSkate_clicked();
  private:
  	Ui::MainWidget *ui;
