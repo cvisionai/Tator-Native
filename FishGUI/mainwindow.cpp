@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui(new Ui::MainWidget)
 	{
 		myPlayer = new Player();
+		fList = new fishSerialize::FishList();
 		QObject::connect(myPlayer, SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
@@ -195,6 +196,7 @@ void addFish(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, in
 
 void modifyFishSpecies(fishSerialize::Fish* thisFish, string fishSpecies)
 {
+	//In order to get thisFish, we will use mutable_fish(indexOfFish)
 	thisFish->set_fSpecies(fishSpecies);
 }
 
@@ -202,6 +204,12 @@ void modifyFishXYLoc(fishSerialize::Fish* thisFish, xyLoc)
 {
 	thisFish->set_xLoc(xyLoc.first;
 	thisFish->set_yLoc(xyLoc.second);
+}
+
+void setTowType(bool towOpenStatus)
+{
+	//towOpenStatus = true corresponds to tow open
+	fList->set_towOpen(towOpenStatus);
 }
 
 int main(int argc, char *argv[])
