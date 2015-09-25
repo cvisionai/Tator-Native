@@ -10,6 +10,7 @@
 #include <iostream>
 #include "ui_mainwindow.h"
 #include "fish.h"
+#include "fishSerialize.pb.h"
 
 using namespace std;
 namespace Ui {
@@ -44,8 +45,14 @@ class MainWindow : public QWidget
  	Ui::MainWidget *ui;
  	Player* myPlayer;
 	Fish* tempFish;
+	fishSerialize::FishList fList;
 	vector<Fish> myFishList;
 	QGraphicsPixmapItem* imgPointer;
 	QGraphicsScene *scene;
+
+	void addFish(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame);
+	void modifyFishSpecies(fishSerialize::Fish* thisFish, string fishSpecies);
+	void modifyFishXYLoc(fishSerialize::Fish* thisFish, xyLoc);
+	void setTowType(bool towOpenStatus);
 };
 #endif

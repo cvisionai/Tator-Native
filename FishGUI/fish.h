@@ -1,6 +1,6 @@
 #include <utility>
 
-typedef std::pair<int, int> xyLoc;
+typedef std::pair<float, float> xyLoc;
 enum FishTypeEnum
 {
   Round,
@@ -20,7 +20,7 @@ public:
 	Fish(FishTypeEnum fType, int frame);
 	void setFishType(FishTypeEnum type);
 	void setFishSubType(int sType);
-	void setXYLoc(int row, int col);
+	void setXYLoc(float row, float col);
 	FishTypeEnum getFishType();
 	int getFishSubType();
 	int getFrameCounted();

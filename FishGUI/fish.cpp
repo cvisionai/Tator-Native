@@ -16,7 +16,7 @@ void Fish::setFishSubType(int sType)
 	subType = sType;
 }
 
-void Fish::setXYLoc(int row, int col)
+void Fish::setXYLoc(float row, float col)
 {
 	fishLoc = std::make_pair(row,col);
 }

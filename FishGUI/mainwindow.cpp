@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui(new Ui::MainWidget)
 	{
 		myPlayer = new Player();
-		QObject::connect(myPlayer, 										 SIGNAL(processedImage(QImage)),
+		QObject::connect(myPlayer, SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
 		ui->Play->setEnabled(false);
@@ -185,6 +185,23 @@ void MainWindow::on_addSkate_clicked()
 	FishTypeEnum fType = (FishTypeEnum) 2;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
+}
+
+void addFish(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame)
+{
+	newFish->set_fType(newFType);
+	newFish->set_fFrame(frame);
+}
+
+void modifyFishSpecies(fishSerialize::Fish* thisFish, string fishSpecies)
+{
+	thisFish->set_fSpecies(fishSpecies);
+}
+
+void modifyFishXYLoc(fishSerialize::Fish* thisFish, xyLoc)
+{
+	thisFish->set_xLoc(xyLoc.first;
+	thisFish->set_yLoc(xyLoc.second);
 }
 
 int main(int argc, char *argv[])
