@@ -1,0 +1,21 @@
+package fishSerialize;
+
+message Fish {
+
+	enum fTypeEnum {
+	  ROUND = 0;
+	  FLAT = 1;
+	  SKATE = 2;
+	}
+	required fTypeEnum fType = 1;
+	optional string fSpecies = 2;
+	required int32 fFrame = 3;
+	optional float xLoc = 4;
+	optional float yLoc = 5;
+
+}
+
+message FishList {
+	optional bool towOpen = 1 [default = true];
+	repeated Fish fish = 2;
+}
