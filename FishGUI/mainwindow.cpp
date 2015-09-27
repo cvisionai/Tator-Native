@@ -11,6 +11,13 @@ MainWindow::MainWindow(QWidget *parent)
 		ui->setupUi(this);
 		ui->Play->setEnabled(false);
 		ui->videoSlider->setEnabled(false);
+		QStringList typeList;
+		typeList.append("Round");
+		typeList.append("Flat");
+		typeList.append("Skate");
+		typeList.append("Other");
+		ui->typeMenu->addItems(typeList);
+		
 	}
 
 MainWindow::~MainWindow()
@@ -172,6 +179,9 @@ void MainWindow::on_addRound_clicked()
 	FishTypeEnum fType = (FishTypeEnum) 0;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
+
+	ui->typeMenu->setCurrentIndex(1);
+	updateSubTypeMenu(1);
 }
 
 void MainWindow::on_addFlat_clicked()
@@ -179,6 +189,9 @@ void MainWindow::on_addFlat_clicked()
 	FishTypeEnum fType = (FishTypeEnum) 1;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
+
+	ui->typeMenu->setCurrentIndex(2);
+	updateSubTypeMenu(2);
 }
 
 void MainWindow::on_addSkate_clicked()
@@ -186,24 +199,15 @@ void MainWindow::on_addSkate_clicked()
 	FishTypeEnum fType = (FishTypeEnum) 2;
 	tempFish = new Fish(fType,1);
 	myFishList.push_back(*tempFish);
+
+	ui->typeMenu->setCurrentIndex(3);
+	updateSubTypeMenu(3);
 }
 
 void addFish(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame)
 {
 	newFish->set_fType(newFType);
 	newFish->set_fFrame(frame);
-}
-
-void modifyFishSpecies(fishSerialize::Fish* thisFish, string fishSpecies)
-{
-	//In order to get thisFish, we will use mutable_fish(indexOfFish)
-	thisFish->set_fSpecies(fishSpecies);
-}
-
-void modifyFishXYLoc(fishSerialize::Fish* thisFish, xyLoc)
-{
-	thisFish->set_xLoc(xyLoc.first;
-	thisFish->set_yLoc(xyLoc.second);
 }
 
 void setTowType(bool towOpenStatus)
