@@ -56,7 +56,9 @@ class MainWindow : public QWidget
 	QGraphicsPixmapItem* imgPointer;
 	QGraphicsScene *scene;
 
-	void addFish(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame);
+	void addFish(FishTypeEnum fType);
+	void addFishSerialize(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum 
+		newFType, int frame);
 	void setTowType(bool towOpenStatus);
 };
 #endif

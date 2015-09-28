@@ -5,3 +5,4 @@
 *.swp
 Makefile
 fishguibuild
+.DS_Store

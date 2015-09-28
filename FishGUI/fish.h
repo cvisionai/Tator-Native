@@ -3,9 +3,10 @@
 typedef std::pair<float, float> xyLoc;
 enum FishTypeEnum
 {
-  Round,
-  Flat,
-  Skate
+  ROUND,
+  FLAT,
+  SKATE,
+  OTHER
 };
 
 class Fish

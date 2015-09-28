@@ -17,7 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
 		typeList.append("Skate");
 		typeList.append("Other");
 		ui->typeMenu->addItems(typeList);
-		
+		QObject::connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)),
+			ui->subTypeMenu, SLOT(setCurrentIndex(int));
+		ui->typeMenu->setCurrentIndex(3);
 	}
 
 MainWindow::~MainWindow()
@@ -43,7 +45,43 @@ void MainWindow::updatePlayerUI(QImage img)
 
 void MainWindow::updateSubTypeMenu(int typeIndex)
 {
-	return;
+	QStringList sTypeList;
+	ui->subTypeMenu->clear();
+	if typeIndex == 0 {
+		sTypeList.append("Round");
+		sTypeList.append("Haddock");
+		sTypeList.append("Cod");
+		sTypeList.append("Whiting");
+		sTypeList.append("Red Hake");
+		sTypeList.append("Pollock");
+		sTypeList.append("Herring");
+		sTypeList.append("Unknown");
+	}
+	else if typeIndex == 1 {
+		sTypeList.append("Flat");
+		sTypeList.append("Yellowtail");
+		sTypeList.append("Windowpane");
+		sTypeList.append("Summer");
+		sTypeList.append("Winter");
+		sTypeList.append("Fourspot");
+		sTypeList.append("Grey Sole");
+		sTypeList.append("Halibut");
+		sTypeList.append("Unknown");
+	}
+	else if typeIndex == 2 {
+		sTypeList.append("Skate");
+		sTypeList.append("Barndoor");
+		sTypeList.append("Unknown");
+	}
+	else if typeIndex == 3 {
+		sTypeList.append("Other");
+		sTypeList.append("Dogfish");
+		sTypelist.append("Monkfish");
+		sTypelist.append("Lobster");
+		sTypelist.append("Scallop");
+	}
+
+	ui->subTypeMenu->setCurrentIndex(0);
 }
 
 QString MainWindow::getFormattedTime(int timeInSeconds)
@@ -176,35 +214,75 @@ void MainWindow::on_plusOneFrame_clicked()
 
 void MainWindow::on_addRound_clicked()
 {
+	addFish((FishTypeEnum) ROUND);
+	/*
+	myPlayer->Stop();
+	double currentFrame = myPlayer->getCurrentFrame();
 	FishTypeEnum fType = (FishTypeEnum) 0;
-	tempFish = new Fish(fType,1);
+	tempFish = new Fish(fType,currentFrame); //VALUE HERE IS FRAME, REMEMBER
 	myFishList.push_back(*tempFish);
-
-	ui->typeMenu->setCurrentIndex(1);
-	updateSubTypeMenu(1);
+	ui->typeMenu->setCurrentIndex(0);
+	//updateSubTypeMenu(0);
+	*/
 }
 
 void MainWindow::on_addFlat_clicked()
 {
+	addFish((FishTypeEnum) FLAT);
+	/*
+	myPlayer->Stop();
+	double currentFrame = myPlayer->getCurrentFrame();
 	FishTypeEnum fType = (FishTypeEnum) 1;
-	tempFish = new Fish(fType,1);
+	tempFish = new Fish(fType,currentFrame);
 	myFishList.push_back(*tempFish);
 
-	ui->typeMenu->setCurrentIndex(2);
-	updateSubTypeMenu(2);
+	ui->typeMenu->setCurrentIndex(1);
+	//updateSubTypeMenu(1);
+	*/
 }
 
 void MainWindow::on_addSkate_clicked()
 {
+	addFish((FishTypeEnum) SKATE);
+	/*
+	myPlayer->Stop();
+	double currentFrame = myPlayer->getCurrentFrame();
 	FishTypeEnum fType = (FishTypeEnum) 2;
-	tempFish = new Fish(fType,1);
+	tempFish = new Fish(fType,currentFrame);
+	myFishList.push_back(*tempFish);
+
+	ui->typeMenu->setCurrentIndex(2);
+	//updateSubTypeMenu(2);
+	*/
+}
+
+void MainWindow::on_addOther_clicked()
+{
+	addFish((FishTypeEnum) OTHER);
+	/*
+	myPlayer->Stop();
+	double currentFrame = myPlayer->getCurrentFrame();
+	FishTypeEnum fType = (FishTypeEnum) 3;
+	tempFish = new Fish(fType,currentFrame);
 	myFishList.push_back(*tempFish);
 
 	ui->typeMenu->setCurrentIndex(3);
-	updateSubTypeMenu(3);
+	//updateSubTypeMenu(3);
+	*/
 }
 
-void addFish(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame)
+void addFish(FishTypeEnum fType)
+{
+	myPlayer->Stop();
+	double currentFrame = myPlayer->getCurrentFrame();
+	tempFish = new Fish(fType,currentFrame);
+	myFishList.push_back(*tempFish);
+
+	ui->typeMenu->setCurrentIndex((int) fType);
+	//updateSubTypeMenu(3);
+}
+
+void addFishSerialize(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame)
 {
 	newFish->set_fType(newFType);
 	newFish->set_fFrame(frame);
