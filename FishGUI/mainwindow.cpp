@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 		typeList.append("Other");
 		ui->typeMenu->addItems(typeList);
 		QObject::connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)),
-			ui->subTypeMenu, SLOT(setCurrentIndex(int));
+			this, SLOT(updateSubTypeMenu(int)));
 		ui->typeMenu->setCurrentIndex(3);
 	}
 
@@ -47,7 +47,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex)
 {
 	QStringList sTypeList;
 	ui->subTypeMenu->clear();
-	if typeIndex == 0 {
+	if (typeIndex == 0) {
 		sTypeList.append("Round");
 		sTypeList.append("Haddock");
 		sTypeList.append("Cod");
@@ -57,7 +57,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex)
 		sTypeList.append("Herring");
 		sTypeList.append("Unknown");
 	}
-	else if typeIndex == 1 {
+	else if (typeIndex == 1) {
 		sTypeList.append("Flat");
 		sTypeList.append("Yellowtail");
 		sTypeList.append("Windowpane");
@@ -68,19 +68,19 @@ void MainWindow::updateSubTypeMenu(int typeIndex)
 		sTypeList.append("Halibut");
 		sTypeList.append("Unknown");
 	}
-	else if typeIndex == 2 {
+	else if (typeIndex == 2) {
 		sTypeList.append("Skate");
 		sTypeList.append("Barndoor");
 		sTypeList.append("Unknown");
 	}
-	else if typeIndex == 3 {
+	else if (typeIndex == 3) {
 		sTypeList.append("Other");
 		sTypeList.append("Dogfish");
-		sTypelist.append("Monkfish");
-		sTypelist.append("Lobster");
-		sTypelist.append("Scallop");
+		sTypeList.append("Monkfish");
+		sTypeList.append("Lobster");
+		sTypeList.append("Scallop");
 	}
-
+	ui->subTypeMenu->addItems(sTypeList);
 	ui->subTypeMenu->setCurrentIndex(0);
 }
 
@@ -271,9 +271,10 @@ void MainWindow::on_addOther_clicked()
 	*/
 }
 
-void addFish(FishTypeEnum fType)
+void MainWindow::addFish(FishTypeEnum fType)
 {
 	myPlayer->Stop();
+	ui->Play->setText(tr("Play"));
 	double currentFrame = myPlayer->getCurrentFrame();
 	tempFish = new Fish(fType,currentFrame);
 	myFishList.push_back(*tempFish);
@@ -282,16 +283,16 @@ void addFish(FishTypeEnum fType)
 	//updateSubTypeMenu(3);
 }
 
-void addFishSerialize(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum newFType, int frame)
+void MainWindow::addFishSerialize(fishSerialize::FishEntry* newFish, fishSerialize::FishEntry::fTypeEnum newFType, int frame)
 {
-	newFish->set_fType(newFType);
-	newFish->set_fFrame(frame);
+	newFish->set_ftype(newFType);
+	newFish->set_fframe(frame);
 }
 
-void setTowType(bool towOpenStatus)
+void MainWindow::setTowType(bool towOpenStatus)
 {
 	//towOpenStatus = true corresponds to tow open
-	fList->set_towOpen(towOpenStatus);
+	fList->set_towopen(towOpenStatus);
 }
 
 int main(int argc, char *argv[])

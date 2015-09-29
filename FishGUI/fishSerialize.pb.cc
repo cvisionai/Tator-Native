@@ -20,10 +20,10 @@ namespace fishSerialize {
 
 namespace {
 
-const ::google::protobuf::Descriptor* Fish_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* FishEntry_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Fish_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* Fish_fTypeEnum_descriptor_ = NULL;
+  FishEntry_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* FishEntry_fTypeEnum_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* FishList_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   FishList_reflection_ = NULL;
@@ -37,26 +37,26 @@ void protobuf_AssignDesc_fishSerialize_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "fishSerialize.proto");
   GOOGLE_CHECK(file != NULL);
-  Fish_descriptor_ = file->message_type(0);
-  static const int Fish_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, ftype_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, fspecies_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, fframe_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, xloc_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, yloc_),
+  FishEntry_descriptor_ = file->message_type(0);
+  static const int FishEntry_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, ftype_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, fspecies_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, fframe_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, xloc_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, yloc_),
   };
-  Fish_reflection_ =
+  FishEntry_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Fish_descriptor_,
-      Fish::default_instance_,
-      Fish_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fish, _unknown_fields_),
+      FishEntry_descriptor_,
+      FishEntry::default_instance_,
+      FishEntry_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishEntry, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Fish));
-  Fish_fTypeEnum_descriptor_ = Fish_descriptor_->enum_type(0);
+      sizeof(FishEntry));
+  FishEntry_fTypeEnum_descriptor_ = FishEntry_descriptor_->enum_type(0);
   FishList_descriptor_ = file->message_type(1);
   static const int FishList_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FishList, towopen_),
@@ -86,7 +86,7 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Fish_descriptor_, &Fish::default_instance());
+    FishEntry_descriptor_, &FishEntry::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FishList_descriptor_, &FishList::default_instance());
 }
@@ -94,8 +94,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 }  // namespace
 
 void protobuf_ShutdownFile_fishSerialize_2eproto() {
-  delete Fish::default_instance_;
-  delete Fish_reflection_;
+  delete FishEntry::default_instance_;
+  delete FishEntry_reflection_;
   delete FishList::default_instance_;
   delete FishList_reflection_;
 }
@@ -107,18 +107,19 @@ void protobuf_AddDesc_fishSerialize_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\023fishSerialize.proto\022\rfishSerialize\"\237\001\n"
-    "\004Fish\022,\n\005fType\030\001 \002(\0162\035.fishSerialize.Fis"
-    "h.fTypeEnum\022\020\n\010fSpecies\030\002 \001(\t\022\016\n\006fFrame\030"
-    "\003 \002(\005\022\014\n\004xLoc\030\004 \001(\002\022\014\n\004yLoc\030\005 \001(\002\"+\n\tfTy"
-    "peEnum\022\t\n\005ROUND\020\000\022\010\n\004FLAT\020\001\022\t\n\005SKATE\020\002\"D"
-    "\n\010FishList\022\025\n\007towOpen\030\001 \001(\010:\004true\022!\n\004fis"
-    "h\030\002 \003(\0132\023.fishSerialize.Fish", 268);
+    "\n\023fishSerialize.proto\022\rfishSerialize\"\251\001\n"
+    "\tFishEntry\0221\n\005fType\030\001 \002(\0162\".fishSerializ"
+    "e.FishEntry.fTypeEnum\022\020\n\010fSpecies\030\002 \001(\t\022"
+    "\016\n\006fFrame\030\003 \002(\005\022\014\n\004xLoc\030\004 \001(\002\022\014\n\004yLoc\030\005 "
+    "\001(\002\"+\n\tfTypeEnum\022\t\n\005ROUND\020\000\022\010\n\004FLAT\020\001\022\t\n"
+    "\005SKATE\020\002\"I\n\010FishList\022\025\n\007towOpen\030\001 \001(\010:\004t"
+    "rue\022&\n\004fish\030\002 \003(\0132\030.fishSerialize.FishEn"
+    "try", 283);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "fishSerialize.proto", &protobuf_RegisterTypes);
-  Fish::default_instance_ = new Fish();
+  FishEntry::default_instance_ = new FishEntry();
   FishList::default_instance_ = new FishList();
-  Fish::default_instance_->InitAsDefaultInstance();
+  FishEntry::default_instance_->InitAsDefaultInstance();
   FishList::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_fishSerialize_2eproto);
 }
@@ -132,11 +133,11 @@ struct StaticDescriptorInitializer_fishSerialize_2eproto {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* Fish_fTypeEnum_descriptor() {
+const ::google::protobuf::EnumDescriptor* FishEntry_fTypeEnum_descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Fish_fTypeEnum_descriptor_;
+  return FishEntry_fTypeEnum_descriptor_;
 }
-bool Fish_fTypeEnum_IsValid(int value) {
+bool FishEntry_fTypeEnum_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
@@ -148,38 +149,38 @@ bool Fish_fTypeEnum_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const Fish_fTypeEnum Fish::ROUND;
-const Fish_fTypeEnum Fish::FLAT;
-const Fish_fTypeEnum Fish::SKATE;
-const Fish_fTypeEnum Fish::fTypeEnum_MIN;
-const Fish_fTypeEnum Fish::fTypeEnum_MAX;
-const int Fish::fTypeEnum_ARRAYSIZE;
+const FishEntry_fTypeEnum FishEntry::ROUND;
+const FishEntry_fTypeEnum FishEntry::FLAT;
+const FishEntry_fTypeEnum FishEntry::SKATE;
+const FishEntry_fTypeEnum FishEntry::fTypeEnum_MIN;
+const FishEntry_fTypeEnum FishEntry::fTypeEnum_MAX;
+const int FishEntry::fTypeEnum_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
-const int Fish::kFTypeFieldNumber;
-const int Fish::kFSpeciesFieldNumber;
-const int Fish::kFFrameFieldNumber;
-const int Fish::kXLocFieldNumber;
-const int Fish::kYLocFieldNumber;
+const int FishEntry::kFTypeFieldNumber;
+const int FishEntry::kFSpeciesFieldNumber;
+const int FishEntry::kFFrameFieldNumber;
+const int FishEntry::kXLocFieldNumber;
+const int FishEntry::kYLocFieldNumber;
 #endif  // !_MSC_VER
 
-Fish::Fish()
+FishEntry::FishEntry()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fishSerialize.Fish)
+  // @@protoc_insertion_point(constructor:fishSerialize.FishEntry)
 }
 
-void Fish::InitAsDefaultInstance() {
+void FishEntry::InitAsDefaultInstance() {
 }
 
-Fish::Fish(const Fish& from)
+FishEntry::FishEntry(const FishEntry& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fishSerialize.Fish)
+  // @@protoc_insertion_point(copy_constructor:fishSerialize.FishEntry)
 }
 
-void Fish::SharedCtor() {
+void FishEntry::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   ftype_ = 0;
@@ -190,12 +191,12 @@ void Fish::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Fish::~Fish() {
-  // @@protoc_insertion_point(destructor:fishSerialize.Fish)
+FishEntry::~FishEntry() {
+  // @@protoc_insertion_point(destructor:fishSerialize.FishEntry)
   SharedDtor();
 }
 
-void Fish::SharedDtor() {
+void FishEntry::SharedDtor() {
   if (fspecies_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete fspecies_;
   }
@@ -203,30 +204,30 @@ void Fish::SharedDtor() {
   }
 }
 
-void Fish::SetCachedSize(int size) const {
+void FishEntry::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Fish::descriptor() {
+const ::google::protobuf::Descriptor* FishEntry::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Fish_descriptor_;
+  return FishEntry_descriptor_;
 }
 
-const Fish& Fish::default_instance() {
+const FishEntry& FishEntry::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_fishSerialize_2eproto();
   return *default_instance_;
 }
 
-Fish* Fish::default_instance_ = NULL;
+FishEntry* FishEntry::default_instance_ = NULL;
 
-Fish* Fish::New() const {
-  return new Fish;
+FishEntry* FishEntry::New() const {
+  return new FishEntry;
 }
 
-void Fish::Clear() {
+void FishEntry::Clear() {
 #define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<Fish*>(16)->f) - \
+  &reinterpret_cast<FishEntry*>(16)->f) - \
    reinterpret_cast<char*>(16))
 
 #define ZR_(first, last) do {                              \
@@ -251,25 +252,25 @@ void Fish::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool Fish::MergePartialFromCodedStream(
+bool FishEntry::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fishSerialize.Fish)
+  // @@protoc_insertion_point(parse_start:fishSerialize.FishEntry)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .fishSerialize.Fish.fTypeEnum fType = 1;
+      // required .fishSerialize.FishEntry.fTypeEnum fType = 1;
       case 1: {
         if (tag == 8) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::fishSerialize::Fish_fTypeEnum_IsValid(value)) {
-            set_ftype(static_cast< ::fishSerialize::Fish_fTypeEnum >(value));
+          if (::fishSerialize::FishEntry_fTypeEnum_IsValid(value)) {
+            set_ftype(static_cast< ::fishSerialize::FishEntry_fTypeEnum >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -356,18 +357,18 @@ bool Fish::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:fishSerialize.Fish)
+  // @@protoc_insertion_point(parse_success:fishSerialize.FishEntry)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:fishSerialize.Fish)
+  // @@protoc_insertion_point(parse_failure:fishSerialize.FishEntry)
   return false;
 #undef DO_
 }
 
-void Fish::SerializeWithCachedSizes(
+void FishEntry::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fishSerialize.Fish)
-  // required .fishSerialize.Fish.fTypeEnum fType = 1;
+  // @@protoc_insertion_point(serialize_start:fishSerialize.FishEntry)
+  // required .fishSerialize.FishEntry.fTypeEnum fType = 1;
   if (has_ftype()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->ftype(), output);
@@ -402,13 +403,13 @@ void Fish::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fishSerialize.Fish)
+  // @@protoc_insertion_point(serialize_end:fishSerialize.FishEntry)
 }
 
-::google::protobuf::uint8* Fish::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* FishEntry::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fishSerialize.Fish)
-  // required .fishSerialize.Fish.fTypeEnum fType = 1;
+  // @@protoc_insertion_point(serialize_to_array_start:fishSerialize.FishEntry)
+  // required .fishSerialize.FishEntry.fTypeEnum fType = 1;
   if (has_ftype()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->ftype(), target);
@@ -444,15 +445,15 @@ void Fish::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fishSerialize.Fish)
+  // @@protoc_insertion_point(serialize_to_array_end:fishSerialize.FishEntry)
   return target;
 }
 
-int Fish::ByteSize() const {
+int FishEntry::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .fishSerialize.Fish.fTypeEnum fType = 1;
+    // required .fishSerialize.FishEntry.fTypeEnum fType = 1;
     if (has_ftype()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->ftype());
@@ -494,10 +495,10 @@ int Fish::ByteSize() const {
   return total_size;
 }
 
-void Fish::MergeFrom(const ::google::protobuf::Message& from) {
+void FishEntry::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Fish* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Fish*>(
+  const FishEntry* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const FishEntry*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -506,7 +507,7 @@ void Fish::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Fish::MergeFrom(const Fish& from) {
+void FishEntry::MergeFrom(const FishEntry& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_ftype()) {
@@ -528,25 +529,25 @@ void Fish::MergeFrom(const Fish& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Fish::CopyFrom(const ::google::protobuf::Message& from) {
+void FishEntry::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Fish::CopyFrom(const Fish& from) {
+void FishEntry::CopyFrom(const FishEntry& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Fish::IsInitialized() const {
+bool FishEntry::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000005) != 0x00000005) return false;
 
   return true;
 }
 
-void Fish::Swap(Fish* other) {
+void FishEntry::Swap(FishEntry* other) {
   if (other != this) {
     std::swap(ftype_, other->ftype_);
     std::swap(fspecies_, other->fspecies_);
@@ -559,11 +560,11 @@ void Fish::Swap(Fish* other) {
   }
 }
 
-::google::protobuf::Metadata Fish::GetMetadata() const {
+::google::protobuf::Metadata FishEntry::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Fish_descriptor_;
-  metadata.reflection = Fish_reflection_;
+  metadata.descriptor = FishEntry_descriptor_;
+  metadata.reflection = FishEntry_reflection_;
   return metadata;
 }
 
@@ -659,7 +660,7 @@ bool FishList::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .fishSerialize.Fish fish = 2;
+      // repeated .fishSerialize.FishEntry fish = 2;
       case 2: {
         if (tag == 18) {
          parse_fish:
@@ -703,7 +704,7 @@ void FishList::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->towopen(), output);
   }
 
-  // repeated .fishSerialize.Fish fish = 2;
+  // repeated .fishSerialize.FishEntry fish = 2;
   for (int i = 0; i < this->fish_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->fish(i), output);
@@ -724,7 +725,7 @@ void FishList::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->towopen(), target);
   }
 
-  // repeated .fishSerialize.Fish fish = 2;
+  // repeated .fishSerialize.FishEntry fish = 2;
   for (int i = 0; i < this->fish_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -749,7 +750,7 @@ int FishList::ByteSize() const {
     }
 
   }
-  // repeated .fishSerialize.Fish fish = 2;
+  // repeated .fishSerialize.FishEntry fish = 2;
   total_size += 1 * this->fish_size();
   for (int i = 0; i < this->fish_size(); i++) {
     total_size +=

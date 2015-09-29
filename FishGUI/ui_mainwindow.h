@@ -44,13 +44,15 @@ public:
     QLabel *label_3;
     QLabel *label_4;
     QLabel *typeLabel;
-    QPushButton *goToFrame;
     QPushButton *nextFish;
     QPushButton *updateFishFrame;
+    QPushButton *prevFish;
+    QPushButton *goToFrame;
     QVBoxLayout *verticalLayout_3;
     QPushButton *addRound;
     QPushButton *addFlat;
     QPushButton *addSkate;
+    QPushButton *addOther;
     QSpacerItem *horizontalSpacer_5;
     QSpacerItem *verticalSpacer_8;
     QVBoxLayout *VideoLayout;
@@ -95,7 +97,7 @@ public:
     {
         if (MainWidget->objectName().isEmpty())
             MainWidget->setObjectName(QString::fromUtf8("MainWidget"));
-        MainWidget->resize(963, 654);
+        MainWidget->resize(901, 685);
         MainWidget->setAutoFillBackground(true);
         verticalLayout = new QVBoxLayout(MainWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -103,6 +105,7 @@ public:
         horizontalLayout_6->setSpacing(0);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
         verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setSpacing(0);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         verticalSpacer_7 = new QSpacerItem(20, 50, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -113,6 +116,8 @@ public:
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
         formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
         formLayout->setLabelAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        formLayout->setHorizontalSpacing(0);
+        formLayout->setVerticalSpacing(5);
         typeMenu = new QComboBox(MainWidget);
         typeMenu->setObjectName(QString::fromUtf8("typeMenu"));
         typeMenu->setFocusPolicy(Qt::NoFocus);
@@ -163,31 +168,50 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, typeLabel);
 
-        goToFrame = new QPushButton(MainWidget);
-        goToFrame->setObjectName(QString::fromUtf8("goToFrame"));
-        goToFrame->setFocusPolicy(Qt::NoFocus);
-
-        formLayout->setWidget(4, QFormLayout::LabelRole, goToFrame);
-
         nextFish = new QPushButton(MainWidget);
         nextFish->setObjectName(QString::fromUtf8("nextFish"));
+        nextFish->setMinimumSize(QSize(100, 0));
         nextFish->setFocusPolicy(Qt::NoFocus);
 
         formLayout->setWidget(4, QFormLayout::FieldRole, nextFish);
 
         updateFishFrame = new QPushButton(MainWidget);
         updateFishFrame->setObjectName(QString::fromUtf8("updateFishFrame"));
+        updateFishFrame->setMinimumSize(QSize(100, 0));
         QFont font1;
         font1.setPointSize(9);
+        font1.setBold(false);
+        font1.setWeight(50);
         updateFishFrame->setFont(font1);
         updateFishFrame->setFocusPolicy(Qt::NoFocus);
 
         formLayout->setWidget(5, QFormLayout::LabelRole, updateFishFrame);
 
+        prevFish = new QPushButton(MainWidget);
+        prevFish->setObjectName(QString::fromUtf8("prevFish"));
+        prevFish->setMinimumSize(QSize(100, 0));
+        prevFish->setFocusPolicy(Qt::NoFocus);
+
+        formLayout->setWidget(4, QFormLayout::LabelRole, prevFish);
+
+        goToFrame = new QPushButton(MainWidget);
+        goToFrame->setObjectName(QString::fromUtf8("goToFrame"));
+        goToFrame->setMinimumSize(QSize(100, 0));
+        QFont font2;
+        font2.setPointSize(10);
+        font2.setBold(false);
+        font2.setWeight(50);
+        goToFrame->setFont(font2);
+        goToFrame->setCursor(QCursor(Qt::ArrowCursor));
+        goToFrame->setFocusPolicy(Qt::NoFocus);
+
+        formLayout->setWidget(5, QFormLayout::FieldRole, goToFrame);
+
 
         verticalLayout_4->addLayout(formLayout);
 
         verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(0);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(5, 0, 5, -1);
         addRound = new QPushButton(MainWidget);
@@ -198,13 +222,13 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(addRound->sizePolicy().hasHeightForWidth());
         addRound->setSizePolicy(sizePolicy);
-        addRound->setMinimumSize(QSize(0, 50));
+        addRound->setMinimumSize(QSize(0, 25));
         addRound->setBaseSize(QSize(0, 0));
-        QFont font2;
-        font2.setPointSize(13);
-        font2.setBold(true);
-        font2.setWeight(75);
-        addRound->setFont(font2);
+        QFont font3;
+        font3.setPointSize(13);
+        font3.setBold(true);
+        font3.setWeight(75);
+        addRound->setFont(font3);
         addRound->setFocusPolicy(Qt::NoFocus);
         addRound->setAutoFillBackground(false);
         addRound->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
@@ -216,8 +240,8 @@ public:
         addFlat->setObjectName(QString::fromUtf8("addFlat"));
         sizePolicy.setHeightForWidth(addFlat->sizePolicy().hasHeightForWidth());
         addFlat->setSizePolicy(sizePolicy);
-        addFlat->setMinimumSize(QSize(0, 50));
-        addFlat->setFont(font2);
+        addFlat->setMinimumSize(QSize(0, 25));
+        addFlat->setFont(font3);
         addFlat->setFocusPolicy(Qt::NoFocus);
         addFlat->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
@@ -227,12 +251,20 @@ public:
         addSkate->setObjectName(QString::fromUtf8("addSkate"));
         sizePolicy.setHeightForWidth(addSkate->sizePolicy().hasHeightForWidth());
         addSkate->setSizePolicy(sizePolicy);
-        addSkate->setMinimumSize(QSize(0, 50));
-        addSkate->setFont(font2);
+        addSkate->setMinimumSize(QSize(0, 25));
+        addSkate->setFont(font3);
         addSkate->setFocusPolicy(Qt::NoFocus);
         addSkate->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
         verticalLayout_3->addWidget(addSkate);
+
+        addOther = new QPushButton(MainWidget);
+        addOther->setObjectName(QString::fromUtf8("addOther"));
+        addOther->setMinimumSize(QSize(0, 25));
+        addOther->setFont(font3);
+        addOther->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
+
+        verticalLayout_3->addWidget(addOther);
 
 
         verticalLayout_4->addLayout(verticalLayout_3);
@@ -245,7 +277,6 @@ public:
 
         verticalLayout_4->addItem(verticalSpacer_8);
 
-        verticalLayout_4->setStretch(0, 1);
 
         horizontalLayout_6->addLayout(verticalLayout_4);
 
@@ -485,12 +516,14 @@ public:
         label_3->setText(QApplication::translate("MainWidget", "UID        ", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWidget", "UID", 0, QApplication::UnicodeUTF8));
         typeLabel->setText(QApplication::translate("MainWidget", "Type       ", 0, QApplication::UnicodeUTF8));
-        goToFrame->setText(QApplication::translate("MainWidget", "Go To Frame", 0, QApplication::UnicodeUTF8));
         nextFish->setText(QApplication::translate("MainWidget", "Next Fish", 0, QApplication::UnicodeUTF8));
         updateFishFrame->setText(QApplication::translate("MainWidget", "Update Frame", 0, QApplication::UnicodeUTF8));
+        prevFish->setText(QApplication::translate("MainWidget", "Prev Fish", 0, QApplication::UnicodeUTF8));
+        goToFrame->setText(QApplication::translate("MainWidget", "Go To Frame", 0, QApplication::UnicodeUTF8));
         addRound->setText(QApplication::translate("MainWidget", "Round", 0, QApplication::UnicodeUTF8));
         addFlat->setText(QApplication::translate("MainWidget", "Flat", 0, QApplication::UnicodeUTF8));
         addSkate->setText(QApplication::translate("MainWidget", "Skate", 0, QApplication::UnicodeUTF8));
+        addOther->setText(QApplication::translate("MainWidget", "Other", 0, QApplication::UnicodeUTF8));
         videoTitle->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
         currentTime->setText(QString());
         totalTime->setText(QString());

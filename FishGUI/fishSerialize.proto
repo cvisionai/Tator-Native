@@ -1,6 +1,6 @@
 package fishSerialize;
 
-message Fish {
+message FishEntry {
 
 	enum fTypeEnum {
 	  ROUND = 0;
@@ -17,5 +17,5 @@ message Fish {
 
 message FishList {
 	optional bool towOpen = 1 [default = true];
-	repeated Fish fish = 2;
+	repeated FishEntry fish = 2;
 }

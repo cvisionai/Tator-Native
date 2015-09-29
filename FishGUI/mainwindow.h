@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QWidget>
+#include <QStringList>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTime>
@@ -42,10 +43,10 @@ class MainWindow : public QWidget
 	void on_addFlat_clicked();
 	void on_addSkate_clicked();
 	void on_addOther_clicked();
-	void on_nextFish_clicked();
-	void on_goToFrame_clicked();
-	void on_typeMenu_currentIndexChanged(int tIdx);
-	void on_subTypeMenu_currentIndexChanged(int sIdx);
+//	void on_nextFish_clicked();
+//	void on_goToFrame_clicked();
+//	void on_typeMenu_currentIndexChanged(int tIdx);
+//	void on_subTypeMenu_currentIndexChanged(int sIdx);
  private:
  	Ui::MainWidget *ui;
  	Player* myPlayer;
@@ -57,7 +58,7 @@ class MainWindow : public QWidget
 	QGraphicsScene *scene;
 
 	void addFish(FishTypeEnum fType);
-	void addFishSerialize(fishSerialize::Fish* newFish, fishSerialize::fTypeEnum 
+	void addFishSerialize(fishSerialize::FishEntry* newFish, fishSerialize::FishEntry::fTypeEnum 
 		newFType, int frame);
 	void setTowType(bool towOpenStatus);
 };
