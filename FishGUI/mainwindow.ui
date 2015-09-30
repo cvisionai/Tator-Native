@@ -54,7 +54,16 @@
          <property name="verticalSpacing">
           <number>5</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
           <number>5</number>
          </property>
          <item row="0" column="1">
@@ -165,7 +174,7 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>9</pointsize>
+             <pointsize>13</pointsize>
              <weight>50</weight>
              <bold>false</bold>
             </font>
@@ -174,7 +183,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>Update Frame</string>
+            <string>Set Frame</string>
            </property>
           </widget>
          </item>
@@ -190,7 +199,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>Prev Fish</string>
+            <string>  Prev Fish  </string>
            </property>
           </widget>
          </item>
@@ -204,7 +213,7 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>10</pointsize>
+             <pointsize>13</pointsize>
              <weight>50</weight>
              <bold>false</bold>
             </font>
@@ -461,7 +470,16 @@
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
