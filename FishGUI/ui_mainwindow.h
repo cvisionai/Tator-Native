@@ -13,6 +13,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QDockWidget>
 #include <QtGui/QFormLayout>
@@ -20,6 +21,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QSlider>
 #include <QtGui/QSpacerItem>
@@ -35,19 +37,29 @@ public:
     QHBoxLayout *horizontalLayout_6;
     QVBoxLayout *verticalLayout_4;
     QSpacerItem *verticalSpacer_7;
+    QVBoxLayout *verticalLayout_5;
+    QLabel *fileNameLabel;
+    QLineEdit *fileNameValue;
+    QHBoxLayout *horizontalLayout;
+    QCheckBox *towStatus;
+    QSpacerItem *horizontalSpacer_4;
     QFormLayout *formLayout;
+    QLabel *typeLabel;
     QComboBox *typeMenu;
     QLabel *subTypeLabel;
     QComboBox *subTypeMenu;
-    QLabel *label_2;
-    QLabel *label;
-    QLabel *label_3;
-    QLabel *label_4;
-    QLabel *typeLabel;
+    QLabel *fishNumLabel;
+    QLabel *fishNumVal;
+    QLabel *totalFishLabel;
+    QLabel *totalFishVal;
+    QPushButton *prevFish;
     QPushButton *nextFish;
     QPushButton *updateFishFrame;
-    QPushButton *prevFish;
     QPushButton *goToFrame;
+    QLabel *frameCountedLabel;
+    QLabel *frameCountedVal;
+    QLabel *goToFishLabel;
+    QLineEdit *goToFishVal;
     QVBoxLayout *verticalLayout_3;
     QPushButton *addRound;
     QPushButton *addFlat;
@@ -82,7 +94,7 @@ public:
     QHBoxLayout *loadVideoLayout;
     QSpacerItem *horizontalSpacer_7;
     QPushButton *LoadVideo;
-    QPushButton *pushButton_3;
+    QPushButton *loadAnnotate;
     QSpacerItem *horizontalSpacer_6;
     QSpacerItem *verticalSpacer_11;
     QVBoxLayout *countingControlsLayout;
@@ -111,13 +123,60 @@ public:
 
         verticalLayout_4->addItem(verticalSpacer_7);
 
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        verticalLayout_5->setContentsMargins(5, 0, 5, 5);
+        fileNameLabel = new QLabel(MainWidget);
+        fileNameLabel->setObjectName(QString::fromUtf8("fileNameLabel"));
+
+        verticalLayout_5->addWidget(fileNameLabel);
+
+        fileNameValue = new QLineEdit(MainWidget);
+        fileNameValue->setObjectName(QString::fromUtf8("fileNameValue"));
+        fileNameValue->setFocusPolicy(Qt::ClickFocus);
+
+        verticalLayout_5->addWidget(fileNameValue);
+
+
+        verticalLayout_4->addLayout(verticalLayout_5);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(19);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setContentsMargins(1, 5, 5, -1);
+        towStatus = new QCheckBox(MainWidget);
+        towStatus->setObjectName(QString::fromUtf8("towStatus"));
+        towStatus->setLayoutDirection(Qt::RightToLeft);
+        towStatus->setChecked(true);
+
+        horizontalLayout->addWidget(towStatus);
+
+        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer_4);
+
+        horizontalLayout->setStretch(0, 2);
+        horizontalLayout->setStretch(1, 3);
+
+        verticalLayout_4->addLayout(horizontalLayout);
+
         formLayout = new QFormLayout();
-        formLayout->setContentsMargins(5, 5, 5, 5);
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
         formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
         formLayout->setLabelAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         formLayout->setHorizontalSpacing(0);
         formLayout->setVerticalSpacing(5);
+        formLayout->setContentsMargins(5, 5, 5, 5);
+        typeLabel = new QLabel(MainWidget);
+        typeLabel->setObjectName(QString::fromUtf8("typeLabel"));
+        QFont font;
+        font.setPointSize(12);
+        typeLabel->setFont(font);
+        typeLabel->setLayoutDirection(Qt::LeftToRight);
+        typeLabel->setAutoFillBackground(false);
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, typeLabel);
+
         typeMenu = new QComboBox(MainWidget);
         typeMenu->setObjectName(QString::fromUtf8("typeMenu"));
         typeMenu->setFocusPolicy(Qt::NoFocus);
@@ -126,8 +185,6 @@ public:
 
         subTypeLabel = new QLabel(MainWidget);
         subTypeLabel->setObjectName(QString::fromUtf8("subTypeLabel"));
-        QFont font;
-        font.setPointSize(12);
         subTypeLabel->setFont(font);
 
         formLayout->setWidget(1, QFormLayout::LabelRole, subTypeLabel);
@@ -138,80 +195,90 @@ public:
 
         formLayout->setWidget(1, QFormLayout::FieldRole, subTypeMenu);
 
-        label_2 = new QLabel(MainWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setFont(font);
+        fishNumLabel = new QLabel(MainWidget);
+        fishNumLabel->setObjectName(QString::fromUtf8("fishNumLabel"));
+        fishNumLabel->setFont(font);
 
-        formLayout->setWidget(2, QFormLayout::LabelRole, label_2);
+        formLayout->setWidget(2, QFormLayout::LabelRole, fishNumLabel);
 
-        label = new QLabel(MainWidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        fishNumVal = new QLabel(MainWidget);
+        fishNumVal->setObjectName(QString::fromUtf8("fishNumVal"));
 
-        formLayout->setWidget(2, QFormLayout::FieldRole, label);
+        formLayout->setWidget(2, QFormLayout::FieldRole, fishNumVal);
 
-        label_3 = new QLabel(MainWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setFont(font);
+        totalFishLabel = new QLabel(MainWidget);
+        totalFishLabel->setObjectName(QString::fromUtf8("totalFishLabel"));
+        totalFishLabel->setFont(font);
 
-        formLayout->setWidget(3, QFormLayout::LabelRole, label_3);
+        formLayout->setWidget(3, QFormLayout::LabelRole, totalFishLabel);
 
-        label_4 = new QLabel(MainWidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
+        totalFishVal = new QLabel(MainWidget);
+        totalFishVal->setObjectName(QString::fromUtf8("totalFishVal"));
 
-        formLayout->setWidget(3, QFormLayout::FieldRole, label_4);
+        formLayout->setWidget(3, QFormLayout::FieldRole, totalFishVal);
 
-        typeLabel = new QLabel(MainWidget);
-        typeLabel->setObjectName(QString::fromUtf8("typeLabel"));
-        typeLabel->setFont(font);
-        typeLabel->setLayoutDirection(Qt::LeftToRight);
-        typeLabel->setAutoFillBackground(false);
+        prevFish = new QPushButton(MainWidget);
+        prevFish->setObjectName(QString::fromUtf8("prevFish"));
+        prevFish->setMinimumSize(QSize(110, 0));
+        prevFish->setFocusPolicy(Qt::NoFocus);
 
-        formLayout->setWidget(0, QFormLayout::LabelRole, typeLabel);
+        formLayout->setWidget(5, QFormLayout::LabelRole, prevFish);
 
         nextFish = new QPushButton(MainWidget);
         nextFish->setObjectName(QString::fromUtf8("nextFish"));
-        nextFish->setMinimumSize(QSize(100, 0));
+        nextFish->setMinimumSize(QSize(110, 0));
         nextFish->setFocusPolicy(Qt::NoFocus);
 
-        formLayout->setWidget(4, QFormLayout::FieldRole, nextFish);
+        formLayout->setWidget(5, QFormLayout::FieldRole, nextFish);
 
         updateFishFrame = new QPushButton(MainWidget);
         updateFishFrame->setObjectName(QString::fromUtf8("updateFishFrame"));
-        updateFishFrame->setMinimumSize(QSize(100, 0));
+        updateFishFrame->setMinimumSize(QSize(110, 0));
         QFont font1;
-        font1.setPointSize(9);
+        font1.setPointSize(13);
         font1.setBold(false);
         font1.setWeight(50);
         updateFishFrame->setFont(font1);
         updateFishFrame->setFocusPolicy(Qt::NoFocus);
 
-        formLayout->setWidget(5, QFormLayout::LabelRole, updateFishFrame);
-
-        prevFish = new QPushButton(MainWidget);
-        prevFish->setObjectName(QString::fromUtf8("prevFish"));
-        prevFish->setMinimumSize(QSize(100, 0));
-        prevFish->setFocusPolicy(Qt::NoFocus);
-
-        formLayout->setWidget(4, QFormLayout::LabelRole, prevFish);
+        formLayout->setWidget(6, QFormLayout::LabelRole, updateFishFrame);
 
         goToFrame = new QPushButton(MainWidget);
         goToFrame->setObjectName(QString::fromUtf8("goToFrame"));
-        goToFrame->setMinimumSize(QSize(100, 0));
-        QFont font2;
-        font2.setPointSize(10);
-        font2.setBold(false);
-        font2.setWeight(50);
-        goToFrame->setFont(font2);
+        goToFrame->setMinimumSize(QSize(110, 0));
+        goToFrame->setFont(font1);
         goToFrame->setCursor(QCursor(Qt::ArrowCursor));
         goToFrame->setFocusPolicy(Qt::NoFocus);
 
-        formLayout->setWidget(5, QFormLayout::FieldRole, goToFrame);
+        formLayout->setWidget(6, QFormLayout::FieldRole, goToFrame);
+
+        frameCountedLabel = new QLabel(MainWidget);
+        frameCountedLabel->setObjectName(QString::fromUtf8("frameCountedLabel"));
+        frameCountedLabel->setFont(font);
+
+        formLayout->setWidget(4, QFormLayout::LabelRole, frameCountedLabel);
+
+        frameCountedVal = new QLabel(MainWidget);
+        frameCountedVal->setObjectName(QString::fromUtf8("frameCountedVal"));
+
+        formLayout->setWidget(4, QFormLayout::FieldRole, frameCountedVal);
+
+        goToFishLabel = new QLabel(MainWidget);
+        goToFishLabel->setObjectName(QString::fromUtf8("goToFishLabel"));
+
+        formLayout->setWidget(7, QFormLayout::LabelRole, goToFishLabel);
+
+        goToFishVal = new QLineEdit(MainWidget);
+        goToFishVal->setObjectName(QString::fromUtf8("goToFishVal"));
+        goToFishVal->setFocusPolicy(Qt::ClickFocus);
+
+        formLayout->setWidget(7, QFormLayout::FieldRole, goToFishVal);
 
 
         verticalLayout_4->addLayout(formLayout);
 
         verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(0);
+        verticalLayout_3->setSpacing(10);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(5, 0, 5, -1);
         addRound = new QPushButton(MainWidget);
@@ -222,13 +289,13 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(addRound->sizePolicy().hasHeightForWidth());
         addRound->setSizePolicy(sizePolicy);
-        addRound->setMinimumSize(QSize(0, 25));
+        addRound->setMinimumSize(QSize(0, 1));
         addRound->setBaseSize(QSize(0, 0));
-        QFont font3;
-        font3.setPointSize(13);
-        font3.setBold(true);
-        font3.setWeight(75);
-        addRound->setFont(font3);
+        QFont font2;
+        font2.setPointSize(13);
+        font2.setBold(true);
+        font2.setWeight(75);
+        addRound->setFont(font2);
         addRound->setFocusPolicy(Qt::NoFocus);
         addRound->setAutoFillBackground(false);
         addRound->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
@@ -240,8 +307,8 @@ public:
         addFlat->setObjectName(QString::fromUtf8("addFlat"));
         sizePolicy.setHeightForWidth(addFlat->sizePolicy().hasHeightForWidth());
         addFlat->setSizePolicy(sizePolicy);
-        addFlat->setMinimumSize(QSize(0, 25));
-        addFlat->setFont(font3);
+        addFlat->setMinimumSize(QSize(0, 1));
+        addFlat->setFont(font2);
         addFlat->setFocusPolicy(Qt::NoFocus);
         addFlat->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
@@ -251,8 +318,8 @@ public:
         addSkate->setObjectName(QString::fromUtf8("addSkate"));
         sizePolicy.setHeightForWidth(addSkate->sizePolicy().hasHeightForWidth());
         addSkate->setSizePolicy(sizePolicy);
-        addSkate->setMinimumSize(QSize(0, 25));
-        addSkate->setFont(font3);
+        addSkate->setMinimumSize(QSize(0, 1));
+        addSkate->setFont(font2);
         addSkate->setFocusPolicy(Qt::NoFocus);
         addSkate->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
@@ -260,8 +327,10 @@ public:
 
         addOther = new QPushButton(MainWidget);
         addOther->setObjectName(QString::fromUtf8("addOther"));
-        addOther->setMinimumSize(QSize(0, 25));
-        addOther->setFont(font3);
+        sizePolicy.setHeightForWidth(addOther->sizePolicy().hasHeightForWidth());
+        addOther->setSizePolicy(sizePolicy);
+        addOther->setMinimumSize(QSize(0, 1));
+        addOther->setFont(font2);
         addOther->setStyleSheet(QString::fromUtf8("background-color: rgb(208, 255, 228);"));
 
         verticalLayout_3->addWidget(addOther);
@@ -318,8 +387,8 @@ public:
         videoControlsDockWidget->setAutoFillBackground(false);
         verticalLayout_2 = new QVBoxLayout(videoControlsDockWidget);
         verticalLayout_2->setSpacing(0);
-        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
         videoControlLayout = new QVBoxLayout();
         videoControlLayout->setSpacing(0);
         videoControlLayout->setObjectName(QString::fromUtf8("videoControlLayout"));
@@ -431,10 +500,10 @@ public:
 
         loadVideoLayout->addWidget(LoadVideo);
 
-        pushButton_3 = new QPushButton(videoControlsDockWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        loadAnnotate = new QPushButton(videoControlsDockWidget);
+        loadAnnotate->setObjectName(QString::fromUtf8("loadAnnotate"));
 
-        loadVideoLayout->addWidget(pushButton_3);
+        loadVideoLayout->addWidget(loadAnnotate);
 
         horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -510,16 +579,21 @@ public:
     void retranslateUi(QWidget *MainWidget)
     {
         MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0, QApplication::UnicodeUTF8));
-        subTypeLabel->setText(QApplication::translate("MainWidget", "SubType", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWidget", "Frame     ", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWidget", "Frame", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("MainWidget", "UID        ", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("MainWidget", "UID", 0, QApplication::UnicodeUTF8));
+        fileNameLabel->setText(QApplication::translate("MainWidget", "File Name:", 0, QApplication::UnicodeUTF8));
+        towStatus->setText(QApplication::translate("MainWidget", "Tow Open          ", 0, QApplication::UnicodeUTF8));
         typeLabel->setText(QApplication::translate("MainWidget", "Type       ", 0, QApplication::UnicodeUTF8));
+        subTypeLabel->setText(QApplication::translate("MainWidget", "SubType", 0, QApplication::UnicodeUTF8));
+        fishNumLabel->setText(QApplication::translate("MainWidget", "Fish #", 0, QApplication::UnicodeUTF8));
+        fishNumVal->setText(QApplication::translate("MainWidget", "-", 0, QApplication::UnicodeUTF8));
+        totalFishLabel->setText(QApplication::translate("MainWidget", "Total Fish", 0, QApplication::UnicodeUTF8));
+        totalFishVal->setText(QApplication::translate("MainWidget", "-", 0, QApplication::UnicodeUTF8));
+        prevFish->setText(QApplication::translate("MainWidget", "  Prev Fish ", 0, QApplication::UnicodeUTF8));
         nextFish->setText(QApplication::translate("MainWidget", "Next Fish", 0, QApplication::UnicodeUTF8));
-        updateFishFrame->setText(QApplication::translate("MainWidget", "Update Frame", 0, QApplication::UnicodeUTF8));
-        prevFish->setText(QApplication::translate("MainWidget", "Prev Fish", 0, QApplication::UnicodeUTF8));
+        updateFishFrame->setText(QApplication::translate("MainWidget", "Set Frame", 0, QApplication::UnicodeUTF8));
         goToFrame->setText(QApplication::translate("MainWidget", "Go To Frame", 0, QApplication::UnicodeUTF8));
+        frameCountedLabel->setText(QApplication::translate("MainWidget", "Frame Counted", 0, QApplication::UnicodeUTF8));
+        frameCountedVal->setText(QApplication::translate("MainWidget", "-", 0, QApplication::UnicodeUTF8));
+        goToFishLabel->setText(QApplication::translate("MainWidget", "     Go To Fish   ", 0, QApplication::UnicodeUTF8));
         addRound->setText(QApplication::translate("MainWidget", "Round", 0, QApplication::UnicodeUTF8));
         addFlat->setText(QApplication::translate("MainWidget", "Flat", 0, QApplication::UnicodeUTF8));
         addSkate->setText(QApplication::translate("MainWidget", "Skate", 0, QApplication::UnicodeUTF8));
@@ -533,7 +607,7 @@ public:
         minusOneFrame->setText(QApplication::translate("MainWidget", "-1 Frame", 0, QApplication::UnicodeUTF8));
         plusOneFrame->setText(QApplication::translate("MainWidget", "+1 Frame", 0, QApplication::UnicodeUTF8));
         LoadVideo->setText(QApplication::translate("MainWidget", "Load Video", 0, QApplication::UnicodeUTF8));
-        pushButton_3->setText(QApplication::translate("MainWidget", "Load Annotation File", 0, QApplication::UnicodeUTF8));
+        loadAnnotate->setText(QApplication::translate("MainWidget", "Load Annotation File", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -1,6 +1,7 @@
 #include <utility>
 
 typedef std::pair<float, float> xyLoc;
+
 enum FishTypeEnum
 {
   ROUND,
@@ -11,10 +12,17 @@ enum FishTypeEnum
 
 class Fish
 {
+public:
+    bool operator < (const Fish& str) const
+    {
+        return (frameCounted < str.frameCounted);
+    }
+public:
+    int frameCounted;
+
 private:
 	FishTypeEnum fishType;
 	int subType;
-	int frameCounted;
 	xyLoc fishLoc;
 
 public:

@@ -109,7 +109,7 @@ void protobuf_AddDesc_fishSerialize_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023fishSerialize.proto\022\rfishSerialize\"\251\001\n"
     "\tFishEntry\0221\n\005fType\030\001 \002(\0162\".fishSerializ"
-    "e.FishEntry.fTypeEnum\022\020\n\010fSpecies\030\002 \001(\t\022"
+    "e.FishEntry.fTypeEnum\022\020\n\010fSpecies\030\002 \001(\005\022"
     "\016\n\006fFrame\030\003 \002(\005\022\014\n\004xLoc\030\004 \001(\002\022\014\n\004yLoc\030\005 "
     "\001(\002\"+\n\tfTypeEnum\022\t\n\005ROUND\020\000\022\010\n\004FLAT\020\001\022\t\n"
     "\005SKATE\020\002\"I\n\010FishList\022\025\n\007towOpen\030\001 \001(\010:\004t"
@@ -181,10 +181,9 @@ FishEntry::FishEntry(const FishEntry& from)
 }
 
 void FishEntry::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   ftype_ = 0;
-  fspecies_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  fspecies_ = 0;
   fframe_ = 0;
   xloc_ = 0;
   yloc_ = 0;
@@ -197,9 +196,6 @@ FishEntry::~FishEntry() {
 }
 
 void FishEntry::SharedDtor() {
-  if (fspecies_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete fspecies_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -238,11 +234,6 @@ void FishEntry::Clear() {
 
   if (_has_bits_[0 / 32] & 31) {
     ZR_(ftype_, yloc_);
-    if (has_fspecies()) {
-      if (fspecies_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        fspecies_->clear();
-      }
-    }
   }
 
 #undef OFFSET_OF_FIELD_
@@ -277,20 +268,18 @@ bool FishEntry::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_fSpecies;
+        if (input->ExpectTag(16)) goto parse_fSpecies;
         break;
       }
 
-      // optional string fSpecies = 2;
+      // optional int32 fSpecies = 2;
       case 2: {
-        if (tag == 18) {
+        if (tag == 16) {
          parse_fSpecies:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_fspecies()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->fspecies().data(), this->fspecies().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "fspecies");
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &fspecies_)));
+          set_has_fspecies();
         } else {
           goto handle_unusual;
         }
@@ -374,14 +363,9 @@ void FishEntry::SerializeWithCachedSizes(
       1, this->ftype(), output);
   }
 
-  // optional string fSpecies = 2;
+  // optional int32 fSpecies = 2;
   if (has_fspecies()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->fspecies().data(), this->fspecies().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fspecies");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->fspecies(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->fspecies(), output);
   }
 
   // required int32 fFrame = 3;
@@ -415,15 +399,9 @@ void FishEntry::SerializeWithCachedSizes(
       1, this->ftype(), target);
   }
 
-  // optional string fSpecies = 2;
+  // optional int32 fSpecies = 2;
   if (has_fspecies()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->fspecies().data(), this->fspecies().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fspecies");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->fspecies(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->fspecies(), target);
   }
 
   // required int32 fFrame = 3;
@@ -459,10 +437,10 @@ int FishEntry::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->ftype());
     }
 
-    // optional string fSpecies = 2;
+    // optional int32 fSpecies = 2;
     if (has_fspecies()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->fspecies());
     }
 

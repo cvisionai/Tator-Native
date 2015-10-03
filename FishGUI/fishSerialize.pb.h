@@ -144,17 +144,12 @@ class FishEntry : public ::google::protobuf::Message {
   inline ::fishSerialize::FishEntry_fTypeEnum ftype() const;
   inline void set_ftype(::fishSerialize::FishEntry_fTypeEnum value);
 
-  // optional string fSpecies = 2;
+  // optional int32 fSpecies = 2;
   inline bool has_fspecies() const;
   inline void clear_fspecies();
   static const int kFSpeciesFieldNumber = 2;
-  inline const ::std::string& fspecies() const;
-  inline void set_fspecies(const ::std::string& value);
-  inline void set_fspecies(const char* value);
-  inline void set_fspecies(const char* value, size_t size);
-  inline ::std::string* mutable_fspecies();
-  inline ::std::string* release_fspecies();
-  inline void set_allocated_fspecies(::std::string* fspecies);
+  inline ::google::protobuf::int32 fspecies() const;
+  inline void set_fspecies(::google::protobuf::int32 value);
 
   // required int32 fFrame = 3;
   inline bool has_fframe() const;
@@ -194,8 +189,8 @@ class FishEntry : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::std::string* fspecies_;
   int ftype_;
+  ::google::protobuf::int32 fspecies_;
   ::google::protobuf::int32 fframe_;
   float xloc_;
   float yloc_;
@@ -330,7 +325,7 @@ inline void FishEntry::set_ftype(::fishSerialize::FishEntry_fTypeEnum value) {
   // @@protoc_insertion_point(field_set:fishSerialize.FishEntry.fType)
 }
 
-// optional string fSpecies = 2;
+// optional int32 fSpecies = 2;
 inline bool FishEntry::has_fspecies() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -341,69 +336,17 @@ inline void FishEntry::clear_has_fspecies() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void FishEntry::clear_fspecies() {
-  if (fspecies_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    fspecies_->clear();
-  }
+  fspecies_ = 0;
   clear_has_fspecies();
 }
-inline const ::std::string& FishEntry::fspecies() const {
+inline ::google::protobuf::int32 FishEntry::fspecies() const {
   // @@protoc_insertion_point(field_get:fishSerialize.FishEntry.fSpecies)
-  return *fspecies_;
-}
-inline void FishEntry::set_fspecies(const ::std::string& value) {
-  set_has_fspecies();
-  if (fspecies_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    fspecies_ = new ::std::string;
-  }
-  fspecies_->assign(value);
-  // @@protoc_insertion_point(field_set:fishSerialize.FishEntry.fSpecies)
-}
-inline void FishEntry::set_fspecies(const char* value) {
-  set_has_fspecies();
-  if (fspecies_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    fspecies_ = new ::std::string;
-  }
-  fspecies_->assign(value);
-  // @@protoc_insertion_point(field_set_char:fishSerialize.FishEntry.fSpecies)
-}
-inline void FishEntry::set_fspecies(const char* value, size_t size) {
-  set_has_fspecies();
-  if (fspecies_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    fspecies_ = new ::std::string;
-  }
-  fspecies_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:fishSerialize.FishEntry.fSpecies)
-}
-inline ::std::string* FishEntry::mutable_fspecies() {
-  set_has_fspecies();
-  if (fspecies_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    fspecies_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:fishSerialize.FishEntry.fSpecies)
   return fspecies_;
 }
-inline ::std::string* FishEntry::release_fspecies() {
-  clear_has_fspecies();
-  if (fspecies_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = fspecies_;
-    fspecies_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void FishEntry::set_allocated_fspecies(::std::string* fspecies) {
-  if (fspecies_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete fspecies_;
-  }
-  if (fspecies) {
-    set_has_fspecies();
-    fspecies_ = fspecies;
-  } else {
-    clear_has_fspecies();
-    fspecies_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:fishSerialize.FishEntry.fSpecies)
+inline void FishEntry::set_fspecies(::google::protobuf::int32 value) {
+  set_has_fspecies();
+  fspecies_ = value;
+  // @@protoc_insertion_point(field_set:fishSerialize.FishEntry.fSpecies)
 }
 
 // required int32 fFrame = 3;

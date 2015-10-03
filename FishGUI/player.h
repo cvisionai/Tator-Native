@@ -21,7 +21,7 @@ private:
  	VideoCapture *capture;
  	Mat RGBframe;
  	QImage img;
-	int delay;
+    int delay;
 signals:
   void processedImage(const QImage &image);
 protected:

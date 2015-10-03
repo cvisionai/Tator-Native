@@ -13,6 +13,6 @@ TARGET = fishguibuild
 target.path = ~/FishDetector/FishGUI
 INSTALLS += target
 QT += widgets
-LIBS += -lprotobuf 
+LIBS += -L/usr/local/lib -lprotobuf
 LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_videoio 
 INCLUDEPATH += /usr/local/include
