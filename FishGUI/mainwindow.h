@@ -63,7 +63,6 @@ class MainWindow : public QWidget
 	QGraphicsScene *scene;
     int m_fIndex;
 	void addFish(FishTypeEnum fType);
-    void addFishSerialize(fishSerialize::FishEntry* newFish, FishTypeEnum newFType, int frame);
     void updateVecIndex();
     void convertFishToSerialize();
     void convertSerialToFish();

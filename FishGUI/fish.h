@@ -13,9 +13,9 @@ enum FishTypeEnum
 class Fish
 {
 public:
-    bool operator < (const Fish& str) const
+    bool operator < (const Fish& rFish) const
     {
-        return (frameCounted < str.frameCounted);
+        return (frameCounted < rFish.frameCounted);
     }
 public:
     int frameCounted;

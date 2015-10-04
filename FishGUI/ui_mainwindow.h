@@ -69,7 +69,6 @@ public:
     QSpacerItem *verticalSpacer_8;
     QVBoxLayout *VideoLayout;
     QHBoxLayout *videoTitleLayout;
-    QLabel *videoTitle;
     QSpacerItem *horizontalSpacer_3;
     QHBoxLayout *videoWindowLayout;
     QGraphicsView *videoWindow;
@@ -356,11 +355,6 @@ public:
         videoTitleLayout = new QHBoxLayout();
         videoTitleLayout->setSpacing(0);
         videoTitleLayout->setObjectName(QString::fromUtf8("videoTitleLayout"));
-        videoTitle = new QLabel(MainWidget);
-        videoTitle->setObjectName(QString::fromUtf8("videoTitle"));
-
-        videoTitleLayout->addWidget(videoTitle);
-
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         videoTitleLayout->addItem(horizontalSpacer_3);
@@ -598,7 +592,6 @@ public:
         addFlat->setText(QApplication::translate("MainWidget", "Flat", 0, QApplication::UnicodeUTF8));
         addSkate->setText(QApplication::translate("MainWidget", "Skate", 0, QApplication::UnicodeUTF8));
         addOther->setText(QApplication::translate("MainWidget", "Other", 0, QApplication::UnicodeUTF8));
-        videoTitle->setText(QApplication::translate("MainWidget", "Video Title Goes Here", 0, QApplication::UnicodeUTF8));
         currentTime->setText(QString());
         totalTime->setText(QString());
         Play->setText(QApplication::translate("MainWidget", "Play", 0, QApplication::UnicodeUTF8));

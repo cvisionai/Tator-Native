@@ -336,25 +336,11 @@ void MainWindow::addFish(FishTypeEnum fType)
     Fish* tempFish = new Fish(fType,currentFrame);
     tempFish->setFishSubType(0);
 	myFishList.push_back(*tempFish);
-    //std::sort(myFishList.begin(), myFishList.end(), [](Fish a, Fish b){ return a.getFrameCounted() < b.getFrameCounted(); });
     std::sort(myFishList.begin(),myFishList.end());
-   /*
-              [ ](Fish a, Fish b) {
-        return b.frameCounted < a.frameCounted;
-    });
-              */
     listPos = myFishList.end()-1;
     updateVecIndex();
     ui->totalFishVal->setText(QString::number(myFishList.size()));
 	ui->typeMenu->setCurrentIndex((int) fType);
-    //addFishSerialize(fList->add_fish(),fType,(int)currentFrame);
-}
-
-void MainWindow::addFishSerialize(fishSerialize::FishEntry* newFish, FishTypeEnum newFType, int frame)
-{
-    int newFTypeSerial = (int) newFType;
-    newFish->set_ftype((fishSerialize::FishEntry::fTypeEnum) newFTypeSerial);
-	newFish->set_fframe(frame);
 }
 
 void MainWindow::setTowType(bool towOpenStatus)
