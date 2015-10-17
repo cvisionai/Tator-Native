@@ -7,7 +7,7 @@ Player::Player(QObject *parent)
 	}
 
 bool Player::loadVideo(std::string filename) {
-	capture = new cv::VideoCapture(filename);
+    capture.reset(new cv::VideoCapture(filename));
 	if (capture->isOpened())
 	{
 		frameRate = (int) capture->get(CV_CAP_PROP_FPS);
@@ -73,15 +73,15 @@ QImage Player::getOneFrame()
 
 Player::~Player()
 {
-	mutex.lock();
-	stop = true;
-	capture->release();
-	delete capture;
-	condition.wakeOne();
-	mutex.unlock();
-	wait();
+    if (capture!=NULL)
+    {
+        QMutexLocker locker(&mutex);
+        stop = true;
+        //capture->release();
+        condition.wakeOne();
+        wait();
+    }
 }
-
 void Player::Stop()
 {
 	stop = true;
@@ -89,8 +89,7 @@ void Player::Stop()
 
 void Player::msleep(int ms)
 {
-	struct timespec ts = {ms / 1000, (ms % 1000) * 1000 * 1000 };
-	nanosleep(&ts, NULL);
+    std::this_thread::sleep_for(std::chrono::microseconds(ms*1000));
 }
 
 bool Player::isStopped() const{

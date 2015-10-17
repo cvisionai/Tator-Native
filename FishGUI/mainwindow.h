@@ -10,9 +10,11 @@
 #include <algorithm>
 #include <player.h>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <memory>
 #include "ui_mainwindow.h"
 #include "fish.h"
-#include "fishSerialize.pb.h"
 
 using namespace std;
 namespace Ui {
@@ -25,13 +27,13 @@ class MainWindow : public QWidget
 
  public:
  	explicit MainWindow(QWidget *parent = 0);
- 	~MainWindow();
+// 	~MainWindow();
 
  private slots:
   	void updatePlayerUI(QImage img);
 	void updateSubTypeMenu(int typeIndex);
     void goToFish();
-    void setTowType(bool towOpenStatus);
+    //void setTowType(bool towOpenStatus);
 	QString getFormattedTime(int timeInSeconds);
 	void on_videoSlider_sliderPressed();
 	void on_videoSlider_sliderReleased();
@@ -54,17 +56,19 @@ class MainWindow : public QWidget
     void on_typeMenu_currentIndexChanged(int tIdx);
     void on_subTypeMenu_currentIndexChanged(int sIdx);
  private:
- 	Ui::MainWidget *ui;
- 	Player* myPlayer;
-	fishSerialize::FishList* fList;
+    std::unique_ptr<Ui::MainWidget> ui;
+    std::unique_ptr<Player> myPlayer;
+//	fishSerialize::FishList* fList;
 	vector<Fish> myFishList;
     vector<Fish>::iterator listPos;
 	QGraphicsPixmapItem* imgPointer;
-	QGraphicsScene *scene;
+    std::unique_ptr<QGraphicsScene> scene;
     int m_fIndex;
 	void addFish(FishTypeEnum fType);
     void updateVecIndex();
-    void convertFishToSerialize();
-    void convertSerialToFish();
+    FishTypeEnum getFishType (string const& inString);
+    int getFishSpecies (FishTypeEnum fType, string const& sString);
+//    void convertFishToSerialize();
+//    void convertSerialToFish();
 };
 #endif

@@ -4,10 +4,15 @@
 #include <QThread>
 #include <QImage>
 #include <QWaitCondition>
+#include <QMutexLocker>
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <string>
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <memory>
 
 using namespace cv;
 class Player : public QThread
@@ -18,7 +23,7 @@ private:
  	QWaitCondition condition;
  	Mat frame;
  	int frameRate;
- 	VideoCapture *capture;
+    std::unique_ptr<VideoCapture> capture;
  	Mat RGBframe;
  	QImage img;
     int delay;
