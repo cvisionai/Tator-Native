@@ -12,7 +12,9 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <ostream>
 #include <memory>
+#include <string>
 #include "ui_mainwindow.h"
 #include "fish.h"
 
@@ -41,6 +43,7 @@ class MainWindow : public QWidget
   	void on_Play_clicked();
   	void on_LoadVideo_clicked();
     void on_loadAnnotate_clicked();
+    void on_saveAnnotate_clicked();
 	void on_SpeedUp_clicked();
 	void on_SlowDown_clicked();
 	void on_minusOneFrame_clicked();
@@ -68,6 +71,8 @@ class MainWindow : public QWidget
     void updateVecIndex();
     FishTypeEnum getFishType (string const& inString);
     int getFishSpecies (FishTypeEnum fType, string const& sString);
+    string getFishTypeString (FishTypeEnum fType);
+    string getFishSpeciesString (FishTypeEnum fType, int species);
 //    void convertFishToSerialize();
 //    void convertSerialToFish();
 };

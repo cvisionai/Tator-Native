@@ -96,6 +96,7 @@ public:
     QSpacerItem *horizontalSpacer_7;
     QPushButton *LoadVideo;
     QPushButton *loadAnnotate;
+    QPushButton *saveAnnotate;
     QSpacerItem *horizontalSpacer_6;
     QSpacerItem *verticalSpacer_11;
     QVBoxLayout *countingControlsLayout;
@@ -515,6 +516,11 @@ public:
 
         loadVideoLayout->addWidget(loadAnnotate);
 
+        saveAnnotate = new QPushButton(videoControlsDockWidget);
+        saveAnnotate->setObjectName(QStringLiteral("saveAnnotate"));
+
+        loadVideoLayout->addWidget(saveAnnotate);
+
         horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         loadVideoLayout->addItem(horizontalSpacer_6);
@@ -617,6 +623,7 @@ public:
         plusOneFrame->setText(QApplication::translate("MainWidget", "+1 Frame", 0));
         LoadVideo->setText(QApplication::translate("MainWidget", "Load Video", 0));
         loadAnnotate->setText(QApplication::translate("MainWidget", "Load Annotation File", 0));
+        saveAnnotate->setText(QApplication::translate("MainWidget", "Save Annotation File", 0));
     } // retranslateUi
 
 };

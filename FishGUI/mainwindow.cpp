@@ -156,8 +156,6 @@ void MainWindow::on_loadAnnotate_clicked()
     QString filename = QFileDialog::getOpenFileName(this,
         tr("Open Annotation File"), ".",
         tr("CSV Files (*.csv)"));
-
-    //QFileInfo name = filename;
     ifstream inFile(filename.toLatin1().data());
     string line;
     string tripID, reviewer, towType, fishType, species;
@@ -168,9 +166,6 @@ void MainWindow::on_loadAnnotate_clicked()
     while(getline(inFile,line))
     {
         stringstream linestream(line);
-        //line.clear();
-
-        //Assign to the members of the struct
         string tempToken;
         std::getline(linestream,tripID,',');
         std::getline(linestream,tempToken,',');
@@ -196,21 +191,6 @@ void MainWindow::on_loadAnnotate_clicked()
         tempConvert.str("");
         tempConvert.clear();
 
-
-        //linestream >> tripID >> towNum >> reviewer >> towType >> fishType >> species >> frame >> timeInVid;
-        //std::cout << "Fish Stats: " << std::endl;
-        //std::cout << towNum << std::endl << reviewer << std::endl << towType << std::endl << fishType << std::endl;
-        //std::cout << species << std::endl << frame << std::endl << timeInVid << std::endl << std::endl;
-        /*
-        tripID << linestream;
-        towNum << linestream;
-        reviewer << linestream;
-        towType << linestream;
-        fishType << linestream;
-        species << linestream;
-        frame << linestream;
-        timeInVid << linestream;
-        */
         FishTypeEnum fType = getFishType(fishType);
         unique_ptr<Fish> tempFish(new Fish(fType,frame));
         tempFish->setFishSubType(getFishSpecies(fType,species));
@@ -225,6 +205,22 @@ void MainWindow::on_loadAnnotate_clicked()
     ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
     ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
     updateVecIndex();
+}
+
+void MainWindow::on_saveAnnotate_clicked()
+{
+    ofstream outFile("simple_test.csv");
+    outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
+    outFile << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
+    for(std::vector<Fish>::iterator it = myFishList.begin(); it != myFishList.end(); ++it) {
+        outFile << "Spring 2015" << "," << "3" << "," << "Ben" << "," << "Open" << ",";
+        outFile << getFishTypeString(it->getFishType()) << ",";
+        outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
+        outFile << it->frameCounted << ",";
+        outFile << 4.566 << std::endl;
+        /* std::cout << *it; ... */
+    }
+    outFile.close();
 }
 
 void MainWindow::on_Play_clicked()
@@ -481,6 +477,73 @@ int MainWindow::getFishSpecies (FishTypeEnum fType, string const& sString)
         break;
     default:
         return 0;
+        break;
+    }
+}
+
+string MainWindow::getFishTypeString (FishTypeEnum fType)
+{
+    switch (fType){
+    case ROUND:
+        return "ROUND";
+        break;
+    case FLAT:
+        return "FLAT";
+        break;
+    case SKATE:
+        return "SKATE";
+        break;
+    case OTHER:
+        return "OTHER";
+        break;
+    default:
+        return "OTHER";
+        break;
+    }
+}
+
+string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species)
+{
+    switch (fType)
+    {
+    case ROUND:
+        if (species == 0) return "Round";
+        if (species == 1) return "Haddock";
+        if (species == 2) return "Cod";
+        if (species == 3) return "Whiting";
+        if (species == 4) return "Red Hake";
+        if (species == 5) return "Pollock";
+        if (species == 6) return "Herring";
+        if (species == 7) return "Unknown";
+        return "Unknown";
+        break;
+    case FLAT:
+        if (species == 0) return "Flat";
+        if (species == 1) return "Yellowtail";
+        if (species == 2) return "Windowpane";
+        if (species == 3) return "Summer";
+        if (species == 4) return "FourSport";
+        if (species == 5) return "Grey Sole";
+        if (species == 6) return "Halibut";
+        if (species == 7) return "Unknown";
+        return "Unknown";
+        break;
+    case SKATE:
+        if (species == 0) return "Skate";
+        if (species == 1) return "Barndoor";
+        if (species == 2) return "Unknown";
+        return "Unknown";
+        break;
+    case OTHER:
+        if (species == 0) return "Other";
+        if (species == 1) return "Dogfish";
+        if (species == 2) return "Monkfish";
+        if (species == 3) return "Lobster";
+        if (species == 4) return "Scallop";
+        return "Unknown";
+        break;
+    default:
+        return "Unknown";
         break;
     }
 }
