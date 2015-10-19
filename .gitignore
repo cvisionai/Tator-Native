@@ -9,5 +9,5 @@
 *.ilk
 *.user
 Makefile*
-fishguibuild
+fishguibuild*
 .DS_Store
