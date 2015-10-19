@@ -4,6 +4,10 @@
 *moc*
 *.swp
 *.csv
-Makefile
+*.obj
+*.pdb
+*.ilk
+*.user
+Makefile*
 fishguibuild
 .DS_Store
