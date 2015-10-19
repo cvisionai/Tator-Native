@@ -73,6 +73,8 @@ class MainWindow : public QWidget
     int getFishSpecies (FishTypeEnum fType, string const& sString);
     string getFishTypeString (FishTypeEnum fType);
     string getFishSpeciesString (FishTypeEnum fType, int species);
+    void disableControls();
+    void enableControls();
 //    void convertFishToSerialize();
 //    void convertSerialToFish();
 };

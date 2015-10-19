@@ -36,10 +36,15 @@ public:
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_6;
     QVBoxLayout *verticalLayout_4;
-    QSpacerItem *verticalSpacer_7;
     QVBoxLayout *verticalLayout_5;
     QLabel *fileNameLabel;
     QLineEdit *fileNameValue;
+    QLabel *reviwerNameLabel;
+    QLineEdit *reviewerNameValue;
+    QLabel *tripIDLabel;
+    QLineEdit *tripIDValue;
+    QLabel *towIDLabel;
+    QLineEdit *towIDValue;
     QHBoxLayout *horizontalLayout;
     QCheckBox *towStatus;
     QSpacerItem *horizontalSpacer_4;
@@ -121,10 +126,6 @@ public:
         verticalLayout_4 = new QVBoxLayout();
         verticalLayout_4->setSpacing(6);
         verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        verticalSpacer_7 = new QSpacerItem(20, 50, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_4->addItem(verticalSpacer_7);
-
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
         verticalLayout_5->setContentsMargins(5, 0, 5, 5);
@@ -138,6 +139,36 @@ public:
         fileNameValue->setFocusPolicy(Qt::ClickFocus);
 
         verticalLayout_5->addWidget(fileNameValue);
+
+        reviwerNameLabel = new QLabel(MainWidget);
+        reviwerNameLabel->setObjectName(QStringLiteral("reviwerNameLabel"));
+
+        verticalLayout_5->addWidget(reviwerNameLabel);
+
+        reviewerNameValue = new QLineEdit(MainWidget);
+        reviewerNameValue->setObjectName(QStringLiteral("reviewerNameValue"));
+
+        verticalLayout_5->addWidget(reviewerNameValue);
+
+        tripIDLabel = new QLabel(MainWidget);
+        tripIDLabel->setObjectName(QStringLiteral("tripIDLabel"));
+
+        verticalLayout_5->addWidget(tripIDLabel);
+
+        tripIDValue = new QLineEdit(MainWidget);
+        tripIDValue->setObjectName(QStringLiteral("tripIDValue"));
+
+        verticalLayout_5->addWidget(tripIDValue);
+
+        towIDLabel = new QLabel(MainWidget);
+        towIDLabel->setObjectName(QStringLiteral("towIDLabel"));
+
+        verticalLayout_5->addWidget(towIDLabel);
+
+        towIDValue = new QLineEdit(MainWidget);
+        towIDValue->setObjectName(QStringLiteral("towIDValue"));
+
+        verticalLayout_5->addWidget(towIDValue);
 
 
         verticalLayout_4->addLayout(verticalLayout_5);
@@ -582,7 +613,7 @@ public:
 
         horizontalLayout_6->setStretch(0, 1);
         horizontalLayout_6->setStretch(1, 10);
-        horizontalLayout_6->setStretch(2, 2);
+        horizontalLayout_6->setStretch(2, 1);
 
         verticalLayout->addLayout(horizontalLayout_6);
 
@@ -596,6 +627,9 @@ public:
     {
         MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0));
         fileNameLabel->setText(QApplication::translate("MainWidget", "File Name:", 0));
+        reviwerNameLabel->setText(QApplication::translate("MainWidget", "Reviewer Name:", 0));
+        tripIDLabel->setText(QApplication::translate("MainWidget", "Trip ID", 0));
+        towIDLabel->setText(QApplication::translate("MainWidget", "Tow Number:", 0));
         towStatus->setText(QApplication::translate("MainWidget", "Tow Open          ", 0));
         typeLabel->setText(QApplication::translate("MainWidget", "Type       ", 0));
         subTypeLabel->setText(QApplication::translate("MainWidget", "SubType", 0));

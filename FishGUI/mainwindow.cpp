@@ -11,8 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
         QObject::connect(myPlayer.get(), SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
-		ui->Play->setEnabled(false);
-		ui->videoSlider->setEnabled(false);
+        disableControls();
 		QStringList typeList;
 		typeList.append("Round");
 		typeList.append("Flat");
@@ -132,6 +131,7 @@ void MainWindow::on_LoadVideo_clicked()
 		}
 		else
         {
+            enableControls();
             this->setWindowTitle(name.fileName());
 			ui->Play->setEnabled(true);
 			ui->videoSlider->setEnabled(true);
@@ -209,16 +209,18 @@ void MainWindow::on_loadAnnotate_clicked()
 
 void MainWindow::on_saveAnnotate_clicked()
 {
-    ofstream outFile("simple_test.csv");
+    string filename;
+    filename = ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
+    filename = filename + ".csv";
+    ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
-    for(std::vector<Fish>::iterator it = myFishList.begin(); it != myFishList.end(); ++it) {
-        outFile << "Spring 2015" << "," << "3" << "," << "Ben" << "," << "Open" << ",";
+    for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
+        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << "Open" << ",";
         outFile << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";
-        outFile << 4.566 << std::endl;
-        /* std::cout << *it; ... */
+        outFile << (double) it->frameCounted / myPlayer->getFrameRate() / 60.0 / 60.0 << std::endl;
     }
     outFile.close();
 }
@@ -348,21 +350,24 @@ void MainWindow::on_nextFish_clicked()
 
 void MainWindow::on_goToFrame_clicked()
 {
-    if (!myPlayer->isStopped())
+    if (!myPlayer==NULL)
     {
-        myPlayer->Stop();
-        ui->Play->setText(tr("Play"));
-    }
-    myPlayer->setCurrentFrame(listPos->getFrameCounted()-1);
-    QImage thisFrame = myPlayer->getOneFrame();
-    if (!thisFrame.isNull())
-    {
-        imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
-        scene->setSceneRect(thisFrame.rect());
-        ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-        ui->videoSlider->setValue(myPlayer->getCurrentFrame());
-        ui->currentTime->setText(getFormattedTime((int)myPlayer->
-            getCurrentFrame() / (int)myPlayer->getFrameRate()));
+        if (!myPlayer->isStopped())
+        {
+            myPlayer->Stop();
+            ui->Play->setText(tr("Play"));
+        }
+        myPlayer->setCurrentFrame(listPos->getFrameCounted()-1);
+        QImage thisFrame = myPlayer->getOneFrame();
+        if (!thisFrame.isNull())
+        {
+            imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
+            scene->setSceneRect(thisFrame.rect());
+            ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
+            ui->videoSlider->setValue(myPlayer->getCurrentFrame());
+            ui->currentTime->setText(getFormattedTime((int)myPlayer->
+                getCurrentFrame() / (int)myPlayer->getFrameRate()));
+        }
     }
 }
 
@@ -548,6 +553,39 @@ string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species)
     }
 }
 
+void MainWindow::disableControls()
+{
+    ui->Play->setEnabled(false);
+    ui->videoSlider->setEnabled(false);
+    ui->SlowDown->setEnabled(false);
+    ui->SpeedUp->setEnabled(false);
+    ui->minusOneFrame->setEnabled(false);
+    ui->plusOneFrame->setEnabled(false);
+    ui->updateFishFrame->setEnabled(false);
+    ui->goToFrame->setEnabled(false);
+    ui->addRound->setEnabled(false);
+    ui->addFlat->setEnabled(false);
+    ui->addSkate->setEnabled(false);
+    ui->addOther->setEnabled(false);
+    ui->saveAnnotate->setEnabled(false);
+}
+
+void MainWindow::enableControls()
+{
+    ui->Play->setEnabled(true);
+    ui->videoSlider->setEnabled(true);
+    ui->SlowDown->setEnabled(true);
+    ui->SpeedUp->setEnabled(true);
+    ui->minusOneFrame->setEnabled(true);
+    ui->plusOneFrame->setEnabled(true);
+    ui->updateFishFrame->setEnabled(true);
+    ui->goToFrame->setEnabled(true);
+    ui->addRound->setEnabled(true);
+    ui->addFlat->setEnabled(true);
+    ui->addSkate->setEnabled(true);
+    ui->addOther->setEnabled(true);
+    ui->saveAnnotate->setEnabled(true);
+}
 
 int main(int argc, char *argv[])
 {
