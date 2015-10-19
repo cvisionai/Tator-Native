@@ -3,6 +3,7 @@
 *.pyc
 *moc*
 *.swp
+*.csv
 Makefile
 fishguibuild
 .DS_Store
