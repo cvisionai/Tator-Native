@@ -390,6 +390,16 @@ void MainWindow::on_subTypeMenu_currentIndexChanged(int sIdx)
         listPos->setFishSubType(sIdx);
 }
 
+void MainWindow::on_addRegion_clicked()
+{
+    QImage thisFrame = myPlayer->getOneFrame();
+    if (!thisFrame.isNull())
+    {
+        //scene->addRect(QRect(0, 0, 100, 100));
+        scene->addItem(new AnnotatedRegion(QRect(0, 0, 100, 100)));
+    }
+}
+
 void MainWindow::addFish(FishTypeEnum fType)
 {
 
