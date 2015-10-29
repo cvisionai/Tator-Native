@@ -8,6 +8,8 @@
 *.pdb
 *.ilk
 *.user
+*.dll
 Makefile*
 fishguibuild*
+ui_mainwindow.h
 .DS_Store
