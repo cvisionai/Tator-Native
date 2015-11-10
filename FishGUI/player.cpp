@@ -73,7 +73,7 @@ QImage Player::getOneFrame()
 
 Player::~Player()
 {
-    if (capture!=NULL)
+    if (1)
     {
         QMutexLocker locker(&mutex);
         stop = true;

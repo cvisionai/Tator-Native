@@ -210,13 +210,22 @@ void MainWindow::on_loadAnnotate_clicked()
 void MainWindow::on_saveAnnotate_clicked()
 {
     string filename;
-    filename = ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
+    filename = filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
     filename = filename + ".csv";
     ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
+    string towStatus;
+    if (ui->towStatus->isChecked())
+    {
+        towStatus = "Open";
+    }
+    else
+    {
+        towStatus = "Closed";
+    }
     for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
-        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << "Open" << ",";
+        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
         outFile << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";

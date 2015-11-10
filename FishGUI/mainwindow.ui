@@ -93,7 +93,7 @@
           <number>19</number>
          </property>
          <property name="leftMargin">
-          <number>1</number>
+          <number>5</number>
          </property>
          <property name="topMargin">
           <number>5</number>
@@ -131,8 +131,17 @@
        </item>
        <item>
         <layout class="QFormLayout" name="formLayout_3">
+         <property name="labelAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
          <property name="horizontalSpacing">
-          <number>35</number>
+          <number>20</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>5</number>
          </property>
          <property name="leftMargin">
           <number>5</number>
