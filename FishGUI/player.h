@@ -23,6 +23,7 @@ private:
  	QWaitCondition condition;
  	Mat frame;
  	int frameRate;
+    double currentSpeed;
     std::unique_ptr<VideoCapture> capture;
  	Mat RGBframe;
  	QImage img;
@@ -47,5 +48,6 @@ public:
   double getFrameRate();
   double getCurrentFrame();
   double getNumberOfFrames();
+  double getCurrentSpeed();
 };
 #endif

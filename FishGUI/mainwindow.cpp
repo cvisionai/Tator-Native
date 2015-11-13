@@ -254,11 +254,17 @@ void MainWindow::on_videoSlider_sliderMoved(int position)
 void MainWindow::on_SpeedUp_clicked()
 {
 	myPlayer->speedUp();
+    QString tempSpeed;
+    tempSpeed.setNum((int)(myPlayer->getCurrentSpeed()));
+    ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
 void MainWindow::on_SlowDown_clicked()
 {
 	myPlayer->slowDown();
+    QString tempSpeed;
+    tempSpeed.setNum((int)(myPlayer->getCurrentSpeed()));
+    ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
 void MainWindow::on_minusOneFrame_clicked()

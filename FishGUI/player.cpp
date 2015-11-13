@@ -11,6 +11,7 @@ bool Player::loadVideo(std::string filename) {
 	if (capture->isOpened())
 	{
 		frameRate = (int) capture->get(CV_CAP_PROP_FPS);
+        currentSpeed = 100;
 		delay = (1000/frameRate);
 		return true;
 	}
@@ -101,11 +102,13 @@ void Player::speedUp()
 	delay = delay/2;
 	if (delay<1)
 	  delay = 1;
+    currentSpeed = currentSpeed * 2;
 }
 
 void Player::slowDown()
 {
 	delay = delay*2;
+    currentSpeed = currentSpeed / 2;
 }
 
 void Player::minusOneFrame()
@@ -133,4 +136,9 @@ double Player::getFrameRate()
 void Player::setCurrentFrame(int frameNumber)
 {
 	capture->set(CV_CAP_PROP_POS_FRAMES, frameNumber);
+}
+
+double Player::getCurrentSpeed()
+{
+    return currentSpeed;
 }
