@@ -92,4 +92,11 @@ T remove_extension(T const & filename)
   typename T::size_type const p(filename.find_last_of('.'));
   return p > 0 && p != T::npos ? filename.substr(0, p) : filename;
 }
+
+template<class T>
+T remove_reviewer(T const & filename)
+{
+  typename T::size_type const p(filename.find_last_of('_'));
+  return p > 0 && p != T::npos ? filename.substr(0, p) : filename;
+}
 #endif

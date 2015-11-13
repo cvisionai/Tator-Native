@@ -141,6 +141,7 @@ void MainWindow::on_LoadVideo_clicked()
             ui->videoWindow->setScene(scene.get());
             ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
             ui->videoWindow->show();
+            ui->currentSpeed->setText("Current Speed: 100%");
 		}
 	}
 
@@ -154,7 +155,8 @@ void MainWindow::on_loadAnnotate_clicked()
 
     std::string filenameBase = base_name(filename.toStdString());
     std::string filenameBaseNoExt = remove_extension(filenameBase);
-    QString qFilename = QString::fromStdString(filenameBaseNoExt);
+    std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
+    QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
     ui->fileNameValue->setText(qFilename);
     ifstream inFile(filename.toLatin1().data());
     string line;
