@@ -151,19 +151,26 @@ void MainWindow::on_loadAnnotate_clicked()
     QString filename = QFileDialog::getOpenFileName(this,
         tr("Open Annotation File"), ".",
         tr("CSV Files (*.csv)"));
+
+    std::string filenameBase = base_name(filename.toStdString());
+    std::string filenameBaseNoExt = remove_extension(filenameBase);
+    QString qFilename = QString::fromStdString(filenameBaseNoExt);
+    ui->fileNameValue->setText(qFilename);
     ifstream inFile(filename.toLatin1().data());
     string line;
-    string tripID, reviewer, towType, fishType, species;
+    string tripID, reviewer, towType, fishNum, fishType, species;
     int frame, towNum;
     double timeInVid;
     getline(inFile,line);
     line.clear();
+    bool first = true;
     while(getline(inFile,line))
     {
         stringstream linestream(line);
         string tempToken;
         std::getline(linestream,tripID,',');
         std::getline(linestream,tempToken,',');
+        string strtowNum = tempToken;
         stringstream tempConvert(tempToken);
         tempConvert >> towNum;
         tempToken.clear();
@@ -171,9 +178,20 @@ void MainWindow::on_loadAnnotate_clicked()
         tempConvert.clear();
         std::getline(linestream,reviewer,',');
         std::getline(linestream,towType,',');
+        std::getline(linestream,fishNum,',');
         std::getline(linestream,fishType,',');
         std::getline(linestream,species,',');
         std::getline(linestream,tempToken,',');
+        if (first)
+        {
+            QString qreviewer = QString::fromStdString(reviewer);
+            ui->reviewerNameValue->setText(qreviewer);
+            QString qtripID = QString::fromStdString(tripID);
+            ui->tripIDValue->setText(qtripID);
+            QString qtowID = QString::fromStdString(strtowNum);
+            ui->towIDValue->setText(qtowID);
+        }
+        first = false;
         tempConvert << tempToken;
         tempConvert >> frame;
         tempToken.clear();
@@ -209,7 +227,7 @@ void MainWindow::on_saveAnnotate_clicked()
     filename = filename + ".csv";
     ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
-    outFile << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
+    outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
     string towStatus;
     if (ui->towStatus->isChecked())
     {
@@ -219,12 +237,14 @@ void MainWindow::on_saveAnnotate_clicked()
     {
         towStatus = "Closed";
     }
+    int fishCount = 1;
     for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
         outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
-        outFile << getFishTypeString(it->getFishType()) << ",";
+        outFile << fishCount << "," << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";
         outFile << (double) it->frameCounted / myPlayer->getFrameRate() / 60.0 / 60.0 << std::endl;
+        fishCount++;
     }
     outFile.close();
 }
