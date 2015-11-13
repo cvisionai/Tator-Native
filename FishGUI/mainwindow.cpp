@@ -27,12 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
                          this, SLOT(setTowType(bool)));
 //        setTowType(true);
 	}
-/*
-MainWindow::~MainWindow()
-{
-	delete ui;
-}
-*/
+
 void MainWindow::updatePlayerUI(QImage img)
 {
 	if (!img.isNull())
