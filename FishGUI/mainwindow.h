@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QTime>
 #include <QGraphicsPixmapItem>
+#include <QKeyEvent>
 #include <vector>
 #include <algorithm>
 #include <player.h>
@@ -75,6 +76,7 @@ class MainWindow : public QWidget
     string getFishSpeciesString (FishTypeEnum fType, int species);
     void disableControls();
     void enableControls();
+    void keyPressEvent(QKeyEvent* e);
 
 //    void convertFishToSerialize();
 //    void convertSerialToFish();

@@ -142,6 +142,7 @@ void MainWindow::on_LoadVideo_clicked()
             ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
             ui->videoWindow->show();
             ui->currentSpeed->setText("Current Speed: 100%");
+            ui->Play->setFocus();
 		}
 	}
 
@@ -420,6 +421,40 @@ void MainWindow::on_subTypeMenu_currentIndexChanged(int sIdx)
 {
     if (!myFishList.empty())
         listPos->setFishSubType(sIdx);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* e)
+{
+    QString keypress = e->text();
+    int keycode;
+    if (keypress == "f")
+        keycode = 0;
+    else if (keypress == "r")
+        keycode = 1;
+    else if (keypress == "s")
+        keycode = 2;
+    else if (keypress == "t")
+        keycode = 3;
+
+    switch (keycode)
+    {
+    case 0:
+        ui->addFlat->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 1:
+        ui->addRound->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 2:
+        ui->addSkate->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 3:
+        ui->addOther->animateClick();
+        ui->Play->setFocus();
+        break;
+    }
 }
 
 /*
