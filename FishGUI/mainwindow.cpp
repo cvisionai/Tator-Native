@@ -457,17 +457,16 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
     }
 }
 
-/*
 void MainWindow::on_addRegion_clicked()
 {
-    QImage thisFrame = myPlayer->getOneFrame();
-    if (!thisFrame.isNull())
+    //QImage thisFrame = myPlayer->getOneFrame();
+    //if (!thisFrame.isNull())
+    if (1)
     {
         //scene->addRect(QRect(0, 0, 100, 100));
         scene->addItem(new AnnotatedRegion(QRect(0, 0, 100, 100)));
     }
 }
-*/
 
 void MainWindow::addFish(FishTypeEnum fType)
 {

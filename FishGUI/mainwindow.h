@@ -18,6 +18,7 @@
 #include <string>
 #include "ui_mainwindow.h"
 #include "fish.h"
+#include "annotatedregion.h"
 
 using namespace std;
 namespace Ui {
@@ -57,6 +58,7 @@ class MainWindow : public QWidget
     void on_nextFish_clicked();
     void on_goToFrame_clicked();
     void on_updateFishFrame_clicked();
+    void on_addRegion_clicked();
     void on_typeMenu_currentIndexChanged(int tIdx);
     void on_subTypeMenu_currentIndexChanged(int sIdx);
  private:

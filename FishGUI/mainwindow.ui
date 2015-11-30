@@ -848,6 +848,16 @@
                 </spacer>
                </item>
                <item>
+                <widget class="QPushButton" name="addRegion">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="text">
+                  <string>Add Region</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QPushButton" name="LoadVideo">
                  <property name="minimumSize">
                   <size>
