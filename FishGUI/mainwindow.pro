@@ -1,10 +1,12 @@
 CONFIG += qt
 SOURCES = player.cpp \
 	  mainwindow.cpp \
-          fish.cpp
+          fish.cpp \
+          annotatedregion.cpp
 HEADERS = player.h \
 	  mainwindow.h \
-          fish.h
+          fish.h \
+          annotatedregion.h
 FORMS = mainwindow.ui
 
 TARGET = fishguibuild

@@ -5,9 +5,9 @@
 #include <QImage>
 #include <QWaitCondition>
 #include <QMutexLocker>
-#include "opencv2/core/core.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/highgui/highgui.hpp"
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <string>
 #include <iostream>
 #include <chrono>
@@ -23,6 +23,7 @@ private:
  	QWaitCondition condition;
  	Mat frame;
  	int frameRate;
+    double currentSpeed;
     std::unique_ptr<VideoCapture> capture;
  	Mat RGBframe;
  	QImage img;
@@ -47,5 +48,6 @@ public:
   double getFrameRate();
   double getCurrentFrame();
   double getNumberOfFrames();
+  double getCurrentSpeed();
 };
 #endif

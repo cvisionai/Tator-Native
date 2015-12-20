@@ -27,12 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
                          this, SLOT(setTowType(bool)));
 //        setTowType(true);
 	}
-/*
-MainWindow::~MainWindow()
-{
-	delete ui;
-}
-*/
+
 void MainWindow::updatePlayerUI(QImage img)
 {
 	if (!img.isNull())
@@ -146,6 +141,8 @@ void MainWindow::on_LoadVideo_clicked()
             ui->videoWindow->setScene(scene.get());
             ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
             ui->videoWindow->show();
+            ui->currentSpeed->setText("Current Speed: 100%");
+            ui->Play->setFocus();
 		}
 	}
 
@@ -156,19 +153,27 @@ void MainWindow::on_loadAnnotate_clicked()
     QString filename = QFileDialog::getOpenFileName(this,
         tr("Open Annotation File"), ".",
         tr("CSV Files (*.csv)"));
+
+    std::string filenameBase = base_name(filename.toStdString());
+    std::string filenameBaseNoExt = remove_extension(filenameBase);
+    std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
+    QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
+    ui->fileNameValue->setText(qFilename);
     ifstream inFile(filename.toLatin1().data());
     string line;
-    string tripID, reviewer, towType, fishType, species;
+    string tripID, reviewer, towType, fishNum, fishType, species;
     int frame, towNum;
     double timeInVid;
     getline(inFile,line);
     line.clear();
+    bool first = true;
     while(getline(inFile,line))
     {
         stringstream linestream(line);
         string tempToken;
         std::getline(linestream,tripID,',');
         std::getline(linestream,tempToken,',');
+        string strtowNum = tempToken;
         stringstream tempConvert(tempToken);
         tempConvert >> towNum;
         tempToken.clear();
@@ -176,9 +181,20 @@ void MainWindow::on_loadAnnotate_clicked()
         tempConvert.clear();
         std::getline(linestream,reviewer,',');
         std::getline(linestream,towType,',');
+        std::getline(linestream,fishNum,',');
         std::getline(linestream,fishType,',');
         std::getline(linestream,species,',');
         std::getline(linestream,tempToken,',');
+        if (first)
+        {
+            QString qreviewer = QString::fromStdString(reviewer);
+            ui->reviewerNameValue->setText(qreviewer);
+            QString qtripID = QString::fromStdString(tripID);
+            ui->tripIDValue->setText(qtripID);
+            QString qtowID = QString::fromStdString(strtowNum);
+            ui->towIDValue->setText(qtowID);
+        }
+        first = false;
         tempConvert << tempToken;
         tempConvert >> frame;
         tempToken.clear();
@@ -210,17 +226,28 @@ void MainWindow::on_loadAnnotate_clicked()
 void MainWindow::on_saveAnnotate_clicked()
 {
     string filename;
-    filename = ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
+    filename = filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
     filename = filename + ".csv";
     ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
-    outFile << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
+    outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
+    string towStatus;
+    if (ui->towStatus->isChecked())
+    {
+        towStatus = "Open";
+    }
+    else
+    {
+        towStatus = "Closed";
+    }
+    int fishCount = 1;
     for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
-        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << "Open" << ",";
-        outFile << getFishTypeString(it->getFishType()) << ",";
+        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
+        outFile << fishCount << "," << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";
         outFile << (double) it->frameCounted / myPlayer->getFrameRate() / 60.0 / 60.0 << std::endl;
+        fishCount++;
     }
     outFile.close();
 }
@@ -259,11 +286,17 @@ void MainWindow::on_videoSlider_sliderMoved(int position)
 void MainWindow::on_SpeedUp_clicked()
 {
 	myPlayer->speedUp();
+    QString tempSpeed;
+    tempSpeed.setNum((int)(myPlayer->getCurrentSpeed()));
+    ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
 void MainWindow::on_SlowDown_clicked()
 {
 	myPlayer->slowDown();
+    QString tempSpeed;
+    tempSpeed.setNum((int)(myPlayer->getCurrentSpeed()));
+    ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
 void MainWindow::on_minusOneFrame_clicked()
@@ -390,10 +423,45 @@ void MainWindow::on_subTypeMenu_currentIndexChanged(int sIdx)
         listPos->setFishSubType(sIdx);
 }
 
+void MainWindow::keyPressEvent(QKeyEvent* e)
+{
+    QString keypress = e->text();
+    int keycode;
+    if (keypress == "f")
+        keycode = 0;
+    else if (keypress == "r")
+        keycode = 1;
+    else if (keypress == "s")
+        keycode = 2;
+    else if (keypress == "t")
+        keycode = 3;
+
+    switch (keycode)
+    {
+    case 0:
+        ui->addFlat->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 1:
+        ui->addRound->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 2:
+        ui->addSkate->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 3:
+        ui->addOther->animateClick();
+        ui->Play->setFocus();
+        break;
+    }
+}
+
 void MainWindow::on_addRegion_clicked()
 {
-    QImage thisFrame = myPlayer->getOneFrame();
-    if (!thisFrame.isNull())
+    //QImage thisFrame = myPlayer->getOneFrame();
+    //if (!thisFrame.isNull())
+    if (1)
     {
         //scene->addRect(QRect(0, 0, 100, 100));
         scene->addItem(new AnnotatedRegion(QRect(0, 0, 100, 100)));
