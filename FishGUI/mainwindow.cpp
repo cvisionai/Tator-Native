@@ -4,11 +4,11 @@ MainWindow::MainWindow(QWidget *parent)
     :QWidget(parent)
 	{
         ui.reset(new Ui::MainWidget);
-        m_fIndex = 0;
-        myPlayer.reset(new Player());
+        fIndex = 0;
+        player.reset(new Player());
 //		fList = new fishSerialize::FishList();
         myFishList.clear();
-        QObject::connect(myPlayer.get(), SIGNAL(processedImage(QImage)),
+        QObject::connect(player.get(), SIGNAL(processedImage(QImage)),
 			this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
         disableControls();
@@ -18,26 +18,77 @@ MainWindow::MainWindow(QWidget *parent)
 		typeList.append("Skate");
 		typeList.append("Other");
 		ui->typeMenu->addItems(typeList);
-		QObject::connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)),
-			this, SLOT(updateSubTypeMenu(int)));
+		connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateSubTypeMenu(int)));
 		ui->typeMenu->setCurrentIndex(3);
-        QObject::connect(ui->goToFishVal,SIGNAL(returnPressed()),
-                         this, SLOT(goToFish()));
-        QObject::connect(ui->towStatus, SIGNAL(toggled(bool)),
-                         this, SLOT(setTowType(bool)));
+        connect(ui->goToFishVal,SIGNAL(returnPressed()), this, SLOT(goToFish()));
+//        connect(ui->towStatus, SIGNAL(toggled(bool)), this, SLOT(setTowType(bool)));
+
+        auto next_button = ui->navigator->findChild<QPushButton *>("next_button");
+        connect(next_button, SIGNAL(clicked()), this, SLOT(on_plusOneFrame_clicked()));
+
+        auto prev_button = ui->navigator->findChild<QPushButton *>("prev_button");
+        connect(prev_button, SIGNAL(clicked()), this, SLOT(on_minusOneFrame_clicked()));
+
+        auto add_region_button = ui->navigator->findChild<QPushButton *>("add_region_button");
+        connect(add_region_button, SIGNAL(clicked()), this, SLOT(on_addRegion_clicked()));
 //        setTowType(true);
 	}
+
+void MainWindow::nextFrame()
+{
+    // remove old annotations
+    for (auto ann : currentAnnotations) {
+        scene->removeItem(ann);
+    }
+
+    currentAnnotations.clear();
+
+    updateImage(player->nextFrame());
+
+    // add new annotations
+    for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
+        auto rect = QRectF(ann->area.x, ann->area.y, ann->area.w, ann->area.h);
+        auto region = new AnnotatedRegion(ann, rect);
+        scene->addItem(region);
+        currentAnnotations.push_back(region);
+    }
+}
+
+void MainWindow::prevFrame()
+{
+    // remove old annotations
+    for (auto ann : currentAnnotations) {
+        scene->removeItem(ann);
+//        delete ann;
+    }
+    currentAnnotations.clear();
+
+    updateImage(player->prevFrame());
+
+    // add new annotations
+    for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
+        auto rect = QRectF(ann->area.x, ann->area.y, ann->area.w, ann->area.h);
+        auto region = new AnnotatedRegion(ann, rect);
+        scene->addItem(region);
+        currentAnnotations.push_back(region);
+    }
+}
+
+void MainWindow::gotoFrame() {
+
+}
+
 
 void MainWindow::updatePlayerUI(QImage img)
 {
 	if (!img.isNull())
 	{
-		imgPointer->setPixmap(QPixmap::fromImage(img));
+		displayImage->setPixmap(QPixmap::fromImage(img));
 		scene->setSceneRect(img.rect());
 		ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-		ui->videoSlider->setValue(myPlayer->getCurrentFrame());
-		ui->currentTime->setText(getFormattedTime((int)myPlayer->
-			getCurrentFrame() / (int)myPlayer->getFrameRate()));
+		ui->videoSlider->setValue(player->getCurrentFrame());
+		ui->currentTime->setText(getFormattedTime((int)player->
+			getCurrentFrame() / (int)player->getFrameRate()));
 	}
 }
 
@@ -118,7 +169,7 @@ void MainWindow::on_LoadVideo_clicked()
     QFileInfo name = filename;
 	if (!filename.isEmpty())
 	{
-        if (!myPlayer->loadVideo(filename.toLatin1().data()))
+        if (!player->loadVideo(filename.toLatin1().data()))
 		{
 			QMessageBox msgBox;
 			msgBox.setText("The selected video could not be opened!");
@@ -130,19 +181,26 @@ void MainWindow::on_LoadVideo_clicked()
             this->setWindowTitle(name.fileName());
 			ui->Play->setEnabled(true);
 			ui->videoSlider->setEnabled(true);
-			ui->videoSlider->setMaximum(myPlayer->getNumberOfFrames());
-			ui->totalTime->setText(getFormattedTime((int)myPlayer-> 
-				getNumberOfFrames() / (int)myPlayer->getFrameRate()));
-			QImage firstImage = myPlayer->getOneFrame();
+			ui->videoSlider->setMaximum(player->getNumberOfFrames());
+			ui->totalTime->setText(getFormattedTime((int)player->
+				getNumberOfFrames() / (int)player->getFrameRate()));
+			QImage firstImage = player->nextFrame();
+//            QImage displayImage = myPlayer->nextFrame();
             scene.reset(new QGraphicsScene(this));
 //            scene = new QGraphicsScene(this);
-			imgPointer = scene->addPixmap(QPixmap::fromImage(firstImage));
+
+			displayImage = scene->addPixmap(QPixmap::fromImage(firstImage));
+
 			scene->setSceneRect(firstImage.rect());
             ui->videoWindow->setScene(scene.get());
             ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
             ui->videoWindow->show();
             ui->currentSpeed->setText("Current Speed: 100%");
             ui->Play->setFocus();
+
+            // TODO: should first try to load this if the data
+            // file exists
+            document.reset(new FishDetector::Document());
 		}
 	}
 
@@ -246,7 +304,7 @@ void MainWindow::on_saveAnnotate_clicked()
         outFile << fishCount << "," << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";
-        outFile << (double) it->frameCounted / myPlayer->getFrameRate() / 60.0 / 60.0 << std::endl;
+        outFile << (double) it->frameCounted / player->getFrameRate() / 60.0 / 60.0 << std::endl;
         fishCount++;
     }
     outFile.close();
@@ -254,89 +312,75 @@ void MainWindow::on_saveAnnotate_clicked()
 
 void MainWindow::on_Play_clicked()
 {
-	if (myPlayer->isStopped())
+	if (player->isStopped())
 	{
-		myPlayer->Play();
+		player->Play();
 		ui->Play->setText(tr("Stop"));
 	}
 	else
 	{
-		myPlayer->Stop();
+		player->Stop();
 		ui->Play->setText(tr("Play"));
 	}
 }
 
 void MainWindow::on_videoSlider_sliderPressed()
 {
-	myPlayer->Stop();
+	player->Stop();
 }
 
 void MainWindow::on_videoSlider_sliderReleased()
 {
-	myPlayer->Play();
+	player->Play();
     ui->Play->setText(tr("Stop"));
 }
 
 void MainWindow::on_videoSlider_sliderMoved(int position)
 {
-	myPlayer->setCurrentFrame(position);
-	ui->currentTime->setText(getFormattedTime(position / (int)myPlayer->getFrameRate()));
+	player->setFrame(position);
+	ui->currentTime->setText(getFormattedTime(position / (int)player->getFrameRate()));
 }
 
 void MainWindow::on_SpeedUp_clicked()
 {
-	myPlayer->speedUp();
+	player->speedUp();
     QString tempSpeed;
-    tempSpeed.setNum((int)(myPlayer->getCurrentSpeed()));
+    tempSpeed.setNum((int)(player->getCurrentSpeed()));
     ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
 void MainWindow::on_SlowDown_clicked()
 {
-	myPlayer->slowDown();
+	player->slowDown();
     QString tempSpeed;
-    tempSpeed.setNum((int)(myPlayer->getCurrentSpeed()));
+    tempSpeed.setNum((int)(player->getCurrentSpeed()));
     ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
+}
+
+void MainWindow::updateImage(const QImage &image)
+{
+    if (!player->isStopped())
+	{
+		player->Stop();
+		ui->Play->setText(tr("Play"));
+	}
+
+    displayImage->setPixmap(QPixmap::fromImage(image));
+    scene->setSceneRect(image.rect());
+    ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
+    ui->videoSlider->setValue(player->getCurrentFrame());
+    ui->currentTime->setText(getFormattedTime((int)player->
+        getCurrentFrame() / (int)player->getFrameRate()));
 }
 
 void MainWindow::on_minusOneFrame_clicked()
 {
-	if (!myPlayer->isStopped())
-	{
-		myPlayer->Stop();
-		ui->Play->setText(tr("Play"));
-	}
-	myPlayer->minusOneFrame();
-	QImage thisFrame = myPlayer->getOneFrame();
-	if (!thisFrame.isNull())
-	{
-        imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
-		scene->setSceneRect(thisFrame.rect());
-        	ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-		ui->videoSlider->setValue(myPlayer->getCurrentFrame());
-		ui->currentTime->setText(getFormattedTime((int)myPlayer->
-			getCurrentFrame() / (int)myPlayer->getFrameRate()));
-	}
+    prevFrame();
 }
 
 void MainWindow::on_plusOneFrame_clicked()
 {
-	if (!myPlayer->isStopped())
-	{
-		myPlayer->Stop();
-		ui->Play->setText(tr("Play"));
-	}
-	QImage thisFrame = myPlayer->getOneFrame();
-	if (!thisFrame.isNull())
-	{
-		imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
-		scene->setSceneRect(thisFrame.rect());
-		ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-		ui->videoSlider->setValue(myPlayer->getCurrentFrame());
-		ui->currentTime->setText(getFormattedTime((int)myPlayer->
-			getCurrentFrame() / (int)myPlayer->getFrameRate()));
-	}
-
+    nextFrame();
 }
 
 void MainWindow::on_addRound_clicked()
@@ -383,30 +427,30 @@ void MainWindow::on_nextFish_clicked()
 
 void MainWindow::on_goToFrame_clicked()
 {
-    if (!myPlayer==NULL)
+    if (!player==NULL)
     {
-        if (!myPlayer->isStopped())
+        if (!player->isStopped())
         {
-            myPlayer->Stop();
+            player->Stop();
             ui->Play->setText(tr("Play"));
         }
-        myPlayer->setCurrentFrame(listPos->getFrameCounted()-1);
-        QImage thisFrame = myPlayer->getOneFrame();
-        if (!thisFrame.isNull())
+        QImage image = player->setFrame(listPos->getFrameCounted());
+
+        if (!image.isNull())
         {
-            imgPointer->setPixmap(QPixmap::fromImage(thisFrame));
-            scene->setSceneRect(thisFrame.rect());
+            displayImage->setPixmap(QPixmap::fromImage(image));
+            scene->setSceneRect(image.rect());
             ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-            ui->videoSlider->setValue(myPlayer->getCurrentFrame());
-            ui->currentTime->setText(getFormattedTime((int)myPlayer->
-                getCurrentFrame() / (int)myPlayer->getFrameRate()));
+            ui->videoSlider->setValue(player->getCurrentFrame());
+            ui->currentTime->setText(getFormattedTime((int)player->
+                getCurrentFrame() / (int)player->getFrameRate()));
         }
     }
 }
 
 void MainWindow::on_updateFishFrame_clicked()
 {
-    int currentFrame = (int) myPlayer->getCurrentFrame();
+    int currentFrame = (int) player->getCurrentFrame();
     listPos->frameCounted = currentFrame;
     updateVecIndex();
 }
@@ -461,19 +505,27 @@ void MainWindow::on_addRegion_clicked()
 {
     //QImage thisFrame = myPlayer->getOneFrame();
     //if (!thisFrame.isNull())
-    if (1)
-    {
         //scene->addRect(QRect(0, 0, 100, 100));
-        scene->addItem(new AnnotatedRegion(QRect(0, 0, 100, 100)));
-    }
+
+    FishDetector::Rect area(0, 0, 100, 100);
+    auto ann = document->addAnnotation();
+    auto loc = document->addAnnotationLocation(ann->getId(), player->getCurrentFrame(), area);
+//    auto loc = ann->addLocation(player->getCurrentFrame(), area);
+//    auto ann = document->addAnnotation(player->getCurrentFrame(), area);
+
+    auto annotationArea = new AnnotatedRegion(loc, QRect(0, 0, 100, 100));
+    currentAnnotations.push_back(annotationArea);
+    scene->addItem(annotationArea);
+
+
 }
 
 void MainWindow::addFish(FishTypeEnum fType)
 {
 
-	myPlayer->Stop();
+	player->Stop();
 	ui->Play->setText(tr("Play"));
-	double currentFrame = myPlayer->getCurrentFrame();
+	double currentFrame = player->getCurrentFrame();
     unique_ptr<Fish> tempFish(new Fish(fType,currentFrame));
     tempFish->setFishSubType(0);
 	myFishList.push_back(*tempFish);
