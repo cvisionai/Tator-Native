@@ -2,6 +2,7 @@
 #define ANNOTATEDREGION_H
 
 #include <QGraphicsRectItem>
+#include "document.h"
 
 enum drag_t {
     DRAG_NONE = 0,
@@ -18,9 +19,10 @@ enum drag_t {
 class AnnotatedRegion: public QGraphicsRectItem
 {
 protected:
+    std::shared_ptr<FishDetector::AnnotationLocation> annotation;
     drag_t drag;
 public:
-    AnnotatedRegion(QRectF area);
+    AnnotatedRegion(std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

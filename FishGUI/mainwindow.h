@@ -16,9 +16,11 @@
 #include <ostream>
 #include <memory>
 #include <string>
+
 #include "ui_mainwindow.h"
 #include "fish.h"
 #include "annotatedregion.h"
+#include "document.h"
 
 using namespace std;
 namespace Ui {
@@ -33,6 +35,9 @@ class MainWindow : public QWidget
  	explicit MainWindow(QWidget *parent = 0);
 // 	~MainWindow();
 
+    void nextFrame();
+    void prevFrame();
+    void gotoFrame();
  private slots:
   	void updatePlayerUI(QImage img);
 	void updateSubTypeMenu(int typeIndex);
@@ -61,27 +66,37 @@ class MainWindow : public QWidget
     void on_addRegion_clicked();
     void on_typeMenu_currentIndexChanged(int tIdx);
     void on_subTypeMenu_currentIndexChanged(int sIdx);
+public:
+    void updateImage(const QImage &image);
+    std::unique_ptr<Player> &getPlayer() { return player; }
  private:
-    std::unique_ptr<Ui::MainWidget> ui;
-    std::unique_ptr<Player> myPlayer;
-//	fishSerialize::FishList* fList;
-	vector<Fish> myFishList;
-    vector<Fish>::iterator listPos;
-	QGraphicsPixmapItem* imgPointer;
-    std::unique_ptr<QGraphicsScene> scene;
-    int m_fIndex;
-	void addFish(FishTypeEnum fType);
+    void updateAnnotations();
+    void addFish(FishTypeEnum fType);
     void updateVecIndex();
-    FishTypeEnum getFishType (string const& inString);
-    int getFishSpecies (FishTypeEnum fType, string const& sString);
+    FishTypeEnum getFishType (string const &inString);
+    int getFishSpecies (FishTypeEnum fType, string const &sString);
     string getFishTypeString (FishTypeEnum fType);
     string getFishSpeciesString (FishTypeEnum fType, int species);
     void disableControls();
     void enableControls();
-    void keyPressEvent(QKeyEvent* e);
+    void keyPressEvent(QKeyEvent *e);
+ private:
+    std::unique_ptr<FishDetector::Document> document;
+
+    std::unique_ptr<Ui::MainWidget> ui;
+    std::unique_ptr<Player> player;
+//	fishSerialize::FishList* fList;
+	vector<Fish> myFishList;
+    vector<Fish>::iterator listPos;
+    std::unique_ptr<QGraphicsScene> scene;
+    int fIndex;
 
 //    void convertFishToSerialize();
 //    void convertSerialToFish();
+
+//    QImage displayImage;
+    QGraphicsPixmapItem *displayImage;
+    std::list<AnnotatedRegion *> currentAnnotations;
 };
 
 template<class T>

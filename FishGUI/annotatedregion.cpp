@@ -7,8 +7,9 @@
 
 #include <iostream>
 
-AnnotatedRegion::AnnotatedRegion(QRectF area)
+AnnotatedRegion::AnnotatedRegion(std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area)
 {
+    this->annotation = annotation;
     setRect(area);
     setAcceptHoverEvents(true);
     setFlags(ItemIsMovable | ItemIsSelectable);
@@ -115,8 +116,17 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     default:
         QGraphicsRectItem::mouseMoveEvent(event);
+        auto pos = QGraphicsRectItem::pos();
+        annotation->area.x = pos.x();
+        annotation->area.y = pos.y();
+
         return;
     }
+
+    annotation->area.x = area.x();
+    annotation->area.y = area.y();
+    annotation->area.w = area.width();
+    annotation->area.h = area.height();
 
     setRect(area);
     prepareGeometryChange();

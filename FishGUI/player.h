@@ -28,6 +28,8 @@ private:
  	Mat RGBframe;
  	QImage img;
     int delay;
+
+    std::int64_t frameIndex;
 signals:
   void processedImage(const QImage &image);
 protected:
@@ -42,12 +44,19 @@ public:
   bool isStopped() const;
   void speedUp();
   void slowDown();
-  void minusOneFrame();
-  QImage getOneFrame();
-  void setCurrentFrame(int frameNumber);
-  double getFrameRate();
-  double getCurrentFrame();
+//  void minusOneFrame();
+  double getFrameRate();  
   double getNumberOfFrames();
   double getCurrentSpeed();
+
+  QImage nextFrame();
+  QImage prevFrame();
+  QImage setFrame(std::int64_t frame);
+
+  std::int64_t getCurrentFrame();
+private:
+  QImage getOneFrame();
+  void setCurrentFrame(std::int64_t frameNumber);
 };
+
 #endif

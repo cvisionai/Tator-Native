@@ -2,9 +2,10 @@
 
 Player::Player(QObject *parent)
 	: QThread(parent)
-	{
-		stop = true;
-	}
+{
+    frameIndex = 0;
+	stop = true;
+}
 
 bool Player::loadVideo(std::string filename) {
     capture.reset(new cv::VideoCapture(filename));
@@ -111,16 +112,30 @@ void Player::slowDown()
     currentSpeed = currentSpeed / 2;
 }
 
-void Player::minusOneFrame()
-{
-	double currentFrame = getCurrentFrame();
-	currentFrame = currentFrame - (double)2;
-	setCurrentFrame((int)currentFrame);
+QImage Player::nextFrame() {
+    setCurrentFrame(++frameIndex);
+    return getOneFrame();
 }
 
-double Player::getCurrentFrame()
+QImage Player::prevFrame() {
+    setCurrentFrame(--frameIndex);
+    return getOneFrame();
+}
+
+
+//void Player::minusOneFrame()
+//{
+//	std::int64_t currentFrame = getCurrentFrame() - 1;
+////	currentFrame = currentFrame - (double)2;
+//	setCurrentFrame(currentFrame);
+//}
+
+std::int64_t Player::getCurrentFrame()
 {
-	return capture->get(CV_CAP_PROP_POS_FRAMES);
+//    double value = capture->get(CV_CAP_PROP_POS_FRAMES);
+//    std::cout << "value = " << value << std::endl;
+//	return (std::uint64_t)value;
+    return frameIndex;
 }
 
 double Player::getNumberOfFrames()
@@ -133,10 +148,19 @@ double Player::getFrameRate()
 	return frameRate;
 }
 
-void Player::setCurrentFrame(int frameNumber)
+void Player::setCurrentFrame(std::int64_t frameNumber)
 {
-	capture->set(CV_CAP_PROP_POS_FRAMES, frameNumber);
+    capture->set(CV_CAP_PROP_POS_MSEC, frameNumber*1000);
+//	capture->set(CV_CAP_PROP_POS_FRAMES, 2.0);
+//    std::cout << "frame: " << frameNumber*1000 << ", actual: " << capture->get(CV_CAP_PROP_POS_MSEC) << std::endl;
 }
+
+QImage Player::setFrame(std::int64_t frame)
+{
+    setCurrentFrame(frame);
+    return getOneFrame();
+}
+
 
 double Player::getCurrentSpeed()
 {
