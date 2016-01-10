@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace FishDetector {
 

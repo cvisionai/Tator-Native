@@ -13,6 +13,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <cstdint>
 
 using namespace cv;
 class Player : public QThread

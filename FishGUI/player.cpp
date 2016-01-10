@@ -39,6 +39,7 @@ void Player::run()
 		{
 			stop = true;
 		}
+        frameIndex++;
 		if (frame.channels() == 3)
 		{
 			cv::cvtColor(frame, RGBframe, CV_BGR2RGB);
@@ -150,7 +151,8 @@ double Player::getFrameRate()
 
 void Player::setCurrentFrame(std::int64_t frameNumber)
 {
-    capture->set(CV_CAP_PROP_POS_MSEC, frameNumber*1000);
+    capture->set(CV_CAP_PROP_POS_MSEC, int((double(frameNumber)/double(frameRate))*1000));
+    frameIndex = frameNumber;
 //	capture->set(CV_CAP_PROP_POS_FRAMES, 2.0);
 //    std::cout << "frame: " << frameNumber*1000 << ", actual: " << capture->get(CV_CAP_PROP_POS_MSEC) << std::endl;
 }
