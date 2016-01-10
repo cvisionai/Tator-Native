@@ -1,8 +1,0 @@
-Implement Vector of Fish, and connect the add Buttons to the actions to add to vector.
-Add JSON converter/writer/reader for writing out and loading fish stats/entries?
-for fish vector, get pointer to data element to read into local fish object. Then, check to make sure pointer is the same when making a modification.
-	If a fish has been added, the pointer will possibly have changed, and we will need to get the new pointer to the same index. 
-	Alternatively, just always get the pointer to that index, by saving the index, and doing things that way. Probably the safest bet.
-		1. Get copy of element, including element id
-		2. Make changes to local object.
-		3. Get pointer to id, and write the changes
