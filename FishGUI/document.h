@@ -26,14 +26,18 @@ struct AnnotationLocation {
 
 class Annotation {
 public:
+    typedef std::list<std::shared_ptr<AnnotationLocation> > list_t;
+public:
     Annotation(std::uint64_t id);
     void addLocation(std::shared_ptr<AnnotationLocation> location);
     std::shared_ptr<AnnotationLocation> addLocation(std::uint64_t frame, Rect area);
 
     std::uint64_t getId() { return id; }
+
+    list_t &getLocations() { return locations; }
 private:
     std::uint64_t id;
-    std::list<std::shared_ptr<AnnotationLocation> > locations;
+    list_t locations;
 };
 
 class FrameAnnotations {
@@ -56,6 +60,8 @@ private:
 // contains a pointer to video we're annotating and annotations
 class Document {
 public:
+    typedef std::map<std::uint64_t, std::shared_ptr<Annotation> > annotation_map_t;
+public:
     Document();
 
     std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
@@ -63,13 +69,13 @@ public:
     void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
 
     FrameAnnotations getAnnotations(std::uint64_t frame);
-    std::map<std::uint64_t, std::shared_ptr<Annotation> > getAnnotations() {return annotations;}
+    annotation_map_t &getAnnotations() { return annotations; }
 private:
     std::uint64_t id_counter;
 //    std::vector<std::shared_ptr<AnnotationLocation>> annotationLocations;
 //    std::list<std::shared_ptr<Annotation>> annotations;
     std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;
-    std::map<std::uint64_t, std::shared_ptr<Annotation> > annotations;
+    annotation_map_t annotations;
 };
 
 }

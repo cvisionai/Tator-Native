@@ -393,20 +393,20 @@ void MainWindow::writeJSON()
     // (i.e. at the front or somewhere in the middle), this can
     // be achieved using a combination of the insert and put_own
     // functions.
-    //BOOST_FOREACH(const FishDetector::Rect &annotation, nameOfAnnotationsList)
-    auto annotationList = document->getAnnotations();
-    for (auto annotation : annotationList)
+
+    auto &annotation_map = document->getAnnotations();
+    for (auto const &map_value : annotation_map)
     {
-        auto &elements = annotation.second();
-        for (auto element : elements)
+        auto annotation = map_value.second;
+        for (auto const &location : annotation->getLocations())
         {
             child.clear();
-            child.put("id",annotation->id);
-            child.put("frame",element->frame);
-            child.put("x",element->area->x);
-            child.put("y",element->area->y);
-            child.put("h",element->area->h);
-            child.put("w",element->area->w);
+            child.put("id",annotation->getId());
+            child.put("frame",location->frame);
+            child.put("x",location->area.x);
+            child.put("y",location->area.y);
+            child.put("h",location->area.h);
+            child.put("w",location->area.w);
 
             children.push_back(std::make_pair("", child));
         }
