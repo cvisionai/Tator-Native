@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace FishDetector {
 
@@ -62,6 +63,7 @@ public:
     void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
 
     FrameAnnotations getAnnotations(std::uint64_t frame);
+    std::map<std::uint64_t, std::shared_ptr<Annotation> > getAnnotations() {return annotations;}
 private:
     std::uint64_t id_counter;
 //    std::vector<std::shared_ptr<AnnotationLocation>> annotationLocations;

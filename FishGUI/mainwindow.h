@@ -16,6 +16,9 @@
 #include <ostream>
 #include <memory>
 #include <string>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
 
 #include "ui_mainwindow.h"
 #include "fish.h"
@@ -69,6 +72,7 @@ class MainWindow : public QWidget
 public:
     void updateImage(const QImage &image);
     std::unique_ptr<Player> &getPlayer() { return player; }
+    void writeJSON();
  private:
     void updateAnnotations();
     void addFish(FishTypeEnum fType);

@@ -6,16 +6,16 @@ SOURCES = player.cpp \
 	  mainwindow.cpp \
           fish.cpp \
           annotatedregion.cpp \
-    navigatorwidget.cpp \
-    document.cpp
+          navigatorwidget.cpp \
+          document.cpp
 HEADERS = player.h \
 	  mainwindow.h \
           fish.h \
           annotatedregion.h \
-    navigatorwidget.h \
-    document.h
+          navigatorwidget.h \
+          document.h
 FORMS = mainwindow.ui \
-    navigatorwidget.ui
+        navigatorwidget.ui
 
 TARGET = fishguibuild
 
@@ -34,6 +34,7 @@ win32{
     }
 
     INCLUDEPATH += D:\\OpenCV\\opencv\\build\\include
+    INCLUDEPATH += D:\\boost_1_60_0
 }
 
 macx{

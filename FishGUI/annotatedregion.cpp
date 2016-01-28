@@ -137,10 +137,11 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                             QWidget *widget)
 {
-    painter->setFont(QFont("Helvetica", 8));
+    painter->setFont(QFont("Helvetica", 14));
 
     // draw main rectangle
     painter->setPen(Qt::DashLine);
+    painter->setPen(QPen(QColor(255,0,0)));
     painter->drawRect(rect());
 
     // draw UID
@@ -152,6 +153,6 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     QRectF text_area = QRectF(rect().right() - width, rect().bottom() - fm.height(), width, fm.height());
     painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 128)));
 
-    painter->setPen(QPen(QColor(255, 255, 255)));
+    painter->setPen(QPen(QColor(255, 0, 0)));
     painter->drawText(text_area, "UID");
 }

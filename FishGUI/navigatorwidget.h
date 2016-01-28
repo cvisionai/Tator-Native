@@ -2,6 +2,7 @@
 #define NAVIGATORWIDGET_H
 
 #include <QWidget>
+#include <memory>
 
 namespace Ui {
 class NavigatorWidget;

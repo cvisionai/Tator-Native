@@ -6,10 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
         ui.reset(new Ui::MainWidget);
         fIndex = 0;
         player.reset(new Player());
-//		fList = new fishSerialize::FishList();
         myFishList.clear();
         QObject::connect(player.get(), SIGNAL(processedImage(QImage)),
-			this, SLOT(updatePlayerUI(QImage)));
+                         this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
         disableControls();
 		QStringList typeList;
@@ -18,9 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
 		typeList.append("Skate");
 		typeList.append("Other");
 		ui->typeMenu->addItems(typeList);
-		connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateSubTypeMenu(int)));
+        QObject::connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)),
+                         this, SLOT(updateSubTypeMenu(int)));
 		ui->typeMenu->setCurrentIndex(3);
-        connect(ui->goToFishVal,SIGNAL(returnPressed()), this, SLOT(goToFish()));
+        QObject::connect(ui->goToFishVal,SIGNAL(returnPressed()),
+                         this, SLOT(goToFish()));
 //        connect(ui->towStatus, SIGNAL(toggled(bool)), this, SLOT(setTowType(bool)));
 
         auto next_button = ui->navigator->findChild<QPushButton *>("next_button");
@@ -138,9 +139,16 @@ void MainWindow::updateSubTypeMenu(int typeIndex)
 void MainWindow::goToFish()
 {
     int fNumber = ui->goToFishVal->text().toInt();
-    if (fNumber > 0)
+    if ((fNumber > 0) && (fNumber < myFishList.size()))
     {
         listPos = myFishList.begin()+fNumber-1;
+        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
+        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+        updateVecIndex();
+    }
+    else
+    {
+        listPos = myFishList.end()-1;
         ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
         ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
         updateVecIndex();
@@ -218,8 +226,7 @@ void MainWindow::on_loadAnnotate_clicked()
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
     ui->fileNameValue->setText(qFilename);
     ifstream inFile(filename.toLatin1().data());
-    string line;
-    string tripID, reviewer, towType, fishNum, fishType, species;
+    string line, tripID, reviewer, towType, fishNum, fishType, species;
     int frame, towNum;
     double timeInVid;
     getline(inFile,line);
@@ -367,10 +374,47 @@ void MainWindow::updateImage(const QImage &image)
 
     displayImage->setPixmap(QPixmap::fromImage(image));
     scene->setSceneRect(image.rect());
-    ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
+    ui->videoWindow->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
     ui->videoSlider->setValue(player->getCurrentFrame());
     ui->currentTime->setText(getFormattedTime((int)player->
         getCurrentFrame() / (int)player->getFrameRate()));
+}
+
+void MainWindow::writeJSON()
+{
+    using boost::property_tree::ptree;
+    ptree pt;
+    ptree children;
+    ptree child;
+    // Iterate over the modules in the set and put them in the
+    // property tree. Note that the put function places the new
+    // key at the end of the list of keys. This is fine most of
+    // the time. If you want to place an item at some other place
+    // (i.e. at the front or somewhere in the middle), this can
+    // be achieved using a combination of the insert and put_own
+    // functions.
+    //BOOST_FOREACH(const FishDetector::Rect &annotation, nameOfAnnotationsList)
+    auto annotationList = document->getAnnotations();
+    for (auto annotation : annotationList)
+    {
+        auto &elements = annotation.second();
+        for (auto element : elements)
+        {
+            child.clear();
+            child.put("id",annotation->id);
+            child.put("frame",element->frame);
+            child.put("x",element->area->x);
+            child.put("y",element->area->y);
+            child.put("h",element->area->h);
+            child.put("w",element->area->w);
+
+            children.push_back(std::make_pair("", child));
+        }
+    }
+
+    pt.add_child("Annotation Array", children);
+    // Write the property tree to the JSON file.
+    write_json("test.json", pt);
 }
 
 void MainWindow::on_minusOneFrame_clicked()
@@ -479,6 +523,8 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         keycode = 2;
     else if (keypress == "t")
         keycode = 3;
+    else if (keypress == " ")
+        keycode = 4;
 
     switch (keycode)
     {
@@ -498,6 +544,9 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         ui->addOther->animateClick();
         ui->Play->setFocus();
         break;
+    case 4:
+        ui->Play->animateClick();
+        ui->Play->setFocus();
     }
 }
 
