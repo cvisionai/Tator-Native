@@ -1,6 +1,6 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/bind.hpp>
-#include "document.h"
+#include "../FishGUI/document.h"
 using namespace boost::unit_test;
 
 void doc_init_function()
