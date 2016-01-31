@@ -67,7 +67,7 @@ public:
     std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
     std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
     void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
-
+    std::uint64_t getIDCounter() {return id_counter; }
     FrameAnnotations getAnnotations(std::uint64_t frame);
     annotation_map_t &getAnnotations() { return annotations; }
 private:
