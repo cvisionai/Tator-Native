@@ -12,4 +12,5 @@
 Makefile*
 fishguibuild*
 ui_mainwindow.h
+build*
 .DS_Store
