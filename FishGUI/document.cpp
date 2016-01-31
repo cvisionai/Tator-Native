@@ -1,4 +1,7 @@
 #include "document.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
 
 namespace FishDetector {
 
@@ -74,6 +77,42 @@ void Document::copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area) 
 
 FrameAnnotations Document::getAnnotations(std::uint64_t frame) {
     return annotationsByFrame[frame];
+}
+
+void Document::writeJSON()
+{
+    using boost::property_tree::ptree;
+    ptree pt;
+    ptree children;
+    ptree child;
+    // Iterate over the modules in the set and put them in the
+    // property tree. Note that the put function places the new
+    // key at the end of the list of keys. This is fine most of
+    // the time. If you want to place an item at some other place
+    // (i.e. at the front or somewhere in the middle), this can
+    // be achieved using a combination of the insert and put_own
+    // functions.
+
+    for (auto const &map_value : annotations)
+    {
+        auto annotation = map_value.second;
+        for (auto const &location : annotation->getLocations())
+        {
+            child.clear();
+            child.put("id",annotation->getId());
+            child.put("frame",location->frame);
+            child.put("x",location->area.x);
+            child.put("y",location->area.y);
+            child.put("h",location->area.h);
+            child.put("w",location->area.w);
+
+            children.push_back(std::make_pair("", child));
+        }
+    }
+
+    pt.add_child("Annotation Array", children);
+    // Write the property tree to the JSON file.
+    write_json("test.json", pt);
 }
 
 }

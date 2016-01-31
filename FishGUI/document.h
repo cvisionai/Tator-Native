@@ -63,6 +63,7 @@ public:
     typedef std::map<std::uint64_t, std::shared_ptr<Annotation> > annotation_map_t;
 public:
     Document();
+    void writeJSON();
 
     std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
     std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
