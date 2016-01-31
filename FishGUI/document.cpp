@@ -79,9 +79,10 @@ FrameAnnotations Document::getAnnotations(std::uint64_t frame) {
     return annotationsByFrame[frame];
 }
 
-void Document::writeJSON()
+void Document::writeJSON(const std::string& filename)
 {
     using boost::property_tree::ptree;
+    using boost::property_tree::json_parser::write_json;
     ptree pt;
     ptree children;
     ptree child;
@@ -112,7 +113,7 @@ void Document::writeJSON()
 
     pt.add_child("Annotation Array", children);
     // Write the property tree to the JSON file.
-    write_json("test.json", pt);
+    write_json(filename, pt);
 }
 
 }
