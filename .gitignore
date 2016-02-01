@@ -9,6 +9,7 @@
 *.ilk
 *.user
 *.dll
+*.json
 Makefile*
 fishguibuild*
 ui_mainwindow.h

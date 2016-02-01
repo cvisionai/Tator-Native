@@ -2,6 +2,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
+#include <iostream>
 
 namespace FishDetector {
 
@@ -79,7 +80,7 @@ FrameAnnotations Document::getAnnotations(std::uint64_t frame) {
     return annotationsByFrame[frame];
 }
 
-void Document::writeJSON(const std::string& filename)
+int Document::writeJSON(const std::string& filename)
 {
     using boost::property_tree::ptree;
     using boost::property_tree::json_parser::write_json;
@@ -100,20 +101,20 @@ void Document::writeJSON(const std::string& filename)
         for (auto const &location : annotation->getLocations())
         {
             child.clear();
-            child.put("id",annotation->getId());
-            child.put("frame",location->frame);
-            child.put("x",location->area.x);
-            child.put("y",location->area.y);
-            child.put("h",location->area.h);
-            child.put("w",location->area.w);
-
+            child.add("annotation.id",annotation->getId());
+            child.add("annotation.frame",location->frame);
+            child.add("annotation.x",location->area.x);
+            child.add("annotation.y",location->area.y);
+            child.add("annotation.h",location->area.h);
+            child.add("annotation.w",location->area.w);
             children.push_back(std::make_pair("", child));
         }
     }
-
+    
     pt.add_child("Annotation Array", children);
     // Write the property tree to the JSON file.
     write_json(filename, pt);
+    return 0;
 }
 
 }
