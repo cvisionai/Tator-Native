@@ -9,7 +9,9 @@
 *.ilk
 *.user
 *.dll
+*.json
 Makefile*
 fishguibuild*
 ui_mainwindow.h
+build*
 .DS_Store

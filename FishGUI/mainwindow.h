@@ -72,7 +72,7 @@ class MainWindow : public QWidget
 public:
     void updateImage(const QImage &image);
     std::unique_ptr<Player> &getPlayer() { return player; }
-    void writeJSON();
+    
  private:
     void updateAnnotations();
     void addFish(FishTypeEnum fType);
