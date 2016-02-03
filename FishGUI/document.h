@@ -64,7 +64,6 @@ public:
 public:
     Document();
     int writeJSON(const std::string& filename);
-
     std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
     std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
     void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
@@ -73,8 +72,6 @@ public:
     annotation_map_t &getAnnotations() { return annotations; }
 private:
     std::uint64_t id_counter;
-//    std::vector<std::shared_ptr<AnnotationLocation>> annotationLocations;
-//    std::list<std::shared_ptr<Annotation>> annotations;
     std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;
     annotation_map_t annotations;
 };

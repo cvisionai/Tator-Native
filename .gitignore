@@ -10,8 +10,9 @@
 *.user
 *.dll
 *.json
+*.app
 Makefile*
 fishguibuild*
-ui_mainwindow.h
+ui_*
 build*
 .DS_Store

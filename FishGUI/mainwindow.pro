@@ -22,7 +22,7 @@ TARGET = fishguibuild
 win32{
     target.path = D:\\Documents\\GitHub\\FishDetector\\FishGUI
     INSTALLS += target
-    QT += widgets
+    QT += widgets testlib
     CONFIG(release, debug|release) {
         LIBS += -LD:\\OpenCV\\build\\lib\\Release
         LIBS += -lopencv_core300 -lopencv_imgproc300 -lopencv_highgui300 -lopencv_videoio300
@@ -41,7 +41,7 @@ macx{
     target.path = ~/FishDetector/FishGUI
     INSTALLS += target
     QT += widgets
-    LIBS += -L/usr/local/lib -lprotobuf
+    LIBS += -L/usr/local/lib
     LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_videoio
     INCLUDEPATH += /usr/local/include
 }
