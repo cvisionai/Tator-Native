@@ -7,7 +7,23 @@
 #include <map>
 #include <memory>
 
+#include <iostream>
+#include <sstream>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+using boost::property_tree::ptree;
+using boost::property_tree::json_parser::write_json;
+using boost::property_tree::json_parser::read_json;
+
 namespace FishDetector {
+
+template <class T>
+struct Serialization {
+    static ptree write(const T &obj) {}
+    static T read(const ptree &node) {}
+};
 
 struct Rect {
     std::uint64_t x, y;
@@ -70,11 +86,69 @@ public:
     std::uint64_t getIDCounter() {return id_counter; }
     FrameAnnotations getAnnotations(std::uint64_t frame);
     annotation_map_t &getAnnotations() { return annotations; }
+    const annotation_map_t &getAnnotations() const { return annotations; }
 private:
     std::uint64_t id_counter;
     std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;
     annotation_map_t annotations;
 };
+
+template <>
+struct Serialization<AnnotationLocation> {
+    static ptree write(const AnnotationLocation &obj) {
+        ptree node;
+        node.add("annotation.frame", obj.frame);
+        node.add("annotation.x", obj.area.x);
+        node.add("annotation.y", obj.area.y);
+        node.add("annotation.w", obj.area.w);
+        node.add("annotation.h", obj.area.h);
+        return node;
+    }
+
+    static AnnotationLocation read(ptree &node) {
+
+    }
+};
+
+template <>
+struct Serialization<Document> {
+    static ptree write(const Document &obj) {
+        ptree document;
+        ptree children;
+
+        for (auto const &map_value : obj.getAnnotations())
+        {
+            auto annotation = map_value.second;
+            for (auto const &location : annotation->getLocations())
+            {
+                ptree node = Serialization<AnnotationLocation>::write(*location);
+                node.add("annotation.id", annotation->getId());
+                children.push_back(std::make_pair("", node));
+            }
+        }
+
+        document.add_child("Annotation Array", children);
+        return document;
+    }
+
+    static Document read(const ptree &document) {
+
+    }
+};
+
+template <typename T>
+void serialize(const T &obj, std::ostream &out) {
+    ptree document = Serialization<T>::write(obj);
+    write_json(out, document, false);
+}
+
+template <typename T>
+T deserialize(std::istream &in) {
+    ptree document;
+
+    read_json(in, document);
+    return Serialization<T>::read(document);
+}
 
 }
 

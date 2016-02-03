@@ -86,7 +86,7 @@ int Document::writeJSON(const std::string& filename)
     using boost::property_tree::json_parser::write_json;
     ptree pt;
     ptree children;
-    ptree child;
+
     // Iterate over the modules in the set and put them in the
     // property tree. Note that the put function places the new
     // key at the end of the list of keys. This is fine most of
@@ -100,7 +100,7 @@ int Document::writeJSON(const std::string& filename)
         auto annotation = map_value.second;
         for (auto const &location : annotation->getLocations())
         {
-            child.clear();
+            ptree child;
             child.add("annotation.id",annotation->getId());
             child.add("annotation.frame",location->frame);
             child.add("annotation.x",location->area.x);
