@@ -12,6 +12,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
 
 using boost::property_tree::ptree;
 using boost::property_tree::json_parser::write_json;
@@ -81,10 +82,13 @@ public:
     Document();
     int writeJSON(const std::string& filename);
     std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
+    void makeAnnotation(std::uint64_t id);
     std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
+    void addAnnotationLocation(std::uint64_t id, std::shared_ptr<AnnotationLocation> newLoc);
     void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
     std::uint64_t getIDCounter() {return id_counter; }
     FrameAnnotations getAnnotations(std::uint64_t frame);
+    bool keyExists(std::uint64_t id) { return (annotations.find( id ) != annotations.end());}
     annotation_map_t &getAnnotations() { return annotations; }
     const annotation_map_t &getAnnotations() const { return annotations; }
 private:
@@ -105,8 +109,17 @@ struct Serialization<AnnotationLocation> {
         return node;
     }
 
-    static AnnotationLocation read(ptree &node) {
+    static std::shared_ptr<AnnotationLocation> read(ptree &node) {
+        std::uint64_t frame,x,y,w,h;
+        frame = node.get("frame",0);
+        x = node.get("x",0);
+        y = node.get("y",0);
+        w = node.get("w",0);
+        h = node.get("h",0);
+        Rect newRect = Rect(x,y,w,h);
+        auto newLoc = std::make_shared<AnnotationLocation>(frame,newRect);
 
+        return newLoc;
     }
 };
 
@@ -132,7 +145,23 @@ struct Serialization<Document> {
     }
 
     static Document read(const ptree &document) {
-
+        std::uint64_t id;
+        Document newDoc = Document();
+        BOOST_FOREACH(const ptree::value_type &v, document.get_child("Annotation Array")) {
+            id = v.second.get("id",0);
+            ptree newAnnotation = v.second;
+            auto newLoc = Serialization<AnnotationLocation>::read(newAnnotation);
+            if (newDoc.keyExists(id))
+            {
+                newDoc.addAnnotationLocation(id,newLoc);
+            }
+            else
+            {
+                newDoc.makeAnnotation(id);
+                newDoc.addAnnotationLocation(id,newLoc);
+            }
+        }
+        return newDoc;
     }
 };
 

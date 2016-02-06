@@ -38,8 +38,8 @@ void TestDocument::testDeserialize() {
 
 //    testDocument.addAnnotation();
 //    testDocument.addAnnotationLocation(std::uint64_t(0), frame, FishDetector::Rect(x,y,w,h));
-////    std::string filename = "/Users/bwoodward/Projects/FishDetector/UnitTests/test.json";
-////    QCOMPARE(testDocument->writeJSON(filename), 0);
+//  std::string filename = "/Users/bwoodward/Projects/FishDetector/UnitTests/test.json";
+//    QCOMPARE(testDocument->writeJSON(filename), 0);
 
 //    std::ostringstream out;
 //    Serialization<Document>::write(testDocument, out);

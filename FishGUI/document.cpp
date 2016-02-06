@@ -58,10 +58,20 @@ std::shared_ptr<Annotation> Document::addAnnotation() { //std::uint64_t frame, R
     return annotation;
 }
 
+void Document::makeAnnotation(std::uint64_t id) {
+    auto annotation = std::make_shared<Annotation>(id);
+    annotations[id] = annotation;
+}
+
 std::shared_ptr<AnnotationLocation> Document::addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area) {
     auto loc = annotations[id]->addLocation(frame, area);
     annotationsByFrame[frame].add(loc);
     return loc;
+}
+
+void Document::addAnnotationLocation(std::uint64_t id, std::shared_ptr<AnnotationLocation> newLoc) {
+    annotations[id]->addLocation(newLoc);
+    annotationsByFrame[newLoc->frame].add(newLoc);
 }
 
 void Document::copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area) {
