@@ -111,11 +111,11 @@ struct Serialization<AnnotationLocation> {
 
     static std::shared_ptr<AnnotationLocation> read(ptree &node) {
         std::uint64_t frame,x,y,w,h;
-        frame = node.get("frame",0);
-        x = node.get("x",0);
-        y = node.get("y",0);
-        w = node.get("w",0);
-        h = node.get("h",0);
+        frame = node.get("annotation.frame",0);
+        x = node.get("annotation.x",0);
+        y = node.get("annotation.y",0);
+        w = node.get("annotation.w",0);
+        h = node.get("annotation.h",0);
         Rect newRect = Rect(x,y,w,h);
         auto newLoc = std::make_shared<AnnotationLocation>(frame,newRect);
 

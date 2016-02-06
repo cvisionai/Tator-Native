@@ -52,5 +52,6 @@ class TestDocument : public QObject {
 private slots:
     void testSerialize();
     void testDeserialize();
+    void testReadJSON();
 //    void writeJSON();
 };

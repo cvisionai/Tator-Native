@@ -19,31 +19,28 @@ void TestDocument::testSerialize() {
 void TestDocument::testDeserialize() {
     std::string data = "{\"x\":\"1\",\"y\":\"2\"}\n";
     std::istringstream input(data);
-
-    TestClass test = deserialize<TestClass>(input);
+    auto test = deserialize<TestClass>(input);
     QCOMPARE(test.x, 1);
     QCOMPARE(test.y, 2);
 }
 
-//void TestDocument::writeJSON()
-//{
-//    using namespace FishDetector;
+void TestDocument::testReadJSON()
+{
+    //THIS NEEDS TO BE CHANGED TO AUTOMATICALLY FIND THE RIGHT FILE, BUT I DON'T KNOW
+    //THE RIGHT WAY TO DO THAT JUST NOW
+    std::ifstream file("/Users/bwoodward/Projects/FishDetector/UnitTests/test.json");
 
-//    Document testDocument;
-//    uint64_t x = 1;
-//    uint64_t y = 1;
-//    uint64_t h = 5;
-//    uint64_t w = 5;
-//    uint64_t frame = 1;
-
-//    testDocument.addAnnotation();
-//    testDocument.addAnnotationLocation(std::uint64_t(0), frame, FishDetector::Rect(x,y,w,h));
-//  std::string filename = "/Users/bwoodward/Projects/FishDetector/UnitTests/test.json";
-//    QCOMPARE(testDocument->writeJSON(filename), 0);
-
-//    std::ostringstream out;
-//    Serialization<Document>::write(testDocument, out);
-//    std::cout << "got: " << out.str() << std::endl;
-//}
+    auto test = deserialize<FishDetector::Document>(file);
+    auto annotations = test.getAnnotations();
+    auto annotation = annotations[0];
+    auto locations = annotation->getLocations();
+    auto location = locations.front();
+    QCOMPARE(location->frame, std::uint64_t(1));
+    QCOMPARE(location->area.x,std::uint64_t(1));
+    QCOMPARE(location->area.y,std::uint64_t(1));
+    QCOMPARE(location->area.h,std::uint64_t(5));
+    QCOMPARE(location->area.w,std::uint64_t(5));
+    QCOMPARE(test.keyExists(std::uint64_t(0)),true);
+}
 
 QTEST_MAIN(TestDocument)
