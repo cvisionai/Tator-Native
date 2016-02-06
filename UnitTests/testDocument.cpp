@@ -26,11 +26,11 @@ void TestDocument::testDeserialize() {
 
 void TestDocument::testReadJSON()
 {
-    //THIS NEEDS TO BE CHANGED TO AUTOMATICALLY FIND THE RIGHT FILE, BUT I DON'T KNOW
-    //THE RIGHT WAY TO DO THAT JUST NOW
-    std::ifstream file("/Users/bwoodward/Projects/FishDetector/UnitTests/test.json");
-
-    auto test = deserialize<FishDetector::Document>(file);
+    std:string data = "{\"Annotation Array\": [{\"annotation\": {\"id\": \"0\",\
+                      \"frame\":\"1\",\"x\":\"1\",\"y\":\"1\",\"h\":\"5\",\"w\":\"5\"\
+                      }}]}\n";
+    std::istringstream input(data);
+    auto test = deserialize<FishDetector::Document>(input);
     auto annotations = test.getAnnotations();
     auto annotation = annotations[0];
     auto locations = annotation->getLocations();
