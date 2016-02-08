@@ -51,7 +51,7 @@ void MainWindow::nextFrame()
     // add new annotations
     for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
         auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
-        auto region = new AnnotatedRegion(ann.second, rect);
+        auto region = new AnnotatedRegion(ann.first, ann.second, rect);
         scene->addItem(region);
         currentAnnotations.push_back(region);
     }
@@ -71,7 +71,7 @@ void MainWindow::prevFrame()
     // add new annotations
     for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
         auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
-        auto region = new AnnotatedRegion(ann.second, rect);
+        auto region = new AnnotatedRegion(ann.first, ann.second, rect);
         scene->addItem(region);
         currentAnnotations.push_back(region);
     }
@@ -522,7 +522,7 @@ void MainWindow::on_addRegion_clicked()
 //    auto loc = ann->addLocation(player->getCurrentFrame(), area);
 //    auto ann = document->addAnnotation(player->getCurrentFrame(), area);
 
-    auto annotationArea = new AnnotatedRegion(loc, QRect(0, 0, 100, 100));
+    auto annotationArea = new AnnotatedRegion(ann->getId(),loc, QRect(0, 0, 100, 100));
     currentAnnotations.push_back(annotationArea);
     scene->addItem(annotationArea);
 
@@ -547,11 +547,11 @@ void MainWindow::on_nextAndCopy_clicked()
  //       ann->updateFrame(player->getCurrentFrame());
  //   }
     for (auto ann : document->getAnnotations(prevFrame)) {
-        document->addAnnotationLocation(ann.first,ann.second->frame+1, ann.second->area);
-    }
-    for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
-        auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
-        auto region = new AnnotatedRegion(ann.second, rect);
+        auto frame = ann.second->frame+1;
+        auto area = ann.second->area;
+        auto loc = document->addAnnotationLocation(ann.first,frame, area);
+        auto rect = QRectF(loc->area.x,loc->area.y,loc->area.w,loc->area.h);
+        auto region = new AnnotatedRegion(ann.first, loc, rect);
         scene->addItem(region);
         currentAnnotations.push_back(region);
     }

@@ -7,9 +7,10 @@
 
 #include <iostream>
 
-AnnotatedRegion::AnnotatedRegion(std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area)
+AnnotatedRegion::AnnotatedRegion(std::uint64_t uid, std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area)
 {
     this->annotation = annotation;
+    this->uid = uid;
     setRect(area);
     setAcceptHoverEvents(true);
     setFlags(ItemIsMovable | ItemIsSelectable);
@@ -75,9 +76,11 @@ void AnnotatedRegion::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QRectF area = rect();
-
+    //I believe this is in item coordinates. Therefore, it's referenced to the center of
+    //the item, which it records as 0,0.  In order to correctly map a move, we need to translate
+    //that to the top left corner, and then convert to scene coordinates.
     QPointF pos = event->pos();
-//    qreal from_right = pos.x() - rect().right();
+    qreal from_right = pos.x() - rect().right();
     qreal from_left = pos.x() - rect().left();
     qreal from_top = pos.y() - rect().top();
     qreal from_bottom = pos.y() - rect().bottom();
@@ -117,8 +120,9 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     default:
         QGraphicsRectItem::mouseMoveEvent(event);
         auto pos = QGraphicsRectItem::pos();
-        annotation->area.x = pos.x();
-        annotation->area.y = pos.y();
+        //auto newArea = rect();
+        annotation->area.x = area.left() + pos.x();
+        annotation->area.y = area.top() + pos.y();
 
         return;
     }
@@ -154,7 +158,7 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 128)));
 
     painter->setPen(QPen(QColor(255, 0, 0)));
-    painter->drawText(text_area, "UID");
+    painter->drawText(text_area, QString::number(uid));
 }
 
 void AnnotatedRegion::updateFrame(uint64_t frame) {
