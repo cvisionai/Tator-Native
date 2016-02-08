@@ -67,6 +67,7 @@ class MainWindow : public QWidget
     void on_goToFrame_clicked();
     void on_updateFishFrame_clicked();
     void on_addRegion_clicked();
+    void on_nextAndCopy_clicked();
     void on_typeMenu_currentIndexChanged(int tIdx);
     void on_subTypeMenu_currentIndexChanged(int sIdx);
 public:

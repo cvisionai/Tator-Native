@@ -26,7 +26,7 @@ AnnotationLocation::AnnotationLocation(std::uint64_t frame, Rect area):
 {}
 
 
-void FrameAnnotations::add(std::shared_ptr<AnnotationLocation> annotation)
+void FrameAnnotations::add(ptr_t annotation)
 {
     annotations.push_back(annotation);
 }
@@ -43,6 +43,11 @@ std::shared_ptr<AnnotationLocation> Annotation::addLocation(std::uint64_t frame,
     auto loc = std::make_shared<AnnotationLocation>(frame, area);
     locations.push_back(loc);
     return loc;
+}
+
+void Annotation::copyLastLocation(std::uint64_t frame) {
+    auto lastLoc = locations.back();
+    addLocation(frame, lastLoc->area);
 }
 
 Document::Document() {
@@ -65,25 +70,24 @@ void Document::makeAnnotation(std::uint64_t id) {
 
 std::shared_ptr<AnnotationLocation> Document::addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area) {
     auto loc = annotations[id]->addLocation(frame, area);
-    annotationsByFrame[frame].add(loc);
+    annotationsByFrame[frame].add(std::make_pair(id,loc));
     return loc;
 }
 
 void Document::addAnnotationLocation(std::uint64_t id, std::shared_ptr<AnnotationLocation> newLoc) {
     annotations[id]->addLocation(newLoc);
-    annotationsByFrame[newLoc->frame].add(newLoc);
+    annotationsByFrame[newLoc->frame].add(std::make_pair(id, newLoc));
 }
 
 void Document::copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area) {
-    annotations[id]->addLocation(frame, area);
-
+    //annotations[id]->addLocation(frame, area);
     auto loc = annotations[id]->addLocation(frame, area);
     auto pos = annotationsByFrame.find(frame);
     if (pos == annotationsByFrame.end()) {
         annotationsByFrame[frame] = FrameAnnotations();
         pos = annotationsByFrame.find(frame);
     }
-    pos->second.add(loc);
+    pos->second.add(std::make_pair(id,loc));
 }
 
 FrameAnnotations Document::getAnnotations(std::uint64_t frame) {

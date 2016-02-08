@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
         auto add_region_button = ui->navigator->findChild<QPushButton *>("add_region_button");
         connect(add_region_button, SIGNAL(clicked()), this, SLOT(on_addRegion_clicked()));
 //        setTowType(true);
+        auto next_and_copy_button = ui->navigator->findChild<QPushButton *>("next_with_copy_button");
+        connect(next_and_copy_button, SIGNAL(clicked()), this, SLOT(on_nextAndCopy_clicked()));
 	}
 
 void MainWindow::nextFrame()
@@ -48,8 +50,8 @@ void MainWindow::nextFrame()
 
     // add new annotations
     for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
-        auto rect = QRectF(ann->area.x, ann->area.y, ann->area.w, ann->area.h);
-        auto region = new AnnotatedRegion(ann, rect);
+        auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
+        auto region = new AnnotatedRegion(ann.second, rect);
         scene->addItem(region);
         currentAnnotations.push_back(region);
     }
@@ -68,8 +70,8 @@ void MainWindow::prevFrame()
 
     // add new annotations
     for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
-        auto rect = QRectF(ann->area.x, ann->area.y, ann->area.w, ann->area.h);
-        auto region = new AnnotatedRegion(ann, rect);
+        auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
+        auto region = new AnnotatedRegion(ann.second, rect);
         scene->addItem(region);
         currentAnnotations.push_back(region);
     }
@@ -486,8 +488,6 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         keycode = 2;
     else if (keypress == "t")
         keycode = 3;
-    else if (keypress == " ")
-        keycode = 4;
 
     switch (keycode)
     {
@@ -507,9 +507,6 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         ui->addOther->animateClick();
         ui->Play->setFocus();
         break;
-    case 4:
-        ui->Play->animateClick();
-        ui->Play->setFocus();
     }
 }
 
@@ -530,6 +527,34 @@ void MainWindow::on_addRegion_clicked()
     scene->addItem(annotationArea);
 
 
+}
+
+void MainWindow::on_nextAndCopy_clicked()
+{
+    // remove old annotations
+    for (auto ann : currentAnnotations) {
+        scene->removeItem(ann);
+    }
+
+    currentAnnotations.clear();
+
+    auto prevFrame = player->getCurrentFrame();
+    updateImage(player->nextFrame());
+
+    // copy annotations
+
+ //   for (auto ann : currentAnnotations) {
+ //       ann->updateFrame(player->getCurrentFrame());
+ //   }
+    for (auto ann : document->getAnnotations(prevFrame)) {
+        document->addAnnotationLocation(ann.first,ann.second->frame+1, ann.second->area);
+    }
+    for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
+        auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
+        auto region = new AnnotatedRegion(ann.second, rect);
+        scene->addItem(region);
+        currentAnnotations.push_back(region);
+    }
 }
 
 void MainWindow::addFish(FishTypeEnum fType)

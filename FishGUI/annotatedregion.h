@@ -29,6 +29,8 @@ public:
 //    QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
+    void updateFrame(std::uint64_t frame);
+    std::shared_ptr<FishDetector::AnnotationLocation> getAnnotation() {return annotation;}
 };
 
 #endif // ANNOTATEDREGION_H

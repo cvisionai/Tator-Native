@@ -156,3 +156,7 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->setPen(QPen(QColor(255, 0, 0)));
     painter->drawText(text_area, "UID");
 }
+
+void AnnotatedRegion::updateFrame(uint64_t frame) {
+    annotation->frame = frame;
+}

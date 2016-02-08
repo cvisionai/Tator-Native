@@ -6,9 +6,30 @@ CONFIG += c++11
 QT += widgets testlib
 TARGET = UnitTests
 INCLUDEPATH += .
-INCLUDEPATH += /usr/local/include
 # Input
 HEADERS += testDocument.h \
            ../FishGui/document.h
 SOURCES += testDocument.cpp \
             ../FishGui/document.cpp
+win32{
+    target.path = D:\\Documents\\GitHub\\FishDetector\\UnitTests
+    INSTALLS += target
+    QT += widgets testlib
+    CONFIG(release, debug|release) {
+        LIBS += -LD:\\OpenCV\\build\\lib\\Release
+        LIBS += -lopencv_core300 -lopencv_imgproc300 -lopencv_highgui300 -lopencv_videoio300
+    }
+
+    CONFIG(debug, debug|release) {
+        LIBS += -LD:\\OpenCV\\build\\lib\\Debug
+        LIBS += -lopencv_core300d -lopencv_imgproc300d -lopencv_highgui300d -lopencv_videoio300d
+    }
+
+    INCLUDEPATH += D:\\OpenCV\\opencv\\build\\include
+    INCLUDEPATH += D:\\boost_1_60_0
+}
+
+macx{
+
+    INCLUDEPATH += /usr/local/include
+}

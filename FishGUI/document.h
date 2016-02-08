@@ -48,7 +48,7 @@ public:
     Annotation(std::uint64_t id);
     void addLocation(std::shared_ptr<AnnotationLocation> location);
     std::shared_ptr<AnnotationLocation> addLocation(std::uint64_t frame, Rect area);
-
+    void copyLastLocation(std::uint64_t frame);
     std::uint64_t getId() { return id; }
 
     list_t &getLocations() { return locations; }
@@ -59,7 +59,7 @@ private:
 
 class FrameAnnotations {
 public:
-    typedef std::shared_ptr<AnnotationLocation> ptr_t;
+    typedef std::pair<std::uint64_t, std::shared_ptr<AnnotationLocation>> ptr_t;
     typedef std::list<ptr_t> list_t;
     typedef list_t::iterator iterator;
     typedef list_t::const_iterator const_iterator;
