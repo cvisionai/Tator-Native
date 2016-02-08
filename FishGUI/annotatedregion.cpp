@@ -123,12 +123,14 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         //auto newArea = rect();
         annotation->area.x = area.left() + pos.x();
         annotation->area.y = area.top() + pos.y();
+        area.setX(area.left() + pos.x());
+        area.setY(area.top() + pos.y());
 
         return;
     }
 
-    annotation->area.x = area.x();
-    annotation->area.y = area.y();
+    //annotation->area.x = area.x();
+    //annotation->area.y = area.y();
     annotation->area.w = area.width();
     annotation->area.h = area.height();
 
@@ -141,7 +143,7 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                             QWidget *widget)
 {
-    painter->setFont(QFont("Helvetica", 14));
+    painter->setFont(QFont("Helvetica", 12));
 
     // draw main rectangle
     painter->setPen(Qt::DashLine);
@@ -149,13 +151,13 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->drawRect(rect());
 
     // draw UID
-    QString text("UID");
+    QString text("000");
     QFontMetrics fm = painter->fontMetrics();
     int width = fm.width(text);
     QBrush brush;
     brush.setColor(Qt::gray);
     QRectF text_area = QRectF(rect().right() - width, rect().bottom() - fm.height(), width, fm.height());
-    painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 128)));
+    painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
 
     painter->setPen(QPen(QColor(255, 0, 0)));
     painter->drawText(text_area, QString::number(uid));

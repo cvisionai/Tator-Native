@@ -550,7 +550,7 @@ void MainWindow::on_nextAndCopy_clicked()
         auto frame = ann.second->frame+1;
         auto area = ann.second->area;
         auto loc = document->addAnnotationLocation(ann.first,frame, area);
-        auto rect = QRectF(loc->area.x,loc->area.y,loc->area.w,loc->area.h);
+        auto rect = QRectF(area.x,area.y,area.w,area.h);
         auto region = new AnnotatedRegion(ann.first, loc, rect);
         scene->addItem(region);
         currentAnnotations.push_back(region);
