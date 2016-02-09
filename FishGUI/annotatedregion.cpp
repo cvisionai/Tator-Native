@@ -76,22 +76,21 @@ void AnnotatedRegion::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QRectF area = rect();
-    //I believe this is in item coordinates. Therefore, it's referenced to the center of
-    //the item, which it records as 0,0.  In order to correctly map a move, we need to translate
-    //that to the top left corner, and then convert to scene coordinates.
     QPointF pos = event->pos();
-    qreal from_right = pos.x() - rect().right();
+    //qreal from_right = pos.x() - rect().right();
     qreal from_left = pos.x() - rect().left();
     qreal from_top = pos.y() - rect().top();
-    qreal from_bottom = pos.y() - rect().bottom();
+    //qreal from_bottom = pos.y() - rect().bottom();
 
     qreal margin = 5;
     switch (drag) {
     case DRAG_TOP: {
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
+            annotation->area.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
+
         }
         break;
     }
@@ -105,6 +104,7 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case DRAG_LEFT: {
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
+            annotation->area.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
@@ -119,31 +119,43 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     default:
         QGraphicsRectItem::mouseMoveEvent(event);
-        auto pos = QGraphicsRectItem::pos();
-        //auto newArea = rect();
+        auto pos = this->pos();
         annotation->area.x = area.left() + pos.x();
         annotation->area.y = area.top() + pos.y();
-        area.setX(area.left() + pos.x());
-        area.setY(area.top() + pos.y());
-
+        setRect(area);
+        /*
+        std::cout << "Ann.x: " << annotation->area.x << std::endl;
+        std::cout << "Rect.x: "<< rect().x() << std::endl;
+        std::cout << "Pos.x: " << pos.x() << std::endl;
+        std::cout << "Ann.y: " << annotation->area.y << std::endl;
+        std::cout << "Rect.y: " << rect().y() << std::endl;
+        std::cout << "Pos.y: " << pos.y() << std::endl;
+        */
         return;
     }
 
-    //annotation->area.x = area.x();
-    //annotation->area.y = area.y();
-    annotation->area.w = area.width();
-    annotation->area.h = area.height();
 
     setRect(area);
+
+    annotation->area.w = area.width();
+    annotation->area.h = area.height();
     prepareGeometryChange();
     update();
+    /*
+    std::cout << "Area.x: " << area.x() << std::endl;
+    std::cout << "Annotation.x: " << annotation->area.x << std::endl;
+    std::cout << "Pos.x: " << pos.x() << std::endl;
+    std::cout << "Area.y: " << area.y() << std::endl;
+    std::cout << "Annotation.y: " << annotation->area.y << std::endl;
+    std::cout << "Pos.y: " << pos.y() << std::endl;
+    */
 }
 
 
 void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                             QWidget *widget)
 {
-    painter->setFont(QFont("Helvetica", 12));
+    painter->setFont(QFont("Helvetica", 10));
 
     // draw main rectangle
     painter->setPen(Qt::DashLine);

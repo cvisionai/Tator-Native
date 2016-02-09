@@ -946,6 +946,7 @@
                <height>0</height>
               </size>
              </property>
+             <zorder>dockWidget_2</zorder>
             </widget>
            </item>
           </layout>
