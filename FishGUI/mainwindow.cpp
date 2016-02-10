@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 		ui->typeMenu->setCurrentIndex(3);
         QObject::connect(ui->goToFishVal,SIGNAL(returnPressed()),
                          this, SLOT(goToFish()));
-//        connect(ui->towStatus, SIGNAL(toggled(bool)), this, SLOT(setTowType(bool)));
 
         auto next_button = ui->navigator->findChild<QPushButton *>("next_button");
         connect(next_button, SIGNAL(clicked()), this, SLOT(on_plusOneFrame_clicked()));
@@ -32,7 +31,10 @@ MainWindow::MainWindow(QWidget *parent)
 
         auto add_region_button = ui->navigator->findChild<QPushButton *>("add_region_button");
         connect(add_region_button, SIGNAL(clicked()), this, SLOT(on_addRegion_clicked()));
-//        setTowType(true);
+
+        auto remove_region_button = ui->navigator->findChild<QPushButton *>("remove_region_button");
+        connect(remove_region_button, SIGNAL(clicked()), this, SLOT(on_removeRegion_clicked()));
+
         auto next_and_copy_button = ui->navigator->findChild<QPushButton *>("next_with_copy_button");
         connect(next_and_copy_button, SIGNAL(clicked()), this, SLOT(on_nextAndCopy_clicked()));
 	}
@@ -224,6 +226,13 @@ void MainWindow::on_loadAnnotate_clicked()
 
     std::string filenameBase = base_name(filename.toStdString());
     std::string filenameBaseNoExt = remove_extension(filenameBase);
+    std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
+    ifstream inputJSON(filenameJSON.c_str(), ios::in);
+    if (!inputJSON.fail()) {
+        std::cout << "test" << std::endl;
+        FishDetector::Document* newDoc = new FishDetector::Document(FishDetector::deserialize<FishDetector::Document>(inputJSON));
+        document.reset(newDoc);
+    }
     std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
     ui->fileNameValue->setText(qFilename);
@@ -293,8 +302,13 @@ void MainWindow::on_loadAnnotate_clicked()
 void MainWindow::on_saveAnnotate_clicked()
 {
     string filename;
+    string filenameJSON;
     filename = filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
+    filenameJSON = filename + ".json";
     filename = filename + ".csv";
+    std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
+    std::cout << "Problem?" << std::endl;
+    FishDetector::serialize(*document, jsonFile);
     ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
@@ -457,11 +471,34 @@ void MainWindow::on_goToFrame_clicked()
     }
 }
 
-void MainWindow::on_updateFishFrame_clicked()
+void MainWindow::on_removeFish_clicked()
 {
-    int currentFrame = (int) player->getCurrentFrame();
-    listPos->frameCounted = currentFrame;
-    updateVecIndex();
+    /*Steps to removing fish:
+     *
+     * 1. Remove any regions from scene
+     * 2. Remove all frame annotations with ID
+     * 3. Remove annotation with ID
+     * 4. Remove from fish list
+     */
+    if (myFishList.begin() != myFishList.end()) {
+        auto id = uint64_t(listPos - myFishList.begin()+1);
+
+        auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
+                          [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
+        if (it != currentAnnotations.end()) {
+            scene->removeItem(*it);
+            currentAnnotations.erase(it);
+        }
+        document->removeFrameAnnotation(id);
+        document->removeAnnotation(id);
+        listPos = myFishList.erase(listPos);
+        if (listPos == myFishList.end())
+            listPos = myFishList.end()-1;
+        updateVecIndex();
+        ui->totalFishVal->setText(QString::number(myFishList.size()));
+        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
+        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+    }
 }
 
 void MainWindow::on_typeMenu_currentIndexChanged(int tIdx)
@@ -488,6 +525,14 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         keycode = 2;
     else if (keypress == "t")
         keycode = 3;
+    else if (keypress == "n")
+        keycode = 4;
+    else if (keypress == "b")
+        keycode = 5;
+    else if (keypress == "m")
+        keycode = 6;
+    else
+        keycode = 7;
 
     switch (keycode)
     {
@@ -507,6 +552,22 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         ui->addOther->animateClick();
         ui->Play->setFocus();
         break;
+    case 4:
+        ui->navigator->findChild<QPushButton *>("next_with_copy_button")->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 5:
+        ui->navigator->findChild<QPushButton *>("prev_button")->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 6:
+        ui->navigator->findChild<QPushButton *>("next_button")->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 7:
+        ui->Play->setFocus();
+        QWidget::keyPressEvent(e);
+        break;
     }
 }
 
@@ -514,35 +575,47 @@ void MainWindow::on_addRegion_clicked()
 {
     FishDetector::Rect area(0, 0, 100, 100);
     auto fishID = uint64_t(listPos - myFishList.begin()+1);
-    std::cout << "Fish ID: " << fishID << std::endl;
+    auto frame = uint64_t(player->getCurrentFrame());
+
     //First check to see if there's an annotation for this ID already.
     if (document->keyExists(fishID))
     {
+        removeRegion(fishID, frame);
+    }
+    else {
+        document->addAnnotation(fishID);
+    }
+    auto loc = document->addAnnotationLocation(fishID, frame, area);
+    auto annotationArea = new AnnotatedRegion(fishID,loc, QRect(0, 0, 100, 100));
+    currentAnnotations.push_back(annotationArea);
+    scene->addItem(annotationArea);
+}
+
+void MainWindow::on_removeRegion_clicked()
+{
+    auto fishID = uint64_t(listPos - myFishList.begin()+1);
+    auto frame = uint64_t(player->getCurrentFrame());
+    removeRegion(fishID, frame);
+}
+
+void MainWindow::removeRegion(std::uint64_t id, std::uint64_t frame) {
+    //First check to see if there's an annotation for this ID already.
+    if (document->keyExists(id))
+    {
         //check to see if there's an annotation location for this frame already
-        std::cout << "key does exist" << std::endl;
-        auto currentAnn = document->getAnnotation(fishID);
-        if (currentAnn->frameHasAnn(uint64_t(player->getCurrentFrame()))) {
-            currentAnn->removeFrameAnn(uint64_t(player->getCurrentFrame()));
-            document->removeFrameAnnotation(fishID, uint64_t(player->getCurrentFrame()));
-            auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), [&fishID](AnnotatedRegion* obj) {return obj->getUID() == fishID;});
+        auto currentAnn = document->getAnnotation(id);
+        if (currentAnn->frameHasAnn(frame)) {
+            currentAnn->removeFrameAnn(frame);
+            document->removeFrameAnnotation(id, frame);
+            auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
+                              [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
             if (it != currentAnnotations.end()) {
                 scene->removeItem(*it);
                 currentAnnotations.erase(it);
             }
-            std::cout << "Annotation Exists. Removing" << std::endl;
         }
     }
-    else {
-        std::cout << "key doesn't exist" << std::endl;
-        document->addAnnotation(fishID);
-
-    }
-    auto loc = document->addAnnotationLocation(fishID, uint64_t(player->getCurrentFrame()), area);
-    auto annotationArea = new AnnotatedRegion(fishID,loc, QRect(0, 0, 100, 100));
-    currentAnnotations.push_back(annotationArea);
-    scene->addItem(annotationArea);
-
-
+    //This function will do nothing if there's no annotation to erase
 }
 
 void MainWindow::on_nextAndCopy_clicked()
@@ -557,11 +630,15 @@ void MainWindow::on_nextAndCopy_clicked()
     auto prevFrame = player->getCurrentFrame();
     updateImage(player->nextFrame());
 
-    // copy annotations
+    //check this frame for annotations. We're going to delete anything
+    //that currently exists.
+    for (auto ann: document->getAnnotations()) {
+        auto id = ann.first;
+        removeRegion(id, prevFrame+1);
 
- //   for (auto ann : currentAnnotations) {
- //       ann->updateFrame(player->getCurrentFrame());
- //   }
+    }
+
+    // copy annotations
     for (auto ann : document->getAnnotations(prevFrame)) {
         auto frame = ann.second->frame+1;
         auto area = ann.second->area;
@@ -744,7 +821,7 @@ void MainWindow::disableControls()
     ui->SpeedUp->setEnabled(false);
     ui->minusOneFrame->setEnabled(false);
     ui->plusOneFrame->setEnabled(false);
-    ui->updateFishFrame->setEnabled(false);
+    ui->removeFish->setEnabled(false);
     ui->goToFrame->setEnabled(false);
     ui->addRound->setEnabled(false);
     ui->addFlat->setEnabled(false);
@@ -761,7 +838,7 @@ void MainWindow::enableControls()
     ui->SpeedUp->setEnabled(true);
     ui->minusOneFrame->setEnabled(true);
     ui->plusOneFrame->setEnabled(true);
-    ui->updateFishFrame->setEnabled(true);
+    ui->removeFish->setEnabled(true);
     ui->goToFrame->setEnabled(true);
     ui->addRound->setEnabled(true);
     ui->addFlat->setEnabled(true);

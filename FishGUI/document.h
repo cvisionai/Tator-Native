@@ -96,6 +96,8 @@ public:
     annotation_map_t &getAnnotations() { return annotations; }
     const annotation_map_t &getAnnotations() const { return annotations; }
     void removeFrameAnnotation(std::uint64_t id, std::uint64_t frame) {annotationsByFrame[frame].removeAnnotation(id);}
+    void removeFrameAnnotation(std::uint64_t id);
+    void removeAnnotation(std::uint64_t id) {annotations.erase(id);}
 private:
     std::uint64_t id_counter;
     std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;
@@ -153,7 +155,7 @@ struct Serialization<Document> {
         std::uint64_t id;
         Document newDoc = Document();
         BOOST_FOREACH(const ptree::value_type &v, document.get_child("Annotation Array")) {
-            id = v.second.get("id",0);
+            id = v.second.get("annotation.id",0);
             ptree newAnnotation = v.second;
             auto newLoc = Serialization<AnnotationLocation>::read(newAnnotation);
             if (newDoc.keyExists(id))

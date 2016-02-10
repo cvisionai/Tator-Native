@@ -65,8 +65,9 @@ class MainWindow : public QWidget
     void on_prevFish_clicked();
     void on_nextFish_clicked();
     void on_goToFrame_clicked();
-    void on_updateFishFrame_clicked();
+    void on_removeFish_clicked();
     void on_addRegion_clicked();
+    void on_removeRegion_clicked();
     void on_nextAndCopy_clicked();
     void on_typeMenu_currentIndexChanged(int tIdx);
     void on_subTypeMenu_currentIndexChanged(int sIdx);
@@ -85,6 +86,7 @@ public:
     void disableControls();
     void enableControls();
     void keyPressEvent(QKeyEvent *e);
+    void removeRegion(std::uint64_t id, std::uint64_t frame);
  private:
     std::unique_ptr<FishDetector::Document> document;
 

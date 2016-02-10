@@ -336,7 +336,7 @@
           </widget>
          </item>
          <item row="6" column="0">
-          <widget class="QPushButton" name="updateFishFrame">
+          <widget class="QPushButton" name="removeFish">
            <property name="minimumSize">
             <size>
              <width>110</width>
@@ -354,7 +354,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>Set Frame</string>
+            <string>Remove Fish</string>
            </property>
           </widget>
          </item>

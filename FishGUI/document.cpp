@@ -114,6 +114,12 @@ void Document::copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area) 
     pos->second.add(std::make_pair(id,loc));
 }
 
+void Document::removeFrameAnnotation(std::uint64_t id) {
+    for (auto const &ann : annotationsByFrame) {
+        annotationsByFrame[ann.first].removeAnnotation(id);
+    }
+}
+
 FrameAnnotations Document::getAnnotations(std::uint64_t frame) {
     return annotationsByFrame[frame];
 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>170</width>
+    <width>186</width>
     <height>465</height>
    </rect>
   </property>
@@ -20,6 +20,13 @@
       <widget class="QPushButton" name="add_region_button">
        <property name="text">
         <string>Add Region</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="remove_region_button">
+       <property name="text">
+        <string>Remove Region</string>
        </property>
       </widget>
      </item>
