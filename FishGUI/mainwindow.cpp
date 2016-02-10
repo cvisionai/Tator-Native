@@ -229,7 +229,6 @@ void MainWindow::on_loadAnnotate_clicked()
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
     ifstream inputJSON(filenameJSON.c_str(), ios::in);
     if (!inputJSON.fail()) {
-        std::cout << "test" << std::endl;
         FishDetector::Document* newDoc = new FishDetector::Document(FishDetector::deserialize<FishDetector::Document>(inputJSON));
         document.reset(newDoc);
     }
@@ -307,7 +306,6 @@ void MainWindow::on_saveAnnotate_clicked()
     filenameJSON = filename + ".json";
     filename = filename + ".csv";
     std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
-    std::cout << "Problem?" << std::endl;
     FishDetector::serialize(*document, jsonFile);
     ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
@@ -565,7 +563,6 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         ui->Play->setFocus();
         break;
     case 7:
-        ui->Play->setFocus();
         QWidget::keyPressEvent(e);
         break;
     }
