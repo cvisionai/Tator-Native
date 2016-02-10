@@ -50,7 +50,8 @@ public:
     std::shared_ptr<AnnotationLocation> addLocation(std::uint64_t frame, Rect area);
     void copyLastLocation(std::uint64_t frame);
     std::uint64_t getId() { return id; }
-
+    bool frameHasAnn(uint64_t frame);
+    void removeFrameAnn(uint64_t frame);
     list_t &getLocations() { return locations; }
 private:
     std::uint64_t id;
@@ -70,6 +71,7 @@ public:
     iterator end() { return annotations.end(); }
     const_iterator cbegin() { return annotations.cbegin(); }
     const_iterator cend() { return annotations.cend(); }
+    void removeAnnotation(std::uint64_t id);
 private:
     list_t annotations;
 };
@@ -82,6 +84,7 @@ public:
     Document();
     int writeJSON(const std::string& filename);
     std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
+    void addAnnotation(std::uint64_t id);
     void makeAnnotation(std::uint64_t id);
     std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
     void addAnnotationLocation(std::uint64_t id, std::shared_ptr<AnnotationLocation> newLoc);
@@ -89,8 +92,10 @@ public:
     std::uint64_t getIDCounter() {return id_counter; }
     FrameAnnotations getAnnotations(std::uint64_t frame);
     bool keyExists(std::uint64_t id) { return (annotations.find( id ) != annotations.end());}
+    std::shared_ptr<Annotation> getAnnotation(std::uint64_t id) { return annotations[id];}
     annotation_map_t &getAnnotations() { return annotations; }
     const annotation_map_t &getAnnotations() const { return annotations; }
+    void removeFrameAnnotation(std::uint64_t id, std::uint64_t frame) {annotationsByFrame[frame].removeAnnotation(id);}
 private:
     std::uint64_t id_counter;
     std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;

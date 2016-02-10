@@ -33,6 +33,7 @@ public:
                QWidget *widget);
     void updateFrame(std::uint64_t frame);
     std::shared_ptr<FishDetector::AnnotationLocation> getAnnotation() {return annotation;}
+    std::uint64_t getUID() {return uid;}
 };
 
 #endif // ANNOTATEDREGION_H

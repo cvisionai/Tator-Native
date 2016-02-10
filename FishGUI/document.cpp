@@ -31,6 +31,13 @@ void FrameAnnotations::add(ptr_t annotation)
     annotations.push_back(annotation);
 }
 
+void FrameAnnotations::removeAnnotation(std::uint64_t id) {
+    auto it = find_if(annotations.begin(), annotations.end(), [&id](const std::pair<std::uint64_t, std::shared_ptr<AnnotationLocation>>& obj) {return obj.first == id;});
+    if (it != annotations.end()) {
+        annotations.erase(it);
+    }
+}
+
 Annotation::Annotation(std::uint64_t id) {
     this->id = id;
 }
@@ -50,6 +57,18 @@ void Annotation::copyLastLocation(std::uint64_t frame) {
     addLocation(frame, lastLoc->area);
 }
 
+bool Annotation::frameHasAnn(uint64_t frame) {
+    auto it = find_if(locations.begin(), locations.end(), [&frame](const std::shared_ptr<AnnotationLocation>& obj) {return obj->frame == frame;});
+    return (it != locations.end());
+}
+
+void Annotation::removeFrameAnn(uint64_t frame) {
+    auto it = find_if(locations.begin(), locations.end(), [&frame](const std::shared_ptr<AnnotationLocation>& obj) {return obj->frame == frame;});
+    if (it != locations.end()) {
+        locations.erase(it);
+    }
+}
+
 Document::Document() {
     id_counter = 0;
 }
@@ -61,6 +80,11 @@ std::shared_ptr<Annotation> Document::addAnnotation() { //std::uint64_t frame, R
 //    annotationLocations.push_back
 
     return annotation;
+}
+
+void Document::addAnnotation(std::uint64_t id) {
+    auto annotation = std::make_shared<Annotation>(id);
+    annotations[id] = annotation;
 }
 
 void Document::makeAnnotation(std::uint64_t id) {

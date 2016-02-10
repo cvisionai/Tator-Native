@@ -512,17 +512,33 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 
 void MainWindow::on_addRegion_clicked()
 {
-    //QImage thisFrame = myPlayer->getOneFrame();
-    //if (!thisFrame.isNull())
-        //scene->addRect(QRect(0, 0, 100, 100));
-
     FishDetector::Rect area(0, 0, 100, 100);
-    auto ann = document->addAnnotation();
-    auto loc = document->addAnnotationLocation(ann->getId(), player->getCurrentFrame(), area);
-//    auto loc = ann->addLocation(player->getCurrentFrame(), area);
-//    auto ann = document->addAnnotation(player->getCurrentFrame(), area);
+    auto fishID = uint64_t(listPos - myFishList.begin()+1);
+    std::cout << "Fish ID: " << fishID << std::endl;
+    //First check to see if there's an annotation for this ID already.
+    if (document->keyExists(fishID))
+    {
+        //check to see if there's an annotation location for this frame already
+        std::cout << "key does exist" << std::endl;
+        auto currentAnn = document->getAnnotation(fishID);
+        if (currentAnn->frameHasAnn(uint64_t(player->getCurrentFrame()))) {
+            currentAnn->removeFrameAnn(uint64_t(player->getCurrentFrame()));
+            document->removeFrameAnnotation(fishID, uint64_t(player->getCurrentFrame()));
+            auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), [&fishID](AnnotatedRegion* obj) {return obj->getUID() == fishID;});
+            if (it != currentAnnotations.end()) {
+                scene->removeItem(*it);
+                currentAnnotations.erase(it);
+            }
+            std::cout << "Annotation Exists. Removing" << std::endl;
+        }
+    }
+    else {
+        std::cout << "key doesn't exist" << std::endl;
+        document->addAnnotation(fishID);
 
-    auto annotationArea = new AnnotatedRegion(ann->getId(),loc, QRect(0, 0, 100, 100));
+    }
+    auto loc = document->addAnnotationLocation(fishID, uint64_t(player->getCurrentFrame()), area);
+    auto annotationArea = new AnnotatedRegion(fishID,loc, QRect(0, 0, 100, 100));
     currentAnnotations.push_back(annotationArea);
     scene->addItem(annotationArea);
 
