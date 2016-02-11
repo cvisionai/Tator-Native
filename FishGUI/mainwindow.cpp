@@ -196,7 +196,7 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->videoSlider->setMaximum(player->getNumberOfFrames());
 			ui->totalTime->setText(getFormattedTime((int)player->
 				getNumberOfFrames() / (int)player->getFrameRate()));
-			QImage firstImage = player->nextFrame();
+            QImage firstImage = player->setFrame(1);
 //            QImage displayImage = myPlayer->nextFrame();
             scene.reset(new QGraphicsScene(this));
 //            scene = new QGraphicsScene(this);
