@@ -51,8 +51,8 @@ public:
     QImage prevFrame();
     QImage setFrame(std::int64_t frame);
     std::int64_t getCurrentFrame();
-private:
     QImage getOneFrame();
+private:
     void setCurrentFrame(std::int64_t frameNumber);
 };
 

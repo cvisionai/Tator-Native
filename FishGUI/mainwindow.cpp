@@ -41,31 +41,24 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::nextFrame()
 {
-    // remove old annotations
-    for (auto ann : currentAnnotations) {
-        scene->removeItem(ann);
-    }
-    currentAnnotations.clear();
     updateImage(player->nextFrame()); // get next frame
-    // add new annotations
-    for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
-        auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
-        auto region = new AnnotatedRegion(ann.first, ann.second, rect);
-        scene->addItem(region);
-        currentAnnotations.push_back(region);
-    }
+    processAnnotations(player->getCurrentFrame());
 }
 
 void MainWindow::prevFrame()
 {
+    updateImage(player->prevFrame()); // get next frame
+    processAnnotations(player->getCurrentFrame());
+}
+
+void MainWindow::processAnnotations(uint64_t frame) {
     // remove old annotations
     for (auto ann : currentAnnotations) {
         scene->removeItem(ann);
     }
     currentAnnotations.clear();
-    updateImage(player->prevFrame()); // get next frame
     // add new annotations
-    for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
+    for (auto ann : document->getAnnotations(frame)) {
         auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
         auto region = new AnnotatedRegion(ann.first, ann.second, rect);
         scene->addItem(region);
@@ -87,6 +80,7 @@ void MainWindow::updatePlayerUI(QImage img)
 		ui->videoSlider->setValue(player->getCurrentFrame());
 		ui->currentTime->setText(getFormattedTime((int)player->
 			getCurrentFrame() / (int)player->getFrameRate()));
+        processAnnotations(player->getCurrentFrame());
 	}
 }
 
@@ -187,7 +181,7 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->videoSlider->setMaximum(player->getNumberOfFrames());
 			ui->totalTime->setText(getFormattedTime((int)player->
 				getNumberOfFrames() / (int)player->getFrameRate()));
-            QImage firstImage = player->setFrame(1);
+            QImage firstImage = player->getOneFrame();
             scene.reset(new QGraphicsScene(this));
 			displayImage = scene->addPixmap(QPixmap::fromImage(firstImage));
 			scene->setSceneRect(firstImage.rect());

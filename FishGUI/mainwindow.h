@@ -87,6 +87,7 @@ private:
     void enableControls();
     void keyPressEvent(QKeyEvent *e);
     void removeRegion(std::uint64_t id, std::uint64_t frame);
+    void processAnnotations(uint64_t frame);
 private:
     std::unique_ptr<FishDetector::Document> document;
 
