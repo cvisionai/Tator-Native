@@ -75,7 +75,7 @@ public:
     void updateImage(const QImage &image);
     std::unique_ptr<Player> &getPlayer() { return player; }
     
- private:
+private:
     void updateAnnotations();
     void addFish(FishTypeEnum fType);
     void updateVecIndex();
@@ -87,21 +87,15 @@ public:
     void enableControls();
     void keyPressEvent(QKeyEvent *e);
     void removeRegion(std::uint64_t id, std::uint64_t frame);
- private:
+private:
     std::unique_ptr<FishDetector::Document> document;
 
     std::unique_ptr<Ui::MainWidget> ui;
     std::unique_ptr<Player> player;
-//	fishSerialize::FishList* fList;
 	vector<Fish> myFishList;
     vector<Fish>::iterator listPos;
     std::unique_ptr<QGraphicsScene> scene;
     int fIndex;
-
-//    void convertFishToSerialize();
-//    void convertSerialToFish();
-
-//    QImage displayImage;
     QGraphicsPixmapItem *displayImage;
     std::list<AnnotatedRegion *> currentAnnotations;
 };

@@ -70,7 +70,6 @@ QImage Player::getOneFrame()
 		img = QImage((const unsigned char*)(frame.data),
 			frame.cols, frame.rows, QImage::Format_Indexed8);
 	}
-
 	return img;
 }
 
@@ -123,19 +122,8 @@ QImage Player::prevFrame() {
     return getOneFrame();
 }
 
-
-//void Player::minusOneFrame()
-//{
-//	std::int64_t currentFrame = getCurrentFrame() - 1;
-////	currentFrame = currentFrame - (double)2;
-//	setCurrentFrame(currentFrame);
-//}
-
 std::int64_t Player::getCurrentFrame()
 {
-//    double value = capture->get(CV_CAP_PROP_POS_FRAMES);
-//    std::cout << "value = " << value << std::endl;
-//	return (std::uint64_t)value;
     return frameIndex;
 }
 
@@ -153,8 +141,6 @@ void Player::setCurrentFrame(std::int64_t frameNumber)
 {
     capture->set(CV_CAP_PROP_POS_MSEC, int((double(frameNumber)/double(frameRate))*1000));
     frameIndex = frameNumber;
-//	capture->set(CV_CAP_PROP_POS_FRAMES, 2.0);
-//    std::cout << "frame: " << frameNumber*1000 << ", actual: " << capture->get(CV_CAP_PROP_POS_MSEC) << std::endl;
 }
 
 QImage Player::setFrame(std::int64_t frame)

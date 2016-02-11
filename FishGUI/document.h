@@ -46,12 +46,15 @@ public:
     typedef std::list<std::shared_ptr<AnnotationLocation> > list_t;
 public:
     Annotation(std::uint64_t id);
+
     void addLocation(std::shared_ptr<AnnotationLocation> location);
     std::shared_ptr<AnnotationLocation> addLocation(std::uint64_t frame, Rect area);
     void copyLastLocation(std::uint64_t frame);
-    std::uint64_t getId() { return id; }
+
     bool frameHasAnn(uint64_t frame);
     void removeFrameAnn(uint64_t frame);
+
+    std::uint64_t getId() { return id; }
     list_t &getLocations() { return locations; }
 private:
     std::uint64_t id;
@@ -83,23 +86,25 @@ public:
 public:
     Document();
     int writeJSON(const std::string& filename);
-    std::shared_ptr<Annotation> addAnnotation(); //std::uint64_t frame, Rect area);
     void addAnnotation(std::uint64_t id);
+
     void makeAnnotation(std::uint64_t id);
+
     std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
     void addAnnotationLocation(std::uint64_t id, std::shared_ptr<AnnotationLocation> newLoc);
+
     void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
-    std::uint64_t getIDCounter() {return id_counter; }
-    FrameAnnotations getAnnotations(std::uint64_t frame);
     bool keyExists(std::uint64_t id) { return (annotations.find( id ) != annotations.end());}
+
+    FrameAnnotations getAnnotations(std::uint64_t frame);
     std::shared_ptr<Annotation> getAnnotation(std::uint64_t id) { return annotations[id];}
     annotation_map_t &getAnnotations() { return annotations; }
     const annotation_map_t &getAnnotations() const { return annotations; }
+
     void removeFrameAnnotation(std::uint64_t id, std::uint64_t frame) {annotationsByFrame[frame].removeAnnotation(id);}
     void removeFrameAnnotation(std::uint64_t id);
     void removeAnnotation(std::uint64_t id) {annotations.erase(id);}
 private:
-    std::uint64_t id_counter;
     std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;
     annotation_map_t annotations;
 };
@@ -115,7 +120,6 @@ struct Serialization<AnnotationLocation> {
         node.add("annotation.h", obj.area.h);
         return node;
     }
-
     static std::shared_ptr<AnnotationLocation> read(ptree &node) {
         std::uint64_t frame,x,y,w,h;
         frame = node.get("annotation.frame",0);
@@ -125,7 +129,6 @@ struct Serialization<AnnotationLocation> {
         h = node.get("annotation.h",0);
         Rect newRect = Rect(x,y,w,h);
         auto newLoc = std::make_shared<AnnotationLocation>(frame,newRect);
-
         return newLoc;
     }
 };
@@ -135,7 +138,6 @@ struct Serialization<Document> {
     static ptree write(const Document &obj) {
         ptree document;
         ptree children;
-
         for (auto const &map_value : obj.getAnnotations())
         {
             auto annotation = map_value.second;
@@ -146,11 +148,9 @@ struct Serialization<Document> {
                 children.push_back(std::make_pair("", node));
             }
         }
-
         document.add_child("Annotation Array", children);
         return document;
     }
-
     static Document read(const ptree &document) {
         std::uint64_t id;
         Document newDoc = Document();
@@ -185,7 +185,6 @@ T deserialize(std::istream &in) {
     read_json(in, document);
     return Serialization<T>::read(document);
 }
-
 }
 
 

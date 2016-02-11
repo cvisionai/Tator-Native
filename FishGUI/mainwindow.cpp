@@ -45,11 +45,8 @@ void MainWindow::nextFrame()
     for (auto ann : currentAnnotations) {
         scene->removeItem(ann);
     }
-
     currentAnnotations.clear();
-
-    updateImage(player->nextFrame());
-
+    updateImage(player->nextFrame()); // get next frame
     // add new annotations
     for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
         auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
@@ -64,12 +61,9 @@ void MainWindow::prevFrame()
     // remove old annotations
     for (auto ann : currentAnnotations) {
         scene->removeItem(ann);
-//        delete ann;
     }
     currentAnnotations.clear();
-
-    updateImage(player->prevFrame());
-
+    updateImage(player->prevFrame()); // get next frame
     // add new annotations
     for (auto ann : document->getAnnotations(player->getCurrentFrame())) {
         auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
@@ -82,7 +76,6 @@ void MainWindow::prevFrame()
 void MainWindow::gotoFrame() {
 
 }
-
 
 void MainWindow::updatePlayerUI(QImage img)
 {
@@ -164,7 +157,6 @@ QString MainWindow::getFormattedTime(int timeInSeconds)
 	int seconds = (int) (timeInSeconds) % 60;
 	int minutes = (int)((timeInSeconds / 60) % 60);
 	int hours = (int)((timeInSeconds / (60 * 60)) % 24);
-
 	QTime t(hours, minutes, seconds);
 	if (hours == 0)
 		return t.toString("mm:ss");
@@ -177,7 +169,6 @@ void MainWindow::on_LoadVideo_clicked()
 	QString filename = QFileDialog::getOpenFileName(this,
 		tr("Open Video"), ".",
 		tr("Video Files (*.avi *.mpg *.mp4)"));
-
     QFileInfo name = filename;
 	if (!filename.isEmpty())
 	{
@@ -197,25 +188,19 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->totalTime->setText(getFormattedTime((int)player->
 				getNumberOfFrames() / (int)player->getFrameRate()));
             QImage firstImage = player->setFrame(1);
-//            QImage displayImage = myPlayer->nextFrame();
             scene.reset(new QGraphicsScene(this));
-//            scene = new QGraphicsScene(this);
-
 			displayImage = scene->addPixmap(QPixmap::fromImage(firstImage));
-
 			scene->setSceneRect(firstImage.rect());
             ui->videoWindow->setScene(scene.get());
             ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
             ui->videoWindow->show();
             ui->currentSpeed->setText("Current Speed: 100%");
             ui->Play->setFocus();
-
             // TODO: should first try to load this if the data
             // file exists
             document.reset(new FishDetector::Document());
 		}
 	}
-
 }
 
 void MainWindow::on_loadAnnotate_clicked()
@@ -223,7 +208,6 @@ void MainWindow::on_loadAnnotate_clicked()
     QString filename = QFileDialog::getOpenFileName(this,
         tr("Open Annotation File"), ".",
         tr("CSV Files (*.csv)"));
-
     std::string filenameBase = base_name(filename.toStdString());
     std::string filenameBaseNoExt = remove_extension(filenameBase);
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
@@ -281,12 +265,10 @@ void MainWindow::on_loadAnnotate_clicked()
         tempToken.clear();
         tempConvert.str("");
         tempConvert.clear();
-
         FishTypeEnum fType = getFishType(fishType);
         unique_ptr<Fish> tempFish(new Fish(fType,frame));
         tempFish->setFishSubType(getFishSpecies(fType,species));
         myFishList.push_back(*tempFish);
-
         linestream.str("");
         linestream.clear();
     }
@@ -573,7 +555,6 @@ void MainWindow::on_addRegion_clicked()
     FishDetector::Rect area(0, 0, 100, 100);
     auto fishID = uint64_t(listPos - myFishList.begin()+1);
     auto frame = uint64_t(player->getCurrentFrame());
-
     //First check to see if there's an annotation for this ID already.
     if (document->keyExists(fishID))
     {
@@ -621,20 +602,15 @@ void MainWindow::on_nextAndCopy_clicked()
     for (auto ann : currentAnnotations) {
         scene->removeItem(ann);
     }
-
     currentAnnotations.clear();
-
     auto prevFrame = player->getCurrentFrame();
     updateImage(player->nextFrame());
-
     //check this frame for annotations. We're going to delete anything
     //that currently exists.
     for (auto ann: document->getAnnotations()) {
         auto id = ann.first;
         removeRegion(id, prevFrame+1);
-
     }
-
     // copy annotations
     for (auto ann : document->getAnnotations(prevFrame)) {
         auto frame = ann.second->frame+1;
@@ -662,31 +638,12 @@ void MainWindow::addFish(FishTypeEnum fType)
     ui->totalFishVal->setText(QString::number(myFishList.size()));
     ui->typeMenu->setCurrentIndex((int) fType);
 }
-/*
-void MainWindow::setTowType(bool towOpenStatus)
-{
-	//towOpenStatus = true corresponds to tow open
-	fList->set_towopen(towOpenStatus);
-}
-*/
+
 void MainWindow::updateVecIndex()
 {
     ui->fishNumVal->setText(QString::number(listPos - myFishList.begin()+1));
     ui->frameCountedVal->setText(QString::number(listPos->getFrameCounted()));
 }
-/*
-void MainWindow::convertFishToSerialize()
-{
-    fishSerialize::FishEntry* newFish;
-    for(vector<Fish>::iterator it = myFishList.begin(); it != myFishList.end(); ++it)
-    {
-        newFish = fList->add_fish();
-        newFish->set_ftype((fishSerialize::FishEntry_fTypeEnum)it->getFishType());
-        newFish->set_fspecies(it->getFishSubType());
-        newFish->set_fframe(it->frameCounted);
-    }
-}
-*/
 
 FishTypeEnum MainWindow::getFishType (string const& inString)
 {

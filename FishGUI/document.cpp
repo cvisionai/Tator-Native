@@ -70,16 +70,6 @@ void Annotation::removeFrameAnn(uint64_t frame) {
 }
 
 Document::Document() {
-    id_counter = 0;
-}
-
-std::shared_ptr<Annotation> Document::addAnnotation() { //std::uint64_t frame, Rect area) {
-    auto id = id_counter++;
-    auto annotation = std::make_shared<Annotation>(id);
-    annotations[id] = annotation;
-//    annotationLocations.push_back
-
-    return annotation;
 }
 
 void Document::addAnnotation(std::uint64_t id) {
