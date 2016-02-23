@@ -45,7 +45,6 @@ class MainWindow : public QWidget
   	void updatePlayerUI(QImage img);
 	void updateSubTypeMenu(int typeIndex);
     void goToFish();
-    //void setTowType(bool towOpenStatus);
 	QString getFormattedTime(int timeInSeconds);
 	void on_videoSlider_sliderPressed();
 	void on_videoSlider_sliderReleased();

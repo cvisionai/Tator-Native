@@ -1,5 +1,4 @@
 #include "annotatedregion.h"
-
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QDebug>
