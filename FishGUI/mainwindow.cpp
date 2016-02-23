@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 	{
         ui.reset(new Ui::MainWidget);
         fIndex = 0;
+        nextID = 1;
         player.reset(new Player());
         myFishList.clear();
         QObject::connect(player.get(), SIGNAL(processedImage(QImage)),
@@ -215,7 +216,7 @@ void MainWindow::on_loadAnnotate_clicked()
     ui->fileNameValue->setText(qFilename);
     ifstream inFile(filename.toLatin1().data());
     string line, tripID, reviewer, towType, fishNum, fishType, species;
-    int frame, towNum;
+    int frame, towNum, curID;
     double timeInVid;
     getline(inFile,line);
     line.clear();
@@ -260,7 +261,9 @@ void MainWindow::on_loadAnnotate_clicked()
         tempConvert.str("");
         tempConvert.clear();
         FishTypeEnum fType = getFishType(fishType);
-        unique_ptr<Fish> tempFish(new Fish(fType,frame));
+        curID = std::stoi(fishNum,nullptr,10);
+        unique_ptr<Fish> tempFish(new Fish(fType,frame,curID));
+        if (curID >= nextID) nextID = curID + 1;
         tempFish->setFishSubType(getFishSpecies(fType,species));
         myFishList.push_back(*tempFish);
         linestream.str("");
@@ -298,7 +301,7 @@ void MainWindow::on_saveAnnotate_clicked()
     int fishCount = 1;
     for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
         outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
-        outFile << fishCount << "," << getFishTypeString(it->getFishType()) << ",";
+        outFile << it->getID() << "," << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";
         outFile << (double) it->frameCounted / player->getFrameRate() / 60.0 / 60.0 << std::endl;
@@ -455,7 +458,8 @@ void MainWindow::on_removeFish_clicked()
      * 4. Remove from fish list
      */
     if (myFishList.begin() != myFishList.end()) {
-        auto id = uint64_t(listPos - myFishList.begin()+1);
+        //auto id = uint64_t(listPos - myFishList.begin()+1);
+        auto id = listPos->getID();
 
         auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
                           [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
@@ -547,7 +551,7 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 void MainWindow::on_addRegion_clicked()
 {
     FishDetector::Rect area(0, 0, 100, 100);
-    auto fishID = uint64_t(listPos - myFishList.begin()+1);
+    auto fishID = uint64_t(listPos->getID());
     auto frame = uint64_t(player->getCurrentFrame());
     //First check to see if there's an annotation for this ID already.
     if (document->keyExists(fishID))
@@ -565,7 +569,7 @@ void MainWindow::on_addRegion_clicked()
 
 void MainWindow::on_removeRegion_clicked()
 {
-    auto fishID = uint64_t(listPos - myFishList.begin()+1);
+    auto fishID = uint64_t(listPos->getID());
     auto frame = uint64_t(player->getCurrentFrame());
     removeRegion(fishID, frame);
 }
@@ -623,7 +627,17 @@ void MainWindow::addFish(FishTypeEnum fType)
 	player->Stop();
 	ui->Play->setText(tr("Play"));
 	double currentFrame = player->getCurrentFrame();
-    unique_ptr<Fish> tempFish(new Fish(fType,currentFrame));
+    int id;
+    if (myFishList.size() == 0) {
+        id = 1;
+        nextID = 2;
+    }
+    else {
+        id = nextID;
+        nextID++;
+
+    }
+    unique_ptr<Fish> tempFish(new Fish(fType,currentFrame,id));
     tempFish->setFishSubType(0);
 	myFishList.push_back(*tempFish);
     std::sort(myFishList.begin(),myFishList.end());
@@ -635,7 +649,7 @@ void MainWindow::addFish(FishTypeEnum fType)
 
 void MainWindow::updateVecIndex()
 {
-    ui->fishNumVal->setText(QString::number(listPos - myFishList.begin()+1));
+    ui->fishNumVal->setText(QString::number(listPos->getID()));
     ui->frameCountedVal->setText(QString::number(listPos->getFrameCounted()));
 }
 

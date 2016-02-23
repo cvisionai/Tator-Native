@@ -24,9 +24,10 @@ private:
 	FishTypeEnum fishType;
 	int subType;
 	xyLoc fishLoc;
+    int id;
 
 public:
-	Fish(FishTypeEnum fType, int frame);
+    Fish(FishTypeEnum fType, int frame, int id);
 	void setFishType(FishTypeEnum type);
 	void setFishSubType(int sType);
 	void setXYLoc(float row, float col);
@@ -34,4 +35,5 @@ public:
 	int getFishSubType();
 	int getFrameCounted();
 	xyLoc getXYLoc();
+    int getID(){return id;}
 };

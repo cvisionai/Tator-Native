@@ -97,6 +97,7 @@ private:
     vector<Fish>::iterator listPos;
     std::unique_ptr<QGraphicsScene> scene;
     int fIndex;
+    int nextID;
     QGraphicsPixmapItem *displayImage;
     std::list<AnnotatedRegion *> currentAnnotations;
 };

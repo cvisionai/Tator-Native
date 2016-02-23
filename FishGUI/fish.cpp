@@ -1,9 +1,10 @@
 #include "fish.h"
 
-Fish::Fish(FishTypeEnum ftype, int frame)
+Fish::Fish(FishTypeEnum ftype, int frame, int id)
 {
 	fishType = ftype;
 	frameCounted = frame;
+    this->id = id;
 }
 
 void Fish::setFishType(FishTypeEnum ftype)
