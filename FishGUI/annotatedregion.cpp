@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QDebug>
 #include <QCursor>
-
 #include <iostream>
 
 AnnotatedRegion::AnnotatedRegion(std::uint64_t uid, std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area)
@@ -77,11 +76,8 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QRectF area = rect();
     QPointF pos = event->pos();
-    //qreal from_right = pos.x() - rect().right();
     qreal from_left = pos.x() - rect().left();
     qreal from_top = pos.y() - rect().top();
-    //qreal from_bottom = pos.y() - rect().bottom();
-
     qreal margin = 5;
     switch (drag) {
     case DRAG_TOP: {
@@ -117,38 +113,73 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         break;
     }
+    case DRAG_TOP_LEFT: {
+        qreal new_width = area.width() - from_left;
+        if (new_width > 2*margin) {
+            annotation->area.x = sceneBoundingRect().x() + 2;
+            area.setWidth(area.width() - from_left);
+            area.translate(from_left, 0);
+        }
+        qreal new_height = area.height() - from_top;
+        if (new_height > 2*margin) {
+            annotation->area.y = sceneBoundingRect().y() + 2;
+            area.setHeight(area.height() - from_top);
+            area.translate(0, from_top);
+
+        }
+        break;
+    }
+    case DRAG_TOP_RIGHT: {
+        qreal new_height = area.height() - from_top;
+        if (new_height > 2*margin) {
+            annotation->area.y = sceneBoundingRect().y() + 2;
+            area.setHeight(area.height() - from_top);
+            area.translate(0, from_top);
+
+        }
+        qreal new_width = pos.x() - area.left();
+        if (new_width > 2*margin) {
+            area.setWidth(new_width);
+        }
+        break;
+    }
+    case DRAG_BOTTOM_LEFT: {
+        qreal new_height = pos.y() - area.top();
+        if (new_height > 2*margin) {
+            area.setHeight(new_height);
+        }
+        qreal new_width = area.width() - from_left;
+        if (new_width > 2*margin) {
+            annotation->area.x = sceneBoundingRect().x() + 2;
+            area.setWidth(area.width() - from_left);
+            area.translate(from_left, 0);
+        }
+        break;
+    }
+    case DRAG_BOTTOM_RIGHT: {
+        qreal new_height = pos.y() - area.top();
+        if (new_height > 2*margin) {
+            area.setHeight(new_height);
+        }
+        qreal new_width = pos.x() - area.left();
+        if (new_width > 2*margin) {
+            area.setWidth(new_width);
+        }
+        break;
+    }
     default:
         QGraphicsRectItem::mouseMoveEvent(event);
         auto pos = this->pos();
         annotation->area.x = area.left() + pos.x();
         annotation->area.y = area.top() + pos.y();
         setRect(area);
-        /*
-        std::cout << "Ann.x: " << annotation->area.x << std::endl;
-        std::cout << "Rect.x: "<< rect().x() << std::endl;
-        std::cout << "Pos.x: " << pos.x() << std::endl;
-        std::cout << "Ann.y: " << annotation->area.y << std::endl;
-        std::cout << "Rect.y: " << rect().y() << std::endl;
-        std::cout << "Pos.y: " << pos.y() << std::endl;
-        */
         return;
     }
-
-
     setRect(area);
-
     annotation->area.w = area.width();
     annotation->area.h = area.height();
     prepareGeometryChange();
     update();
-    /*
-    std::cout << "Area.x: " << area.x() << std::endl;
-    std::cout << "Annotation.x: " << annotation->area.x << std::endl;
-    std::cout << "Pos.x: " << pos.x() << std::endl;
-    std::cout << "Area.y: " << area.y() << std::endl;
-    std::cout << "Annotation.y: " << annotation->area.y << std::endl;
-    std::cout << "Pos.y: " << pos.y() << std::endl;
-    */
 }
 
 
@@ -156,12 +187,10 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
                             QWidget *widget)
 {
     painter->setFont(QFont("Helvetica", 10));
-
     // draw main rectangle
     painter->setPen(Qt::DashLine);
     painter->setPen(QPen(QColor(255,0,0)));
     painter->drawRect(rect());
-
     // draw UID
     QString text("000");
     QFontMetrics fm = painter->fontMetrics();
@@ -170,7 +199,6 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     brush.setColor(Qt::gray);
     QRectF text_area = QRectF(rect().right() - width, rect().bottom() - fm.height(), width, fm.height());
     painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
-
     painter->setPen(QPen(QColor(255, 0, 0)));
     painter->drawText(text_area, QString::number(uid));
 }
