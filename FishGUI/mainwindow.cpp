@@ -513,8 +513,10 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         keycode = 7;
     else if (keypress == "q")
         keycode = 8;
-    else
+    else if (keypress == "p")
         keycode = 9;
+    else
+        keycode = 10;
 
     switch (keycode)
     {
@@ -555,6 +557,10 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         ui->Play->setFocus();
         break;
     case 9:
+        ui->Play->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 10:
         QWidget::keyPressEvent(e);
         break;
     }
