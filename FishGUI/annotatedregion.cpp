@@ -185,7 +185,7 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                             QWidget *widget)
 {
-    painter->setFont(QFont("Helvetica", 10));
+    painter->setFont(QFont("Helvetica", 16));
     // draw main rectangle
     painter->setPen(Qt::DashLine);
     painter->setPen(QPen(QColor(255,0,0)));

@@ -131,7 +131,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex)
 void MainWindow::goToFish()
 {
     int fNumber = ui->goToFishVal->text().toInt();
-    if ((fNumber > 0) && (fNumber < myFishList.size()))
+    if ((fNumber > 0) && (fNumber < int(myFishList.size())))
     {
         listPos = myFishList.begin()+fNumber-1;
         ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
@@ -509,8 +509,12 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         keycode = 5;
     else if (keypress == "m")
         keycode = 6;
-    else
+    else if (keypress == "a")
         keycode = 7;
+    else if (keypress == "q")
+        keycode = 8;
+    else
+        keycode = 9;
 
     switch (keycode)
     {
@@ -543,6 +547,14 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         ui->Play->setFocus();
         break;
     case 7:
+        ui->navigator->findChild<QPushButton *>("add_region_button")->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 8:
+        ui->navigator->findChild<QPushButton *>("remove_region_button")->animateClick();
+        ui->Play->setFocus();
+        break;
+    case 9:
         QWidget::keyPressEvent(e);
         break;
     }
@@ -790,6 +802,16 @@ void MainWindow::disableControls()
     ui->addSkate->setEnabled(false);
     ui->addOther->setEnabled(false);
     ui->saveAnnotate->setEnabled(false);
+    ui->removeFish->setEnabled(false);
+    ui->goToFrame->setEnabled(false);
+    ui->prevFish->setEnabled(false);
+    ui->nextFish->setEnabled(false);
+    ui->loadAnnotate->setEnabled(false);
+    ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(false);
+    ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(false);
+    ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(false);
+    ui->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(false);
+    ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(false);
 }
 
 void MainWindow::enableControls()
@@ -807,6 +829,16 @@ void MainWindow::enableControls()
     ui->addSkate->setEnabled(true);
     ui->addOther->setEnabled(true);
     ui->saveAnnotate->setEnabled(true);
+    ui->removeFish->setEnabled(true);
+    ui->goToFrame->setEnabled(true);
+    ui->prevFish->setEnabled(true);
+    ui->nextFish->setEnabled(true);
+    ui->loadAnnotate->setEnabled(true);
+    ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
+    ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
+    ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
+    ui->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(true);
+    ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
 }
 
 int main(int argc, char *argv[])
