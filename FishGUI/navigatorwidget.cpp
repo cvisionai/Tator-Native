@@ -1,6 +1,5 @@
 #include "navigatorwidget.h"
 #include "ui_navigatorwidget.h"
-#include "mainwindow.h"
 
 NavigatorWidget::NavigatorWidget(QWidget *parent) :
     QWidget(parent),

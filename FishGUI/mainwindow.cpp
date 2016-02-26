@@ -279,9 +279,11 @@ void MainWindow::on_loadAnnotate_clicked()
 
 void MainWindow::on_saveAnnotate_clicked()
 {
+
+    QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save direcotry"));
     string filename;
     string filenameJSON;
-    filename = filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
+    filename = dirName.toStdString() + "/" + filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
     filenameJSON = filename + ".json";
     filename = filename + ".csv";
     std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
