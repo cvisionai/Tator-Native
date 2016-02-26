@@ -18,6 +18,11 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QPushButton" name="add_region_button">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Add Region</string>
        </property>
@@ -25,6 +30,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="remove_region_button">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Remove Region</string>
        </property>
@@ -32,13 +42,23 @@
      </item>
      <item>
       <widget class="QPushButton" name="next_with_copy_button">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>Next+Copy Regions</string>
+        <string>Next+Copy</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="next_button">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Next</string>
        </property>
@@ -46,6 +66,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="prev_button">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Prev</string>
        </property>

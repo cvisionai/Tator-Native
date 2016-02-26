@@ -41,8 +41,11 @@ macx{
     target.path = ~/FishDetector/FishGUI
     INSTALLS += target
     QT += widgets
-    LIBS += -L/usr/local/lib
+    LIBS += -L/Users/bwoodward/Projects/opencv-3.1.0/build/lib/ #This is your opencv install location
+    #LIBS += -L/usr/local/lib/
     LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_videoio
-    INCLUDEPATH += /usr/local/include
+    INCLUDEPATH += /usr/local/Cellar/qt5/5.5.1_2/include/
+    INCLUDEPATH += /Users/bwoodward/Projects/opencv-3.1.0/build/include/
+    INCLUDEPATH += /usr/local/include/
 }
 

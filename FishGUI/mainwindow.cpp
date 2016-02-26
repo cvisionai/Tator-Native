@@ -558,7 +558,6 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         break;
     case 9:
         ui->Play->animateClick();
-        ui->Play->setFocus();
         break;
     case 10:
         QWidget::keyPressEvent(e);
