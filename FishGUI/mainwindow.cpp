@@ -280,7 +280,7 @@ void MainWindow::on_loadAnnotate_clicked()
 void MainWindow::on_saveAnnotate_clicked()
 {
 
-    QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save direcotry"));
+    QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save directory"));
     string filename;
     string filenameJSON;
     filename = dirName.toStdString() + "/" + filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
