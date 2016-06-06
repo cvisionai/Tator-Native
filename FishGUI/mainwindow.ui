@@ -413,7 +413,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Fish #</string>
+            <string>Fish ID</string>
            </property>
           </widget>
          </item>

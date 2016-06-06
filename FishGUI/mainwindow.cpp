@@ -264,6 +264,7 @@ void MainWindow::on_loadAnnotate_clicked()
         curID = std::stoi(fishNum,nullptr,10);
         unique_ptr<Fish> tempFish(new Fish(fType,frame,curID));
         if (curID >= nextID) nextID = curID + 1;
+        //std::cout<<nextID<<std::endl;
         tempFish->setFishSubType(getFishSpecies(fType,species));
         myFishList.push_back(*tempFish);
         linestream.str("");
@@ -447,6 +448,7 @@ void MainWindow::on_goToFrame_clicked()
             ui->currentTime->setText(getFormattedTime((int)player->
                 getCurrentFrame() / (int)player->getFrameRate()));
         }
+        processAnnotations(player->getCurrentFrame());
     }
 }
 
@@ -622,6 +624,54 @@ void MainWindow::on_nextAndCopy_clicked()
     currentAnnotations.clear();
     auto prevFrame = player->getCurrentFrame();
     updateImage(player->nextFrame());
+    //Currently delete existing annotations and overwrites. Want to change
+    //into next and copy current fish only. Desired behavior will be to
+    //delete any current annotation associated with the fish and then
+    //copy over the annotation from the current frame.
+
+    //check this frame for annotations. We're going to delete anything
+    //that currently exists.
+    for (auto ann: document->getAnnotations()) {
+        auto id = ann.first;
+        //Here is where we'll check the id against the current fish. If
+        //not equal, then just do nothing
+        if(listPos->getID() == id) {
+            removeRegion(id, prevFrame+1);
+            break;
+        }
+    }
+    // copy annotations
+    for (auto ann : document->getAnnotations(prevFrame)) {
+        auto id = ann.first;
+        if(listPos->getID() == id) {
+            auto frame = ann.second->frame+1;
+            auto area = ann.second->area;
+            auto loc = document->addAnnotationLocation(ann.first,frame, area);
+            //auto rect = QRectF(area.x,area.y,area.w,area.h);
+            //auto region = new AnnotatedRegion(id, loc, rect);
+            //scene->addItem(region);
+            //currentAnnotations.push_back(region);
+            break;
+        }
+    }
+    processAnnotations(player->getCurrentFrame());
+}
+/* Saving to turn into next and copy all
+void MainWindow::on_nextAndCopy_clicked()
+{
+    // remove old annotations
+    for (auto ann : currentAnnotations) {
+        scene->removeItem(ann);
+    }
+    currentAnnotations.clear();
+    auto prevFrame = player->getCurrentFrame();
+    updateImage(player->nextFrame());
+    //Currently delete existing annotations and overwrites. Want to change
+    //to don't overwrite existing annotations.  Probably going to have to
+    //do an exhaustive search of existing annotations for each potential
+    //copied annotation.  Research code templates to shortcut this.  Make
+    //sure to understand data types involved.
+
     //check this frame for annotations. We're going to delete anything
     //that currently exists.
     for (auto ann: document->getAnnotations()) {
@@ -639,7 +689,7 @@ void MainWindow::on_nextAndCopy_clicked()
         currentAnnotations.push_back(region);
     }
 }
-
+*/
 void MainWindow::addFish(FishTypeEnum fType)
 {
 
@@ -653,17 +703,50 @@ void MainWindow::addFish(FishTypeEnum fType)
     }
     else {
         id = nextID;
+        //std::cout<<"ID is: "<<id<<std::endl;
         nextID++;
 
     }
     unique_ptr<Fish> tempFish(new Fish(fType,currentFrame,id));
     tempFish->setFishSubType(0);
-	myFishList.push_back(*tempFish);
-    std::sort(myFishList.begin(),myFishList.end());
-    listPos = myFishList.end()-1;
-    updateVecIndex();
+
+    if (myFishList.size() == 0) {
+        myFishList.push_back(*tempFish);
+        listPos = myFishList.end()-1;
+    }
+    else {
+        vector<Fish>::iterator tempLoc = myFishList.begin();
+        int tempIndex = 0;
+        while(tempLoc->getFrameCounted() < currentFrame) {
+            tempLoc++;
+            if(tempLoc==myFishList.end()) break;
+            tempIndex++;
+            //std::cout<<tempIndex<<std::endl;
+        }
+        if (tempLoc == myFishList.end()) {
+            //std::cout<<"Putting at end"<<std::endl;
+            myFishList.push_back(*tempFish);
+            listPos = myFishList.end()-1;
+        }
+        else {
+            if (tempLoc == myFishList.begin()) {
+                myFishList.insert(tempLoc, *tempFish);
+                listPos = myFishList.begin();
+            }
+            else {
+                myFishList.insert(myFishList.begin()+tempIndex, *tempFish);
+                listPos = myFishList.begin()+tempIndex;
+            }
+        }
+    }
+    //myFishList.push_back(*tempFish);
+    //listPos = myFishList.end()-1;
+    //std::sort(myFishList.begin(),myFishList.end());
+    ui->fishNumVal->setText(QString::number(id));
+    ui->frameCountedVal->setText(QString::number(currentFrame));
     ui->totalFishVal->setText(QString::number(myFishList.size()));
     ui->typeMenu->setCurrentIndex((int) fType);
+    ui->subTypeMenu->setCurrentIndex((int) 0);
 }
 
 void MainWindow::updateVecIndex()
