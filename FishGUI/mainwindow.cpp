@@ -341,7 +341,7 @@ void MainWindow::on_videoSlider_sliderReleased()
 void MainWindow::on_videoSlider_sliderMoved(int position)
 {
 	player->setFrame(position);
-	ui->currentTime->setText(getFormattedTime(position / (int)player->getFrameRate()));
+    ui->currentTime->setText(getFormattedTime((int)(position / player->getFrameRate())));
 }
 
 void MainWindow::on_SpeedUp_clicked()

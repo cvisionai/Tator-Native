@@ -11,7 +11,7 @@ bool Player::loadVideo(std::string filename) {
     capture.reset(new cv::VideoCapture(filename));
 	if (capture->isOpened())
 	{
-		frameRate = (int) capture->get(CV_CAP_PROP_FPS);
+        frameRate = capture->get(CV_CAP_PROP_FPS);
         currentSpeed = 100;
 		delay = (1000/frameRate);
 		return true;
@@ -139,7 +139,8 @@ double Player::getFrameRate()
 
 void Player::setCurrentFrame(std::int64_t frameNumber)
 {
-    capture->set(CV_CAP_PROP_POS_MSEC, int((double(frameNumber)/double(frameRate))*1000));
+    capture->set(CV_CAP_PROP_POS_MSEC, (double(frameNumber)/double(frameRate)*1000));
+    //capture->set(CV_CAP_PROP_POS_FRAMES, frameNumber);
     frameIndex = frameNumber;
 }
 

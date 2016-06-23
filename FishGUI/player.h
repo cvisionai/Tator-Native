@@ -23,7 +23,7 @@ private:
     QMutex mutex;
     QWaitCondition condition;
     Mat frame;
-    int frameRate;
+    double frameRate;
     double currentSpeed;
     std::unique_ptr<VideoCapture> capture;
     Mat RGBframe;
