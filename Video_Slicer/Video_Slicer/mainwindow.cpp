@@ -21,8 +21,8 @@ void MainWindow::on_chooseVideo_clicked() {
         tr("Video Files (*.avi *.mpg *.mp4)"));
     if (!filename.isEmpty())
     {
-        inputVideo.reset(new VideoCapture(filename.toLatin1().data())); // Open input
-        if (!inputVideo.isOpened())
+        inputVideo.reset(new cv::VideoCapture(filename.toLatin1().data())); // Open input
+        if (!inputVideo->isOpened())
         {
             QMessageBox msgBox;
             msgBox.setText("The selected video could not be opened!");
@@ -33,37 +33,43 @@ void MainWindow::on_chooseVideo_clicked() {
 
 void MainWindow::on_run_clicked() {
 
-    auto pAt = filename.lastIndexOf('.');                  // Find extension point
-    int ex = static_cast<int>(inputVideo->get(CV_CAP_PROP_FOURCC));     // Get Codec Type- Int form
-    int numFrames = (int) inputVideo->get(CV_CAP_PROP_FRAME_COUNT);
+    auto pAt = filename.lastIndexOf('.'); // Find extension point
+    int ex = static_cast<int>(inputVideo->get(CV_CAP_PROP_FOURCC)); // Get Codec Type- Int form
+    int numFrames = (int) inputVideo->get(CV_CAP_PROP_FRAME_COUNT); //Number of frames in video
     inputVideo->set(CV_CAP_PROP_POS_FRAMES,0);
-    int fps = (int) inputVideo->get(CV_CAP_PROP_FPS);
+    double fps = inputVideo->get(CV_CAP_PROP_FPS);
+    int secondsPerSlice = 60;
+    int framesPerSlice = (double) secondsPerSlice * fps;
+    int numSlices = (int)((double) numFrames / (double) framesPerSlice);
+    cv::Size S = cv::Size((int) inputVideo->get(CV_CAP_PROP_FRAME_WIDTH),    // Acquire input size
+                      (int) inputVideo->get(CV_CAP_PROP_FRAME_HEIGHT));
 
-    VideoWriter outputVideo;                                        // Open the output
 
 
-    const string NAME = filename.left(pAt-1).c_str()+std::to_string(n)+".avi";   // Form the new name
-    outputVideo.open(NAME, ex, inputVideo->get(CV_CAP_PROP_FPS), S, true);
-
-    if (!outputVideo.isOpened()) {
-        QMessageBox msgBox;
-        msgBox.setText("Could not open the output video for write!");
-        msgBox.exec();
-    }
-
-    cv::Mat src;
+    cv::VideoWriter outputVideo; // Open the output
     inputVideo->set(CV_CAP_PROP_POS_FRAMES,0);
-    for(;;) //Show the image captured in the window and repeat
-    {
-    
-        inputVideo >> src;              // read
-    
-        if (src.empty() | start_frame_no > end_frame_no) break;         // check if at end
-        //outputVideo.write(src); //save or
-        outputVideo << src;
-        start_frame_no++;
+
+    for(int i=0;i<numSlices+1;i++) {
+        const std::string NAME = filename.left(pAt-1).toStdString().c_str()+std::to_string(i)+".avi";   // Form the new name
+        std::cout << NAME << std::endl;
+        outputVideo.open(NAME, CV_FOURCC('x','2','6','4'), inputVideo->get(CV_CAP_PROP_FPS), S, true);
+//        outputVideo.open(NAME, -1, inputVideo->get(CV_CAP_PROP_FPS), S, true);
+
+        if (!outputVideo.isOpened()) {
+            QMessageBox msgBox;
+            msgBox.setText("Could not open the output video for write!");
+            msgBox.exec();
+            break;
+        }
+        cv::Mat src;
+        if (i>0) inputVideo->set(CV_CAP_PROP_POS_FRAMES,i*framesPerSlice-(int)fps*2);
+        for(int n=0;n<framesPerSlice+(int)fps*2;n++) //Show the image captured in the window and repeat
+        {
+
+            *inputVideo >> src;              // read
+            if (src.empty()) return;         // check if at end
+            outputVideo << src;
+        }
     }
-    
-    cout << "Finished writing" << endl;
-    return 0;
+    std::cout << "Finished writing" << std::endl;
 }

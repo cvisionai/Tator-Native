@@ -1,7 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QWidget>
+#include <QStringList>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <vector>
+#include <algorithm>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <ostream>
+#include <memory>
 #include <string>
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat)
 #include <opencv2/highgui/highgui.hpp>  // Video write
@@ -25,7 +35,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    std::unique_ptr<VideoInput> inputVideo;
+    std::unique_ptr<cv::VideoCapture> inputVideo;
     QString filename;
 };
 
