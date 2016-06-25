@@ -34,7 +34,7 @@ void MainWindow::on_chooseVideo_clicked() {
 void MainWindow::on_run_clicked() {
 
     auto pAt = filename.lastIndexOf('.'); // Find extension point
-    int ex = static_cast<int>(inputVideo->get(CV_CAP_PROP_FOURCC)); // Get Codec Type- Int form
+//    int ex = static_cast<int>(inputVideo->get(CV_CAP_PROP_FOURCC)); // Get Codec Type- Int form
     int numFrames = (int) inputVideo->get(CV_CAP_PROP_FRAME_COUNT); //Number of frames in video
     inputVideo->set(CV_CAP_PROP_POS_FRAMES,0);
     double fps = inputVideo->get(CV_CAP_PROP_FPS);
