@@ -15,9 +15,11 @@ Dependencies
 
 FishDetector uses the following 3rd party libraries:
 
-* [Qt][Qt]
+* [Qt5][Qt5]
 * [Boost.PropertyTree][BoostPropertyTree]
 * [OpenCV][OpenCV]
+
+[CMake][CMake] is also required to build.
 
 To simplify distribution, Qt and OpenCV must be built as static libraries.
 Boost.PropertyTree is include only, so the Boost libraries do not need to 
@@ -68,4 +70,28 @@ nmake
 
 The Qt5 static libraries should now be built.
 
+Building static OpenCV on Windows
+---------------------------------
+
+1\. Clone the [OpenCV repository][OpenCVRepo] from github.
+
+2\. By default, the master branch will be checked out.  If desired, change
+    your branch to a tagged release version.
+
+3\. Navigate to the top level opencv directory and create a subdirectory
+    called build.
+
+4\. From a Visual Studio command prompt, navigate to the build directory
+    and type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake -DBUILD_SHARED_LIBS=OFF ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5\. Type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake --build . --target INSTALL --config Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The OpenCV static libraries should now be built.
 
