@@ -12,12 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
                          this, SLOT(updatePlayerUI(QImage)));
 		ui->setupUi(this);
         disableControls();
-		QStringList typeList;
-		typeList.append("Round");
-		typeList.append("Flat");
-		typeList.append("Skate");
-		typeList.append("Other");
-		ui->typeMenu->addItems(typeList);
+        updateTypeMenu();
         QObject::connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)),
                          this, SLOT(updateSubTypeMenu(int)));
 		ui->typeMenu->setCurrentIndex(3);
@@ -67,10 +62,6 @@ void MainWindow::processAnnotations(uint64_t frame) {
     }
 }
 
-void MainWindow::gotoFrame() {
-
-}
-
 void MainWindow::updatePlayerUI(QImage img)
 {
 	if (!img.isNull())
@@ -83,49 +74,6 @@ void MainWindow::updatePlayerUI(QImage img)
 			getCurrentFrame() / (int)player->getFrameRate()));
         processAnnotations(player->getCurrentFrame());
 	}
-}
-
-void MainWindow::updateSubTypeMenu(int typeIndex)
-{
-	QStringList sTypeList;
-    ui->subTypeMenu->blockSignals(true);
-	ui->subTypeMenu->clear();
-	if (typeIndex == 0) {
-		sTypeList.append("Round");
-		sTypeList.append("Haddock");
-		sTypeList.append("Cod");
-		sTypeList.append("Whiting");
-		sTypeList.append("Red Hake");
-		sTypeList.append("Pollock");
-		sTypeList.append("Herring");
-		sTypeList.append("Unknown");
-	}
-	else if (typeIndex == 1) {
-		sTypeList.append("Flat");
-		sTypeList.append("Yellowtail");
-		sTypeList.append("Windowpane");
-		sTypeList.append("Summer");
-		sTypeList.append("Winter");
-		sTypeList.append("Fourspot");
-		sTypeList.append("Grey Sole");
-		sTypeList.append("Halibut");
-		sTypeList.append("Unknown");
-	}
-	else if (typeIndex == 2) {
-		sTypeList.append("Skate");
-		sTypeList.append("Barndoor");
-		sTypeList.append("Unknown");
-	}
-	else if (typeIndex == 3) {
-		sTypeList.append("Other");
-		sTypeList.append("Dogfish");
-		sTypeList.append("Monkfish");
-		sTypeList.append("Lobster");
-		sTypeList.append("Scallop");
-	}
-	ui->subTypeMenu->addItems(sTypeList);
-    ui->subTypeMenu->setCurrentIndex(0);
-    ui->subTypeMenu->blockSignals(false);
 }
 
 void MainWindow::goToFish()
@@ -183,6 +131,7 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->totalTime->setText(getFormattedTime((int)player->
 				getNumberOfFrames() / (int)player->getFrameRate()));
             QImage firstImage = player->getOneFrame();
+            player->incrementFrameIndex();
             scene.reset(new QGraphicsScene(this));
 			displayImage = scene->addPixmap(QPixmap::fromImage(firstImage));
 			scene->setSceneRect(firstImage.rect());
@@ -196,121 +145,6 @@ void MainWindow::on_LoadVideo_clicked()
             document.reset(new FishDetector::Document());
 		}
 	}
-}
-
-void MainWindow::on_loadAnnotate_clicked()
-{
-    QString filename = QFileDialog::getOpenFileName(this,
-        tr("Open Annotation File"), ".",
-        tr("CSV Files (*.csv)"));
-    std::string filenameBase = base_name(filename.toStdString());
-    std::string filenameBaseNoExt = remove_extension(filenameBase);
-    std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
-    ifstream inputJSON(filenameJSON.c_str(), ios::in);
-    if (!inputJSON.fail()) {
-        FishDetector::Document* newDoc = new FishDetector::Document(FishDetector::deserialize<FishDetector::Document>(inputJSON));
-        document.reset(newDoc);
-    }
-    std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
-    QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
-    ui->fileNameValue->setText(qFilename);
-    ifstream inFile(filename.toLatin1().data());
-    string line, tripID, reviewer, towType, fishNum, fishType, species;
-    int frame, towNum, curID;
-    double timeInVid;
-    getline(inFile,line);
-    line.clear();
-    bool first = true;
-    while(getline(inFile,line))
-    {
-        stringstream linestream(line);
-        string tempToken;
-        std::getline(linestream,tripID,',');
-        std::getline(linestream,tempToken,',');
-        string strtowNum = tempToken;
-        stringstream tempConvert(tempToken);
-        tempConvert >> towNum;
-        tempToken.clear();
-        tempConvert.str("");
-        tempConvert.clear();
-        std::getline(linestream,reviewer,',');
-        std::getline(linestream,towType,',');
-        std::getline(linestream,fishNum,',');
-        std::getline(linestream,fishType,',');
-        std::getline(linestream,species,',');
-        std::getline(linestream,tempToken,',');
-        if (first)
-        {
-            QString qreviewer = QString::fromStdString(reviewer);
-            ui->reviewerNameValue->setText(qreviewer);
-            QString qtripID = QString::fromStdString(tripID);
-            ui->tripIDValue->setText(qtripID);
-            QString qtowID = QString::fromStdString(strtowNum);
-            ui->towIDValue->setText(qtowID);
-        }
-        first = false;
-        tempConvert << tempToken;
-        tempConvert >> frame;
-        tempToken.clear();
-        tempConvert.str("");
-        tempConvert.clear();
-        std::getline(linestream,tempToken,',');
-        tempConvert << tempToken;
-        tempConvert >> timeInVid;
-        tempToken.clear();
-        tempConvert.str("");
-        tempConvert.clear();
-        FishTypeEnum fType = getFishType(fishType);
-        curID = std::stoi(fishNum,nullptr,10);
-        unique_ptr<Fish> tempFish(new Fish(fType,frame,curID));
-        if (curID >= nextID) nextID = curID + 1;
-        //std::cout<<nextID<<std::endl;
-        tempFish->setFishSubType(getFishSpecies(fType,species));
-        myFishList.push_back(*tempFish);
-        linestream.str("");
-        linestream.clear();
-    }
-    inFile.close();
-    ui->totalFishVal->setText(QString::number(myFishList.size()));
-    listPos = myFishList.begin();
-    ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-    ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
-    updateVecIndex();
-}
-
-void MainWindow::on_saveAnnotate_clicked()
-{
-
-    QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save directory"));
-    string filename;
-    string filenameJSON;
-    filename = dirName.toStdString() + "/" + filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
-    filenameJSON = filename + ".json";
-    filename = filename + ".csv";
-    std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
-    FishDetector::serialize(*document, jsonFile);
-    ofstream outFile(filename);
-    outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
-    outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
-    string towStatus;
-    if (ui->towStatus->isChecked())
-    {
-        towStatus = "Open";
-    }
-    else
-    {
-        towStatus = "Closed";
-    }
-    int fishCount = 1;
-    for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
-        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
-        outFile << it->getID() << "," << getFishTypeString(it->getFishType()) << ",";
-        outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
-        outFile << it->frameCounted << ",";
-        outFile << (double) it->frameCounted / player->getFrameRate() / 60.0 / 60.0 << std::endl;
-        fishCount++;
-    }
-    outFile.close();
 }
 
 void MainWindow::on_Play_clicked()
@@ -360,6 +194,11 @@ void MainWindow::on_SlowDown_clicked()
     ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
+void MainWindow::on_Rewind_clicked()
+{
+
+}
+
 void MainWindow::updateImage(const QImage &image)
 {
     if (!player->isStopped())
@@ -386,48 +225,6 @@ void MainWindow::on_plusOneFrame_clicked()
     nextFrame();
 }
 
-void MainWindow::on_addRound_clicked()
-{
-	addFish((FishTypeEnum) ROUND);
-}
-
-void MainWindow::on_addFlat_clicked()
-{
-	addFish((FishTypeEnum) FLAT);
-}
-
-void MainWindow::on_addSkate_clicked()
-{
-	addFish((FishTypeEnum) SKATE);
-}
-
-void MainWindow::on_addOther_clicked()
-{
-	addFish((FishTypeEnum) OTHER);
-}
-
-void MainWindow::on_prevFish_clicked()
-{
-    if (listPos!=myFishList.begin())
-    {
-        listPos = listPos-1;
-        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
-        updateVecIndex();
-    }
-}
-
-void MainWindow::on_nextFish_clicked()
-{
-    if (listPos!=myFishList.end()-1)
-    {
-        listPos = listPos+1;
-        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
-        updateVecIndex();
-    }
-}
-
 void MainWindow::on_goToFrame_clicked()
 {
     if (!player==NULL)
@@ -449,37 +246,6 @@ void MainWindow::on_goToFrame_clicked()
                 getCurrentFrame() / (int)player->getFrameRate()));
         }
         processAnnotations(player->getCurrentFrame());
-    }
-}
-
-void MainWindow::on_removeFish_clicked()
-{
-    /*Steps to removing fish:
-     *
-     * 1. Remove any regions from scene
-     * 2. Remove all frame annotations with ID
-     * 3. Remove annotation with ID
-     * 4. Remove from fish list
-     */
-    if (myFishList.begin() != myFishList.end()) {
-        //auto id = uint64_t(listPos - myFishList.begin()+1);
-        auto id = listPos->getID();
-
-        auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
-                          [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
-        if (it != currentAnnotations.end()) {
-            scene->removeItem(*it);
-            currentAnnotations.erase(it);
-        }
-        document->removeFrameAnnotation(id);
-        document->removeAnnotation(id);
-        listPos = myFishList.erase(listPos);
-        if (listPos == myFishList.end())
-            listPos = myFishList.end()-1;
-        updateVecIndex();
-        ui->totalFishVal->setText(QString::number(myFishList.size()));
-        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
     }
 }
 
@@ -733,128 +499,6 @@ void MainWindow::updateVecIndex()
 {
     ui->fishNumVal->setText(QString::number(listPos->getID()));
     ui->frameCountedVal->setText(QString::number(listPos->getFrameCounted()));
-}
-
-FishTypeEnum MainWindow::getFishType (string const& inString)
-{
-    if (inString == "ROUND") return ROUND;
-    if (inString == "FLAT") return FLAT;
-    if (inString == "SKATE") return SKATE;
-    if (inString == "OTHER") return OTHER;
-    return OTHER;
-}
-
-int MainWindow::getFishSpecies (FishTypeEnum fType, string const& sString)
-{
-    switch (fType)
-    {
-    case ROUND:
-        if (sString == "Round") return 0;
-        if (sString == "Haddock") return 1;
-        if (sString == "Cod") return 2;
-        if (sString == "Whiting") return 3;
-        if (sString == "Red Hake") return 4;
-        if (sString == "Pollock") return 5;
-        if (sString == "Herring") return 6;
-        if (sString == "Unknown") return 7;
-        return 0;
-        break;
-    case FLAT:
-        if (sString == "Flat") return 0;
-        if (sString == "Yellowtail") return 1;
-        if (sString == "Windowpane") return 2;
-        if (sString == "Summer") return 3;
-        if (sString == "FourSport") return 4;
-        if (sString == "Grey Sole") return 5;
-        if (sString == "Halibut") return 6;
-        if (sString == "Unknown") return 7;
-        return 0;
-        break;
-    case SKATE:
-        if (sString == "Skate") return 0;
-        if (sString == "Barndoor") return 1;
-        if (sString == "Unknown") return 2;
-        return 0;
-        break;
-    case OTHER:
-        if (sString == "Other") return 0;
-        if (sString == "Dogfish") return 1;
-        if (sString == "Monkfish") return 2;
-        if (sString == "Lobster") return 3;
-        if (sString == "Scallop") return 4;
-        return 0;
-        break;
-    default:
-        return 0;
-        break;
-    }
-}
-
-string MainWindow::getFishTypeString (FishTypeEnum fType)
-{
-    switch (fType){
-    case ROUND:
-        return "ROUND";
-        break;
-    case FLAT:
-        return "FLAT";
-        break;
-    case SKATE:
-        return "SKATE";
-        break;
-    case OTHER:
-        return "OTHER";
-        break;
-    default:
-        return "OTHER";
-        break;
-    }
-}
-
-string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species)
-{
-    switch (fType)
-    {
-    case ROUND:
-        if (species == 0) return "Round";
-        if (species == 1) return "Haddock";
-        if (species == 2) return "Cod";
-        if (species == 3) return "Whiting";
-        if (species == 4) return "Red Hake";
-        if (species == 5) return "Pollock";
-        if (species == 6) return "Herring";
-        if (species == 7) return "Unknown";
-        return "Unknown";
-        break;
-    case FLAT:
-        if (species == 0) return "Flat";
-        if (species == 1) return "Yellowtail";
-        if (species == 2) return "Windowpane";
-        if (species == 3) return "Summer";
-        if (species == 4) return "FourSport";
-        if (species == 5) return "Grey Sole";
-        if (species == 6) return "Halibut";
-        if (species == 7) return "Unknown";
-        return "Unknown";
-        break;
-    case SKATE:
-        if (species == 0) return "Skate";
-        if (species == 1) return "Barndoor";
-        if (species == 2) return "Unknown";
-        return "Unknown";
-        break;
-    case OTHER:
-        if (species == 0) return "Other";
-        if (species == 1) return "Dogfish";
-        if (species == 2) return "Monkfish";
-        if (species == 3) return "Lobster";
-        if (species == 4) return "Scallop";
-        return "Unknown";
-        break;
-    default:
-        return "Unknown";
-        break;
-    }
 }
 
 void MainWindow::disableControls()

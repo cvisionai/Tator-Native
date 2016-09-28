@@ -44,6 +44,7 @@ public:
     bool isStopped() const;
     void speedUp();
     void slowDown();
+    void incrementFrameIndex(){++frameIndex;}
     double getFrameRate();
     double getNumberOfFrames();
     double getCurrentSpeed();
