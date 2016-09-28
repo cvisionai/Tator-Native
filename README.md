@@ -95,3 +95,13 @@ cmake --build . --target INSTALL --config Release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The OpenCV static libraries should now be built.
 
+[Qt5]: https://www.qt.io/developers/
+[BoostPropertyTree]: http://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html
+[OpenCV]: http://opencv.org/
+[CMake]: https://cmake.org/
+[QtRepo]: https://github.com/qt/qt5
+[Perl]: https://www.perl.org/
+[Python]: https://www.python.org/
+[Ruby]: http://rubyinstaller.org/
+[OpenCVRepo]: https://github.com/opencv/opencv
+
