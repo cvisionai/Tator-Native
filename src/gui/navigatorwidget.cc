@@ -14,5 +14,7 @@ NavigatorWidget::~NavigatorWidget()
 {
 }
 
+#include "../../include/fish_detector/gui/moc_navigatorwidget.cpp"
+
 }} // namespace fish_detector::gui
 
