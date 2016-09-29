@@ -16,3 +16,4 @@ fishguibuild*
 ui_*
 build*
 .DS_Store
+cmake/FishDetFindLibsHints.cmake
