@@ -1,0 +1,19 @@
+# This file is used to generate a library hints file in the
+# source tree without requiring these hints to be part of 
+# version control
+# 
+# The hints file is generated only if it does not already
+# exist, allowing for one time configuration on a given
+# machine.
+
+# Qt5
+set( CMAKE_PREFIX_PATH $ENV{CMAKE_PREFIX_PATH} )
+
+# Boost
+set( BOOST_ROOT $ENV{BOOST_ROOT} )
+set( BOOST_LIBRARYDIR $ENV{BOOST_LIBRARYDIR} )
+
+# OpenCV
+set( CMAKE_CL_64 $ENV{CMAKE_CL_64} )
+set( OpenCV_DIR $ENV{OpenCV_DIR} )
+

@@ -23,7 +23,8 @@ FishDetector uses the following 3rd party libraries:
 
 To simplify distribution, Qt and OpenCV must be built as static libraries.
 Boost.PropertyTree is include only, so the Boost libraries do not need to 
-be built.
+be built.  It is recommended to download compiled Boost binaries for your 
+compiler if they are available.
 
 Building static Qt on Windows
 -----------------------------
