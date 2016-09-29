@@ -569,5 +569,7 @@ int main(int argc, char *argv[])
 	return a.exec();
 }
 
+#include "../../include/fish_detector/gui/moc_mainwindow.cpp"
+
 }} // namespace fish_detector::gui
 
