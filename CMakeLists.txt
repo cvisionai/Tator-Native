@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 2.8.12 )
+cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
 
 project( fish_detector )
 
@@ -33,6 +33,7 @@ set( CMAKE_MODULE_PATH ${FISHDET_CMAKE_DIR} )
 # Do Qt specific settings
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
+set( CMAKE_AUTOUIC ON )
 
 # Generate the library hints file if necessary
 set( HINTS_PATH "${FISHDET_CMAKE_DIR}/FishDetFindLibsHints.cmake" )
@@ -50,12 +51,13 @@ include( "cmake/FishDetFindLibs.cmake" )
 
 # Add necessary include directories
 include_directories(
+  ${Qt5Widgets_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
   ${FISHDET_INCLUDE_DIR}
   )
 
-#add_subdirectory( ${FISHDET_SRC_DIR} )
-#add_subdirectory( ${FISHDET_PYTHON_DIR} )
+add_subdirectory( ${FISHDET_SRC_DIR} )
 
 #enable_testing()
 
