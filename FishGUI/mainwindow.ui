@@ -1053,7 +1053,7 @@
                 </spacer>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="playControlsLayout" stretch="2,1,1,1,1">
+                <layout class="QHBoxLayout" name="playControlsLayout" stretch="2,1,1,0,1,1">
                  <property name="spacing">
                   <number>2</number>
                  </property>
@@ -1120,6 +1120,13 @@
                    </property>
                    <property name="text">
                     <string>Faster</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="Rewind">
+                   <property name="text">
+                    <string>Rewind</string>
                    </property>
                   </widget>
                  </item>

@@ -191,7 +191,7 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->setPen(QPen(QColor(255,0,0)));
     painter->drawRect(rect());
     // draw UID
-    QString text("000");
+    QString text("0000");
     QFontMetrics fm = painter->fontMetrics();
     int width = fm.width(text);
     QBrush brush;

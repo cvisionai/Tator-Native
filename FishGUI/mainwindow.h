@@ -40,7 +40,7 @@ class MainWindow : public QWidget
 
     void nextFrame();
     void prevFrame();
-    void gotoFrame();
+
  private slots:
   	void updatePlayerUI(QImage img);
 	void updateSubTypeMenu(int typeIndex);
@@ -55,6 +55,7 @@ class MainWindow : public QWidget
     void on_saveAnnotate_clicked();
 	void on_SpeedUp_clicked();
 	void on_SlowDown_clicked();
+    void on_Rewind_clicked();
 	void on_minusOneFrame_clicked();
 	void on_plusOneFrame_clicked();
 	void on_addRound_clicked();
@@ -88,8 +89,8 @@ private:
     void removeRegion(std::uint64_t id, std::uint64_t frame);
     void processAnnotations(uint64_t frame);
 private:
+    void updateTypeMenu();
     std::unique_ptr<FishDetector::Document> document;
-
     std::unique_ptr<Ui::MainWidget> ui;
     std::unique_ptr<Player> player;
 	vector<Fish> myFishList;

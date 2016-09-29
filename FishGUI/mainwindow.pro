@@ -7,7 +7,9 @@ SOURCES = player.cpp \
           fish.cpp \
           annotatedregion.cpp \
           navigatorwidget.cpp \
-          document.cpp
+          document.cpp \
+          mainwindowmenus.cpp \
+          mainwindowbuttons.cpp
 HEADERS = player.h \
 	  mainwindow.h \
           fish.h \
