@@ -1,5 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <ostream>
+#include <memory>
+#include <string>
+
 #include <QWidget>
 #include <QStringList>
 #include <QFileDialog>
@@ -7,25 +17,18 @@
 #include <QTime>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
-#include <vector>
-#include <algorithm>
-#include <player.h>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <ostream>
-#include <memory>
-#include <string>
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
-#include "ui_mainwindow.h"
-#include "fish.h"
-#include "annotatedregion.h"
-#include "document.h"
+#include "fish_detector/gui/fish.h"
+#include "fish_detector/gui/annotatedregion.h"
+#include "fish_detector/gui/document.h"
+#include "fish_detector/gui/player.h"
 
-using namespace std;
+namespace fish_detector { namespace gui {
+
 namespace Ui {
 	class MainWidget;
 }
@@ -79,10 +82,10 @@ private:
     void updateAnnotations();
     void addFish(FishTypeEnum fType);
     void updateVecIndex();
-    FishTypeEnum getFishType (string const &inString);
-    int getFishSpecies (FishTypeEnum fType, string const &sString);
-    string getFishTypeString (FishTypeEnum fType);
-    string getFishSpeciesString (FishTypeEnum fType, int species);
+    FishTypeEnum getFishType (std::string const &inString);
+    int getFishSpecies (FishTypeEnum fType, std::string const &sString);
+    std::string getFishTypeString (FishTypeEnum fType);
+    std::string getFishSpeciesString (FishTypeEnum fType, int species);
     void disableControls();
     void enableControls();
     void keyPressEvent(QKeyEvent *e);
@@ -90,11 +93,11 @@ private:
     void processAnnotations(uint64_t frame);
 private:
     void updateTypeMenu();
-    std::unique_ptr<FishDetector::Document> document;
+    std::unique_ptr<Document> document;
     std::unique_ptr<Ui::MainWidget> ui;
     std::unique_ptr<Player> player;
-	vector<Fish> myFishList;
-    vector<Fish>::iterator listPos;
+    std::vector<Fish> myFishList;
+    std::vector<Fish>::iterator listPos;
     std::unique_ptr<QGraphicsScene> scene;
     int fIndex;
     int nextID;
@@ -121,4 +124,8 @@ T remove_reviewer(T const & filename)
   typename T::size_type const p(filename.find_last_of('_'));
   return p > 0 && p != T::npos ? filename.substr(0, p) : filename;
 }
-#endif
+
+}} // namespace fish_detector::gui
+
+#endif // MAINWINDOW_H
+

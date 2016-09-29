@@ -1,4 +1,6 @@
-#include <player.h>
+#include "fish_detector/gui/player.h"
+
+namespace fish_detector { namespace gui {
 
 Player::Player(QObject *parent)
 	: QThread(parent)
@@ -155,3 +157,6 @@ double Player::getCurrentSpeed()
 {
     return currentSpeed;
 }
+
+}} // namespace fish_detector::gui
+

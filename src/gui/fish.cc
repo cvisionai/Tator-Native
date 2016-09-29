@@ -1,4 +1,6 @@
-#include "fish.h"
+#include "fish_detector/gui/fish.h"
+
+namespace fish_detector { namespace gui {
 
 Fish::Fish(FishTypeEnum ftype, int frame, int id)
 {
@@ -41,3 +43,6 @@ xyLoc Fish::getXYLoc()
 {
 	return fishLoc;
 }
+
+}} // namespace fish_detector::gui
+

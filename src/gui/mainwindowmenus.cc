@@ -1,5 +1,11 @@
-#include <mainwindow.h>
+#include "fish_detector/gui/mainwindow.h"
+#include "ui_mainwindow.h"
 
+namespace fish_detector { namespace gui {
+
+namespace Ui {
+  class MainWidget;
+}
 
 void MainWindow::updateTypeMenu()
 {
@@ -55,7 +61,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex)
     ui->subTypeMenu->blockSignals(false);
 }
 
-FishTypeEnum MainWindow::getFishType (string const& inString)
+FishTypeEnum MainWindow::getFishType (std::string const& inString)
 {
     if (inString == "ROUND") return ROUND;
     if (inString == "FLAT") return FLAT;
@@ -64,7 +70,7 @@ FishTypeEnum MainWindow::getFishType (string const& inString)
     return OTHER;
 }
 
-int MainWindow::getFishSpecies (FishTypeEnum fType, string const& sString)
+int MainWindow::getFishSpecies (FishTypeEnum fType, std::string const& sString)
 {
     switch (fType)
     {
@@ -110,7 +116,7 @@ int MainWindow::getFishSpecies (FishTypeEnum fType, string const& sString)
     }
 }
 
-string MainWindow::getFishTypeString (FishTypeEnum fType)
+std::string MainWindow::getFishTypeString (FishTypeEnum fType)
 {
     switch (fType){
     case ROUND:
@@ -131,7 +137,7 @@ string MainWindow::getFishTypeString (FishTypeEnum fType)
     }
 }
 
-string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species)
+std::string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species)
 {
     switch (fType)
     {
@@ -176,3 +182,6 @@ string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species)
         break;
     }
 }
+
+}} // namespace fish_detector::gui
+

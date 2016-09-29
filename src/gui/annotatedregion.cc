@@ -1,11 +1,15 @@
-#include "annotatedregion.h"
+#include <iostream>
+
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QDebug>
 #include <QCursor>
-#include <iostream>
 
-AnnotatedRegion::AnnotatedRegion(std::uint64_t uid, std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area)
+#include "fish_detector/gui/annotatedregion.h"
+
+namespace fish_detector { namespace gui {
+
+AnnotatedRegion::AnnotatedRegion(std::uint64_t uid, std::shared_ptr<AnnotationLocation> annotation, QRectF area)
 {
     this->annotation = annotation;
     this->uid = uid;
@@ -205,3 +209,6 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 void AnnotatedRegion::updateFrame(uint64_t frame) {
     annotation->frame = frame;
 }
+
+}} // namespace fish_detector::gui
+

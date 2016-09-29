@@ -1,4 +1,7 @@
-#include <mainwindow.h>
+#include "fish_detector/gui/mainwindow.h"
+#include "ui_mainwindow.h"
+
+namespace fish_detector { namespace gui {
 
 MainWindow::MainWindow(QWidget *parent)
     :QWidget(parent)
@@ -142,7 +145,7 @@ void MainWindow::on_LoadVideo_clicked()
             ui->Play->setFocus();
             // TODO: should first try to load this if the data
             // file exists
-            document.reset(new FishDetector::Document());
+            document.reset(new Document());
 		}
 	}
 }
@@ -337,7 +340,7 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 
 void MainWindow::on_addRegion_clicked()
 {
-    FishDetector::Rect area(0, 0, 100, 100);
+    Rect area(0, 0, 100, 100);
     auto fishID = uint64_t(listPos->getID());
     auto frame = uint64_t(player->getCurrentFrame());
     //First check to see if there's an annotation for this ID already.
@@ -458,7 +461,7 @@ void MainWindow::addFish(FishTypeEnum fType)
         nextID++;
 
     }
-    unique_ptr<Fish> tempFish(new Fish(fType,currentFrame,id));
+    std::unique_ptr<Fish> tempFish(new Fish(fType,currentFrame,id));
     tempFish->setFishSubType(0);
 
     if (myFishList.size() == 0) {
@@ -466,7 +469,7 @@ void MainWindow::addFish(FishTypeEnum fType)
         listPos = myFishList.end()-1;
     }
     else {
-        vector<Fish>::iterator tempLoc = myFishList.begin();
+        std::vector<Fish>::iterator tempLoc = myFishList.begin();
         int tempIndex = 0;
         while(tempLoc->getFrameCounted() < currentFrame) {
             tempLoc++;
@@ -565,3 +568,6 @@ int main(int argc, char *argv[])
 
 	return a.exec();
 }
+
+}} // namespace fish_detector::gui
+

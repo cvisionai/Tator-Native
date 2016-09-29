@@ -1,10 +1,12 @@
-#include "document.h"
+#include <iostream>
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
-#include <iostream>
 
-namespace FishDetector {
+#include "fish_detector/gui/document.h"
+
+namespace fish_detector { namespace gui {
 
 Rect::Rect(const Rect &r) {
     x = r.x;
@@ -151,4 +153,5 @@ int Document::writeJSON(const std::string& filename)
     return 0;
 }
 
-}
+}} // namespace fish_detector::gui
+

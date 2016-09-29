@@ -1,4 +1,9 @@
+#ifndef FISH_H
+#define FISH_H
+
 #include <utility>
+
+namespace fish_detector { namespace gui {
 
 typedef std::pair<float, float> xyLoc;
 
@@ -37,3 +42,7 @@ public:
 	xyLoc getXYLoc();
     int getID(){return id;}
 };
+
+}} // namespace fish_detector::gui
+
+#endif // FISH_H

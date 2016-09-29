@@ -18,7 +18,7 @@ using boost::property_tree::ptree;
 using boost::property_tree::json_parser::write_json;
 using boost::property_tree::json_parser::read_json;
 
-namespace FishDetector {
+namespace fish_detector { namespace gui {
 
 template <class T>
 struct Serialization {
@@ -185,7 +185,8 @@ T deserialize(std::istream &in) {
     read_json(in, document);
     return Serialization<T>::read(document);
 }
-}
 
+}} // namespace fish_detector::gui
 
 #endif // DOCUMENT_H
+

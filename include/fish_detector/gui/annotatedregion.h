@@ -3,7 +3,10 @@
 
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
-#include "document.h"
+
+#include "fish_detector/gui/document.h"
+
+namespace fish_detector { namespace gui {
 
 enum drag_t {
     DRAG_NONE = 0,
@@ -20,19 +23,22 @@ enum drag_t {
 class AnnotatedRegion: public QGraphicsRectItem
 {
 protected:
-    std::shared_ptr<FishDetector::AnnotationLocation> annotation;
+    std::shared_ptr<AnnotationLocation> annotation;
     std::uint64_t uid;
     drag_t drag;
 public:
-    AnnotatedRegion(std::uint64_t uid, std::shared_ptr<FishDetector::AnnotationLocation> annotation, QRectF area);
+    AnnotatedRegion(std::uint64_t uid, std::shared_ptr<AnnotationLocation> annotation, QRectF area);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
     void updateFrame(std::uint64_t frame);
-    std::shared_ptr<FishDetector::AnnotationLocation> getAnnotation() {return annotation;}
+    std::shared_ptr<AnnotationLocation> getAnnotation() {return annotation;}
     std::uint64_t getUID() {return uid;}
 };
 
+}} // namespace fish_detector::gui
+
 #endif // ANNOTATEDREGION_H
+

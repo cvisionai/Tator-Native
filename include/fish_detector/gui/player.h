@@ -1,5 +1,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
+#include <cstdint>
+
+#include <string>
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <memory>
+
 #include <QMutex>
 #include <QThread>
 #include <QImage>
@@ -8,12 +17,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <string>
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include <memory>
-#include <cstdint>
+
+namespace fish_detector { namespace gui {
 
 using namespace cv;
 class Player : public QThread
@@ -57,4 +62,6 @@ private:
     void setCurrentFrame(std::int64_t frameNumber);
 };
 
-#endif
+}} // namespace fish_detector::gui
+
+#endif // PLAYER_H

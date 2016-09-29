@@ -1,5 +1,7 @@
-#include "navigatorwidget.h"
+#include "fish_detector/gui/navigatorwidget.h"
 #include "ui_navigatorwidget.h"
+
+namespace fish_detector { namespace gui {
 
 NavigatorWidget::NavigatorWidget(QWidget *parent) :
     QWidget(parent),
@@ -11,4 +13,6 @@ NavigatorWidget::NavigatorWidget(QWidget *parent) :
 NavigatorWidget::~NavigatorWidget()
 {
 }
+
+}} // namespace fish_detector::gui
 

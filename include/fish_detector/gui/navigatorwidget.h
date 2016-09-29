@@ -4,8 +4,10 @@
 #include <QWidget>
 #include <memory>
 
+namespace fish_detector { namespace gui {
+
 namespace Ui {
-class NavigatorWidget;
+  class NavigatorWidget;
 }
 
 class NavigatorWidget : public QWidget
@@ -19,5 +21,7 @@ public:
 public:
     std::unique_ptr<Ui::NavigatorWidget> ui;
 };
+
+}} // namespace fish_detector::gui
 
 #endif // NAVIGATORWIDGET_H

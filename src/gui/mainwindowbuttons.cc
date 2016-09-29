@@ -1,5 +1,11 @@
-#include <mainwindow.h>
+#include "fish_detector/gui/mainwindow.h"
+#include "ui_mainwindow.h"
 
+namespace fish_detector { namespace gui {
+
+namespace Ui {
+  class MainWidget;
+}
 
 void MainWindow::on_addRound_clicked()
 {
@@ -29,16 +35,16 @@ void MainWindow::on_loadAnnotate_clicked()
     std::string filenameBase = base_name(filename.toStdString());
     std::string filenameBaseNoExt = remove_extension(filenameBase);
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
-    ifstream inputJSON(filenameJSON.c_str(), ios::in);
+    std::ifstream inputJSON(filenameJSON.c_str(), std::ios::in);
     if (!inputJSON.fail()) {
-        FishDetector::Document* newDoc = new FishDetector::Document(FishDetector::deserialize<FishDetector::Document>(inputJSON));
+        Document* newDoc = new Document(deserialize<Document>(inputJSON));
         document.reset(newDoc);
     }
     std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
     ui->fileNameValue->setText(qFilename);
-    ifstream inFile(filename.toLatin1().data());
-    string line, tripID, reviewer, towType, fishNum, fishType, species;
+    std::ifstream inFile(filename.toLatin1().data());
+    std::string line, tripID, reviewer, towType, fishNum, fishType, species;
     int frame, towNum, curID;
     double timeInVid;
     getline(inFile,line);
@@ -46,12 +52,12 @@ void MainWindow::on_loadAnnotate_clicked()
     bool first = true;
     while(getline(inFile,line))
     {
-        stringstream linestream(line);
-        string tempToken;
+        std::stringstream linestream(line);
+        std::string tempToken;
         std::getline(linestream,tripID,',');
         std::getline(linestream,tempToken,',');
-        string strtowNum = tempToken;
-        stringstream tempConvert(tempToken);
+        std::string strtowNum = tempToken;
+        std::stringstream tempConvert(tempToken);
         tempConvert >> towNum;
         tempToken.clear();
         tempConvert.str("");
@@ -85,7 +91,7 @@ void MainWindow::on_loadAnnotate_clicked()
         tempConvert.clear();
         FishTypeEnum fType = getFishType(fishType);
         curID = std::stoi(fishNum,nullptr,10);
-        unique_ptr<Fish> tempFish(new Fish(fType,frame,curID));
+        std::unique_ptr<Fish> tempFish(new Fish(fType,frame,curID));
         if (curID >= nextID) nextID = curID + 1;
         //std::cout<<nextID<<std::endl;
         tempFish->setFishSubType(getFishSpecies(fType,species));
@@ -106,17 +112,17 @@ void MainWindow::on_saveAnnotate_clicked()
 {
 
     QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save directory"));
-    string filename;
-    string filenameJSON;
+    std::string filename;
+    std::string filenameJSON;
     filename = dirName.toStdString() + "/" + filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
     filenameJSON = filename + ".json";
     filename = filename + ".csv";
     std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
-    FishDetector::serialize(*document, jsonFile);
-    ofstream outFile(filename);
+    serialize(*document, jsonFile);
+    std::ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
-    string towStatus;
+    std::string towStatus;
     if (ui->towStatus->isChecked())
     {
         towStatus = "Open";
@@ -189,3 +195,6 @@ void MainWindow::on_removeFish_clicked()
         ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
     }
 }
+
+}} // namespace fish_detector::gui
+
