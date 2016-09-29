@@ -54,7 +54,7 @@ corresponding to your current branch.
 6\. In the subdirectory qtbase\mkspecs\common, change msvc-desktop.conf
     such that all occurrences of MD are replaced with MT.
 
-7\. Type the following:
+7\. Type the following from the top level directory:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 configure.bat -static -debug-and-release -prefix "your\working\dir\qtbase"
