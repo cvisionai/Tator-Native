@@ -158,5 +158,7 @@ double Player::getCurrentSpeed()
     return currentSpeed;
 }
 
+#include "../../include/fish_detector/gui/moc_player.cpp"
+
 }} // namespace fish_detector::gui
 
