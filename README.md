@@ -96,6 +96,58 @@ cmake --build . --target INSTALL --config Release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The OpenCV static libraries should now be built.
 
+Building the application
+------------------------
+
+1\. It is recommended on Windows to use the CMake GUI to configure the
+    build.  Open the CMake GUI, set the source directory to the top level
+    FishDetector repository directory, and set the build directory to a 
+    subdirectory of this called *build*.  Something like:
+    
+    Where is the source code: C:/local/FishDetector
+    Where to build the binaries: C:/local/FishDetector/build
+
+2\. Press configure, allow CMake to create the build directory, and select
+    the same generator that was used to build the dependencies.
+
+3\. FishDetector uses find_package commands to find dependencies.  Sometimes
+    these libraries require hints to be found properly, especially on Windows.
+    The first time FishDetector is built, it will generate a file at 
+    cmake/FishDetFindLibsHints.cmake which contains the hints for these 
+    libraries.  The default values are set to the environment variables for 
+    the system, however if they are not set you can modify this file manually 
+    to point to the proper directories.  After the file is generated it will 
+    not be overwritten next FishDetector is built, so this manual modification 
+    is only necessary for fresh builds.  Modify this file until the libraries 
+    are found and the configure step completes successfully.
+
+4\. Press generate.
+
+5\. From a Visual Studio command prompt, navigate to the build subdirectory 
+    and type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake --build . --target INSTALL --config Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+6\. When the build completes, the applications will be located in the 
+    build/inst subdirectory.  If a different installation location is 
+    desired, cmake can be invoked with the variable CMAKE_INSTALL_PREFIX
+    set to the install directory.
+
+Building documentation
+----------------------
+
+After CMake has been run, documentation can be built by typing:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake --build . --target doc --config Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+from the build subdirectory.  This will generate doxygen documentation
+in the doxygen subdirectory of the top level repository.  For the html
+output, simply open index.html in your favorite browser.
+
 [Qt5]: https://www.qt.io/developers/
 [BoostPropertyTree]: http://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html
 [OpenCV]: http://opencv.org/
