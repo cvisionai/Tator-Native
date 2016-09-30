@@ -1,6 +1,7 @@
 #include "fish_detector/gui/mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 namespace fish_detector { namespace gui {
 
 MainWindow::MainWindow(QWidget *parent)
@@ -556,17 +557,6 @@ void MainWindow::enableControls()
     ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
     ui->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(true);
     ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
-}
-
-int main(int argc, char *argv[])
-{
-	QApplication a(argc, argv);
-	MainWindow* w = new MainWindow();
-	w->setAttribute(Qt::WA_DeleteOnClose, true);
-
-	w->show();
-
-	return a.exec();
 }
 
 #include "../../include/fish_detector/gui/moc_mainwindow.cpp"
