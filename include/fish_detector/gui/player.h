@@ -22,7 +22,8 @@ namespace fish_detector { namespace gui {
 
 using namespace cv;
 class Player : public QThread
-{	Q_OBJECT
+{	
+  Q_OBJECT
 private:
     bool stop;
     QMutex mutex;
