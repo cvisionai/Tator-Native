@@ -1,10 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QWidget>
-#include <QStringList>
-#include <QFileDialog>
-#include <QMessageBox>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -13,9 +9,17 @@
 #include <ostream>
 #include <memory>
 #include <string>
+
+#include <QWidget>
+#include <QStringList>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QMainWindow>
+
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat)
 #include <opencv2/highgui/highgui.hpp>  // Video write
-#include <QMainWindow>
+
+namespace fish_detector { namespace video_slicer {
 
 namespace Ui {
 class MainWindow;
@@ -38,5 +42,7 @@ private:
     std::unique_ptr<cv::VideoCapture> inputVideo;
     QString filename;
 };
+
+}} // namespace fish_detector::video_slicer
 
 #endif // MAINWINDOW_H

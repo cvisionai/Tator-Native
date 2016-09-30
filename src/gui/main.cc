@@ -1,5 +1,6 @@
 #include <QtPlugin>
 #include <QApplication>
+
 #include "fish_detector/gui/mainwindow.h"
 
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
