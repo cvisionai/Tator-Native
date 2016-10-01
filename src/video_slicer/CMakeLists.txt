@@ -22,4 +22,7 @@ if( WIN32 )
 endif()
 
 # Add install target
-install( TARGETS video_slicer DESTINATION . )
+install( 
+  TARGETS video_slicer 
+  DESTINATION . 
+  )

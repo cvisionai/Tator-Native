@@ -32,6 +32,9 @@ find_package( OpenCV )
 if( NOT OpenCV_FOUND )
   message( FATAL_ERROR "Could not find OpenCV.  Build cannot continue." )
 endif()
+if( WIN32 )
+  file( GLOB_RECURSE OpenCV_SHARED_LIBS "${OpenCV_LIB_PATH}/../bin/*.dll" )
+endif()
 
 # --- OpenGL ---
 find_package( OpenGL )
