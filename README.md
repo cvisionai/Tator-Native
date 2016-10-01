@@ -148,6 +148,19 @@ from the build subdirectory.  This will generate doxygen documentation
 in the doxygen subdirectory of the top level repository.  For the html
 output, simply open index.html in your favorite browser.
 
+Building installer
+------------------
+
+After FishDetector has been built and installed, the installer can be built
+by typing the following from a Visual Studio command prompt:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cpack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The installer will be located in the top level build directory when it is
+finished building.
+
 [Qt5]: https://www.qt.io/developers/
 [BoostPropertyTree]: http://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html
 [OpenCV]: http://opencv.org/
