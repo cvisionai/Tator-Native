@@ -89,11 +89,11 @@ set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishDetector.ico" )
 set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishDetector.bmp" )
 
 # Configure CPack
+set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
+include( InstallRequiredSystemLibraries )
 set( CPACK_PACKAGE_NAME "FishDetector" )
-set( 
-  CPACK_PACKAGE_DESCRIPTION_SUMMARY 
-  "An application for assisting estimation of fish populations." 
-  )
+set( CPACK_PACKAGE_DESCRIPTION_SUMMARY 
+     "An application for assisting estimation of fish populations." )
 set( CPACK_PACKAGE_VENDOR "CVision Consulting LLC" )
 set( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
 set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md" )
@@ -112,9 +112,18 @@ if( WIN32 )
   set( CPACK_NSIS_MUI_UNIHEADERIMAGE_RIGHT ON )
   set( CPACK_NSIS_INSTALLED_ICON_NAME ${FISHDET_ICON} )
   set( CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME} )
+  set( CPACK_NSIS_CONTACT "bgwoodward@gmail.com" )
+  set( CPACK_NSIS_MODIFY_PATH ON )
+  set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
+  set( CPACK_CREATE_DESKTOP_LINKS fish_gui video_slicer )
 else()
   set( CPACK_GENERATOR "STGZ" )
   set( CPACK_SOURCE_STRIP_FILES "" )
 endif()
+set( CPACK_PACKAGE_EXECUTABLES 
+  fish_gui "Fish GUI" 
+  video_slicer "Video Slicer" 
+  uninstall "Uninstall" 
+  )
 include( CPack )
 

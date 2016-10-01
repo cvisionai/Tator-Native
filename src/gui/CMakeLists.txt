@@ -20,5 +20,8 @@ if( WIN32 )
 endif()
 
 # Add install target 
-install( TARGETS fish_gui DESTINATION . )
+install( 
+  TARGETS fish_gui 
+  DESTINATION . 
+  )
 
