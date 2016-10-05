@@ -1,0 +1,10 @@
+/// @brief Top level namespace for FishDetector.
+namespace fish_detector {
+
+/// @brief Namespace for the FishDetector GUI.
+namespace gui {}
+
+/// @brief Namespace for Video Slicer.
+namespace video_slicer {}
+
+}
