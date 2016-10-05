@@ -153,5 +153,66 @@ int Document::writeJSON(const std::string& filename)
     return 0;
 }
 
+ptree Serialization< AnnotationLocation >::write( 
+    const AnnotationLocation &obj ) {
+  ptree node;
+  node.add("annotation.frame", obj.frame);
+  node.add("annotation.x", obj.area.x);
+  node.add("annotation.y", obj.area.y);
+  node.add("annotation.w", obj.area.w);
+  node.add("annotation.h", obj.area.h);
+  return node;
+}
+
+std::shared_ptr< AnnotationLocation > 
+Serialization< AnnotationLocation >::read( ptree &node ) {
+  std::uint64_t frame,x,y,w,h;
+  frame = node.get("annotation.frame",0);
+  x = node.get("annotation.x",0);
+  y = node.get("annotation.y",0);
+  w = node.get("annotation.w",0);
+  h = node.get("annotation.h",0);
+  Rect newRect = Rect(x,y,w,h);
+  auto newLoc = std::make_shared<AnnotationLocation>(frame,newRect);
+  return newLoc;
+}
+
+ptree Serialization< Document >::write( const Document &obj ) {
+  ptree document;
+  ptree children;
+  for (auto const &map_value : obj.getAnnotations())
+  {
+    auto annotation = map_value.second;
+    for (auto const &location : annotation->getLocations())
+    {
+      ptree node = Serialization<AnnotationLocation>::write(*location);
+      node.add("annotation.id", annotation->getId());
+      children.push_back(std::make_pair("", node));
+    }
+  }
+  document.add_child("Annotation Array", children);
+  return document;
+}
+
+Document Serialization< Document >::read( const ptree &document ) {
+  std::uint64_t id;
+  Document newDoc = Document();
+  BOOST_FOREACH(const ptree::value_type &v, document.get_child("Annotation Array")) {
+    id = v.second.get("annotation.id",0);
+    ptree newAnnotation = v.second;
+    auto newLoc = Serialization<AnnotationLocation>::read(newAnnotation);
+    if (newDoc.keyExists(id))
+    {
+      newDoc.addAnnotationLocation(id,newLoc);
+    }
+    else
+    {
+      newDoc.makeAnnotation(id);
+      newDoc.addAnnotationLocation(id,newLoc);
+    }
+  }
+  return newDoc;
+}
+
 }} // namespace fish_detector::gui
 
