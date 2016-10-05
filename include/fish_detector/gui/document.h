@@ -1,3 +1,6 @@
+/// @file
+/// @brief Defines classes needed for recording and loading annotations.
+
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
