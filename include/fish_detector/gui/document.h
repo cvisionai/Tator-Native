@@ -30,19 +30,7 @@ namespace fish_detector { namespace gui {
 ///
 /// @tparam T Type to be serialized.
 template <class T>
-struct Serialization {
-  /// @brief Writes the data to property tree.
-  ///
-  /// @param obj The object to be written.
-  /// @return Property tree containing the data.
-  static ptree write(const T &obj) {}
-
-  /// @brief Reads the data from property tree.
-  ///
-  /// @param node Property tree containing data.
-  /// @return An object containing the data.
-  static T read(const ptree &node) {}
-};
+struct Serialization {};
 
 /// @brief Geometric definition of a rectangle.
 struct Rect {
