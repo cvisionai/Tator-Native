@@ -78,10 +78,17 @@ if( APPLE )
   if( NOT CUPS_FOUND )
     message (FATAL_ERROR "Could not find Cups.  Build cannot continue." )
   endif()
+  find_package( ZLIB )
+  if( NOT ZLIB_FOUND )
+    message( FATAL_ERROR "Could not find zlib.  Build cannot continue." )
+  endif()
   set( APPLE_LIBRARIES
     ${COCOA_LIBRARY}
     ${CARBON_LIBRARY}
     ${IOKIT_LIBRARY}
     ${CUPS_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    ${JPEG_LIBRARIES}
+    ${PNG_LIBRARIES}
     )
 endif()
