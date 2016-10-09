@@ -102,8 +102,100 @@ cmake --build . --target INSTALL --config Release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The OpenCV static libraries should now be built.
 
-Building the application
-------------------------
+Building static Qt on Mac
+-------------------------
+
+1\. Make sure that XCode is installed.
+
+2\. Clone the [Qt5 repository][QtRepo] from github.
+
+3\. By default, the dev branch will be checked out.  If desired, change
+    your branch to a tagged release version.
+
+4\. Navigate to the top level repository directory and type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+git submodule update --init
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This will clone all the submodules of Qt and check out the branch
+corresponding to your current branch.
+
+5\. Install the following script languages with brew:
+
+* [Perl][Perl]
+* [Python][Python]
+* [Ruby][Ruby]
+
+6\. Type the following from the top level directory:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+./configure -static -debug-and-release -prefix "your/working/dir/qtbase"
+-platform macx-clang -qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype
+-opengl desktop -no-openssl -opensource -confirm-license -make libs -nomake
+tools -nomake examples -nomake tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+7\. Type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make -j4 && make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Qt5 static libraries should now be built.
+
+8\. It is possible that some 3rd party libraries will NOT be built, such 
+    as [zlib][zlib], [libjpeg][libjpeg], and [libpng][libpng].  You will 
+    need to clone and build static versions of these.  Each of them can 
+    be built by typing:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+mkdir build
+cd build
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=./inst ..
+make -j4
+make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+from the top level cloned directory.
+
+Building static OpenCV on Mac
+-----------------------------
+
+1\. Install ffmpeg with the following options enabled:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype 
+--with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus 
+--with-x265
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1\. Clone the [OpenCV repository][OpenCVRepo] from github.
+
+2\. By default, the master branch will be checked out.  If desired, change
+    your branch to a tagged release version.
+
+3\. Navigate to the top level opencv directory and create a subdirectory
+    called build.
+
+4\. From a Visual Studio command prompt, navigate to the build directory
+    and type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=ON 
+-DCMAKE_INSTALL_PREFIX=./inst ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5\. Type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make -j4 && make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The OpenCV static libraries should now be built.
+
+Building the application on Windows
+-----------------------------------
 
 1\. It is recommended on Windows to use the CMake GUI to configure the
     build.  Open the CMake GUI, set the source directory to the top level
@@ -150,6 +242,47 @@ cmake --build . --target INSTALL --config Release
     desired, cmake can be invoked with the variable CMAKE_INSTALL_PREFIX
     set to the install directory.
 
+Building the application on Mac
+-------------------------------
+
+1\. From top level FishDetector directory:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+mkdir build
+cd build
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2\. FishDetector uses find_package commands to find dependencies.  Sometimes
+these libraries require hints to be found properly, especially on Windows.
+The first time FishDetector is built, it will generate a file at
+cmake/FishDetFindLibsHints.cmake which contains the hints for these
+libraries.  The default values are set to the environment variables for
+the system, however if they are not set you can modify this file manually
+to point to the proper directories.  
+For example,  
+
+set( CMAKE_PREFIX_PATH "/Users/jtakahashi/dev/qt5/qtbase" )
+set( BOOST_ROOT  )
+set( BOOST_LIBRARYDIR  )
+set( CMAKE_CL_64  )
+set( OpenCV_DIR "/Users/jtakahashi/dev/opencv/build/inst" )
+set( ZLIB_ROOT "/Users/jtakahashi/dev/zlib/build/inst" )
+set( JPEG_LIBRARIES "/Users/jtakahashi/dev/libjpeg/build/inst/lib/libjpeg.a" )
+set( PNG_LIBRARIES "/Users/jtakahashi/dev/libpng/build/inst/lib/libpng.a" )
+
+After the file is generated it will
+not be overwritten next FishDetector is built, so this manual modification
+is only necessary for fresh builds.  Modify this file until the libraries
+are found and the configure step completes successfully.
+
+3\. Type: 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake ..
+make -j4
+make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Building documentation
 ----------------------
 
@@ -184,6 +317,9 @@ finished building.
 [Perl]: https://www.perl.org/
 [Python]: https://www.python.org/
 [Ruby]: http://rubyinstaller.org/
+[zlib]: https://github.com/madler/zlib
+[libjpeg]: https://github.com/LuaDist/libjpeg
+[libpng]: https://github.com/glennrp/libpng
 [OpenCVRepo]: https://github.com/opencv/opencv
 [doxysite]: https://sourceforge.net/projects/doxygen/
 [nsissite]: http://nsis.sourceforge.net/Main_Page
