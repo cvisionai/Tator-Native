@@ -17,12 +17,15 @@ if( WIN32 )
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
-elseif( APPLE or UNIX )
+elseif( APPLE )
   add_executable( fish_gui ${GUI_SOURCES} )
   target_link_libraries(
     fish_gui
     ${OpenCV_LIBS}
+    ${APPLE_LIBRARIES}
     Qt5::Widgets
+    Qt5::PrintSupport
+    ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     )
 endif()

@@ -19,14 +19,17 @@ if( WIN32 )
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
-elseif( APPLE OR UNIX)
+else()
   add_executable( video_slicer ${VIDEO_SLICER_SOURCES} )
   target_link_libraries(
     video_slicer
     ${OpenCV_LIBS}
+    ${APPLE_LIBRARIES}
     Qt5::Widgets
     Qt5::Core
     Qt5::Gui
+    Qt5::PrintSupport
+    ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     )
 endif()

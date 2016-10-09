@@ -11,6 +11,10 @@ find_package( Qt5Gui )
 if( NOT Qt5Gui_FOUND )
   message( FATAL_ERROR "Could not find Qt5Gui.  Build cannot continue." )
 endif()
+find_package( Qt5PrintSupport )
+if( NOT Qt5PrintSupport_FOUND )
+  message( FATAL_ERROR "Could not find Qt5PrintSupport.  Build cannot continue." )
+endif()
 if( WIN32 )
   set( QT_THIRD_PARTY_LIBS
     "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"
@@ -19,6 +23,17 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5PlatformSupport.lib"
     "${_qt5Widgets_install_prefix}/plugins/platforms/qwindows.lib"
+    )
+else()
+  set( QT_THIRD_PARTY_LIBS
+    "${_qt5Widgets_install_prefix}/lib/libqtpcre.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtfreetype.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a"
+    "${_qt5Widgets_install_prefix}/lib/libQt5PlatformSupport.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqcocoa.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqminimal.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqoffscreen.a"
+    "${_qt5Widgets_install_prefix}/plugins/printsupport/libcocoaprintersupport.a"
     )
 endif() 
 
@@ -54,3 +69,19 @@ if( MSVC )
     )
 endif()
 
+# --- Mac ---
+if( APPLE )
+  find_library( COCOA_LIBRARY Cocoa )
+  find_library( CARBON_LIBRARY Carbon )
+  find_library( IOKIT_LIBRARY IOKit )
+  find_package( Cups )
+  if( NOT CUPS_FOUND )
+    message (FATAL_ERROR "Could not find Cups.  Build cannot continue." )
+  endif()
+  set( APPLE_LIBRARIES
+    ${COCOA_LIBRARY}
+    ${CARBON_LIBRARY}
+    ${IOKIT_LIBRARY}
+    ${CUPS_LIBRARIES}
+    )
+endif()
