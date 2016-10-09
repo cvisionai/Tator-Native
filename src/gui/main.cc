@@ -3,7 +3,11 @@
 
 #include "fish_detector/gui/mainwindow.h"
 
+#ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+#elif __APPLE__
+Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
+#endif
 
 int main(int argc, char* argv[])
 {
