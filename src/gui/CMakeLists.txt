@@ -17,6 +17,14 @@ if( WIN32 )
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
+elseif( APPLE or UNIX )
+  add_executable( fish_gui ${GUI_SOURCES} )
+  target_link_libraries(
+    fish_gui
+    ${OpenCV_LIBS}
+    Qt5::Widgets
+    ${OPENGL_LIBRARIES}
+    )
 endif()
 
 # Add install target 

@@ -19,6 +19,16 @@ if( WIN32 )
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
+elseif( APPLE OR UNIX)
+  add_executable( video_slicer ${VIDEO_SLICER_SOURCES} )
+  target_link_libraries(
+    video_slicer
+    ${OpenCV_LIBS}
+    Qt5::Widgets
+    Qt5::Core
+    Qt5::Gui
+    ${OPENGL_LIBRARIES}
+    )
 endif()
 
 # Add install target

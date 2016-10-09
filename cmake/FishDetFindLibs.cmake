@@ -11,15 +11,16 @@ find_package( Qt5Gui )
 if( NOT Qt5Gui_FOUND )
   message( FATAL_ERROR "Could not find Qt5Gui.  Build cannot continue." )
 endif()
-set( QT_THIRD_PARTY_LIBS
-  "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"
-  "${_qt5Widgets_install_prefix}/lib/qtfreetype.lib"
-  "${_qt5Widgets_install_prefix}/lib/qtpng.lib"
-  "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib"
-  "${_qt5Widgets_install_prefix}/lib/Qt5PlatformSupport.lib"
-  "${_qt5Widgets_install_prefix}/plugins/platforms/qwindows.lib"
-  )
- 
+if( WIN32 )
+  set( QT_THIRD_PARTY_LIBS
+    "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"
+    "${_qt5Widgets_install_prefix}/lib/qtfreetype.lib"
+    "${_qt5Widgets_install_prefix}/lib/qtpng.lib"
+    "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib"
+    "${_qt5Widgets_install_prefix}/lib/Qt5PlatformSupport.lib"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/qwindows.lib"
+    )
+endif() 
 
 # --- Boost ---
 find_package( Boost )
