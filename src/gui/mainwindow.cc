@@ -135,7 +135,7 @@ void MainWindow::on_LoadVideo_clicked()
 			ui->totalTime->setText(getFormattedTime((int)player->
 				getNumberOfFrames() / (int)player->getFrameRate()));
             QImage firstImage = player->getOneFrame();
-            player->incrementFrameIndex();
+            //player->incrementFrameIndex();
             scene.reset(new QGraphicsScene(this));
 			displayImage = scene->addPixmap(QPixmap::fromImage(firstImage));
 			scene->setSceneRect(firstImage.rect());

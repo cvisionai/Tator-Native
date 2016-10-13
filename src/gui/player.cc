@@ -143,7 +143,11 @@ void Player::setCurrentFrame(std::int64_t frameNumber)
 {
     capture->set(CV_CAP_PROP_POS_MSEC, (double(frameNumber)/double(frameRate)*1000));
     //capture->set(CV_CAP_PROP_POS_FRAMES, frameNumber);
-    frameIndex = frameNumber;
+	if (frameNumber > 0)
+		frameIndex = capture->get(CV_CAP_PROP_POS_FRAMES);
+	else
+		frameIndex = 0;
+    //frameIndex = frameNumber;
 }
 
 QImage Player::setFrame(std::int64_t frame)
