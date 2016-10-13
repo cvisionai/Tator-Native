@@ -144,9 +144,9 @@ make -j4 && make install
 
 The Qt5 static libraries should now be built.
 
-8\. It is possible that some 3rd party libraries will NOT be built, such 
-    as [zlib][zlib], [libjpeg][libjpeg], and [libpng][libpng].  You will 
-    need to clone and build static versions of these.  Each of them can 
+8\. It is possible that some 3rd party libraries will NOT be built, such
+    as [zlib][zlib], [libjpeg][libjpeg], and [libpng][libpng].  You will
+    need to clone and build static versions of these.  Each of them can
     be built by typing:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
@@ -165,8 +165,8 @@ Building static OpenCV on Mac
 1\. Install ffmpeg with the following options enabled:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype 
---with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus 
+brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype
+--with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus
 --with-x265
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -182,7 +182,7 @@ brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype
     and type:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-cmake -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=ON 
+cmake -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=ON
 -DCMAKE_INSTALL_PREFIX=./inst ..
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -261,21 +261,21 @@ the system, however if they are not set you can modify this file manually
 to point to the proper directories.  
 For example,  
 
-set( CMAKE_PREFIX_PATH "/Users/jtakahashi/dev/qt5/qtbase" )
-set( BOOST_ROOT  )
-set( BOOST_LIBRARYDIR  )
-set( CMAKE_CL_64  )
-set( OpenCV_DIR "/Users/jtakahashi/dev/opencv/build/inst" )
-set( ZLIB_ROOT "/Users/jtakahashi/dev/zlib/build/inst" )
-set( JPEG_LIBRARIES "/Users/jtakahashi/dev/libjpeg/build/inst/lib/libjpeg.a" )
-set( PNG_LIBRARIES "/Users/jtakahashi/dev/libpng/build/inst/lib/libpng.a" )
+    set( CMAKE_PREFIX_PATH "/Users/jtakahashi/dev/qt5/qtbase" )
+    set( BOOST_ROOT  )
+    set( BOOST_LIBRARYDIR  )
+    set( CMAKE_CL_64  )
+    set( OpenCV_DIR "/Users/jtakahashi/dev/opencv/build/inst" )
+    set( ZLIB_ROOT "/Users/jtakahashi/dev/zlib/build/inst" )
+    set( JPEG_LIBRARIES "/Users/jtakahashi/dev/libjpeg/build/inst/lib/libjpeg.a" )
+    set( PNG_LIBRARIES "/Users/jtakahashi/dev/libpng/build/inst/lib/libpng.a" )
 
 After the file is generated it will
 not be overwritten next FishDetector is built, so this manual modification
 is only necessary for fresh builds.  Modify this file until the libraries
 are found and the configure step completes successfully.
 
-3\. Type: 
+3\. Type:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 cmake ..
