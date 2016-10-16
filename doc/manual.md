@@ -19,7 +19,7 @@ Welcome to the Fish Annotation tool! This guide will give you all the informatio
 
 This section gives an overview of the Graphical User Interface (GUI) that is used in the annotation tool. Each piece of the GUI will be highlighted, and the general functionality explained. In the following sections, using the GUI to accomplish specific actions will be covered. The figure below points out the major sections of the GUI.
 
-![Annotation tool layout](./Video_Layout.png "Annotation tool layout")
+![Annotation tool layout](./Video_Layout.jpg "Annotation tool layout")
 
 <a name="loading-and-viewing-video-files"/>
 # Loading and Viewing Video Files
