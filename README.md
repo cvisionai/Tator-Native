@@ -29,7 +29,8 @@ compiler if they are available.
 **IMPORTANT: Make sure that you build Qt and OpenCV with the same compiler you
 will use for building the application (e.g. all MSVC 32 bit, or all MSVC 64 bit).**
 
-Building the documentation requires installing [doxygen][doxysite].  
+Building the documentation requires installing [doxygen][doxysite] and
+[LaTeX][latexsite].  
 Building the installer requires installing [NSIS][nsissite].
 
 Building static Qt on Windows
@@ -294,7 +295,8 @@ cmake --build . --target doc --config Release
 
 from the build subdirectory.  This will generate doxygen documentation
 in the doxygen subdirectory of the top level repository.  For the html
-output, simply open index.html in your favorite browser.
+output, simply open index.html in your favorite browser.  For the pdf
+output from latex, open refman.pdf.
 
 Building installer
 ------------------
@@ -322,4 +324,5 @@ finished building.
 [libpng]: https://github.com/glennrp/libpng
 [OpenCVRepo]: https://github.com/opencv/opencv
 [doxysite]: https://sourceforge.net/projects/doxygen/
+[latexsite]: https://miktex.org/
 [nsissite]: http://nsis.sourceforge.net/Main_Page

@@ -58,6 +58,18 @@ if( NOT OPENGL_FOUND )
   message( FATAL_ERROR "Could not find OpenGL.  Build cannot continue." )
 endif()
 
+# --- Doxygen ---
+find_package( Doxygen )
+if( NOT DOXYGEN_FOUND )
+  message( WARNING "Could not find Doxygen.  Documentation target will be unavailable." )
+endif()
+
+# --- LATEX ---
+find_package( LATEX )
+if( NOT LATEX_FOUND )
+  message( WARNING "Could not find LATEX.  Documentation target will be unavailable." )
+endif()
+
 # --- Windows ---
 if( MSVC )
   set( WINDOWS_LIBRARIES
