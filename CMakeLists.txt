@@ -77,8 +77,9 @@ add_subdirectory( ${FISHDET_SRC_DIR} )
 # Add documentation target
 if( ${DOXYGEN_FOUND} STREQUAL "YES" )
   if( ${LATEX_FOUND} )
+    configure_file( ${FISHDET_DOC_DIR}/manual.md.in ${FISHDET_DOC_DIR}/manual.md )
     add_custom_target( doc
-      ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/doc/doxyfile"
+      ${DOXYGEN_EXECUTABLE} "${FISH_DET_DOC_DIR}/doxyfile"
       COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/doxygen/latex/make.bat"
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       COMMENT "Generating API documentation with Doxygen." VERBATIM
