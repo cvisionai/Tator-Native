@@ -298,6 +298,15 @@ in the doxygen subdirectory of the top level repository.  For the html
 output, simply open index.html in your favorite browser.  For the pdf
 output from latex, open refman.pdf.
 
+A standalone user manual can be built by typing:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake --build . --target manual --config Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+from the build subdirectory.  This will generate a user manual at
+doxygen/manual/latex/refman.pdf.
+
 Building installer
 ------------------
 
