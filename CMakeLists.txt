@@ -84,6 +84,12 @@ if( ${DOXYGEN_FOUND} STREQUAL "YES" )
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       COMMENT "Generating API documentation with Doxygen." VERBATIM
       )
+    add_custom_target( manual
+      ${DOXYGEN_EXECUTABLE} "${FISHDET_DOC_DIR}/doxyfile_manual"
+      COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/doxygen/manual/latex/make.bat"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      COMMENT "Generating manual with Doxygen." VERBATIM
+      )
   endif()
 endif()
 
