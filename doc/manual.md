@@ -22,7 +22,7 @@ Welcome to the Fish Annotation tool! This guide will give you all the informatio
 
 This section gives an overview of the Graphical User Interface (GUI) that is used in the annotation tool. Each piece of the GUI will be highlighted, and the general functionality explained. In the following sections, using the GUI to accomplish specific actions will be covered. The figure below points out the major sections of the GUI.
 
-![Annotation tool layout](./Video_Layout.jpg "Annotation tool layout")
+![Annotation tool layout](./Video_Layout.png "Annotation tool layout")
 
 <a name="loading-and-viewing-video-files"/></a>
 # Loading and Viewing Video Files
@@ -43,11 +43,13 @@ If you are reviewing an already annotated file, or resuming a previously started
 
 <a name="adding-fish"/></a>
 # Adding fish
-In order to add a fish to the list of fish to be counted and/or annotated, use one of the four buttons: Round, Flat, Skate, or Other. This will add an entry to the fish annotation list, and this fish can then have annotation boxes associated with it. After choosing the initial type, you can also choose the subtype of the fish from the SubType drop down menu. Displayed below the type and subtype of the fish are the Fish ID, the total number of fish that have been annotated, and the frame that the currrent fish was first counted. You can navigatee through the list by pressing the Prev Fish or Next Fish buttons, and jump to the frame where the currently shown fish in the list was counted by pressing the Go To Frame button.
+In order to add a fish to the list of fish to be counted and/or annotated, use one of the four buttons: Round, Flat, Skate, or Other. This will add an entry to the fish annotation list, and this fish can then have annotation boxes associated with it. After choosing the initial type, you can also choose the subtype of the fish from the SubType drop down menu. Displayed below the type and subtype of the fish are the Fish ID, the total number of fish that have been annotated, and the frame that the current fish was first counted. You can navigatee through the list by pressing the Prev Fish or Next Fish buttons, and jump to the frame where the currently shown fish in the list was counted by pressing the Go To Frame button.
 
 <a name="deleting-fish"/></a>
 # Deleting Fish
 You can delete a fish (and any annotations associated with it) by pressing the Remove Fish button when the ID of the fish you wish to delete is displayed in the Counting Controls area.
+
+
 
 <a name="annotations"/></a>
 # Annotations
