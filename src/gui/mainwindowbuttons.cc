@@ -1,3 +1,5 @@
+#include <QProgressDialog>
+
 #include "fish_detector/gui/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -36,10 +38,20 @@ void MainWindow::on_loadAnnotate_clicked()
     std::string filenameBaseNoExt = remove_extension(filenameBase);
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
     std::ifstream inputJSON(filenameJSON.c_str(), std::ios::in);
+	
+	QProgressDialog progress("Loading","Cancel",0,10,this);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setCancelButton(0);
+	progress.setMinimumDuration(0);
+	progress.show();
+	progress.setValue(1);
+
     if (!inputJSON.fail()) {
+		progress.setValue(3);
         Document* newDoc = new Document(deserialize<Document>(inputJSON));
         document.reset(newDoc);
     }
+	progress.setValue(2);
     std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
     ui->fileNameValue->setText(qFilename);
@@ -50,6 +62,7 @@ void MainWindow::on_loadAnnotate_clicked()
     getline(inFile,line);
     line.clear();
     bool first = true;
+	progress.setValue(6);
     while(getline(inFile,line))
     {
         std::stringstream linestream(line);
@@ -105,6 +118,8 @@ void MainWindow::on_loadAnnotate_clicked()
     ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
     ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
     updateVecIndex();
+	progress.setValue(10);
+	progress.cancel();
 }
 
 
@@ -112,13 +127,23 @@ void MainWindow::on_saveAnnotate_clicked()
 {
 
     QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save directory"));
+
+	QProgressDialog progress("Saving", "Cancel", 0, 10, this);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setCancelButton(0);
+	progress.setMinimumDuration(0);
+	progress.show();
+	progress.setValue(1);
+
     std::string filename;
     std::string filenameJSON;
     filename = dirName.toStdString() + "/" + filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
     filenameJSON = filename + ".json";
     filename = filename + ".csv";
     std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
-    serialize(*document, jsonFile);
+	progress.setValue(3);
+	serialize(*document, jsonFile);
+	progress.setValue(5);
     std::ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
@@ -132,6 +157,7 @@ void MainWindow::on_saveAnnotate_clicked()
         towStatus = "Closed";
     }
     int fishCount = 1;
+	progress.setValue(7);
     for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
         outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
         outFile << it->getID() << "," << getFishTypeString(it->getFishType()) << ",";
@@ -141,6 +167,8 @@ void MainWindow::on_saveAnnotate_clicked()
         fishCount++;
     }
     outFile.close();
+	progress.setValue(10);
+	progress.cancel();
 }
 
 void MainWindow::on_prevFish_clicked()

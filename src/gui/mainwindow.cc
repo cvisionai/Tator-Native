@@ -200,7 +200,31 @@ void MainWindow::on_SlowDown_clicked()
 
 void MainWindow::on_Rewind_clicked()
 {
+	if (!(player == NULL))
+	{
+		if (!player->isStopped())
+		{
+			player->Stop();
+			ui->Play->setText(tr("Play"));
+		}
 
+		bool valid_rewind = player->getCurrentFrame() > 3 * player->getFrameRate();
+
+		QImage image = player->setFrame(player->getCurrentFrame() - valid_rewind * 3 * player->getFrameRate());
+
+		if (!image.isNull())
+		{
+			displayImage->setPixmap(QPixmap::fromImage(image));
+			scene->setSceneRect(image.rect());
+			ui->videoWindow->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+			ui->videoSlider->setValue(player->getCurrentFrame());
+			ui->currentTime->setText(getFormattedTime((int)player->
+				getCurrentFrame() / (int)player->getFrameRate()));
+		}
+		processAnnotations(player->getCurrentFrame());
+		player->Play();
+		ui->Play->setText(tr("Stop"));
+	}
 }
 
 void MainWindow::updateImage(const QImage &image)
@@ -231,7 +255,7 @@ void MainWindow::on_plusOneFrame_clicked()
 
 void MainWindow::on_goToFrame_clicked()
 {
-  if (!player==NULL)
+  if (!(player==NULL))
   {
     if (!player->isStopped())
     {
