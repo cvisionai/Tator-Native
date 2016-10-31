@@ -198,8 +198,16 @@ void MainWindow::on_SlowDown_clicked()
   ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
-void MainWindow::on_Rewind_clicked()
+void MainWindow::on_minusOneSecond_clicked()
 {
+	rewind_video(1);
+}
+
+void MainWindow::on_minusThreeSecond_clicked() {
+	rewind_video(3);
+}
+
+void MainWindow::rewind_video(int seconds_to_rewind) {
 	if (!(player == NULL))
 	{
 		if (!player->isStopped())
@@ -210,7 +218,7 @@ void MainWindow::on_Rewind_clicked()
 
 		bool valid_rewind = player->getCurrentFrame() > 3 * player->getFrameRate();
 
-		QImage image = player->setFrame(player->getCurrentFrame() - valid_rewind * 3 * player->getFrameRate());
+		QImage image = player->setFrame(player->getCurrentFrame() - valid_rewind * seconds_to_rewind * player->getFrameRate());
 
 		if (!image.isNull())
 		{

@@ -58,7 +58,8 @@ class MainWindow : public QWidget
   void on_saveAnnotate_clicked();
   void on_SpeedUp_clicked();
   void on_SlowDown_clicked();
-  void on_Rewind_clicked();
+  void on_minusOneSecond_clicked();
+  void on_minusThreeSecond_clicked();
   void on_minusOneFrame_clicked();
   void on_plusOneFrame_clicked();
   void on_addRound_clicked();
@@ -91,6 +92,7 @@ private:
   void keyPressEvent(QKeyEvent *e);
   void removeRegion(std::uint64_t id, std::uint64_t frame);
   void processAnnotations(uint64_t frame);
+  void rewind_video(int seconds_to_rewind);
 private:
   void updateTypeMenu();
   std::unique_ptr<Document> document;

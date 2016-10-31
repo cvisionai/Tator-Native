@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>fish_detector::gui::MainWidget</class>
+ <class>MainWidget</class>
  <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
@@ -1053,7 +1053,7 @@
                 </spacer>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="playControlsLayout" stretch="2,1,1,0,1,1">
+                <layout class="QHBoxLayout" name="playControlsLayout" stretch="2,1,1,0,0,1,1">
                  <property name="spacing">
                   <number>2</number>
                  </property>
@@ -1124,9 +1124,16 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="Rewind">
+                  <widget class="QPushButton" name="minusOneSecond">
                    <property name="text">
-                    <string>Rewind</string>
+                    <string>-1 Second</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="minusThreeSecond">
+                   <property name="text">
+                    <string>-3 Second</string>
                    </property>
                   </widget>
                  </item>
@@ -1273,10 +1280,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>fish_detector::gui::NavigatorWidget</class>
+   <class>NavigatorWidget</class>
    <extends>QWidget</extends>
-   <header>fish_detector/gui/navigatorwidget.h</header>
-   <container>1</container>
+   <header>navigatorwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
