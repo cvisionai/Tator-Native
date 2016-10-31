@@ -216,7 +216,7 @@ void MainWindow::rewind_video(int seconds_to_rewind) {
 			ui->Play->setText(tr("Play"));
 		}
 
-		bool valid_rewind = player->getCurrentFrame() > 3 * player->getFrameRate();
+		bool valid_rewind = player->getCurrentFrame() > seconds_to_rewind * player->getFrameRate();
 
 		QImage image = player->setFrame(player->getCurrentFrame() - valid_rewind * seconds_to_rewind * player->getFrameRate());
 

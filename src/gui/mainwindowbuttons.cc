@@ -47,11 +47,11 @@ void MainWindow::on_loadAnnotate_clicked()
 	progress.setValue(1);
 
     if (!inputJSON.fail()) {
-		progress.setValue(3);
+		progress.setValue(2);
         Document* newDoc = new Document(deserialize<Document>(inputJSON));
         document.reset(newDoc);
     }
-	progress.setValue(2);
+	progress.setValue(3);
     std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
     ui->fileNameValue->setText(qFilename);
