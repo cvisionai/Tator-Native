@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWidget</class>
+ <class>fish_detector::gui::MainWidget</class>
  <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
@@ -1280,9 +1280,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>NavigatorWidget</class>
-   <extends>QWidget</extends>
-   <header>navigatorwidget.h</header>
+    <class>fish_detector::gui::NavigatorWidget</class>
+    <extends>QWidget</extends>
+    <header>fish_detector/gui/navigatorwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
