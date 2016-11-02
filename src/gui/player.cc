@@ -162,6 +162,11 @@ double Player::getCurrentSpeed()
   return currentSpeed;
 }
 
+void Player::write_image(QString filename) {
+	cv::Mat matTemp = frame;
+	cv::imwrite(filename.toStdString(), matTemp);
+}
+
 #include "../../include/fish_detector/gui/moc_player.cpp"
 
 }} // namespace fish_detector::gui

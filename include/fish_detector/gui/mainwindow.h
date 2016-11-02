@@ -75,6 +75,7 @@ class MainWindow : public QWidget
   void on_nextAndCopy_clicked();
   void on_typeMenu_currentIndexChanged(int tIdx);
   void on_subTypeMenu_currentIndexChanged(int sIdx);
+  void on_writeImage_clicked();
 public:
   void updateImage(const QImage &image);
   std::unique_ptr<Player> &getPlayer() { return player; }

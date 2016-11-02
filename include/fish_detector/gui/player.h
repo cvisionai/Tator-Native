@@ -59,6 +59,7 @@ public:
     QImage setFrame(std::int64_t frame);
     std::int64_t getCurrentFrame();
     QImage getOneFrame();
+	void write_image(QString filename);
 private:
     void setCurrentFrame(std::int64_t frameNumber);
 };

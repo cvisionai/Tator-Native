@@ -39,7 +39,7 @@ void MainWindow::on_loadAnnotate_clicked()
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
     std::ifstream inputJSON(filenameJSON.c_str(), std::ios::in);
 	
-	QProgressDialog progress("Loading","Cancel",0,10,this);
+	QProgressDialog progress("Loading","Cancel",0,10,this, Qt::WindowTitleHint);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setCancelButton(0);
 	progress.setMinimumDuration(0);
@@ -128,7 +128,7 @@ void MainWindow::on_saveAnnotate_clicked()
 
     QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save directory"));
 
-	QProgressDialog progress("Saving", "Cancel", 0, 10, this);
+	QProgressDialog progress("Saving", "Cancel", 0, 10, this, Qt::WindowTitleHint);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setCancelButton(0);
 	progress.setMinimumDuration(0);
@@ -222,6 +222,11 @@ void MainWindow::on_removeFish_clicked()
         ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
         ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
     }
+}
+
+void MainWindow::on_writeImage_clicked() {
+	QString filename = "D:\\Projects\\FishDetector\\testimage.jpg";
+	player->write_image(filename);
 }
 
 }} // namespace fish_detector::gui
