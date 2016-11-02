@@ -17,5 +17,4 @@ ui_*
 build*
 .DS_Store
 cmake/FishDetFindLibsHints.cmake
-doc/manual.md
 doxygen

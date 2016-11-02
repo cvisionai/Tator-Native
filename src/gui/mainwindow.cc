@@ -3,7 +3,10 @@
 
 
 namespace fish_detector { namespace gui {
-
+/// @brief Mainwindow constructor.
+///
+/// @param parent The parent widget for mainwindow.
+/// @return no return.
 MainWindow::MainWindow(QWidget *parent)
   :QWidget(parent)
 {
@@ -39,17 +42,28 @@ MainWindow::MainWindow(QWidget *parent)
   connect(next_and_copy_button, SIGNAL(clicked()), this, SLOT(on_nextAndCopy_clicked()));
 }
 
+/// @brief Retrieves next frame from video player and adds annotations to frame.
+///
+/// @return no return.
 void MainWindow::nextFrame()
 {
   updateImage(player->nextFrame()); // get next frame
   processAnnotations(player->getCurrentFrame());
 }
 
+/// @brief Retrieves previous frame from video player and adds annotations to frame.
+///
+/// @return no return.
 void MainWindow::prevFrame()
 {
   updateImage(player->prevFrame()); // get next frame
   processAnnotations(player->getCurrentFrame());
 }
+
+/// @brief Retrieves annotations associated with frame.
+///
+/// @param frame The frame for which you want to retrieve annotations.
+/// @return no return.
 
 void MainWindow::processAnnotations(uint64_t frame) {
   // remove old annotations
@@ -66,6 +80,10 @@ void MainWindow::processAnnotations(uint64_t frame) {
   }
 }
 
+/// @brief Updates the GUI window with image img.
+///
+/// @param img The image to display in the GUI window
+/// @return no return.
 void MainWindow::updatePlayerUI(QImage img)
 {
   if (!img.isNull())
@@ -80,6 +98,9 @@ void MainWindow::updatePlayerUI(QImage img)
   }
 }
 
+/// @brief Retrieves information for fish number currently in goToFishVal.
+///
+/// @return no return.
 void MainWindow::goToFish()
 {
   int fNumber = ui->goToFishVal->text().toInt();
@@ -99,6 +120,10 @@ void MainWindow::goToFish()
   }
 }
 
+/// @brief Converts time in seconds into hours, minutes, seconds.
+///
+/// @param timeInSeconds The time from the start of the video in seconds.
+/// @return no return.
 QString MainWindow::getFormattedTime(int timeInSeconds)
 {
   int seconds = (int) (timeInSeconds) % 60;
@@ -111,6 +136,9 @@ QString MainWindow::getFormattedTime(int timeInSeconds)
   return t.toString("h:mm:ss");
 }
 
+/// @brief Loads a video file user chooses with popup dialog.
+///
+/// @return no return.
 void MainWindow::on_LoadVideo_clicked()
 {
   QString filename = QFileDialog::getOpenFileName(this,
@@ -151,6 +179,9 @@ void MainWindow::on_LoadVideo_clicked()
   }
 }
 
+/// @brief Starts video player.
+///
+/// @return no return.
 void MainWindow::on_Play_clicked()
 {
   if (player->isStopped())
@@ -165,23 +196,36 @@ void MainWindow::on_Play_clicked()
   }
 }
 
+/// @brief Stops the vido player for seeking within video using slider.
+///
+/// @return no return.
 void MainWindow::on_videoSlider_sliderPressed()
 {
   player->Stop();
 }
 
+/// @brief Starts the video player after seeking within video using slider.
+///
+/// @return no return.
 void MainWindow::on_videoSlider_sliderReleased()
 {
   player->Play();
   ui->Play->setText(tr("Stop"));
 }
 
+/// @brief Sets the frame that the video player starts playing at within the video after seeking using the slider.
+///
+/// @param position The position of the video slider.
+/// @return no return.
 void MainWindow::on_videoSlider_sliderMoved(int position)
 {
   player->setFrame(position);
   ui->currentTime->setText(getFormattedTime((int)(position / player->getFrameRate())));
 }
 
+/// @brief Speeds up the playback rate of the video player.
+///
+/// @return no return.
 void MainWindow::on_SpeedUp_clicked()
 {
   player->speedUp();
@@ -190,6 +234,9 @@ void MainWindow::on_SpeedUp_clicked()
   ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
+/// @brief Slows down the playback rate of the video player.
+///
+/// @return no return.
 void MainWindow::on_SlowDown_clicked()
 {
   player->slowDown();
@@ -198,15 +245,25 @@ void MainWindow::on_SlowDown_clicked()
   ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
+/// @brief Rewinds the video by 1 second.
+///
+/// @return no return.
 void MainWindow::on_minusOneSecond_clicked()
 {
 	rewind_video(1);
 }
 
+/// @brief Rewinds the video by 3 seconds.
+///
+/// @return no return.
 void MainWindow::on_minusThreeSecond_clicked() {
 	rewind_video(3);
 }
 
+/// @brief Rewinds the video by seconds_to_rewind seconds.
+///
+/// @param seconds_to_rewind The number of seconds in the video to rewind.
+/// @return no return.
 void MainWindow::rewind_video(int seconds_to_rewind) {
 	if (!(player == NULL))
 	{
@@ -557,6 +614,9 @@ void MainWindow::disableControls()
   ui->prevFish->setEnabled(false);
   ui->nextFish->setEnabled(false);
   ui->loadAnnotate->setEnabled(false);
+  ui->minusOneSecond->setEnabled(false);
+  ui->minusThreeSecond->setEnabled(false);
+  ui->writeImage->setEnabled(false);
   ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(false);
   ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(false);
   ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(false);
@@ -584,6 +644,9 @@ void MainWindow::enableControls()
   ui->prevFish->setEnabled(true);
   ui->nextFish->setEnabled(true);
   ui->loadAnnotate->setEnabled(true);
+  ui->minusOneSecond->setEnabled(true);
+  ui->minusThreeSecond->setEnabled(true);
+  ui->writeImage->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
