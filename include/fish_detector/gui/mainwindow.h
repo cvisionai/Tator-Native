@@ -94,8 +94,9 @@ private:
   void removeRegion(std::uint64_t id, std::uint64_t frame);
   void processAnnotations(uint64_t frame);
   void rewind_video(int seconds_to_rewind);
-private:
   void updateTypeMenu();
+
+private:
   std::unique_ptr<Document> document;
   std::unique_ptr<Ui::MainWidget> ui;
   std::unique_ptr<Player> player;
