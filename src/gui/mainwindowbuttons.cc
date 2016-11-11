@@ -205,7 +205,7 @@ void MainWindow::on_writeImage_clicked() {
 	if (images_save_path_.isNull())
 		images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
 	//QString filename = "D:\\Projects\\FishDetector\\testimage.jpg";
-	player->write_image(images_save_path_ + QStringLiteral("\Fish_%1.jpg").arg(listPos->getID()));
+	player->write_image(images_save_path_ + QStringLiteral("\\Fish_%1.jpg").arg(listPos->getID()));
 
 	/*
 	Now to write out each annotation that exists in the frame. Use currentannotations
