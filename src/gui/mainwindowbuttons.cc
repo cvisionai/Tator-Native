@@ -33,7 +33,7 @@ void MainWindow::on_loadAnnotate_clicked() {
     std::string filenameBaseNoExt = remove_extension(filenameBase);
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
     std::ifstream inputJSON(filenameJSON.c_str(), std::ios::in);
-	
+
 	QProgressDialog progress("Loading","Cancel",0,10,this, Qt::WindowTitleHint);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setCancelButton(0);
@@ -201,8 +201,12 @@ void MainWindow::on_removeFish_clicked() {
 
 void MainWindow::on_writeImage_clicked() {
 	// filename needs to be procedurally generated
-	QString filename = "D:\\Projects\\FishDetector\\testimage.jpg";
-	player->write_image(filename);
+
+	if (images_save_path_.isNull())
+		images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
+	//QString filename = "D:\\Projects\\FishDetector\\testimage.jpg";
+	player->write_image(images_save_path_ + QStringLiteral("%1.jpg").arg(listPos->getID()));
+
 	/*
 	Now to write out each annotation that exists in the frame. Use currentannotations
 
@@ -216,4 +220,3 @@ void MainWindow::on_writeImage_clicked() {
 }
 
 }} // namespace fish_detector::gui
-

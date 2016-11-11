@@ -107,6 +107,7 @@ private:
   int nextID;
   QGraphicsPixmapItem *displayImage;
   std::list<AnnotatedRegion *> currentAnnotations;
+  QString images_save_path_;
 };
 
 template<class T>

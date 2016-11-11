@@ -287,8 +287,8 @@ void MainWindow::rewind_video(int seconds_to_rewind) {
 				getCurrentFrame() / (int)player->getFrameRate()));
 		}
 		processAnnotations(player->getCurrentFrame());
-		player->Play();
-		ui->Play->setText(tr("Stop"));
+		//player->Play();
+		//ui->Play->setText(tr("Stop"));
 	}
 }
 
@@ -310,11 +310,21 @@ void MainWindow::updateImage(const QImage &image)
 
 void MainWindow::on_minusOneFrame_clicked()
 {
+  if (!player->isStopped())
+  {
+    player->Stop();
+    ui->Play->setText(tr("Play"));
+  }
   prevFrame();
 }
 
 void MainWindow::on_plusOneFrame_clicked()
 {
+  if (!player->isStopped())
+  {
+    player->Stop();
+    ui->Play->setText(tr("Play"));
+  }
   nextFrame();
 }
 
@@ -646,7 +656,7 @@ void MainWindow::enableControls()
   ui->loadAnnotate->setEnabled(true);
   ui->minusOneSecond->setEnabled(true);
   ui->minusThreeSecond->setEnabled(true);
-  ui->writeImage->setEnabled(true);
+  //ui->writeImage->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
