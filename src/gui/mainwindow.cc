@@ -656,7 +656,7 @@ void MainWindow::enableControls()
   ui->loadAnnotate->setEnabled(true);
   ui->minusOneSecond->setEnabled(true);
   ui->minusThreeSecond->setEnabled(true);
-  //ui->writeImage->setEnabled(true);
+  ui->writeImage->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
   ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
