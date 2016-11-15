@@ -17,6 +17,7 @@
 #include <QTime>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QProgressDialog>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -95,6 +96,8 @@ private:
   void processAnnotations(uint64_t frame);
   void rewind_video(int seconds_to_rewind);
   void updateTypeMenu();
+  void format_progress_dialog(QProgressDialog &progress_dialog);
+  QProgressDialog * gen_progress_dialog(QString dialog_text, QProgressBar * myBar);
 
 private:
   std::unique_ptr<Document> document;
@@ -108,6 +111,7 @@ private:
   QGraphicsPixmapItem *displayImage;
   std::list<AnnotatedRegion *> currentAnnotations;
   QString images_save_path_;
+  QString progress_bar_stylesheet_;
 };
 
 template<class T>

@@ -1,4 +1,5 @@
 #include <QProgressDialog>
+#include <QProgressBar>
 
 #include "fish_detector/gui/mainwindow.h"
 #include "ui_mainwindow.h"
@@ -34,19 +35,15 @@ void MainWindow::on_loadAnnotate_clicked() {
     std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
     std::ifstream inputJSON(filenameJSON.c_str(), std::ios::in);
 
-	QProgressDialog progress("Loading","Cancel",0,10,this, Qt::WindowTitleHint);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setCancelButton(0);
-	progress.setMinimumDuration(0);
-	progress.show();
-	progress.setValue(1);
+	QProgressBar * myBar = new QProgressBar(this);
+	QProgressDialog * progress = gen_progress_dialog("Loading", myBar);
 
     if (!inputJSON.fail()) {
-		progress.setValue(2);
+		progress->setValue(2);
         Document* newDoc = new Document(deserialize<Document>(inputJSON));
         document.reset(newDoc);
     }
-	progress.setValue(3);
+	progress->setValue(3);
 
     std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
@@ -58,7 +55,7 @@ void MainWindow::on_loadAnnotate_clicked() {
     getline(inFile,line);
     line.clear();
     bool first = true;
-	progress.setValue(6);
+	progress->setValue(6);
     while(getline(inFile,line)) {
         std::stringstream linestream(line);
         std::string tempToken;
@@ -104,20 +101,18 @@ void MainWindow::on_loadAnnotate_clicked() {
     ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
     ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
     updateVecIndex();
-	progress.setValue(10);
-	progress.cancel();
+	progress->setValue(10);
+	progress->cancel();
+	delete progress;
+	delete myBar;
 }
 
 void MainWindow::on_saveAnnotate_clicked() {
 
     QString dirName = QFileDialog::getExistingDirectory(this,tr("Choose save directory"));
 
-	QProgressDialog progress("Saving", "Cancel", 0, 10, this, Qt::WindowTitleHint);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setCancelButton(0);
-	progress.setMinimumDuration(0);
-	progress.show();
-	progress.setValue(1);
+	QProgressBar * myBar = new QProgressBar(this);
+	QProgressDialog * progress = gen_progress_dialog("Saving", myBar);
 
     std::string filename;
     std::string filenameJSON;
@@ -125,9 +120,9 @@ void MainWindow::on_saveAnnotate_clicked() {
     filenameJSON = filename + ".json";
     filename = filename + ".csv";
     std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
-	progress.setValue(3);
+	progress->setValue(3);
 	serialize(*document, jsonFile);
-	progress.setValue(5);
+	progress->setValue(5);
     std::ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
@@ -139,7 +134,7 @@ void MainWindow::on_saveAnnotate_clicked() {
         towStatus = "Closed";
     }
     int fishCount = 1;
-	progress.setValue(7);
+	progress->setValue(7);
     for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
         outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
         outFile << it->getID() << "," << getFishTypeString(it->getFishType()) << ",";
@@ -149,8 +144,10 @@ void MainWindow::on_saveAnnotate_clicked() {
         fishCount++;
     }
     outFile.close();
-	progress.setValue(10);
-	progress.cancel();
+	progress->setValue(10);
+	progress->cancel();
+	delete progress;
+	delete myBar;
 }
 
 void MainWindow::on_prevFish_clicked() {
@@ -200,9 +197,12 @@ void MainWindow::on_removeFish_clicked() {
 }
 
 void MainWindow::on_writeImage_clicked() {
+	// filename needs to be procedurally generated
 
 	if (images_save_path_.isNull())
 		images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
+	//QString filename = "D:\\Projects\\FishDetector\\testimage.jpg";
+	//player->write_image(images_save_path_ + QStringLiteral("\\Fish_%1.jpg").arg(listPos->getID()));
 
 	QImage img(scene->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
 	QPainter p(&img);
@@ -220,6 +220,24 @@ void MainWindow::on_writeImage_clicked() {
 
 	}
 	*/
+}
+
+QProgressDialog * MainWindow::gen_progress_dialog(QString dialog_text, QProgressBar * myBar) {
+	myBar->setStyleSheet(progress_bar_stylesheet_);
+	QProgressDialog * progress = new QProgressDialog(dialog_text, "Cancel", 0, 10, this, Qt::WindowTitleHint);
+	progress->setBar(myBar);
+	format_progress_dialog(*progress);
+
+	return progress;
+}
+
+void MainWindow::format_progress_dialog(QProgressDialog &progress_dialog) {
+	progress_dialog.setWindowModality(Qt::WindowModal);
+	progress_dialog.setCancelButton(0);
+	progress_dialog.setMinimumDuration(0);
+	progress_dialog.show();
+	progress_dialog.setValue(1);
+
 }
 
 }} // namespace fish_detector::gui

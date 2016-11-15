@@ -12,7 +12,9 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
-  fish_detector::gui::MainWindow* w = new fish_detector::gui::MainWindow();
+	
+
+	fish_detector::gui::MainWindow* w = new fish_detector::gui::MainWindow();
 	w->setAttribute(Qt::WA_DeleteOnClose, true);
 
 	w->show();

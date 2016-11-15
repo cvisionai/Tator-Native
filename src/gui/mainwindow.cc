@@ -26,6 +26,23 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(ui->goToFishVal,SIGNAL(returnPressed()),
            this, SLOT(goToFish()));
 
+  //QFile file(":/qss/progress_bar.qss");
+  //file.open(QFile::ReadOnly);
+  //progress_bar_stylesheet_ = QLatin1String(file.readAll());
+  progress_bar_stylesheet_ = QString("QProgressBar {"
+	  "border: 2px solid grey; border-radius: 5px; text-align: center; }"
+	  "QProgressBar::chunk{ background-color: #05B8CC; width: 20px;}");
+
+  //QFile styleFile("../../src/gui/qss/qpushbutton.qss");
+  //styleFile.open(QFile::ReadOnly);
+  // Apply the loaded stylesheet
+  //QLatin1String style(styleFile.readAll());
+  QString style("QPushButton { background-color: rgb(230, 230, 230);"
+	  "border-style: outset; border-radius: 5px; border-width: 2px; border-color: grey; padding: 6px;}"
+	  "QPushButton:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;"
+	  "border-width: 2px; border-color: grey; padding: 6px;}");
+  this->setStyleSheet(style);
+
   auto next_button = ui->navigator->findChild<QPushButton *>("next_button");
   connect(next_button, SIGNAL(clicked()), this, SLOT(on_plusOneFrame_clicked()));
 
