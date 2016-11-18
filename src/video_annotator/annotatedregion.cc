@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -9,7 +10,8 @@
 
 namespace fish_detector { namespace video_annotator {
 
-AnnotatedRegion::AnnotatedRegion(std::uint64_t uid, std::shared_ptr<AnnotationLocation> annotation, QRectF area)
+AnnotatedRegion::AnnotatedRegion( std::uint64_t uid, 
+  std::shared_ptr<AnnotationLocation> annotation, QRectF area )
 {
     this->annotation = annotation;
     this->uid = uid;
@@ -27,32 +29,32 @@ void AnnotatedRegion::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     qreal from_bottom = pos.y() - rect().bottom();
 
     qreal margin = 5;
-    if (abs(from_top) < margin) {
-        if (abs(from_left) < margin) {
+    if (std::abs(from_top) < margin) {
+        if (std::abs(from_left) < margin) {
             drag = DRAG_TOP_LEFT;
             setCursor(QCursor(Qt::SizeFDiagCursor));
-        } else if (abs(from_right) < margin) {
+        } else if (std::abs(from_right) < margin) {
             drag = DRAG_TOP_RIGHT;
             setCursor(QCursor(Qt::SizeBDiagCursor));
         } else {
             drag = DRAG_TOP;
             setCursor(QCursor(Qt::SizeVerCursor));
         }
-    } else if (abs(from_bottom) < margin) {
-        if (abs(from_left) < margin) {
+    } else if (std::abs(from_bottom) < margin) {
+        if (std::abs(from_left) < margin) {
             drag = DRAG_BOTTOM_LEFT;
             setCursor(QCursor(Qt::SizeBDiagCursor));
-        } else if (abs(from_right) < margin) {
+        } else if (std::abs(from_right) < margin) {
             drag = DRAG_BOTTOM_RIGHT;
             setCursor(QCursor(Qt::SizeFDiagCursor));
         } else {
             drag = DRAG_BOTTOM;
             setCursor(QCursor(Qt::SizeVerCursor));
         }
-    } else if (abs(from_left) < margin) {
+    } else if (std::abs(from_left) < margin) {
         drag = DRAG_LEFT;
         setCursor(QCursor(Qt::SizeHorCursor));
-    } else if (abs(from_right) < margin) {
+    } else if (std::abs(from_right) < margin) {
         drag = DRAG_RIGHT;
         setCursor(QCursor(Qt::SizeHorCursor));
     } else {
