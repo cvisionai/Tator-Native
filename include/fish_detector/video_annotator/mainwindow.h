@@ -19,12 +19,8 @@
 #include <QKeyEvent>
 #include <QProgressDialog>
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
-
+#include "fish_detector/common/annotatedregion.h"
 #include "fish_detector/video_annotator/fish.h"
-#include "fish_detector/video_annotator/annotatedregion.h"
 #include "fish_detector/video_annotator/document.h"
 #include "fish_detector/video_annotator/player.h"
 
@@ -92,7 +88,7 @@ private:
   void disableControls();
   void enableControls();
   void keyPressEvent(QKeyEvent *e);
-  void removeRegion(std::uint64_t id, std::uint64_t frame);
+  void removeRegion(uint64_t id, uint64_t frame);
   void processAnnotations(uint64_t frame);
   void rewind_video(int seconds_to_rewind);
   void updateTypeMenu();
@@ -109,7 +105,7 @@ private:
   int fIndex;
   int nextID;
   QGraphicsPixmapItem *displayImage;
-  std::list<AnnotatedRegion *> currentAnnotations;
+  std::list<AnnotatedRegion<AnnotationLocation> *> currentAnnotations;
   QString images_save_path_;
   QString progress_bar_stylesheet_;
 };

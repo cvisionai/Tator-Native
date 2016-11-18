@@ -13,57 +13,32 @@
 #include <iostream>
 #include <sstream>
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
-
-using boost::property_tree::ptree;
-using boost::property_tree::json_parser::write_json;
-using boost::property_tree::json_parser::read_json;
+#include "fish_detector/common/rect.h"
+#include "fish_detector/common/serialization.h"
 
 namespace fish_detector { namespace video_annotator {
 
-
-/// @brief Class for serializing data.
-///
-/// Converts a generic type to and from a Boost property tree. 
-///
-/// @tparam T Type to be serialized.
-template <class T>
-struct Serialization {};
-
-/// @brief Geometric definition of a rectangle.
-struct Rect {
-  /// @brief Constructor.
-  ///
-  /// @param x Horizontal coordinate of top-left corner.
-  /// @param y Vertical coordinate of top-left corner.
-  /// @param w Width.
-  /// @param h Height.
-  Rect(std::uint64_t x, std::uint64_t y, std::uint64_t w, std::uint64_t h);
-
-  /// @brief Copy constructor.
-  ///
-  /// @param r Rect object to be copied.
-  Rect(const Rect &r);
-
-  std::uint64_t x; ///< Horizontal coordinate of top-left corner.
-  std::uint64_t y; ///< Vertical coordinate of top-left corner.
-  std::uint64_t w; ///< Width.
-  std::uint64_t h; ///< Height.
-};
-
-/// @brief Location of an annotation.
+/// @brief Location of an annotation in a video.
 ///
 /// There is one of these for each annotation created by the user in the GUI.
-struct AnnotationLocation {
+struct AnnotationLocation : public Serialization {
   /// @brief Constructor.
   ///
   /// @param frame The video frame in which this annotation was made.
   /// @param area Rectangle bounding the annotation.
-  AnnotationLocation(std::uint64_t frame, Rect area);
+  AnnotationLocation(uint64_t frame, Rect area);
 
-  std::uint64_t frame; ///< Video frame in which this annotation was made.
+  /// @brief Writes to a property tree.
+  ///
+  /// @return Property tree constructed from the object.
+  boost::property_tree::ptree write() const;
+
+  /// @brief Reads from a property tree.
+  ///
+  /// @param tree Property tree to be read.
+  void read(const boost::property_tree::ptree &tree);
+
+  uint64_t frame; ///< Video frame in which this annotation was made.
   Rect area; ///< Rectangle bounding the annotation.
 };
 
@@ -76,7 +51,7 @@ public:
   typedef std::list<std::shared_ptr<AnnotationLocation> > list_t;
 public:
   /// @brief Constructor.
-  Annotation(std::uint64_t id);
+  Annotation(uint64_t id);
 
   /// @brief Adds another location to this annotation.
   ///
@@ -88,12 +63,13 @@ public:
   /// @param frame The video frame for which this location is added.
   /// @param area Definition of the bounding box for this location.
   /// @return Shared pointer to the resulting AnnotationLocation object.
-  std::shared_ptr<AnnotationLocation> addLocation(std::uint64_t frame, Rect area);
+  std::shared_ptr<AnnotationLocation> addLocation(uint64_t frame, 
+                                                  Rect area);
 
   /// @brief Copies the last location for the given frame.
   ///
   /// @param frame Video frame for which the last location is requested.
-  void copyLastLocation(std::uint64_t frame);
+  void copyLastLocation(uint64_t frame);
 
   /// @brief Indicates whether a given frame has an annotation.
   ///
@@ -109,14 +85,14 @@ public:
   /// @brief Accessor for the annotation ID.
   ///
   /// @return ID for this annotation.
-  std::uint64_t getId() { return id; }
+  uint64_t getId() { return id; }
 
   /// @brief Accessor for the annotation locations.
   ///
   /// @return List of pointers to locations in this annotation.
   list_t &getLocations() { return locations; }
 private:
-  std::uint64_t id; ///< Unique identifier for this annotation.
+  uint64_t id; ///< Unique identifier for this annotation.
   list_t locations; ///< Locations of this annotation.
 };
 
@@ -124,7 +100,7 @@ private:
 class FrameAnnotations {
 public:
   /// @brief Mapping from annotation ID to pointer to annotation location.
-    typedef std::pair<std::uint64_t, std::shared_ptr<AnnotationLocation>> ptr_t;
+    typedef std::pair<uint64_t, std::shared_ptr<AnnotationLocation>> ptr_t;
 
   /// @brief List of annotation ID to location mappings.
   typedef std::list<ptr_t> list_t;
@@ -151,7 +127,7 @@ public:
   const_iterator cend() { return annotations.cend(); }
 
   /// @brief Removes an annotation from the current list.
-  void removeAnnotation(std::uint64_t id);
+  void removeAnnotation(uint64_t id);
 private:
   /// @brief List of mappings between annotation ID and shared pointers
   ///        to annotation locations.
@@ -160,101 +136,44 @@ private:
 
 /// @todo I'll let ben do this one..
 /// @brief Contains a pointer to video we're annotating and annotations.
-class Document {
+class Document : public Serialization {
 public:
-    typedef std::map<std::uint64_t, std::shared_ptr<Annotation> > annotation_map_t;
+  typedef std::map<uint64_t, std::shared_ptr<Annotation> > AnnotationMap;
 public:
-    Document();
-    int writeJSON(const std::string& filename);
-    void addAnnotation(std::uint64_t id);
+  Document();
+  void addAnnotation(uint64_t id);
 
-    void makeAnnotation(std::uint64_t id);
+  void makeAnnotation(uint64_t id);
 
-    std::shared_ptr<AnnotationLocation> addAnnotationLocation(std::uint64_t id, std::uint64_t frame, Rect area);
-    void addAnnotationLocation(std::uint64_t id, std::shared_ptr<AnnotationLocation> newLoc);
+  std::shared_ptr<AnnotationLocation> addAnnotationLocation(uint64_t id, 
+      uint64_t frame, Rect area);
+  void addAnnotationLocation(uint64_t id, std::shared_ptr<AnnotationLocation> newLoc);
 
-    void copyAnnotation(std::uint64_t id, std::uint64_t frame, Rect area);
-    bool keyExists(std::uint64_t id) { return (annotations.find( id ) != annotations.end());}
+  void copyAnnotation(uint64_t id, uint64_t frame, Rect area);
+  bool keyExists(uint64_t id) { return (annotations.find( id ) != annotations.end());}
 
-    FrameAnnotations getAnnotations(std::uint64_t frame);
-    std::shared_ptr<Annotation> getAnnotation(std::uint64_t id) { return annotations[id];}
-    annotation_map_t &getAnnotations() { return annotations; }
-    const annotation_map_t &getAnnotations() const { return annotations; }
+  FrameAnnotations getAnnotations(uint64_t frame);
+  std::shared_ptr<Annotation> getAnnotation(uint64_t id) { return annotations[id];}
+  AnnotationMap &getAnnotations() { return annotations; }
+  const AnnotationMap &getAnnotations() const { return annotations; }
 
-    void removeFrameAnnotation(std::uint64_t id, std::uint64_t frame) {annotationsByFrame[frame].removeAnnotation(id);}
-    void removeFrameAnnotation(std::uint64_t id);
-    void removeAnnotation(std::uint64_t id) {annotations.erase(id);}
+  void removeFrameAnnotation(uint64_t id, uint64_t frame) {annotationsByFrame[frame].removeAnnotation(id);}
+  void removeFrameAnnotation(uint64_t id);
+  void removeAnnotation(uint64_t id) {annotations.erase(id);}
+
+  /// @brief Writes to a property tree.
+  ///
+  /// @return Property tree constructed from the object.
+  boost::property_tree::ptree write() const;
+
+  /// @brief Reads from a property tree.
+  ///
+  /// @param tree Property tree to be read.
+  void read(const boost::property_tree::ptree &tree);
 private:
-    std::map<std::uint64_t, FrameAnnotations> annotationsByFrame;
-    annotation_map_t annotations;
+    std::map<uint64_t, FrameAnnotations> annotationsByFrame;
+    AnnotationMap annotations;
 };
-
-/// @brief This specialization serializes AnnotationLocation objects.
-template <>
-struct Serialization<AnnotationLocation> {
-  /// @brief Writes an annotation to a property tree.
-  ///
-  /// @param obj AnnotationLocation object to be written.
-  /// @return Property tree constructed from AnnotationLocation object.
-  static ptree write(const AnnotationLocation &obj);
-
-  /// @brief Reads an annotation from a property tree.
-  ///
-  /// @param node Property tree to be read.
-  /// @return Shared pointer to annotation location constructed from 
-  ///         property tree.
-  static std::shared_ptr<AnnotationLocation> read(ptree &node);
-};
-
-/// @brief This specialization serializes Document objects.
-template <>
-struct Serialization<Document> {
-  /// @brief Writes a document to a property tree.
-  ///
-  /// @param obj Document object to be written.
-  /// @return Property tree constructed from Document object.
-  static ptree write(const Document &obj);
-
-  /// @brief Reads a document from a property tree.
-  ///
-  /// @param document Property tree to be read.
-  /// @return Document object constructed form property tree.
-  static Document read(const ptree &document);
-};
-
-/// @brief Serializes data to a stream.
-///
-/// @tparam T Type of object to be serialized.
-/// @param obj Object to be serialized.
-/// @param out Output stream.
-template <typename T>
-void serialize(const T &obj, std::ostream &out);
-
-/// @brief Deserializes data from a stream.
-///
-/// @tparam T Type of object to be deserialized.
-/// @param in Input stream.
-/// @return Deserialized object.
-template <typename T>
-T deserialize(std::istream &in);
-
-//
-// Implementations
-// 
-
-template <typename T>
-void serialize(const T &obj, std::ostream &out) {
-    ptree document = Serialization<T>::write(obj);
-    write_json(out, document, false);
-}
-
-template <typename T>
-T deserialize(std::istream &in) {
-  ptree document;
-
-  read_json(in, document);
-  return Serialization<T>::read(document);
-}
 
 }} // namespace fish_detector::video_annotator
 
