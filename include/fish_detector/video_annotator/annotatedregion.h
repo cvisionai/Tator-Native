@@ -4,9 +4,9 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
 
-#include "fish_detector/gui/document.h"
+#include "fish_detector/video_annotator/document.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 enum drag_t {
     DRAG_NONE = 0,
@@ -38,7 +38,7 @@ public:
     std::uint64_t getUID() {return uid;}
 };
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // ANNOTATEDREGION_H
 

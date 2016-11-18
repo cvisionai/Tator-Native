@@ -1,10 +1,10 @@
 #include <QProgressDialog>
 #include <QProgressBar>
 
-#include "fish_detector/gui/mainwindow.h"
+#include "fish_detector/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 namespace Ui {
   class MainWidget;
@@ -240,4 +240,4 @@ void MainWindow::format_progress_dialog(QProgressDialog &progress_dialog) {
 
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator

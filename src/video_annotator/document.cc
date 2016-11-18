@@ -4,9 +4,9 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
-#include "fish_detector/gui/document.h"
+#include "fish_detector/video_annotator/document.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 Rect::Rect(const Rect &r) {
     x = r.x;
@@ -214,5 +214,5 @@ Document Serialization< Document >::read( const ptree &document ) {
   return newDoc;
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 

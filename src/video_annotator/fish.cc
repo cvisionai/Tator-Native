@@ -1,6 +1,6 @@
-#include "fish_detector/gui/fish.h"
+#include "fish_detector/video_annotator/fish.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 Fish::Fish(FishTypeEnum ftype, int frame, int id)
 {
@@ -44,5 +44,5 @@ xyLoc Fish::getXYLoc()
 	return fishLoc;
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 

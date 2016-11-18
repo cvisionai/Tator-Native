@@ -1,8 +1,8 @@
-#include "fish_detector/gui/mainwindow.h"
+#include "fish_detector/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 /// @brief Mainwindow constructor.
 ///
 /// @param parent The parent widget for mainwindow.
@@ -674,6 +674,6 @@ void MainWindow::enableControls()
   ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
 }
 
-#include "../../include/fish_detector/gui/moc_mainwindow.cpp"
+#include "../../include/fish_detector/video_annotator/moc_mainwindow.cpp"
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator

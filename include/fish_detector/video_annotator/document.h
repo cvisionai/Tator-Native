@@ -21,7 +21,7 @@ using boost::property_tree::ptree;
 using boost::property_tree::json_parser::write_json;
 using boost::property_tree::json_parser::read_json;
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 
 /// @brief Class for serializing data.
@@ -256,7 +256,7 @@ T deserialize(std::istream &in) {
   return Serialization<T>::read(document);
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // DOCUMENT_H
 

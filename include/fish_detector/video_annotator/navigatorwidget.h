@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <memory>
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 namespace Ui {
   class NavigatorWidget;
@@ -22,6 +22,6 @@ public:
     std::unique_ptr<Ui::NavigatorWidget> ui;
 };
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // NAVIGATORWIDGET_H

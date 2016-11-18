@@ -5,9 +5,9 @@
 #include <QDebug>
 #include <QCursor>
 
-#include "fish_detector/gui/annotatedregion.h"
+#include "fish_detector/video_annotator/annotatedregion.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 AnnotatedRegion::AnnotatedRegion(std::uint64_t uid, std::shared_ptr<AnnotationLocation> annotation, QRectF area)
 {
@@ -210,5 +210,5 @@ void AnnotatedRegion::updateFrame(uint64_t frame) {
     annotation->frame = frame;
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 

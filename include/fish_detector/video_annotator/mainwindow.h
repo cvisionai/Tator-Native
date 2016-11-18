@@ -23,12 +23,12 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
-#include "fish_detector/gui/fish.h"
-#include "fish_detector/gui/annotatedregion.h"
-#include "fish_detector/gui/document.h"
-#include "fish_detector/gui/player.h"
+#include "fish_detector/video_annotator/fish.h"
+#include "fish_detector/video_annotator/annotatedregion.h"
+#include "fish_detector/video_annotator/document.h"
+#include "fish_detector/video_annotator/player.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 namespace Ui {
   class MainWidget;
@@ -134,7 +134,7 @@ T remove_reviewer(T const & filename)
   return p > 0 && p != T::npos ? filename.substr(0, p) : filename;
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // MAINWINDOW_H
 

@@ -18,7 +18,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 using namespace cv;
 class Player : public QThread
@@ -64,6 +64,6 @@ private:
     void setCurrentFrame(std::int64_t frameNumber);
 };
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // PLAYER_H

@@ -3,7 +3,7 @@
 
 #include <utility>
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 typedef std::pair<float, float> xyLoc;
 
@@ -43,6 +43,6 @@ public:
     int getID(){return id;}
 };
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // FISH_H
