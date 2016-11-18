@@ -8,7 +8,7 @@
 
 namespace fish_detector { namespace video_annotator {
 
-enum drag_t {
+enum Drag {
     DRAG_NONE = 0,
     DRAG_TOP,
     DRAG_BOTTOM,
@@ -23,19 +23,30 @@ enum drag_t {
 class AnnotatedRegion: public QGraphicsRectItem
 {
 protected:
-    std::shared_ptr<AnnotationLocation> annotation;
-    std::uint64_t uid;
-    drag_t drag;
+    /// @brief Pointer to the annotation location.
+    std::shared_ptr<AnnotationLocation> annotation_;
+
+    /// @brief ID associated with this object.
+    std::uint64_t uid_;
+
+    /// @brief Type of move event.
+    Drag drag_;
 public:
-    AnnotatedRegion(std::uint64_t uid, std::shared_ptr<AnnotationLocation> annotation, QRectF area);
+
+    /// @brief Constructor.
+    AnnotatedRegion(std::uint64_t uid, 
+                    std::shared_ptr<AnnotationLocation> annotation, 
+                    QRectF area);
+
+    /// @brief Executed 
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
     void updateFrame(std::uint64_t frame);
-    std::shared_ptr<AnnotationLocation> getAnnotation() {return annotation;}
-    std::uint64_t getUID() {return uid;}
+    std::shared_ptr<AnnotationLocation> getAnnotation() {return annotation_;}
+    std::uint64_t getUID() {return uid_;}
 };
 
 }} // namespace fish_detector::video_annotator

@@ -13,8 +13,8 @@ namespace fish_detector { namespace video_annotator {
 AnnotatedRegion::AnnotatedRegion( std::uint64_t uid, 
   std::shared_ptr<AnnotationLocation> annotation, QRectF area )
 {
-    this->annotation = annotation;
-    this->uid = uid;
+    this->annotation_ = annotation;
+    this->uid_ = uid;
     setRect(area);
     setAcceptHoverEvents(true);
     setFlags(ItemIsMovable | ItemIsSelectable);
@@ -31,38 +31,38 @@ void AnnotatedRegion::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     qreal margin = 5;
     if (std::abs(from_top) < margin) {
         if (std::abs(from_left) < margin) {
-            drag = DRAG_TOP_LEFT;
+            drag_ = DRAG_TOP_LEFT;
             setCursor(QCursor(Qt::SizeFDiagCursor));
         } else if (std::abs(from_right) < margin) {
-            drag = DRAG_TOP_RIGHT;
+            drag_ = DRAG_TOP_RIGHT;
             setCursor(QCursor(Qt::SizeBDiagCursor));
         } else {
-            drag = DRAG_TOP;
+            drag_ = DRAG_TOP;
             setCursor(QCursor(Qt::SizeVerCursor));
         }
     } else if (std::abs(from_bottom) < margin) {
         if (std::abs(from_left) < margin) {
-            drag = DRAG_BOTTOM_LEFT;
+            drag_ = DRAG_BOTTOM_LEFT;
             setCursor(QCursor(Qt::SizeBDiagCursor));
         } else if (std::abs(from_right) < margin) {
-            drag = DRAG_BOTTOM_RIGHT;
+            drag_ = DRAG_BOTTOM_RIGHT;
             setCursor(QCursor(Qt::SizeFDiagCursor));
         } else {
-            drag = DRAG_BOTTOM;
+            drag_ = DRAG_BOTTOM;
             setCursor(QCursor(Qt::SizeVerCursor));
         }
     } else if (std::abs(from_left) < margin) {
-        drag = DRAG_LEFT;
+        drag_ = DRAG_LEFT;
         setCursor(QCursor(Qt::SizeHorCursor));
     } else if (std::abs(from_right) < margin) {
-        drag = DRAG_RIGHT;
+        drag_ = DRAG_RIGHT;
         setCursor(QCursor(Qt::SizeHorCursor));
     } else {
-        drag = DRAG_NONE;
+        drag_ = DRAG_NONE;
         setCursor(QCursor());
     }
 
-    if (drag != DRAG_NONE) {
+    if (drag_ != DRAG_NONE) {
         setFlag(ItemIsMovable, false);
     } else {
         setFlag(ItemIsMovable, true);
@@ -84,11 +84,11 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     qreal from_left = pos.x() - rect().left();
     qreal from_top = pos.y() - rect().top();
     qreal margin = 5;
-    switch (drag) {
+    switch (drag_) {
     case DRAG_TOP: {
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
-            annotation->area.y = sceneBoundingRect().y() + 2;
+            annotation_->area.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
 
@@ -105,7 +105,7 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case DRAG_LEFT: {
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
-            annotation->area.x = sceneBoundingRect().x() + 2;
+            annotation_->area.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
@@ -121,13 +121,13 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case DRAG_TOP_LEFT: {
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
-            annotation->area.x = sceneBoundingRect().x() + 2;
+            annotation_->area.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
-            annotation->area.y = sceneBoundingRect().y() + 2;
+            annotation_->area.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
 
@@ -137,7 +137,7 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case DRAG_TOP_RIGHT: {
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
-            annotation->area.y = sceneBoundingRect().y() + 2;
+            annotation_->area.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
 
@@ -155,7 +155,7 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
-            annotation->area.x = sceneBoundingRect().x() + 2;
+            annotation_->area.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
@@ -175,14 +175,14 @@ void AnnotatedRegion::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     default:
         QGraphicsRectItem::mouseMoveEvent(event);
         auto pos = this->pos();
-        annotation->area.x = area.left() + pos.x();
-        annotation->area.y = area.top() + pos.y();
+        annotation_->area.x = area.left() + pos.x();
+        annotation_->area.y = area.top() + pos.y();
         setRect(area);
         return;
     }
     setRect(area);
-    annotation->area.w = area.width();
-    annotation->area.h = area.height();
+    annotation_->area.w = area.width();
+    annotation_->area.h = area.height();
     prepareGeometryChange();
     update();
 }
@@ -205,11 +205,11 @@ void AnnotatedRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     QRectF text_area = QRectF(rect().right() - width, rect().bottom() - fm.height(), width, fm.height());
     painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
     painter->setPen(QPen(QColor(255, 0, 0)));
-    painter->drawText(text_area, QString::number(uid));
+    painter->drawText(text_area, QString::number(uid_));
 }
 
 void AnnotatedRegion::updateFrame(uint64_t frame) {
-    annotation->frame = frame;
+    annotation_->frame = frame;
 }
 
 }} // namespace fish_detector::video_annotator
