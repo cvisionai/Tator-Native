@@ -1,8 +1,8 @@
-#include "fish_detector/gui/mainwindow.h"
+#include "fish_detector/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 /// @brief Mainwindow constructor.
 ///
 /// @param parent The parent widget for mainwindow.
@@ -84,7 +84,7 @@ void MainWindow::processAnnotations(uint64_t frame) {
   // add new annotations
   for (auto ann : document->getAnnotations(frame)) {
     auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
-    auto region = new AnnotatedRegion(ann.first, ann.second, rect);
+    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, ann.second, rect);
     scene->addItem(region);
     currentAnnotations.push_back(region);
   }
@@ -462,7 +462,8 @@ void MainWindow::on_addRegion_clicked()
     document->addAnnotation(fishID);
   }
   auto loc = document->addAnnotationLocation(fishID, frame, area);
-  auto annotationArea = new AnnotatedRegion(fishID,loc, QRect(0, 0, 100, 100));
+  auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
+      fishID,loc, QRect(0, 0, 100, 100));
   currentAnnotations.push_back(annotationArea);
   scene->addItem(annotationArea);
 }
@@ -474,7 +475,7 @@ void MainWindow::on_removeRegion_clicked()
   removeRegion(fishID, frame);
 }
 
-void MainWindow::removeRegion(std::uint64_t id, std::uint64_t frame) {
+void MainWindow::removeRegion(uint64_t id, uint64_t frame) {
   //First check to see if there's an annotation for this ID already.
   if (document->keyExists(id))
   {
@@ -484,7 +485,7 @@ void MainWindow::removeRegion(std::uint64_t id, std::uint64_t frame) {
       currentAnn->removeFrameAnn(frame);
       document->removeFrameAnnotation(id, frame);
       auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
-                [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
+                [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
       if (it != currentAnnotations.end()) {
         scene->removeItem(*it);
         currentAnnotations.erase(it);
@@ -522,40 +523,7 @@ void MainWindow::on_nextAndCopy_clicked()
   }
   processAnnotations(player->getCurrentFrame());
 }
-/* Saving to turn into next and copy all
-void MainWindow::on_nextAndCopy_clicked()
-{
-  // remove old annotations
-  for (auto ann : currentAnnotations) {
-    scene->removeItem(ann);
-  }
-  currentAnnotations.clear();
-  auto prevFrame = player->getCurrentFrame();
-  updateImage(player->nextFrame());
-  //Currently delete existing annotations and overwrites. Want to change
-  //to don't overwrite existing annotations.  Probably going to have to
-  //do an exhaustive search of existing annotations for each potential
-  //copied annotation.  Research code templates to shortcut this.  Make
-  //sure to understand data types involved.
 
-  //check this frame for annotations. We're going to delete anything
-  //that currently exists.
-  for (auto ann: document->getAnnotations()) {
-    auto id = ann.first;
-    removeRegion(id, prevFrame+1);
-  }
-  // copy annotations
-  for (auto ann : document->getAnnotations(prevFrame)) {
-    auto frame = ann.second->frame+1;
-    auto area = ann.second->area;
-    auto loc = document->addAnnotationLocation(ann.first,frame, area);
-    auto rect = QRectF(area.x,area.y,area.w,area.h);
-    auto region = new AnnotatedRegion(ann.first, loc, rect);
-    scene->addItem(region);
-    currentAnnotations.push_back(region);
-  }
-}
-*/
 void MainWindow::addFish(FishTypeEnum fType)
 {
   player->Stop();
@@ -674,6 +642,6 @@ void MainWindow::enableControls()
   ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
 }
 
-#include "../../include/fish_detector/gui/moc_mainwindow.cpp"
+#include "../../include/fish_detector/video_annotator/moc_mainwindow.cpp"
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator

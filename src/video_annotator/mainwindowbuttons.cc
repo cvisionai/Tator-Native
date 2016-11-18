@@ -1,10 +1,10 @@
 #include <QProgressDialog>
 #include <QProgressBar>
 
-#include "fish_detector/gui/mainwindow.h"
+#include "fish_detector/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 namespace Ui {
   class MainWidget;
@@ -40,7 +40,8 @@ void MainWindow::on_loadAnnotate_clicked() {
 
     if (!inputJSON.fail()) {
 		progress->setValue(2);
-        Document* newDoc = new Document(deserialize<Document>(inputJSON));
+        Document* newDoc = new Document;
+        deserialize(*newDoc, inputJSON);
         document.reset(newDoc);
     }
 	progress->setValue(3);
@@ -180,7 +181,7 @@ void MainWindow::on_removeFish_clicked() {
         auto id = listPos->getID();
 
         auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
-                          [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
+                          [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
         if (it != currentAnnotations.end()) {
             scene->removeItem(*it);
             currentAnnotations.erase(it);
@@ -240,4 +241,4 @@ void MainWindow::format_progress_dialog(QProgressDialog &progress_dialog) {
 
 }
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator

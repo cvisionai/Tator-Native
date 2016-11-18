@@ -3,7 +3,7 @@ file( GLOB GUI_SOURCES "*.cc" )
 
 # Add gui executable
 if( WIN32 )
-  add_executable( fish_gui WIN32 ${GUI_SOURCES} )
+  add_executable( fish_gui WIN32 ${GUI_SOURCES} ${COMMON_SOURCES} )
   target_link_libraries(
     fish_gui
     ${OpenCV_LIBS}

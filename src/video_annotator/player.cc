@@ -1,6 +1,6 @@
-#include "fish_detector/gui/player.h"
+#include "fish_detector/video_annotator/player.h"
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
 Player::Player(QObject *parent)
   : QThread(parent)
@@ -167,6 +167,6 @@ void Player::write_image(QString filename) {
 	cv::imwrite(filename.toStdString(), matTemp);
 }
 
-#include "../../include/fish_detector/gui/moc_player.cpp"
+#include "../../include/fish_detector/video_annotator/moc_player.cpp"
 
 }} // namespace fish_detector::gui

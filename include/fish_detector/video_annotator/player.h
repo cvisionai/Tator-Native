@@ -18,21 +18,20 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-namespace fish_detector { namespace gui {
+namespace fish_detector { namespace video_annotator {
 
-using namespace cv;
 class Player : public QThread
 {	
-  Q_OBJECT
+    Q_OBJECT
 private:
     bool stop;
     QMutex mutex;
     QWaitCondition condition;
-    Mat frame;
+    cv::Mat frame;
     double frameRate;
     double currentSpeed;
-    std::unique_ptr<VideoCapture> capture;
-    Mat RGBframe;
+    std::unique_ptr<cv::VideoCapture> capture;
+    cv::Mat RGBframe;
     QImage img;
     int delay;
     std::int64_t frameIndex;
@@ -59,11 +58,11 @@ public:
     QImage setFrame(std::int64_t frame);
     std::int64_t getCurrentFrame();
     QImage getOneFrame();
-	void write_image(QString filename);
+    void write_image(QString filename);
 private:
     void setCurrentFrame(std::int64_t frameNumber);
 };
 
-}} // namespace fish_detector::gui
+}} // namespace fish_detector::video_annotator
 
 #endif // PLAYER_H

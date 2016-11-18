@@ -1,5 +1,6 @@
+file( GLOB COMMON_SOURCES "common/*.cc" )
 
-add_subdirectory( gui )
+add_subdirectory( video_annotator )
 add_subdirectory( video_slicer )
 
 # Add install target for OpenCV shared libs

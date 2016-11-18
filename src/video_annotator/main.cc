@@ -1,7 +1,7 @@
 #include <QtPlugin>
 #include <QApplication>
 
-#include "fish_detector/gui/mainwindow.h"
+#include "fish_detector/video_annotator/mainwindow.h"
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	QApplication a(argc, argv);
 	
 
-	fish_detector::gui::MainWindow* w = new fish_detector::gui::MainWindow();
+	fish_detector::video_annotator::MainWindow* w = new fish_detector::video_annotator::MainWindow();
 	w->setAttribute(Qt::WA_DeleteOnClose, true);
 
 	w->show();
