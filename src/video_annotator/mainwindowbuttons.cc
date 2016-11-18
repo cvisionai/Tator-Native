@@ -40,7 +40,8 @@ void MainWindow::on_loadAnnotate_clicked() {
 
     if (!inputJSON.fail()) {
 		progress->setValue(2);
-        Document* newDoc = new Document(deserialize<Document>(inputJSON));
+        Document* newDoc = new Document;
+        deserialize(*newDoc, inputJSON);
         document.reset(newDoc);
     }
 	progress->setValue(3);
@@ -180,7 +181,7 @@ void MainWindow::on_removeFish_clicked() {
         auto id = listPos->getID();
 
         auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
-                          [&id](AnnotatedRegion* obj) {return obj->getUID() == id;});
+                          [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
         if (it != currentAnnotations.end()) {
             scene->removeItem(*it);
             currentAnnotations.erase(it);
