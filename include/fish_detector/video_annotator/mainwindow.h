@@ -23,16 +23,16 @@
 #include "fish_detector/video_annotator/fish.h"
 #include "fish_detector/video_annotator/document.h"
 #include "fish_detector/video_annotator/player.h"
+#include "ui_mainwindow.h"
 
 namespace fish_detector { namespace video_annotator {
-
-namespace Ui {
-  class MainWidget;
-}
 
 class MainWindow : public QWidget
 {
   Q_OBJECT
+#ifndef NO_TESTING
+  friend class TestVideoAnnotator;
+#endif
 public:
   /// @brief Mainwindow constructor.
   ///
@@ -114,8 +114,6 @@ private slots:
   void on_writeImage_clicked();
 public:
   void updateImage(const QImage &image);
-  std::unique_ptr<Player> &getPlayer() { return player_; }
-  
 private:
   void updateAnnotations();
   void addFish(FishTypeEnum fType);

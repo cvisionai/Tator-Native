@@ -1,6 +1,4 @@
 #include "fish_detector/video_annotator/mainwindow.h"
-#include "ui_mainwindow.h"
-
 
 namespace fish_detector { namespace video_annotator {
 
