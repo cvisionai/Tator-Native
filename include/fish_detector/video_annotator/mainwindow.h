@@ -143,8 +143,7 @@ private:
   /// @param seconds_to_rewind The number of seconds in the video to rewind.
   void rewindVideo(int seconds_to_rewind);
   void updateTypeMenu();
-  void format_progress_dialog(QProgressDialog &progress_dialog);
-  QProgressDialog * gen_progress_dialog(QString dialog_text, QProgressBar * myBar);
+  QProgressDialog * genProgressDialog(QString dialog_text);
 
 private:
   std::unique_ptr<Document> document_;
