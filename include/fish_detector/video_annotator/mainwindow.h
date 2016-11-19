@@ -128,6 +128,11 @@ private:
   void keyPressEvent(QKeyEvent *e);
   void removeRegion(uint64_t id, uint64_t frame);
 
+  /// @brief Saves annotations to a given directory.
+  ///
+  /// @param dir_name Directory to save files.
+  void saveAnnotations(const QString &dir_name);
+
   /// @brief Retrieves annotations associated with frame.
   ///
   /// @param frame The frame for which you want to retrieve annotations.
