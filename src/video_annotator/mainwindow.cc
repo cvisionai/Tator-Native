@@ -4,12 +4,21 @@ namespace fish_detector { namespace video_annotator {
 
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
+  , document_(new Document)
+  , ui_(new Ui::MainWidget)
+  , player_(new Player)
+  , my_fish_list_()
+  , list_pos_(my_fish_list_.end())
+  , scene_(new QGraphicsScene)
+  , f_index_(0)
+  , next_id_(1)
+  , display_image_(NULL)
+  , current_annotations_()
+  , images_save_path_("")
+  , progress_bar_stylesheet_("QProgressBar {"
+	  "border: 2px solid grey; border-radius: 5px; text-align: center; }"
+	  "QProgressBar::chunk{ background-color: #05B8CC; width: 20px;}")
 {
-  ui_.reset(new Ui::MainWidget);
-  f_index_ = 0;
-  next_id_ = 1;
-  player_.reset(new Player());
-  my_fish_list_.clear();
   QObject::connect(player_.get(), SIGNAL(processedImage(QImage)),
            this, SLOT(updatePlayerUI(QImage)));
   ui_->setupUi(this);
@@ -20,16 +29,10 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->typeMenu->setCurrentIndex(3);
   QObject::connect(ui_->goToFishVal,SIGNAL(returnPressed()),
            this, SLOT(goToFish()));
-
-  progress_bar_stylesheet_ = QString("QProgressBar {"
-	  "border: 2px solid grey; border-radius: 5px; text-align: center; }"
-	  "QProgressBar::chunk{ background-color: #05B8CC; width: 20px;}");
-
-  QString style("QPushButton { background-color: rgb(230, 230, 230);"
+  setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
 	  "border-style: outset; border-radius: 5px; border-width: 2px; border-color: grey; padding: 6px;}"
 	  "QPushButton:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
-  this->setStyleSheet(style);
 
   auto next_button = ui_->navigator->findChild<QPushButton *>("next_button");
   connect(next_button, SIGNAL(clicked()), this, SLOT(on_plusOneFrame_clicked()));
