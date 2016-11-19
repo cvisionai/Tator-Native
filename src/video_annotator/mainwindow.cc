@@ -119,37 +119,38 @@ void MainWindow::on_LoadVideo_clicked() {
   tr("Open Video"), ".",
   tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo name = filename;
-  if (!filename.isEmpty())
-  {
-    if (!player_->loadVideo(filename.toLatin1().data()))
-    {
+  if (!filename.isEmpty()) {
+    if (!player_->loadVideo(filename.toLatin1().data())) {
       QMessageBox msgBox;
       msgBox.setText("The selected video could not be opened!");
       msgBox.exec();
     }
-    else
-    {
-      enableControls();
-      this->setWindowTitle(name.fileName());
-      ui_->Play->setEnabled(true);
-      ui_->videoSlider->setEnabled(true);
-      ui_->videoSlider->setMaximum(player_->getNumberOfFrames());
-      ui_->totalTime->setText(getFormattedTime((int)player_->
-      getNumberOfFrames() / (int)player_->getFrameRate()));
-      QImage firstImage = player_->getOneFrame();
-      scene_.reset(new QGraphicsScene(this));
-      display_image_ = scene_->addPixmap(QPixmap::fromImage(firstImage));
-      scene_->setSceneRect(firstImage.rect());
-      ui_->videoWindow->setScene(scene_.get());
-      ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
-      ui_->videoWindow->show();
-      ui_->currentSpeed->setText("Current Speed: 100%");
-      ui_->Play->setFocus();
-      // TODO: should first try to load this if the data
-      // file exists
-      document_.reset(new Document());
+    else {
+      onLoadVideoSuccess(name);
     }
   }
+}
+
+void MainWindow::onLoadVideoSuccess(const QFileInfo &name) {
+  enableControls();
+  this->setWindowTitle(name.fileName());
+  ui_->Play->setEnabled(true);
+  ui_->videoSlider->setEnabled(true);
+  ui_->videoSlider->setMaximum(player_->getNumberOfFrames());
+  ui_->totalTime->setText(getFormattedTime((int)player_->
+  getNumberOfFrames() / (int)player_->getFrameRate()));
+  QImage firstImage = player_->getOneFrame();
+  scene_.reset(new QGraphicsScene(this));
+  display_image_ = scene_->addPixmap(QPixmap::fromImage(firstImage));
+  scene_->setSceneRect(firstImage.rect());
+  ui_->videoWindow->setScene(scene_.get());
+  ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
+  ui_->videoWindow->show();
+  ui_->currentSpeed->setText("Current Speed: 100%");
+  ui_->Play->setFocus();
+  // TODO: should first try to load this if the data
+  // file exists
+  document_.reset(new Document());
 }
 
 void MainWindow::on_Play_clicked() {

@@ -115,6 +115,7 @@ private slots:
 public:
   void updateImage(const QImage &image);
 private:
+  void onLoadVideoSuccess(const QFileInfo &name);
   void updateAnnotations();
   void addFish(FishTypeEnum fType);
   void updateVecIndex();
