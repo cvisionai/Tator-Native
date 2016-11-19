@@ -57,22 +57,10 @@ include_directories(
   ${FISHDET_INCLUDE_DIR}
   )
 
+enable_testing()
+
 add_subdirectory( ${FISHDET_SRC_DIR} )
-
-#enable_testing()
-
-#add_test( 
-#    NAME "test_all_fish_detector" 
-#    COMMAND ${PYTHON_EXECUTABLE} 
-#    "${CMAKE_CURRENT_SOURCE_DIR}/test/run_fish_detector_tests.py" 
-#    "${CMAKE_INSTALL_PREFIX}"
-#    "${CMAKE_CURRENT_BINARY_DIR}"
-#    )
-#set_tests_properties( 
-#    "test_all_fish_detector" PROPERTIES
-#    FAIL_REGULAR_EXPRESSION "FAILED"
-#    PASS_REGULAR_EXPRESSION "OK"
-#    )
+add_subdirectory( ${FISHDET_TEST_DIR} )
 
 # Add documentation target
 if( ${DOXYGEN_FOUND} STREQUAL "YES" )
