@@ -293,6 +293,12 @@ After CMake has been run, documentation can be built by typing:
 cmake --build . --target doc --config Release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+or on linux/mac:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make doc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 from the build subdirectory.  This will generate doxygen documentation
 in the doxygen subdirectory of the top level repository.  For the html
 output, simply open index.html in your favorite browser.  For the pdf
@@ -302,6 +308,12 @@ A standalone user manual can be built by typing:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 cmake --build . --target manual --config Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+or on linux/mac:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make manual
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 from the build subdirectory.  This will generate a user manual at
@@ -319,6 +331,22 @@ cpack
 
 The installer will be located in the top level build directory when it is
 finished building.
+
+Running unit tests
+------------------
+
+After CMake has been run the ALL_BUILD or INSTALL target has been built,
+unit tests can be run by typing:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake --build . --target RUN_TESTS --config Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+or on linux/mac:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [Qt5]: https://www.qt.io/developers/
 [BoostPropertyTree]: http://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html
