@@ -36,9 +36,11 @@ if( WIN32 )
   add_test( 
     NAME test_video_annotator 
     COMMAND test_video_annotator 
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   set_tests_properties( 
     test_video_annotator PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
+  file( COPY ${OpenCV_SHARED_LIBS} DESTINATION Release )
 endif()
