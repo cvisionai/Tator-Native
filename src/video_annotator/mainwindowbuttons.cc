@@ -42,13 +42,13 @@ void MainWindow::on_loadAnnotate_clicked() {
 		progress->setValue(2);
         Document* newDoc = new Document;
         deserialize(*newDoc, inputJSON);
-        document.reset(newDoc);
+        document_.reset(newDoc);
     }
 	progress->setValue(3);
 
     std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
     QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
-    ui->fileNameValue->setText(qFilename);
+    ui_->fileNameValue->setText(qFilename);
     std::ifstream inFile(filename.toLatin1().data());
     std::string line, tripID, reviewer, towType, fishNum, fishType, species;
     int frame, towNum, curID;
@@ -76,11 +76,11 @@ void MainWindow::on_loadAnnotate_clicked() {
         std::getline(linestream,tempToken,',');
         if (first) {
             QString qreviewer = QString::fromStdString(reviewer);
-            ui->reviewerNameValue->setText(qreviewer);
+            ui_->reviewerNameValue->setText(qreviewer);
             QString qtripID = QString::fromStdString(tripID);
-            ui->tripIDValue->setText(qtripID);
+            ui_->tripIDValue->setText(qtripID);
             QString qtowID = QString::fromStdString(strtowNum);
-            ui->towIDValue->setText(qtowID);
+            ui_->towIDValue->setText(qtowID);
         }
         first = false;
         tempConvert << tempToken; tempConvert >> frame; tempToken.clear();
@@ -91,16 +91,16 @@ void MainWindow::on_loadAnnotate_clicked() {
         FishTypeEnum fType = getFishType(fishType);
         curID = std::stoi(fishNum,nullptr,10);
         std::unique_ptr<Fish> tempFish(new Fish(fType,frame,curID));
-        if (curID >= nextID) nextID = curID + 1;
+        if (curID >= next_id_) next_id_ = curID + 1;
         tempFish->setFishSubType(getFishSpecies(fType,species));
-        myFishList.push_back(*tempFish);
+        my_fish_list_.push_back(*tempFish);
         linestream.str(""); linestream.clear();
     }
     inFile.close();
-    ui->totalFishVal->setText(QString::number(myFishList.size()));
-    listPos = myFishList.begin();
-    ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-    ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+    ui_->totalFishVal->setText(QString::number(my_fish_list_.size()));
+    list_pos_ = my_fish_list_.begin();
+    ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
+    ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
     updateVecIndex();
 	progress->setValue(10);
 	progress->cancel();
@@ -117,18 +117,18 @@ void MainWindow::on_saveAnnotate_clicked() {
 
     std::string filename;
     std::string filenameJSON;
-    filename = dirName.toStdString() + "/" + filename + ui->fileNameValue->text().toStdString() + "_" + ui->reviewerNameValue->text().toStdString();
+    filename = dirName.toStdString() + "/" + filename + ui_->fileNameValue->text().toStdString() + "_" + ui_->reviewerNameValue->text().toStdString();
     filenameJSON = filename + ".json";
     filename = filename + ".csv";
     std::ofstream jsonFile (filenameJSON.c_str(), std::ofstream::out);
 	progress->setValue(3);
-	serialize(*document, jsonFile);
+	serialize(*document_, jsonFile);
 	progress->setValue(5);
     std::ofstream outFile(filename);
     outFile << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" << "," << "Tow_Type" << ",";
     outFile << "Fish_Number" << "," << "Fish_Type" << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" << std::endl;
     std::string towStatus;
-    if (ui->towStatus->isChecked()) {
+    if (ui_->towStatus->isChecked()) {
         towStatus = "Open";
     }
     else {
@@ -136,12 +136,12 @@ void MainWindow::on_saveAnnotate_clicked() {
     }
     int fishCount = 1;
 	progress->setValue(7);
-    for(auto it = myFishList.begin(); it != myFishList.end(); ++it) {
-        outFile << ui->tripIDValue->text().toStdString() << "," << ui->towIDValue->text().toStdString() << "," << ui->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
+    for(auto it = my_fish_list_.begin(); it != my_fish_list_.end(); ++it) {
+        outFile << ui_->tripIDValue->text().toStdString() << "," << ui_->towIDValue->text().toStdString() << "," << ui_->reviewerNameValue->text().toStdString() << "," << towStatus << ",";
         outFile << it->getID() << "," << getFishTypeString(it->getFishType()) << ",";
         outFile << getFishSpeciesString(it->getFishType(),it->getFishSubType()) << ",";
         outFile << it->frameCounted << ",";
-        outFile << (double) it->frameCounted / player->getFrameRate() / 60.0 / 60.0 << std::endl;
+        outFile << (double) it->frameCounted / player_->getFrameRate() / 60.0 / 60.0 << std::endl;
         fishCount++;
     }
     outFile.close();
@@ -152,19 +152,19 @@ void MainWindow::on_saveAnnotate_clicked() {
 }
 
 void MainWindow::on_prevFish_clicked() {
-    if (listPos!=myFishList.begin()) {
-        listPos = listPos-1;
-        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+    if (list_pos_!=my_fish_list_.begin()) {
+        list_pos_ = list_pos_-1;
+        ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
+        ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
         updateVecIndex();
     }
 }
 
 void MainWindow::on_nextFish_clicked() {
-    if (listPos!=myFishList.end()-1) {
-        listPos = listPos+1;
-        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+    if (list_pos_!=my_fish_list_.end()-1) {
+        list_pos_ = list_pos_+1;
+        ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
+        ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
         updateVecIndex();
     }
 }
@@ -177,23 +177,23 @@ void MainWindow::on_removeFish_clicked() {
      * 3. Remove annotation with ID
      * 4. Remove from fish list
      */
-    if (myFishList.begin() != myFishList.end()) {
-        auto id = listPos->getID();
+    if (my_fish_list_.begin() != my_fish_list_.end()) {
+        auto id = list_pos_->getID();
 
-        auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
+        auto it = find_if(current_annotations_.begin(), current_annotations_.end(), \
                           [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
-        if (it != currentAnnotations.end()) {
-            scene->removeItem(*it);
-            currentAnnotations.erase(it);
+        if (it != current_annotations_.end()) {
+            scene_->removeItem(*it);
+            current_annotations_.erase(it);
         }
-        document->removeFrameAnnotation(id);
-        document->removeAnnotation(id);
-        listPos = myFishList.erase(listPos);
-        if (listPos == myFishList.end()) listPos = myFishList.end()-1;
+        document_->removeFrameAnnotation(id);
+        document_->removeAnnotation(id);
+        list_pos_ = my_fish_list_.erase(list_pos_);
+        if (list_pos_ == my_fish_list_.end()) list_pos_ = my_fish_list_.end()-1;
         updateVecIndex();
-        ui->totalFishVal->setText(QString::number(myFishList.size()));
-        ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-        ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+        ui_->totalFishVal->setText(QString::number(my_fish_list_.size()));
+        ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
+        ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
     }
 }
 
@@ -202,25 +202,12 @@ void MainWindow::on_writeImage_clicked() {
 
 	if (images_save_path_.isNull())
 		images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
-	//QString filename = "D:\\Projects\\FishDetector\\testimage.jpg";
-	//player->write_image(images_save_path_ + QStringLiteral("\\Fish_%1.jpg").arg(listPos->getID()));
 
-	QImage img(scene->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
+	QImage img(scene_->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
 	QPainter p(&img);
-	scene->render(&p);
+	scene_->render(&p);
 	p.end();
-	img.save(images_save_path_ + QStringLiteral("\\Fish_%1.png").arg(listPos->getID()));
-
-	/*
-	Now to write out each annotation that exists in the frame. Use currentannotations
-
-	for (auto ann : currentannotations) {
-
-	// Retrieve bounding box info for each annotation, and write it to file. Question about writing
-	// sequentially or generating a string and writing all at once.
-
-	}
-	*/
+	img.save(images_save_path_ + QStringLiteral("\\Fish_%1.png").arg(list_pos_->getID()));
 }
 
 QProgressDialog * MainWindow::gen_progress_dialog(QString dialog_text, QProgressBar * myBar) {
