@@ -22,7 +22,8 @@ enum Drag {
 
 
 /// @brief Displays bounding boxes drawn by user.
-/// @tparam Contains data associated with a bounding box.
+///
+/// @tparam Info Contains data associated with a bounding box.
 template<typename Info>
 class AnnotatedRegion: public QGraphicsRectItem
 {
