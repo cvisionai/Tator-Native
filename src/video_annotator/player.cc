@@ -9,17 +9,15 @@ Player::Player(QObject *parent)
   stop = true;
 }
 
-bool Player::loadVideo(std::string filename) {
+bool Player::loadVideo(const std::string &filename) {
   capture.reset(new cv::VideoCapture(filename));
-  if (capture->isOpened())
-  {
+  if (capture->isOpened()) {
     frameRate = capture->get(CV_CAP_PROP_FPS);
     currentSpeed = 100;
     delay = (1000/frameRate);
     return true;
   }
-  else
-    return false;
+  return false;
 }
 
 void Player::Play()

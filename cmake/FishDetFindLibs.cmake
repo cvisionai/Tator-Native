@@ -15,6 +15,10 @@ find_package( Qt5PrintSupport )
 if( NOT Qt5PrintSupport_FOUND )
   message( FATAL_ERROR "Could not find Qt5PrintSupport.  Build cannot continue." )
 endif()
+find_package( Qt5Test )
+if( NOT Qt5Test_FOUND )
+  message( FATAL_ERROR "Could not find Qt5Test.  Build cannot continue." )
+endif()
 if( WIN32 )
   set( QT_THIRD_PARTY_LIBS
     "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"

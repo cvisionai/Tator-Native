@@ -43,7 +43,7 @@ protected:
 public:
     Player(QObject *parent = 0);
     ~Player();
-    bool loadVideo(std::string filename);
+    bool loadVideo(const std::string &filename);
     void Play();
     void Stop();
     bool isStopped() const;
