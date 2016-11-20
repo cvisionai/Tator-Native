@@ -1,11 +1,14 @@
-# Find the sources for gui
-file( GLOB GUI_SOURCES "*.cc" )
+# Find the sources for video annotator
+file( GLOB VIDEO_ANNOTATOR_SOURCES "*.cc" )
 
-# Add gui executable
+# Add video annotator executable
 if( WIN32 )
-  add_executable( fish_gui WIN32 ${GUI_SOURCES} ${COMMON_SOURCES} )
+  add_executable( video_annotator WIN32 
+    ${VIDEO_ANNOTATOR_SOURCES} 
+    ${COMMON_SOURCES} 
+    )
   target_link_libraries(
-    fish_gui
+    video_annotator
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
@@ -13,14 +16,14 @@ if( WIN32 )
     ${OPENGL_LIBRARIES}
     )
   set_target_properties( 
-    fish_gui 
+    video_annotator 
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
 elseif( APPLE )
-  add_executable( fish_gui ${GUI_SOURCES} )
+  add_executable( video_annotator ${VIDEO_ANNOTATOR_SOURCES} )
   target_link_libraries(
-    fish_gui
+    video_annotator
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
@@ -32,7 +35,7 @@ endif()
 
 # Add install target 
 install( 
-  TARGETS fish_gui 
+  TARGETS video_annotator 
   DESTINATION . 
   )
 
