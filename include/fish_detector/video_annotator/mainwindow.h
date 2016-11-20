@@ -23,39 +23,78 @@
 #include "fish_detector/video_annotator/fish.h"
 #include "fish_detector/video_annotator/document.h"
 #include "fish_detector/video_annotator/player.h"
+#include "ui_mainwindow.h"
 
 namespace fish_detector { namespace video_annotator {
-
-namespace Ui {
-  class MainWidget;
-}
 
 class MainWindow : public QWidget
 {
   Q_OBJECT
-
-  public:
+#ifndef NO_TESTING
+  friend class TestVideoAnnotator;
+#endif
+public:
+  /// @brief Mainwindow constructor.
+  ///
+  /// @param parent The parent widget for mainwindow.
   explicit MainWindow(QWidget *parent = 0);
-//   ~MainWindow();
 
+  /// @brief Retrieves next frame from video player and adds annotations to 
+  ///        frame.
   void nextFrame();
+
+  /// @brief Retrieves previous frame from video player and adds annotations 
+  ///        to frame.
   void prevFrame();
 
- private slots:
+private slots:
+  /// @brief Updates the GUI window with image img.
+  ///
+  /// @param img The image to display in the GUI window
   void updatePlayerUI(QImage img);
   void updateSubTypeMenu(int typeIndex);
+
+  /// @brief Retrieves information for fish number currently in goToFishVal.
+  ///
+  /// @return no return.
   void goToFish();
+
+  /// @brief Converts time in seconds into hours, minutes, seconds.
+  ///
+  /// @param timeInSeconds The time from the start of the video in seconds.
+  /// @return QString with formatted time.
   QString getFormattedTime(int timeInSeconds);
+
+  /// @brief Stops the video player for seeking within video using slider.
   void on_videoSlider_sliderPressed();
+
+  /// @brief Starts the video player after seeking within video using slider.
   void on_videoSlider_sliderReleased();
+
+  /// @brief Sets the frame that the video player starts playing at within 
+  ///        the video after seeking using the slider.
+  ///
+  /// @param position The position of the video slider.
   void on_videoSlider_sliderMoved(int position);
+
+  /// @brief Starts video player.
   void on_Play_clicked();
+
+  /// @brief Loads a video file user chooses with popup dialog.
   void on_LoadVideo_clicked();
   void on_loadAnnotate_clicked();
   void on_saveAnnotate_clicked();
+
+  /// @brief Speeds up the playback rate of the video player.
   void on_SpeedUp_clicked();
+
+  /// @brief Slows down the playback rate of the video player.
   void on_SlowDown_clicked();
+
+  /// @brief Rewinds the video by 1 second.
   void on_minusOneSecond_clicked();
+
+  /// @brief Rewinds the video by 3 seconds.
   void on_minusThreeSecond_clicked();
   void on_minusOneFrame_clicked();
   void on_plusOneFrame_clicked();
@@ -75,9 +114,8 @@ class MainWindow : public QWidget
   void on_writeImage_clicked();
 public:
   void updateImage(const QImage &image);
-  std::unique_ptr<Player> &getPlayer() { return player; }
-  
 private:
+  void onLoadVideoSuccess(const QFileInfo &name);
   void updateAnnotations();
   void addFish(FishTypeEnum fType);
   void updateVecIndex();
@@ -88,24 +126,41 @@ private:
   void disableControls();
   void enableControls();
   void keyPressEvent(QKeyEvent *e);
+
+  /// @brief Adds a region.
+  ///
+  /// @return True if success, false if failure.
+  bool addRegion();
   void removeRegion(uint64_t id, uint64_t frame);
+
+  /// @brief Saves annotations to a given directory.
+  ///
+  /// @param dir_name Directory to save files.
+  void saveAnnotations(const QString &dir_name);
+
+  /// @brief Retrieves annotations associated with frame.
+  ///
+  /// @param frame The frame for which you want to retrieve annotations.
   void processAnnotations(uint64_t frame);
-  void rewind_video(int seconds_to_rewind);
+
+  /// @brief Rewinds the video by seconds_to_rewind seconds.
+  ///
+  /// @param seconds_to_rewind The number of seconds in the video to rewind.
+  void rewindVideo(int seconds_to_rewind);
   void updateTypeMenu();
-  void format_progress_dialog(QProgressDialog &progress_dialog);
-  QProgressDialog * gen_progress_dialog(QString dialog_text, QProgressBar * myBar);
+  QProgressDialog * genProgressDialog(QString dialog_text);
 
 private:
-  std::unique_ptr<Document> document;
-  std::unique_ptr<Ui::MainWidget> ui;
-  std::unique_ptr<Player> player;
-  std::vector<Fish> myFishList;
-  std::vector<Fish>::iterator listPos;
-  std::unique_ptr<QGraphicsScene> scene;
-  int fIndex;
-  int nextID;
-  QGraphicsPixmapItem *displayImage;
-  std::list<AnnotatedRegion<AnnotationLocation> *> currentAnnotations;
+  std::unique_ptr<Document> document_;
+  std::unique_ptr<Ui::MainWidget> ui_;
+  std::unique_ptr<Player> player_;
+  std::vector<Fish> my_fish_list_;
+  std::vector<Fish>::iterator list_pos_;
+  std::unique_ptr<QGraphicsScene> scene_;
+  int f_index_;
+  int next_id_;
+  QGraphicsPixmapItem *display_image_;
+  std::list<AnnotatedRegion<AnnotationLocation> *> current_annotations_;
   QString images_save_path_;
   QString progress_bar_stylesheet_;
 };

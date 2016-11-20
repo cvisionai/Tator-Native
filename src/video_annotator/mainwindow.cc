@@ -1,141 +1,112 @@
 #include "fish_detector/video_annotator/mainwindow.h"
-#include "ui_mainwindow.h"
-
 
 namespace fish_detector { namespace video_annotator {
-/// @brief Mainwindow constructor.
-///
-/// @param parent The parent widget for mainwindow.
-/// @return no return.
+
 MainWindow::MainWindow(QWidget *parent)
-  :QWidget(parent)
+  : QWidget(parent)
+  , document_(new Document)
+  , ui_(new Ui::MainWidget)
+  , player_(new Player)
+  , my_fish_list_()
+  , list_pos_(my_fish_list_.end())
+  , scene_(new QGraphicsScene)
+  , f_index_(0)
+  , next_id_(1)
+  , display_image_(NULL)
+  , current_annotations_()
+  , images_save_path_("")
+  , progress_bar_stylesheet_("QProgressBar {"
+	  "border: 2px solid grey; border-radius: 5px; text-align: center; }"
+	  "QProgressBar::chunk{ background-color: #05B8CC; width: 20px;}")
 {
-  ui.reset(new Ui::MainWidget);
-  fIndex = 0;
-  nextID = 1;
-  player.reset(new Player());
-  myFishList.clear();
-  QObject::connect(player.get(), SIGNAL(processedImage(QImage)),
+  QObject::connect(player_.get(), SIGNAL(processedImage(QImage)),
            this, SLOT(updatePlayerUI(QImage)));
-  ui->setupUi(this);
+  ui_->setupUi(this);
   disableControls();
   updateTypeMenu();
-  QObject::connect(ui->typeMenu, SIGNAL(currentIndexChanged(int)),
+  QObject::connect(ui_->typeMenu, SIGNAL(currentIndexChanged(int)),
            this, SLOT(updateSubTypeMenu(int)));
-  ui->typeMenu->setCurrentIndex(3);
-  QObject::connect(ui->goToFishVal,SIGNAL(returnPressed()),
+  ui_->typeMenu->setCurrentIndex(3);
+  QObject::connect(ui_->goToFishVal,SIGNAL(returnPressed()),
            this, SLOT(goToFish()));
-
-  progress_bar_stylesheet_ = QString("QProgressBar {"
-	  "border: 2px solid grey; border-radius: 5px; text-align: center; }"
-	  "QProgressBar::chunk{ background-color: #05B8CC; width: 20px;}");
-
-  QString style("QPushButton { background-color: rgb(230, 230, 230);"
+  setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
 	  "border-style: outset; border-radius: 5px; border-width: 2px; border-color: grey; padding: 6px;}"
 	  "QPushButton:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
-  this->setStyleSheet(style);
 
-  auto next_button = ui->navigator->findChild<QPushButton *>("next_button");
+  auto next_button = ui_->navigator->findChild<QPushButton *>("next_button");
   connect(next_button, SIGNAL(clicked()), this, SLOT(on_plusOneFrame_clicked()));
 
-  auto prev_button = ui->navigator->findChild<QPushButton *>("prev_button");
+  auto prev_button = ui_->navigator->findChild<QPushButton *>("prev_button");
   connect(prev_button, SIGNAL(clicked()), this, SLOT(on_minusOneFrame_clicked()));
 
-  auto add_region_button = ui->navigator->findChild<QPushButton *>("add_region_button");
+  auto add_region_button = ui_->navigator->findChild<QPushButton *>("add_region_button");
   connect(add_region_button, SIGNAL(clicked()), this, SLOT(on_addRegion_clicked()));
 
-  auto remove_region_button = ui->navigator->findChild<QPushButton *>("remove_region_button");
+  auto remove_region_button = ui_->navigator->findChild<QPushButton *>("remove_region_button");
   connect(remove_region_button, SIGNAL(clicked()), this, SLOT(on_removeRegion_clicked()));
 
-  auto next_and_copy_button = ui->navigator->findChild<QPushButton *>("next_with_copy_button");
+  auto next_and_copy_button = ui_->navigator->findChild<QPushButton *>("next_with_copy_button");
   connect(next_and_copy_button, SIGNAL(clicked()), this, SLOT(on_nextAndCopy_clicked()));
 }
 
-/// @brief Retrieves next frame from video player and adds annotations to frame.
-///
-/// @return no return.
-void MainWindow::nextFrame()
-{
-  updateImage(player->nextFrame()); // get next frame
-  processAnnotations(player->getCurrentFrame());
+void MainWindow::nextFrame() {
+  updateImage(player_->nextFrame()); // get next frame
+  processAnnotations(player_->getCurrentFrame());
 }
 
-/// @brief Retrieves previous frame from video player and adds annotations to frame.
-///
-/// @return no return.
-void MainWindow::prevFrame()
-{
-  updateImage(player->prevFrame()); // get next frame
-  processAnnotations(player->getCurrentFrame());
+void MainWindow::prevFrame() {
+  updateImage(player_->prevFrame()); // get next frame
+  processAnnotations(player_->getCurrentFrame());
 }
-
-/// @brief Retrieves annotations associated with frame.
-///
-/// @param frame The frame for which you want to retrieve annotations.
-/// @return no return.
 
 void MainWindow::processAnnotations(uint64_t frame) {
   // remove old annotations
-  for (auto ann : currentAnnotations) {
-    scene->removeItem(ann);
+  for (auto ann : current_annotations_) {
+    scene_->removeItem(ann);
   }
-  currentAnnotations.clear();
+  current_annotations_.clear();
   // add new annotations
-  for (auto ann : document->getAnnotations(frame)) {
+  for (auto ann : document_->getAnnotations(frame)) {
     auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
     auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, ann.second, rect);
-    scene->addItem(region);
-    currentAnnotations.push_back(region);
+    scene_->addItem(region);
+    current_annotations_.push_back(region);
   }
 }
 
-/// @brief Updates the GUI window with image img.
-///
-/// @param img The image to display in the GUI window
-/// @return no return.
-void MainWindow::updatePlayerUI(QImage img)
-{
+void MainWindow::updatePlayerUI(QImage img) {
   if (!img.isNull())
   {
-    displayImage->setPixmap(QPixmap::fromImage(img));
-    scene->setSceneRect(img.rect());
-    ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-    ui->videoSlider->setValue(player->getCurrentFrame());
-    ui->currentTime->setText(getFormattedTime((int)player->
-    getCurrentFrame() / (int)player->getFrameRate()));
-    processAnnotations(player->getCurrentFrame());
+    display_image_->setPixmap(QPixmap::fromImage(img));
+    scene_->setSceneRect(img.rect());
+    ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
+    ui_->videoSlider->setValue(player_->getCurrentFrame());
+    ui_->currentTime->setText(getFormattedTime((int)player_->
+    getCurrentFrame() / (int)player_->getFrameRate()));
+    processAnnotations(player_->getCurrentFrame());
   }
 }
 
-/// @brief Retrieves information for fish number currently in goToFishVal.
-///
-/// @return no return.
-void MainWindow::goToFish()
-{
-  int fNumber = ui->goToFishVal->text().toInt();
-  if ((fNumber > 0) && (fNumber < int(myFishList.size())))
+void MainWindow::goToFish() {
+  int fNumber = ui_->goToFishVal->text().toInt();
+  if ((fNumber > 0) && (fNumber < int(my_fish_list_.size())))
   {
-    listPos = myFishList.begin()+fNumber-1;
-    ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-    ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+    list_pos_ = my_fish_list_.begin()+fNumber-1;
+    ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
+    ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
     updateVecIndex();
   }
   else
   {
-    listPos = myFishList.end()-1;
-    ui->typeMenu->setCurrentIndex((int) listPos->getFishType());
-    ui->subTypeMenu->setCurrentIndex((int) listPos->getFishSubType());
+    list_pos_ = my_fish_list_.end()-1;
+    ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
+    ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
     updateVecIndex();
   }
 }
 
-/// @brief Converts time in seconds into hours, minutes, seconds.
-///
-/// @param timeInSeconds The time from the start of the video in seconds.
-/// @return no return.
-QString MainWindow::getFormattedTime(int timeInSeconds)
-{
+QString MainWindow::getFormattedTime(int timeInSeconds) {
   int seconds = (int) (timeInSeconds) % 60;
   int minutes = (int)((timeInSeconds / 60) % 60);
   int hours = (int)((timeInSeconds / (60 * 60)) % 24);
@@ -146,232 +117,193 @@ QString MainWindow::getFormattedTime(int timeInSeconds)
   return t.toString("h:mm:ss");
 }
 
-/// @brief Loads a video file user chooses with popup dialog.
-///
-/// @return no return.
-void MainWindow::on_LoadVideo_clicked()
-{
+void MainWindow::on_LoadVideo_clicked() {
   QString filename = QFileDialog::getOpenFileName(this,
   tr("Open Video"), ".",
   tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo name = filename;
-  if (!filename.isEmpty())
-  {
-    if (!player->loadVideo(filename.toLatin1().data()))
-    {
+  if (!filename.isEmpty()) {
+    if (!player_->loadVideo(filename.toLatin1().data())) {
       QMessageBox msgBox;
       msgBox.setText("The selected video could not be opened!");
       msgBox.exec();
     }
-    else
-    {
-      enableControls();
-      this->setWindowTitle(name.fileName());
-      ui->Play->setEnabled(true);
-      ui->videoSlider->setEnabled(true);
-      ui->videoSlider->setMaximum(player->getNumberOfFrames());
-      ui->totalTime->setText(getFormattedTime((int)player->
-      getNumberOfFrames() / (int)player->getFrameRate()));
-      QImage firstImage = player->getOneFrame();
-      //player->incrementFrameIndex();
-      scene.reset(new QGraphicsScene(this));
-      displayImage = scene->addPixmap(QPixmap::fromImage(firstImage));
-      scene->setSceneRect(firstImage.rect());
-      ui->videoWindow->setScene(scene.get());
-      ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-      ui->videoWindow->show();
-      ui->currentSpeed->setText("Current Speed: 100%");
-      ui->Play->setFocus();
-      // TODO: should first try to load this if the data
-      // file exists
-      document.reset(new Document());
+    else {
+      onLoadVideoSuccess(name);
     }
   }
 }
 
-/// @brief Starts video player.
-///
-/// @return no return.
-void MainWindow::on_Play_clicked()
-{
-  if (player->isStopped())
+void MainWindow::onLoadVideoSuccess(const QFileInfo &name) {
+  enableControls();
+  this->setWindowTitle(name.fileName());
+  ui_->Play->setEnabled(true);
+  ui_->videoSlider->setEnabled(true);
+  ui_->videoSlider->setMaximum(player_->getNumberOfFrames());
+  ui_->totalTime->setText(getFormattedTime((int)player_->
+  getNumberOfFrames() / (int)player_->getFrameRate()));
+  QImage firstImage = player_->getOneFrame();
+  scene_.reset(new QGraphicsScene(this));
+  display_image_ = scene_->addPixmap(QPixmap::fromImage(firstImage));
+  scene_->setSceneRect(firstImage.rect());
+  ui_->videoWindow->setScene(scene_.get());
+  ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
+  ui_->videoWindow->show();
+  ui_->currentSpeed->setText("Current Speed: 100%");
+  ui_->Play->setFocus();
+  // TODO: should first try to load this if the data
+  // file exists
+  document_.reset(new Document());
+}
+
+void MainWindow::on_Play_clicked() {
+  if (player_->isStopped())
   {
-    player->Play();
-    ui->Play->setText(tr("Stop"));
+    player_->Play();
+    ui_->Play->setText(tr("Stop"));
   }
   else
   {
-    player->Stop();
-    ui->Play->setText(tr("Play"));
+    player_->Stop();
+    ui_->Play->setText(tr("Play"));
   }
 }
 
-/// @brief Stops the vido player for seeking within video using slider.
-///
-/// @return no return.
-void MainWindow::on_videoSlider_sliderPressed()
-{
-  player->Stop();
+void MainWindow::on_videoSlider_sliderPressed() {
+  player_->Stop();
 }
 
-/// @brief Starts the video player after seeking within video using slider.
-///
-/// @return no return.
-void MainWindow::on_videoSlider_sliderReleased()
-{
-  player->Play();
-  ui->Play->setText(tr("Stop"));
+void MainWindow::on_videoSlider_sliderReleased() {
+  player_->Play();
+  ui_->Play->setText(tr("Stop"));
 }
 
-/// @brief Sets the frame that the video player starts playing at within the video after seeking using the slider.
-///
-/// @param position The position of the video slider.
-/// @return no return.
-void MainWindow::on_videoSlider_sliderMoved(int position)
-{
-  player->setFrame(position);
-  ui->currentTime->setText(getFormattedTime((int)(position / player->getFrameRate())));
+void MainWindow::on_videoSlider_sliderMoved(int position) {
+  player_->setFrame(position);
+  ui_->currentTime->setText(getFormattedTime((int)(position / player_->getFrameRate())));
 }
 
-/// @brief Speeds up the playback rate of the video player.
-///
-/// @return no return.
-void MainWindow::on_SpeedUp_clicked()
-{
-  player->speedUp();
+void MainWindow::on_SpeedUp_clicked() {
+  player_->speedUp();
   QString tempSpeed;
-  tempSpeed.setNum((int)(player->getCurrentSpeed()));
-  ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
+  tempSpeed.setNum((int)(player_->getCurrentSpeed()));
+  ui_->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
-/// @brief Slows down the playback rate of the video player.
-///
-/// @return no return.
-void MainWindow::on_SlowDown_clicked()
-{
-  player->slowDown();
+void MainWindow::on_SlowDown_clicked() {
+  player_->slowDown();
   QString tempSpeed;
-  tempSpeed.setNum((int)(player->getCurrentSpeed()));
-  ui->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
+  tempSpeed.setNum((int)(player_->getCurrentSpeed()));
+  ui_->currentSpeed->setText("Current Speed: " + tempSpeed + "%");
 }
 
-/// @brief Rewinds the video by 1 second.
-///
-/// @return no return.
 void MainWindow::on_minusOneSecond_clicked()
 {
-	rewind_video(1);
+	rewindVideo(1);
 }
 
-/// @brief Rewinds the video by 3 seconds.
-///
-/// @return no return.
 void MainWindow::on_minusThreeSecond_clicked() {
-	rewind_video(3);
+	rewindVideo(3);
 }
 
-/// @brief Rewinds the video by seconds_to_rewind seconds.
-///
-/// @param seconds_to_rewind The number of seconds in the video to rewind.
-/// @return no return.
-void MainWindow::rewind_video(int seconds_to_rewind) {
-	if (!(player == NULL))
+void MainWindow::rewindVideo(int seconds_to_rewind) {
+	if (!(player_ == NULL))
 	{
-		if (!player->isStopped())
+		if (!player_->isStopped())
 		{
-			player->Stop();
-			ui->Play->setText(tr("Play"));
+			player_->Stop();
+			ui_->Play->setText(tr("Play"));
 		}
 
-		bool valid_rewind = player->getCurrentFrame() > seconds_to_rewind * player->getFrameRate();
+		bool valid_rewind = player_->getCurrentFrame() > 
+      seconds_to_rewind * player_->getFrameRate();
 
-		QImage image = player->setFrame(player->getCurrentFrame() - valid_rewind * seconds_to_rewind * player->getFrameRate());
+		QImage image = player_->setFrame(player_->getCurrentFrame() 
+        - valid_rewind * seconds_to_rewind * player_->getFrameRate());
 
 		if (!image.isNull())
 		{
-			displayImage->setPixmap(QPixmap::fromImage(image));
-			scene->setSceneRect(image.rect());
-			ui->videoWindow->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
-			ui->videoSlider->setValue(player->getCurrentFrame());
-			ui->currentTime->setText(getFormattedTime((int)player->
-				getCurrentFrame() / (int)player->getFrameRate()));
+			display_image_->setPixmap(QPixmap::fromImage(image));
+			scene_->setSceneRect(image.rect());
+			ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+			ui_->videoSlider->setValue(player_->getCurrentFrame());
+			ui_->currentTime->setText(getFormattedTime((int)player_->
+				getCurrentFrame() / (int)player_->getFrameRate()));
 		}
-		processAnnotations(player->getCurrentFrame());
-		//player->Play();
-		//ui->Play->setText(tr("Stop"));
+		processAnnotations(player_->getCurrentFrame());
 	}
 }
 
 void MainWindow::updateImage(const QImage &image)
 {
-  if (!player->isStopped())
+  if (!player_->isStopped())
   {
-  player->Stop();
-  ui->Play->setText(tr("Play"));
+  player_->Stop();
+  ui_->Play->setText(tr("Play"));
   }
 
-  displayImage->setPixmap(QPixmap::fromImage(image));
-  scene->setSceneRect(image.rect());
-  ui->videoWindow->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
-  ui->videoSlider->setValue(player->getCurrentFrame());
-  ui->currentTime->setText(getFormattedTime((int)player->
-    getCurrentFrame() / (int)player->getFrameRate()));
+  display_image_->setPixmap(QPixmap::fromImage(image));
+  scene_->setSceneRect(image.rect());
+  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  ui_->videoSlider->setValue(player_->getCurrentFrame());
+  ui_->currentTime->setText(getFormattedTime((int)player_->
+    getCurrentFrame() / (int)player_->getFrameRate()));
 }
 
 void MainWindow::on_minusOneFrame_clicked()
 {
-  if (!player->isStopped())
+  if (!player_->isStopped())
   {
-    player->Stop();
-    ui->Play->setText(tr("Play"));
+    player_->Stop();
+    ui_->Play->setText(tr("Play"));
   }
   prevFrame();
 }
 
 void MainWindow::on_plusOneFrame_clicked()
 {
-  if (!player->isStopped())
+  if (!player_->isStopped())
   {
-    player->Stop();
-    ui->Play->setText(tr("Play"));
+    player_->Stop();
+    ui_->Play->setText(tr("Play"));
   }
   nextFrame();
 }
 
 void MainWindow::on_goToFrame_clicked()
 {
-  if (!(player==NULL))
+  if (!(player_==NULL))
   {
-    if (!player->isStopped())
+    if (!player_->isStopped())
     {
-      player->Stop();
-      ui->Play->setText(tr("Play"));
+      player_->Stop();
+      ui_->Play->setText(tr("Play"));
     }
-    QImage image = player->setFrame(listPos->getFrameCounted());
+    QImage image = player_->setFrame(list_pos_->getFrameCounted());
 
     if (!image.isNull())
     {
-      displayImage->setPixmap(QPixmap::fromImage(image));
-      scene->setSceneRect(image.rect());
-      ui->videoWindow->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-      ui->videoSlider->setValue(player->getCurrentFrame());
-      ui->currentTime->setText(getFormattedTime((int)player->
-        getCurrentFrame() / (int)player->getFrameRate()));
+      display_image_->setPixmap(QPixmap::fromImage(image));
+      scene_->setSceneRect(image.rect());
+      ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
+      ui_->videoSlider->setValue(player_->getCurrentFrame());
+      ui_->currentTime->setText(getFormattedTime((int)player_->
+        getCurrentFrame() / (int)player_->getFrameRate()));
     }
-    processAnnotations(player->getCurrentFrame());
+    processAnnotations(player_->getCurrentFrame());
   }
 }
 
 void MainWindow::on_typeMenu_currentIndexChanged(int tIdx)
 {
-  if (!myFishList.empty())
-    listPos->setFishType((FishTypeEnum) tIdx);
+  if (!my_fish_list_.empty())
+    list_pos_->setFishType((FishTypeEnum) tIdx);
 }
 
 void MainWindow::on_subTypeMenu_currentIndexChanged(int sIdx)
 {
-  if (!myFishList.empty())
-    listPos->setFishSubType(sIdx);
+  if (!my_fish_list_.empty())
+    list_pos_->setFishSubType(sIdx);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* e)
@@ -404,43 +336,43 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
   switch (keycode)
   {
   case 0:
-    ui->addFlat->animateClick();
-    ui->Play->setFocus();
+    ui_->addFlat->animateClick();
+    ui_->Play->setFocus();
     break;
   case 1:
-    ui->addRound->animateClick();
-    ui->Play->setFocus();
+    ui_->addRound->animateClick();
+    ui_->Play->setFocus();
     break;
   case 2:
-    ui->addSkate->animateClick();
-    ui->Play->setFocus();
+    ui_->addSkate->animateClick();
+    ui_->Play->setFocus();
     break;
   case 3:
-    ui->addOther->animateClick();
-    ui->Play->setFocus();
+    ui_->addOther->animateClick();
+    ui_->Play->setFocus();
     break;
   case 4:
-    ui->navigator->findChild<QPushButton *>("next_with_copy_button")->animateClick();
-    ui->Play->setFocus();
+    ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->animateClick();
+    ui_->Play->setFocus();
     break;
   case 5:
-    ui->navigator->findChild<QPushButton *>("prev_button")->animateClick();
-    ui->Play->setFocus();
+    ui_->navigator->findChild<QPushButton *>("prev_button")->animateClick();
+    ui_->Play->setFocus();
     break;
   case 6:
-    ui->navigator->findChild<QPushButton *>("next_button")->animateClick();
-    ui->Play->setFocus();
+    ui_->navigator->findChild<QPushButton *>("next_button")->animateClick();
+    ui_->Play->setFocus();
     break;
   case 7:
-    ui->navigator->findChild<QPushButton *>("add_region_button")->animateClick();
-    ui->Play->setFocus();
+    ui_->navigator->findChild<QPushButton *>("add_region_button")->animateClick();
+    ui_->Play->setFocus();
     break;
   case 8:
-    ui->navigator->findChild<QPushButton *>("remove_region_button")->animateClick();
-    ui->Play->setFocus();
+    ui_->navigator->findChild<QPushButton *>("remove_region_button")->animateClick();
+    ui_->Play->setFocus();
     break;
   case 9:
-    ui->Play->animateClick();
+    ui_->Play->animateClick();
     break;
   case 10:
     QWidget::keyPressEvent(e);
@@ -448,47 +380,59 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
   }
 }
 
-void MainWindow::on_addRegion_clicked()
-{
-  Rect area(0, 0, 100, 100);
-  auto fishID = uint64_t(listPos->getID());
-  auto frame = uint64_t(player->getCurrentFrame());
-  //First check to see if there's an annotation for this ID already.
-  if (document->keyExists(fishID))
-  {
-    removeRegion(fishID, frame);
+void MainWindow::on_addRegion_clicked() {
+  if(!addRegion()) {
+    QMessageBox err;
+    err.critical(0, "Error", "Please add a fish before adding a region.");
   }
-  else {
-    document->addAnnotation(fishID);
+}
+
+bool MainWindow::addRegion() {
+  if(list_pos_ != my_fish_list_.end()) {
+    Rect area(0, 0, 100, 100);
+    auto fishID = uint64_t(list_pos_->getID());
+    auto frame = uint64_t(player_->getCurrentFrame());
+    //First check to see if there's an annotation for this ID already.
+    if (document_->keyExists(fishID))
+    {
+      removeRegion(fishID, frame);
+    }
+    else {
+      document_->addAnnotation(fishID);
+    }
+    auto loc = document_->addAnnotationLocation(fishID, frame, area);
+    auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
+        fishID,loc, QRect(0, 0, 100, 100));
+    current_annotations_.push_back(annotationArea);
+    scene_->addItem(annotationArea);
+    return true;
   }
-  auto loc = document->addAnnotationLocation(fishID, frame, area);
-  auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
-      fishID,loc, QRect(0, 0, 100, 100));
-  currentAnnotations.push_back(annotationArea);
-  scene->addItem(annotationArea);
+  return false;
 }
 
 void MainWindow::on_removeRegion_clicked()
 {
-  auto fishID = uint64_t(listPos->getID());
-  auto frame = uint64_t(player->getCurrentFrame());
-  removeRegion(fishID, frame);
+  if(list_pos_ != my_fish_list_.end()) {
+    auto fishID = uint64_t(list_pos_->getID());
+    auto frame = uint64_t(player_->getCurrentFrame());
+    removeRegion(fishID, frame);
+  }
 }
 
 void MainWindow::removeRegion(uint64_t id, uint64_t frame) {
   //First check to see if there's an annotation for this ID already.
-  if (document->keyExists(id))
+  if (document_->keyExists(id))
   {
     //check to see if there's an annotation location for this frame already
-    auto currentAnn = document->getAnnotation(id);
+    auto currentAnn = document_->getAnnotation(id);
     if (currentAnn->frameHasAnn(frame)) {
       currentAnn->removeFrameAnn(frame);
-      document->removeFrameAnnotation(id, frame);
-      auto it = find_if(currentAnnotations.begin(), currentAnnotations.end(), \
+      document_->removeFrameAnnotation(id, frame);
+      auto it = find_if(current_annotations_.begin(), current_annotations_.end(), \
                 [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
-      if (it != currentAnnotations.end()) {
-        scene->removeItem(*it);
-        currentAnnotations.erase(it);
+      if (it != current_annotations_.end()) {
+        scene_->removeItem(*it);
+        current_annotations_.erase(it);
       }
     }
   }
@@ -498,148 +442,154 @@ void MainWindow::removeRegion(uint64_t id, uint64_t frame) {
 void MainWindow::on_nextAndCopy_clicked()
 {
   // remove old annotations
-  for (auto ann : currentAnnotations) {
-    scene->removeItem(ann);
+  for (auto ann : current_annotations_) {
+    scene_->removeItem(ann);
   }
-  currentAnnotations.clear();
-  auto prevFrame = player->getCurrentFrame();
-  updateImage(player->nextFrame());
-  for (auto ann: document->getAnnotations()) {
+  current_annotations_.clear();
+  auto prevFrame = player_->getCurrentFrame();
+  updateImage(player_->nextFrame());
+  for (auto ann: document_->getAnnotations()) {
     auto id = ann.first;
-    if(listPos->getID() == id) {
-      removeRegion(id, prevFrame+1);
-      break;
+    if(list_pos_ != my_fish_list_.end()) {
+      if(list_pos_->getID() == id) {
+        removeRegion(id, prevFrame+1);
+        break;
+      }
     }
   }
   // copy annotation
-  for (auto ann : document->getAnnotations(prevFrame)) {
+  for (auto ann : document_->getAnnotations(prevFrame)) {
     auto id = ann.first;
-    if(listPos->getID() == id) {
-      auto frame = ann.second->frame+1;
-      auto area = ann.second->area;
-      auto loc = document->addAnnotationLocation(ann.first,frame, area);
-      break;
+    if(list_pos_ != my_fish_list_.end()) {
+      if(list_pos_->getID() == id) {
+        auto frame = ann.second->frame+1;
+        auto area = ann.second->area;
+        auto loc = document_->addAnnotationLocation(ann.first,frame, area);
+        break;
+      }
     }
   }
-  processAnnotations(player->getCurrentFrame());
+  processAnnotations(player_->getCurrentFrame());
 }
 
 void MainWindow::addFish(FishTypeEnum fType)
 {
-  player->Stop();
-  ui->Play->setText(tr("Play"));
-  double currentFrame = player->getCurrentFrame();
+  player_->Stop();
+  ui_->Play->setText(tr("Play"));
+  double currentFrame = player_->getCurrentFrame();
   int id;
-  if (myFishList.size() == 0) {
+  if (my_fish_list_.size() == 0) {
     id = 1;
-    nextID = 2;
+    next_id_ = 2;
   }
   else {
-    id = nextID;
-    nextID++;
+    id = next_id_;
+    next_id_++;
 
   }
   std::unique_ptr<Fish> tempFish(new Fish(fType,currentFrame,id));
   tempFish->setFishSubType(0);
 
-  if (myFishList.size() == 0) {
-    myFishList.push_back(*tempFish);
-    listPos = myFishList.end()-1;
+  if (my_fish_list_.size() == 0) {
+    my_fish_list_.push_back(*tempFish);
+    list_pos_ = my_fish_list_.end()-1;
   }
   else {
-    std::vector<Fish>::iterator tempLoc = myFishList.begin();
+    std::vector<Fish>::iterator tempLoc = my_fish_list_.begin();
     int tempIndex = 0;
     while(tempLoc->getFrameCounted() < currentFrame) {
       tempLoc++;
-      if(tempLoc==myFishList.end()) break;
+      if(tempLoc==my_fish_list_.end()) break;
       tempIndex++;
     }
-    if (tempLoc == myFishList.end()) {
-      myFishList.push_back(*tempFish);
-      listPos = myFishList.end()-1;
+    if (tempLoc == my_fish_list_.end()) {
+      my_fish_list_.push_back(*tempFish);
+      list_pos_ = my_fish_list_.end()-1;
     }
     else {
-      if (tempLoc == myFishList.begin()) {
-        myFishList.insert(tempLoc, *tempFish);
-        listPos = myFishList.begin();
+      if (tempLoc == my_fish_list_.begin()) {
+        my_fish_list_.insert(tempLoc, *tempFish);
+        list_pos_ = my_fish_list_.begin();
       }
       else {
-        myFishList.insert(myFishList.begin()+tempIndex, *tempFish);
-        listPos = myFishList.begin()+tempIndex;
+        my_fish_list_.insert(my_fish_list_.begin()+tempIndex, *tempFish);
+        list_pos_ = my_fish_list_.begin()+tempIndex;
       }
     }
   }
-  ui->fishNumVal->setText(QString::number(id));
-  ui->frameCountedVal->setText(QString::number(currentFrame));
-  ui->totalFishVal->setText(QString::number(myFishList.size()));
-  ui->typeMenu->setCurrentIndex((int) fType);
-  ui->subTypeMenu->setCurrentIndex((int) 0);
+  ui_->fishNumVal->setText(QString::number(id));
+  ui_->frameCountedVal->setText(QString::number(currentFrame));
+  ui_->totalFishVal->setText(QString::number(my_fish_list_.size()));
+  ui_->typeMenu->setCurrentIndex((int) fType);
+  ui_->subTypeMenu->setCurrentIndex((int) 0);
 }
 
 void MainWindow::updateVecIndex()
 {
-  ui->fishNumVal->setText(QString::number(listPos->getID()));
-  ui->frameCountedVal->setText(QString::number(listPos->getFrameCounted()));
+  if(list_pos_ != my_fish_list_.end()) {
+    ui_->fishNumVal->setText(QString::number(list_pos_->getID()));
+    ui_->frameCountedVal->setText(QString::number(list_pos_->getFrameCounted()));
+  }
 }
 
 void MainWindow::disableControls()
 {
-  ui->Play->setEnabled(false);
-  ui->videoSlider->setEnabled(false);
-  ui->SlowDown->setEnabled(false);
-  ui->SpeedUp->setEnabled(false);
-  ui->minusOneFrame->setEnabled(false);
-  ui->plusOneFrame->setEnabled(false);
-  ui->removeFish->setEnabled(false);
-  ui->goToFrame->setEnabled(false);
-  ui->addRound->setEnabled(false);
-  ui->addFlat->setEnabled(false);
-  ui->addSkate->setEnabled(false);
-  ui->addOther->setEnabled(false);
-  ui->saveAnnotate->setEnabled(false);
-  ui->removeFish->setEnabled(false);
-  ui->goToFrame->setEnabled(false);
-  ui->prevFish->setEnabled(false);
-  ui->nextFish->setEnabled(false);
-  ui->loadAnnotate->setEnabled(false);
-  ui->minusOneSecond->setEnabled(false);
-  ui->minusThreeSecond->setEnabled(false);
-  ui->writeImage->setEnabled(false);
-  ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(false);
-  ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(false);
-  ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(false);
-  ui->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(false);
-  ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(false);
+  ui_->Play->setEnabled(false);
+  ui_->videoSlider->setEnabled(false);
+  ui_->SlowDown->setEnabled(false);
+  ui_->SpeedUp->setEnabled(false);
+  ui_->minusOneFrame->setEnabled(false);
+  ui_->plusOneFrame->setEnabled(false);
+  ui_->removeFish->setEnabled(false);
+  ui_->goToFrame->setEnabled(false);
+  ui_->addRound->setEnabled(false);
+  ui_->addFlat->setEnabled(false);
+  ui_->addSkate->setEnabled(false);
+  ui_->addOther->setEnabled(false);
+  ui_->saveAnnotate->setEnabled(false);
+  ui_->removeFish->setEnabled(false);
+  ui_->goToFrame->setEnabled(false);
+  ui_->prevFish->setEnabled(false);
+  ui_->nextFish->setEnabled(false);
+  ui_->loadAnnotate->setEnabled(false);
+  ui_->minusOneSecond->setEnabled(false);
+  ui_->minusThreeSecond->setEnabled(false);
+  ui_->writeImage->setEnabled(false);
+  ui_->navigator->findChild<QPushButton *>("next_button")->setEnabled(false);
+  ui_->navigator->findChild<QPushButton *>("prev_button")->setEnabled(false);
+  ui_->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(false);
+  ui_->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(false);
+  ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(false);
 }
 
 void MainWindow::enableControls()
 {
-  ui->Play->setEnabled(true);
-  ui->videoSlider->setEnabled(true);
-  ui->SlowDown->setEnabled(true);
-  ui->SpeedUp->setEnabled(true);
-  ui->minusOneFrame->setEnabled(true);
-  ui->plusOneFrame->setEnabled(true);
-  ui->removeFish->setEnabled(true);
-  ui->goToFrame->setEnabled(true);
-  ui->addRound->setEnabled(true);
-  ui->addFlat->setEnabled(true);
-  ui->addSkate->setEnabled(true);
-  ui->addOther->setEnabled(true);
-  ui->saveAnnotate->setEnabled(true);
-  ui->removeFish->setEnabled(true);
-  ui->goToFrame->setEnabled(true);
-  ui->prevFish->setEnabled(true);
-  ui->nextFish->setEnabled(true);
-  ui->loadAnnotate->setEnabled(true);
-  ui->minusOneSecond->setEnabled(true);
-  ui->minusThreeSecond->setEnabled(true);
-  ui->writeImage->setEnabled(true);
-  ui->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
-  ui->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
-  ui->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
-  ui->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(true);
-  ui->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
+  ui_->Play->setEnabled(true);
+  ui_->videoSlider->setEnabled(true);
+  ui_->SlowDown->setEnabled(true);
+  ui_->SpeedUp->setEnabled(true);
+  ui_->minusOneFrame->setEnabled(true);
+  ui_->plusOneFrame->setEnabled(true);
+  ui_->removeFish->setEnabled(true);
+  ui_->goToFrame->setEnabled(true);
+  ui_->addRound->setEnabled(true);
+  ui_->addFlat->setEnabled(true);
+  ui_->addSkate->setEnabled(true);
+  ui_->addOther->setEnabled(true);
+  ui_->saveAnnotate->setEnabled(true);
+  ui_->removeFish->setEnabled(true);
+  ui_->goToFrame->setEnabled(true);
+  ui_->prevFish->setEnabled(true);
+  ui_->nextFish->setEnabled(true);
+  ui_->loadAnnotate->setEnabled(true);
+  ui_->minusOneSecond->setEnabled(true);
+  ui_->minusThreeSecond->setEnabled(true);
+  ui_->writeImage->setEnabled(true);
+  ui_->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
+  ui_->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
+  ui_->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
+  ui_->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(true);
+  ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
 }
 
 #include "../../include/fish_detector/video_annotator/moc_mainwindow.cpp"

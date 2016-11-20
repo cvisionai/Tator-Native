@@ -1,0 +1,2 @@
+add_subdirectory(document)
+add_subdirectory(video_annotator)
