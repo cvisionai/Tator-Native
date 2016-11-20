@@ -12,6 +12,7 @@
 #include <boost/property_tree/ptree.hpp>
 
 #include "fish_detector/common/serialization.h"
+#include "fish_detector/common/rect.h"
 
 namespace fish_detector { namespace image_annotator {
 
@@ -33,6 +34,9 @@ public:
                   uint64_t id, 
                   const Rect &rect);
 
+  /// @brief Default constructor.
+  ImageAnnotation();
+
   /// @brief Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
@@ -48,7 +52,7 @@ private:
   std::string subspecies_; ///< Subspecies of the individual.
   uint64_t id_; ///< ID of the individual within the image.
   Rect rect_; ///< Rectangle defining the annotation. 
-}
+};
 
 /// @brief Defines annotation information for a series of images.
 class ImageAnnotationList {
@@ -93,7 +97,7 @@ private:
     std::multimap<
       std::string,
       std::reference_wrapper<ImageAnnotation>>> by_species_;
-}
+};
 
 }} // namespace fish_detector::image_annotator
 
