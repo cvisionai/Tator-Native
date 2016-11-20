@@ -6,4 +6,5 @@ private slots:
   void testLoadVideo();
   void testSaveAnnotationsNoFish();
   void testAddRegionNoFish();
+  void testSaveAnnotations();
 };
