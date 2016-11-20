@@ -24,6 +24,9 @@ public:
   /// @param name Name of the species.
   Species(const std::string& name);
 
+  /// @brief Default constructor.
+  Species();
+
   /// @brief Gets a reference to the subspecies list.
   ///
   /// @return Reference to the subspecies list.
@@ -44,7 +47,7 @@ private:
 
   /// @brief List of subspecies.
   std::vector<std::string> subspecies_;
-}
+};
 
 /// @brief List of species.
 class SpeciesList : public Serialization {
@@ -64,7 +67,7 @@ public:
 private:
   /// @brief List of species.
   std::vector<Species> species_;
-}
+};
 
 } // namespace fish_detector
 
