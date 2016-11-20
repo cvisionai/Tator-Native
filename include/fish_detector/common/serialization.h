@@ -4,6 +4,8 @@
 #ifndef SERIALIZATION_H
 #define SERIALIZATION_H
 
+#include <string>
+
 #include <boost/property_tree/ptree.hpp>
 
 namespace fish_detector {
@@ -34,7 +36,22 @@ void serialize(const Serialization &obj, std::ostream &out);
 /// @brief Deserializes data from a stream.
 ///
 /// @param obj Deserialized object.
+/// @param in Input stream.
 void deserialize(Serialization &obj, std::istream &in);
+
+/// @brief Serializes data to a file.
+///
+/// @param obj Object to be serialized.
+/// @param out Output file name.
+/// @return True if successful, false otherwise.
+bool serialize(const Serialization &obj, const std::string &out);
+
+/// @brief Deserializes data from a file.
+///
+/// @param obj Deserialized object.
+/// @param in Input file name.
+/// @return True if successful, false otherwise.
+bool deserialize(Serialization &obj, const std::string &in);
 
 } // namespace fish_detector
 
