@@ -5,4 +5,5 @@ class TestVideoAnnotator : public QObject {
 private slots:
   void testLoadVideo();
   void testSaveAnnotationsNoFish();
+  void testAddRegionNoFish();
 };

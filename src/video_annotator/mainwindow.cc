@@ -380,31 +380,43 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
   }
 }
 
-void MainWindow::on_addRegion_clicked()
-{
-  Rect area(0, 0, 100, 100);
-  auto fishID = uint64_t(list_pos_->getID());
-  auto frame = uint64_t(player_->getCurrentFrame());
-  //First check to see if there's an annotation for this ID already.
-  if (document_->keyExists(fishID))
-  {
-    removeRegion(fishID, frame);
+void MainWindow::on_addRegion_clicked() {
+  if(!addRegion()) {
+    QMessageBox err;
+    err.critical(0, "Error", "Please add a fish before adding a region.");
   }
-  else {
-    document_->addAnnotation(fishID);
+}
+
+bool MainWindow::addRegion() {
+  if(list_pos_ != my_fish_list_.end()) {
+    Rect area(0, 0, 100, 100);
+    auto fishID = uint64_t(list_pos_->getID());
+    auto frame = uint64_t(player_->getCurrentFrame());
+    //First check to see if there's an annotation for this ID already.
+    if (document_->keyExists(fishID))
+    {
+      removeRegion(fishID, frame);
+    }
+    else {
+      document_->addAnnotation(fishID);
+    }
+    auto loc = document_->addAnnotationLocation(fishID, frame, area);
+    auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
+        fishID,loc, QRect(0, 0, 100, 100));
+    current_annotations_.push_back(annotationArea);
+    scene_->addItem(annotationArea);
+    return true;
   }
-  auto loc = document_->addAnnotationLocation(fishID, frame, area);
-  auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
-      fishID,loc, QRect(0, 0, 100, 100));
-  current_annotations_.push_back(annotationArea);
-  scene_->addItem(annotationArea);
+  return false;
 }
 
 void MainWindow::on_removeRegion_clicked()
 {
-  auto fishID = uint64_t(list_pos_->getID());
-  auto frame = uint64_t(player_->getCurrentFrame());
-  removeRegion(fishID, frame);
+  if(list_pos_ != my_fish_list_.end()) {
+    auto fishID = uint64_t(list_pos_->getID());
+    auto frame = uint64_t(player_->getCurrentFrame());
+    removeRegion(fishID, frame);
+  }
 }
 
 void MainWindow::removeRegion(uint64_t id, uint64_t frame) {
@@ -438,19 +450,23 @@ void MainWindow::on_nextAndCopy_clicked()
   updateImage(player_->nextFrame());
   for (auto ann: document_->getAnnotations()) {
     auto id = ann.first;
-    if(list_pos_->getID() == id) {
-      removeRegion(id, prevFrame+1);
-      break;
+    if(list_pos_ != my_fish_list_.end()) {
+      if(list_pos_->getID() == id) {
+        removeRegion(id, prevFrame+1);
+        break;
+      }
     }
   }
   // copy annotation
   for (auto ann : document_->getAnnotations(prevFrame)) {
     auto id = ann.first;
-    if(list_pos_->getID() == id) {
-      auto frame = ann.second->frame+1;
-      auto area = ann.second->area;
-      auto loc = document_->addAnnotationLocation(ann.first,frame, area);
-      break;
+    if(list_pos_ != my_fish_list_.end()) {
+      if(list_pos_->getID() == id) {
+        auto frame = ann.second->frame+1;
+        auto area = ann.second->area;
+        auto loc = document_->addAnnotationLocation(ann.first,frame, area);
+        break;
+      }
     }
   }
   processAnnotations(player_->getCurrentFrame());
@@ -510,8 +526,10 @@ void MainWindow::addFish(FishTypeEnum fType)
 
 void MainWindow::updateVecIndex()
 {
-  ui_->fishNumVal->setText(QString::number(list_pos_->getID()));
-  ui_->frameCountedVal->setText(QString::number(list_pos_->getFrameCounted()));
+  if(list_pos_ != my_fish_list_.end()) {
+    ui_->fishNumVal->setText(QString::number(list_pos_->getID()));
+    ui_->frameCountedVal->setText(QString::number(list_pos_->getFrameCounted()));
+  }
 }
 
 void MainWindow::disableControls()

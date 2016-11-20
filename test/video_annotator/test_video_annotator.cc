@@ -20,6 +20,14 @@ void TestVideoAnnotator::testSaveAnnotationsNoFish() {
   mainwin.saveAnnotations("");
 }
 
+void TestVideoAnnotator::testAddRegionNoFish() {
+  fish_detector::video_annotator::MainWindow mainwin;
+  std::string name = "slow_motion_drop.mp4";
+  QVERIFY(mainwin.player_->loadVideo(name));
+  mainwin.onLoadVideoSuccess(QString::fromUtf8(name.c_str()));
+  QVERIFY(!mainwin.addRegion());
+}
+
 QTEST_MAIN(TestVideoAnnotator)
 #include "test_video_annotator.moc"
 

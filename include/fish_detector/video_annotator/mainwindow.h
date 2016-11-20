@@ -126,6 +126,11 @@ private:
   void disableControls();
   void enableControls();
   void keyPressEvent(QKeyEvent *e);
+
+  /// @brief Adds a region.
+  ///
+  /// @return True if success, false if failure.
+  bool addRegion();
   void removeRegion(uint64_t id, uint64_t frame);
 
   /// @brief Saves annotations to a given directory.
