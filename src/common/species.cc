@@ -16,9 +16,22 @@ std::vector<std::string> &Species::getSubspecies() {
   return subspecies_;
 }
 
+bool Species::operator==(Species &rhs) {
+  if(name_ != rhs.name_) return false;
+  if(subspecies_.size() != rhs.subspecies_.size()) return false;
+  for(int n=0; n < subspecies_.size(); n++) {
+    if(subspecies_[n] != rhs.subspecies_[n]) return false;
+  }
+  return true;
+}
+
+bool Species::operator!=(Species &rhs) {
+  return !operator==(rhs);
+}
+
 pt::ptree Species::write() const {
   pt::ptree tree;
-  tree.add("name", name_);
+  tree.put("name", name_);
   for(const auto &subname : subspecies_) {
     tree.add("subspecies_list.subspecies", subname);
   }
@@ -26,7 +39,7 @@ pt::ptree Species::write() const {
 }
 
 void Species::read(const pt::ptree &tree) {
-  name_ = tree.get("name", 0);
+  name_ = tree.get<std::string>("name");
   for(auto &val : tree.get_child("subspecies_list")) {
     subspecies_.push_back(val.second.data());
   }
@@ -34,6 +47,22 @@ void Species::read(const pt::ptree &tree) {
 
 SpeciesList::SpeciesList() 
   : species_() {
+}
+
+std::vector<Species> &SpeciesList::getSpecies() {
+  return species_;
+}
+
+bool SpeciesList::operator==(SpeciesList &rhs) {
+  if(species_.size() != rhs.species_.size()) return false;
+  for(int n=0; n < species_.size(); n++) {
+    if(species_[n] != rhs.species_[n]) return false;
+  }
+  return true;
+}
+
+bool SpeciesList::operator!=(SpeciesList &rhs) {
+  return !operator==(rhs);
 }
 
 pt::ptree SpeciesList::write() const {
@@ -45,8 +74,8 @@ pt::ptree SpeciesList::write() const {
 }
 
 void SpeciesList::read(const pt::ptree &tree) {
-  Species species;
   for(auto &val : tree.get_child("species_list")) {
+    Species species;
     species.read(val.second);
     species_.push_back(species);
   }
