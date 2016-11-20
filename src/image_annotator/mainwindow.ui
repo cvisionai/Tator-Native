@@ -403,7 +403,7 @@
        <item>
         <layout class="QHBoxLayout" name="videoWindowLayout">
          <item>
-          <widget class="QGraphicsView" name="videoWindow"/>
+          <widget class="QGraphicsView" name="imageWindow"/>
          </item>
         </layout>
        </item>
@@ -463,7 +463,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSlider" name="videoSlider">
+                <widget class="QSlider" name="imageSlider">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -557,16 +557,9 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="loadAnnotate">
+                 <widget class="QPushButton" name="saveAnnotions">
                   <property name="text">
-                   <string>Load Annotation File</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="saveAnnotate">
-                  <property name="text">
-                   <string>Save Annotation File</string>
+                   <string>Save Annotations</string>
                   </property>
                  </widget>
                 </item>
