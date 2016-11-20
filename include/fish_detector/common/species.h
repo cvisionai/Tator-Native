@@ -32,6 +32,18 @@ public:
   /// @return Reference to the subspecies list.
   std::vector<std::string> &getSubspecies();
 
+  /// @brief Equality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is equal to rhs.
+  bool operator==(Species &rhs);
+
+  /// @brief Inequality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is not equal to rhs.
+  bool operator!=(Species &rhs);
+
   /// @brief Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
@@ -54,6 +66,23 @@ class SpeciesList : public Serialization {
 public:
   /// @brief Constructor.
   SpeciesList();
+
+  /// @brief Get a reference to species list.
+  ///
+  /// @return Reference to species list.
+  std::vector<Species> &getSpecies();
+
+  /// @brief Equality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is equal to rhs.
+  bool operator==(SpeciesList &rhs);
+
+  /// @brief Inequality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is not equal to rhs.
+  bool operator!=(SpeciesList &rhs);
 
   /// @brief Writes to a property tree.
   ///
