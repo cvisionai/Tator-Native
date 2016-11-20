@@ -4,6 +4,15 @@
 #ifndef IMAGE_ANNOTATIONS_H
 #define IMAGE_ANNOTATIONS_H
 
+#include <map>
+#include <string>
+#include <vector>
+#include <functional>
+
+#include <boost/property_tree/ptree.hpp>
+
+#include "fish_detector/common/serialization.h"
+
 namespace fish_detector { namespace image_annotator {
 
 namespace pt = boost::property_tree;
