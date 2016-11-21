@@ -90,6 +90,17 @@ void ImageAnnotationList::write(
 }
 
 void ImageAnnotationList::read(const std::vector<std::string> &filenames) {
+  for(auto &image_file : filenames) {
+    boost::filesystem::path json_file(image_file);
+    json_file.replace_extension(".json");
+    if(boost::filesystem::exists(json_file)) {
+      pt::ptree tree;
+      pt::read_json(json_file.string(), tree);
+      ImageAnnotation annotation;
+      annotation.read(tree);
+      insert(annotation);
+    }
+  }
 }
 
 }} // namespace fish_detector::image_annotator
