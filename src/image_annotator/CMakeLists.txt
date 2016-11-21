@@ -1,7 +1,7 @@
 # Find the sources for image annotator
 file( GLOB IMAGE_ANNOTATOR_SOURCES "*.cc" )
 
-# Add gui executable
+# Add image_annotator executable
 if( WIN32 )
   add_executable( image_annotator WIN32 
     ${IMAGE_ANNOTATOR_SOURCES} 

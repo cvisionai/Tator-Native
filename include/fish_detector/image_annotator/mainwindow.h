@@ -4,7 +4,17 @@
 #ifndef IMAGE_ANNOTATOR_MAINWINDOW_H
 #define IMAGE_ANNOTATOR_MAINWINDOW_H
 
+#include <memory>
+
+#include <QWidget>
+
+#include "fish_detector/image_annotator/image_annotation.h"
+
 namespace fish_detector { namespace image_annotator {
+
+namespace Ui {
+  class MainWidget;
+}
 
 class MainWindow : public QWidget {
   Q_OBJECT

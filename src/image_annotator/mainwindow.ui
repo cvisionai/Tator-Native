@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWidget</class>
+ <class>fish_detector::image_annotator::MainWidget</class>
  <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
