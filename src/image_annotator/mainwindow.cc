@@ -6,6 +6,13 @@ namespace fish_detector { namespace image_annotator {
 MainWindow::MainWindow(QWidget *parent)
   : annotations_(new ImageAnnotationList)
   , ui_(new Ui::MainWidget) {
+  ui_->setupUi(this);
+  setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
+	  "border-style: outset; border-radius: 5px; border-width: 2px; "
+    "border-color: grey; padding: 6px;}"
+	  "QPushButton:pressed{background-color: rgb(190, 190, 190); "
+    "border-style: outset; border-radius: 5px;"
+	  "border-width: 2px; border-color: grey; padding: 6px;}");
 }
 
 void MainWindow::on_addSpecies_clicked() {
