@@ -1,3 +1,5 @@
+#include <boost/filesystem.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "fish_detector/image_annotator/image_annotation.h"
 
@@ -63,7 +65,7 @@ void ImageAnnotationList::insert(const ImageAnnotation &annotation) {
 
 void ImageAnnotationList::remove(const std::string &image_file, uint64_t id) {
   auto it = by_file_.left.find(image_file);
-  for(; it != by_file_.left.end(); it++) {
+  for(; it != by_file_.left.end(); ++it) {
     if(it->second->id_ == id) {
       list_.erase(it->second);
       by_species_.right.erase(by_species_.right.find(it->second));
@@ -73,7 +75,18 @@ void ImageAnnotationList::remove(const std::string &image_file, uint64_t id) {
   }
 }
 
-void ImageAnnotationList::write() const {
+void ImageAnnotationList::write(
+  const std::vector<std::string> &filenames) const {
+  for(auto &image_file : filenames) {
+    pt::ptree tree;
+    auto it = by_file_.left.find(image_file);
+    for(; it != by_file_.left.end(); ++it) {
+      tree.add_child("annotation_list.annotation", it->second->write());
+    }
+    boost::filesystem::path json_file(image_file);
+    json_file.replace_extension(".json");
+    pt::write_json(json_file.string(), tree);
+  }
 }
 
 void ImageAnnotationList::read(const std::vector<std::string> &filenames) {

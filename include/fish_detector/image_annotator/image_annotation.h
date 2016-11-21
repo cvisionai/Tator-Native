@@ -59,7 +59,12 @@ struct ImageAnnotation : public Serialization {
 /// @brief List of image annotations.
 typedef std::list<ImageAnnotation> List;
 
-/// @brief Makes iterator sortable so it can be used as key in maps. 
+/// @brief Makes iterator sortable so it can be used as key in maps.
+///
+/// Works by converting both iterators to pointers and applying operator<.
+///
+/// @param lhs Left hand side argument.
+/// @param rhs Right hand side argument.
 inline bool operator<(const List::iterator& lhs, const List::iterator& rhs) {
   return &(*lhs) < &(*rhs);
 }
@@ -85,12 +90,15 @@ public:
   ///
   /// Writes one file per image.  Multiple annotations for the same image
   /// are written to the same file.
-  void write() const;
+  ///
+  /// @param filenames Vector of strings, each containing the full path 
+  ///        to an image.
+  void write(const std::vector<std::string> &filenames) const;
 
   /// @brief Reads annotations from a given list of input files.
   ///
-  /// @param filenames Vector of strings containing the full path to an
-  ///        image.
+  /// @param filenames Vector of strings, each containing the full path 
+  ///        to an image.
   void read(const std::vector<std::string> &filenames);
 private:
   /// @brief For mapping strings to image annotations.
