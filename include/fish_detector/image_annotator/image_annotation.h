@@ -7,9 +7,12 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <list>
 #include <functional>
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/bimap.hpp>
+#include <boost/bimap/multiset_of.hpp>
 
 #include "fish_detector/common/serialization.h"
 #include "fish_detector/common/rect.h"
@@ -19,8 +22,7 @@ namespace fish_detector { namespace image_annotator {
 namespace pt = boost::property_tree;
 
 /// @brief Defines annotation information for one image.
-class ImageAnnotation : public Serialization {
-public:
+struct ImageAnnotation : public Serialization {
   /// @brief Constructor.
   ///
   /// @param image_file Name of the image file (not including path).
@@ -46,13 +48,21 @@ public:
   ///
   /// @param tree Property tree to be read.
   void read(const pt::ptree &tree);
-private:
+
   std::string image_file_; ///< Name of the image file (not including path).
   std::string species_; ///< Species of the individual.
   std::string subspecies_; ///< Subspecies of the individual.
   uint64_t id_; ///< ID of the individual within the image.
   Rect rect_; ///< Rectangle defining the annotation. 
 };
+
+/// @brief List of image annotations.
+typedef std::list<ImageAnnotation> List;
+
+/// @brief Makes iterator sortable so it can be used as key in maps. 
+inline bool operator<(const List::iterator& lhs, const List::iterator& rhs) {
+  return &(*lhs) < &(*rhs);
+}
 
 /// @brief Defines annotation information for a series of images.
 class ImageAnnotationList {
@@ -83,20 +93,23 @@ public:
   ///        image.
   void read(const std::vector<std::string> &filenames);
 private:
-  std::vector<ImageAnnotation> list_; ///< Vector of image annotations.
+  /// @brief For mapping strings to image annotations.
+  typedef boost::bimap<
+    boost::bimaps::multiset_of<std::string>, 
+    boost::bimaps::set_of<List::iterator>> ByString;
+
+  /// @brief For mapping pair of strings to image annotations.
+  typedef boost::bimap<
+    boost::bimaps::multiset_of<std::pair<std::string, std::string>>,
+    boost::bimaps::set_of<List::iterator>> ByStringPair;
+
+  std::list<ImageAnnotation> list_; ///< List of image annotations.
 
   /// @brief Map between image filename and reference to image annotations.
-  std::multimap<
-    std::string, 
-    std::reference_wrapper<ImageAnnotation>> by_file_;
+  ByString by_file_;
 
-  /// @brief Map between species, subspecies, and reference to image 
-  ///        annotations.
-  std::multimap<
-    std::string, 
-    std::multimap<
-      std::string,
-      std::reference_wrapper<ImageAnnotation>>> by_species_;
+  /// @brief Map between species/subspecies and reference to image annotations.
+  ByStringPair by_species_;
 };
 
 }} // namespace fish_detector::image_annotator
