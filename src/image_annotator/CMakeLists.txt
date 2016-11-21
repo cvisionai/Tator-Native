@@ -14,6 +14,7 @@ if( WIN32 )
     Qt5::Widgets
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
   set_target_properties( 
     image_annotator 

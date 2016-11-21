@@ -42,7 +42,9 @@ else()
 endif() 
 
 # --- Boost ---
-find_package( Boost )
+set( Boost_USE_STATIC_LIBS ON )
+set( Boost_USE_STATIC_RUNTIME ON )
+find_package( Boost COMPONENTS filesystem system )
 if( NOT Boost_FOUND )
   message( FATAL_ERROR "Could not find Boost.  Build cannot continue." )
 endif()
