@@ -19,7 +19,7 @@ std::vector<std::string> &Species::getSubspecies() {
 bool Species::operator==(Species &rhs) {
   if(name_ != rhs.name_) return false;
   if(subspecies_.size() != rhs.subspecies_.size()) return false;
-  for(int n=0; n < subspecies_.size(); n++) {
+  for(uint32_t n=0; n < subspecies_.size(); n++) {
     if(subspecies_[n] != rhs.subspecies_[n]) return false;
   }
   return true;
@@ -55,7 +55,7 @@ std::vector<Species> &SpeciesList::getSpecies() {
 
 bool SpeciesList::operator==(SpeciesList &rhs) {
   if(species_.size() != rhs.species_.size()) return false;
-  for(int n=0; n < species_.size(); n++) {
+  for(uint32_t n=0; n < species_.size(); n++) {
     if(species_[n] != rhs.species_[n]) return false;
   }
   return true;
