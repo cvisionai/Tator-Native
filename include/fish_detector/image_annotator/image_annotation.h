@@ -44,6 +44,18 @@ struct ImageAnnotation : public Serialization {
   /// @return Property tree constructed from the object.
   pt::ptree write() const;
 
+  /// @brief Equality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is equal to rhs.
+  bool operator==(const ImageAnnotation &rhs) const;
+
+  /// @brief Inequality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is not equal to rhs.
+  bool operator!=(const ImageAnnotation &rhs) const;
+
   /// @brief Reads from a property tree.
   ///
   /// @param tree Property tree to be read.
@@ -85,6 +97,18 @@ public:
   /// @param image_file Image file name (not including path).
   /// @param id ID of the individual within the image.
   void remove(const std::string &image_file, uint64_t id);
+
+  /// @brief Equality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is equal to rhs.
+  bool operator==(ImageAnnotationList &rhs);
+
+  /// @brief Inequality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is not equal to rhs.
+  bool operator!=(ImageAnnotationList &rhs);
 
   /// @brief Writes annotations to file.
   ///
