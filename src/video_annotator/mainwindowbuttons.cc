@@ -225,7 +225,7 @@ void MainWindow::on_removeFish_clicked() {
 void MainWindow::on_writeImage_clicked() {
   // filename needs to be procedurally generated
 
-  if (images_save_path_.isNull())
+  if (images_save_path_.isEmpty())
     images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
 
   QImage img(scene_->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);

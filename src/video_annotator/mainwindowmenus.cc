@@ -85,10 +85,11 @@ int MainWindow::getFishSpecies (FishTypeEnum fType,
     if (sString == "Yellowtail") return 1;
     if (sString == "Windowpane") return 2;
     if (sString == "Summer") return 3;
-    if (sString == "FourSport") return 4;
-    if (sString == "Grey Sole") return 5;
-    if (sString == "Halibut") return 6;
-    if (sString == "Unknown") return 7;
+	if (sString == "Winter") return 4;
+    if (sString == "FourSport") return 5;
+    if (sString == "Grey Sole") return 6;
+    if (sString == "Halibut") return 7;
+    if (sString == "Unknown") return 8;
     return 0;
     break;
   case SKATE:
@@ -149,10 +150,11 @@ std::string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species) {
     if (species == 1) return "Yellowtail";
     if (species == 2) return "Windowpane";
     if (species == 3) return "Summer";
-    if (species == 4) return "FourSport";
-    if (species == 5) return "Grey Sole";
-    if (species == 6) return "Halibut";
-    if (species == 7) return "Unknown";
+	if (species == 4) return "Winter";
+    if (species == 5) return "FourSport";
+    if (species == 6) return "Grey Sole";
+    if (species == 7) return "Halibut";
+    if (species == 8) return "Unknown";
     return "Unknown";
     break;
   case SKATE:
