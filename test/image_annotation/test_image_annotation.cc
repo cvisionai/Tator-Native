@@ -27,6 +27,12 @@ void TestImageAnnotation::testSerialize() {
   ia::ImageAnnotationList deserialized_list;
   deserialized_list.read(image_list);
   QVERIFY(list == deserialized_list);
+  list.remove(image_list[0], 1);
+  list.write(image_list);
+  ia::ImageAnnotationList deserialized_list_1;
+  deserialized_list_1.read(image_list);
+  QVERIFY(list == deserialized_list_1);
+  QVERIFY(list.by_file_.left.count(image_list[0]) == 1);
 }
 
 QTEST_MAIN(TestImageAnnotation)

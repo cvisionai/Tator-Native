@@ -17,6 +17,10 @@
 #include "fish_detector/common/serialization.h"
 #include "fish_detector/common/rect.h"
 
+#ifndef NO_TESTING
+class TestImageAnnotation;
+#endif
+
 namespace fish_detector { namespace image_annotator {
 
 namespace pt = boost::property_tree;
@@ -83,6 +87,9 @@ inline bool operator<(const List::iterator& lhs, const List::iterator& rhs) {
 
 /// @brief Defines annotation information for a series of images.
 class ImageAnnotationList {
+#ifndef NO_TESTING
+  friend class TestImageAnnotation;
+#endif
 public:
   /// @brief Constructor.
   ImageAnnotationList();
