@@ -6,15 +6,21 @@
 
 #include <memory>
 
+#include <vector>
+#include <string>
+#include <memory>
+
 #include <QWidget>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
 #include "fish_detector/image_annotator/image_annotation.h"
-
-namespace fish_detector { namespace image_annotator {
 
 namespace Ui {
   class MainWidget;
 }
+
+namespace fish_detector { namespace image_annotator {
 
 class MainWindow : public QWidget {
   Q_OBJECT
@@ -50,14 +56,26 @@ private slots:
   void on_saveAnnotations_clicked();
 
   /// @brief Moves to the image indicated by image slider.
-  void on_imageSlider_sliderMoved();
+  void on_imageSlider_valueChanged();
 
 private:
   /// @brief Annotations associated with this directory.
   std::unique_ptr<ImageAnnotationList> annotations_;
 
+  /// @brief Scene for displaying images.
+  std::unique_ptr<QGraphicsScene> scene_;
+
+  /// @brief Pixel map from current image.
+  std::unique_ptr<QGraphicsPixmapItem> pixmap_;
+
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::MainWidget> ui_;
+
+  /// @brief Vector of image files in a directory.
+  std::vector<std::string> image_files_;
+
+  /// @brief Runs when image directory loaded successfully.
+  void onLoadDirectorySuccess(const QString &image_dir);
 };
 
 }} // namespace fish_detector::image_annotator
