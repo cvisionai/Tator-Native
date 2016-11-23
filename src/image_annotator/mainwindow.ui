@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>fish_detector::image_annotator::MainWidget</class>
+ <class>MainWidget</class>
  <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
@@ -557,7 +557,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="saveAnnotions">
+                 <widget class="QPushButton" name="saveAnnotations">
                   <property name="text">
                    <string>Save Annotations</string>
                   </property>
