@@ -27,6 +27,17 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5PlatformSupport.lib"
     "${_qt5Widgets_install_prefix}/plugins/platforms/qwindows.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qdds.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qgif.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qicns.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qico.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qjpeg.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qsvg.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qtga.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qtiff.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qwbmp.lib"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/qwebp.lib"
+    "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
     )
 else()
   set( QT_THIRD_PARTY_LIBS
