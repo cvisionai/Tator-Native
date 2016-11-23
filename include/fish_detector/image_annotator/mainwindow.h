@@ -15,10 +15,7 @@
 #include <QGraphicsPixmapItem>
 
 #include "fish_detector/image_annotator/image_annotation.h"
-
-namespace Ui {
-  class MainWidget;
-}
+#include "ui_mainwindow.h"
 
 namespace fish_detector { namespace image_annotator {
 
