@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , f_index_(0)
   , next_id_(1)
-  , display_image_(NULL)
+  , display_image_(nullptr)
   , current_annotations_()
   , images_save_path_("")
   , progress_bar_stylesheet_("QProgressBar {"
@@ -207,7 +207,7 @@ void MainWindow::on_minusThreeSecond_clicked() {
 }
 
 void MainWindow::rewindVideo(int seconds_to_rewind) {
-	if (!(player_ == NULL))
+	if (!(player_ == nullptr))
 	{
 		if (!player_->isStopped())
 		{
@@ -272,7 +272,7 @@ void MainWindow::on_plusOneFrame_clicked()
 
 void MainWindow::on_goToFrame_clicked()
 {
-  if (!(player_==NULL))
+  if (!(player_==nullptr))
   {
     if (!player_->isStopped())
     {
