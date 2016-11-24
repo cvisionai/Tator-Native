@@ -10,15 +10,25 @@ SpeciesDialog::SpeciesDialog(QWidget *parent)
 }
 
 void SpeciesDialog::on_ok_clicked() {
+  accept();
 }
 
 void SpeciesDialog::on_cancel_clicked() {
+  reject();
 }
 
 void SpeciesDialog::on_removeSubspecies_clicked() {
+  QListWidgetItem *current = ui_->subspeciesList->currentItem();
+  if(current != nullptr) {
+    delete current;
+  }
 }
 
 void SpeciesDialog::on_addSubspecies_clicked() {
+  QListWidgetItem *item = new QListWidgetItem("New subspecies");
+  item->setFlags(item->flags() | Qt::ItemIsEditable);
+  ui_->subspeciesList->addItem(item);
+  ui_->subspeciesList->editItem(item);
 }
 
 Species SpeciesDialog::getSpecies() {
