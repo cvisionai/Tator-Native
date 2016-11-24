@@ -5,10 +5,10 @@ file( GLOB VIDEO_ANNOTATOR_SOURCES "*.cc" )
 if( WIN32 )
   add_executable( video_annotator WIN32 
     ${VIDEO_ANNOTATOR_SOURCES} 
-    ${COMMON_SOURCES} 
     )
   target_link_libraries(
     video_annotator
+    common
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets

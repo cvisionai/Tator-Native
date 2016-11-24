@@ -2,8 +2,6 @@ set( TEST_IMAGE_ANNOTATOR_SOURCES test_image_annotator.cc )
 set( IMAGE_ANNOTATOR_SOURCES
   "../../src/image_annotator/image_annotation.cc"
   "../../src/image_annotator/mainwindow.cc"
-  "../../src/common/rect.cc"
-  "../../src/common/serialization.cc"
   )
 include_directories( 
   "../../include/fish_detector/image_annotator"
@@ -16,6 +14,7 @@ if( WIN32 )
     )
   target_link_libraries( 
     test_image_annotator 
+    common
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets

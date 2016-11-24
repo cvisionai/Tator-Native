@@ -5,10 +5,10 @@ file( GLOB IMAGE_ANNOTATOR_SOURCES "*.cc" )
 if( WIN32 )
   add_executable( image_annotator WIN32 
     ${IMAGE_ANNOTATOR_SOURCES} 
-    ${COMMON_SOURCES} 
     )
   target_link_libraries(
     image_annotator
+    common
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
@@ -25,6 +25,7 @@ elseif( APPLE )
   add_executable( image_annotator ${IMAGE_ANNOTATOR_SOURCES} )
   target_link_libraries(
     image_annotator
+    common
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
