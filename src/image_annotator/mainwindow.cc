@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include "fish_detector/common/species_dialog.h"
 #include "fish_detector/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -38,7 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::on_addSpecies_clicked() {
-  
+  SpeciesDialog *dlg = new SpeciesDialog(this);
+  if(dlg->exec()) {
+    Species species = dlg->getSpecies();
+  }
+  delete dlg;
 }
 
 void MainWindow::on_loadSpecies_clicked() {
