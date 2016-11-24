@@ -32,7 +32,11 @@ void SpeciesDialog::on_addSubspecies_clicked() {
 }
 
 Species SpeciesDialog::getSpecies() {
-  Species species;
+  Species species(ui_->species->text().toStdString());
+  for(int row = 0; row < ui_->subspeciesList->count(); ++row) {
+    QListWidgetItem *item = ui_->subspeciesList->item(row);
+    species.getSubspecies().push_back(item->text().toStdString());
+  }
   return species;
 }
 
