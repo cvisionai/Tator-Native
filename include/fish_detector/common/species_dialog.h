@@ -1,8 +1,19 @@
 /// @file
-/// @brief Defines SpeciedDialog class.
+/// @brief Defines SpeciesDialog class.
 
 #ifndef SPECIES_DIALOG_H
 #define SPECIES_DIALOG_H
+
+#include <memory>
+
+#include <QWidget>
+#include <QDialog>
+
+#include "fish_detector/common/species.h"
+
+namespace Ui {
+  class SpeciesDialog;
+}
 
 namespace fish_detector {
 
@@ -17,6 +28,11 @@ public:
   /// @param parent Parent widget.
   explicit SpeciesDialog(QWidget *parent = 0);
 
+  /// @brief Returns a Species object corresponding to the dialog values.
+  ///
+  /// @return Species object corresponding to the dialog values.
+  Species getSpecies();
+
 private slots:
   /// @brief Emits the accepted signal.
   void on_ok_clicked();
@@ -30,10 +46,9 @@ private slots:
   /// @brief Adds a new subspecies.
   void on_addSubspecies_clicked();
 
-  /// @brief Returns a Species object corresponding to the dialog values.
-  ///
-  /// @return Species object corresponding to the dialog values.
-  Species getSpecies();
+private:
+  /// @brief Widget loaded from ui file.
+  std::unique_ptr<Ui::SpeciesDialog> ui_;
 };
 
 } // namespace fish_detector
