@@ -83,6 +83,7 @@ void MainWindow::on_imageSlider_valueChanged() {
     ui_->imageWindow->setScene(scene_.get());
     ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->imageWindow->show();
+    ui_->fileNameValue->setText(filename);
   }
   else {
     QMessageBox err;
