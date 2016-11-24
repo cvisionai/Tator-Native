@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::on_addSpecies_clicked() {
+  
 }
 
 void MainWindow::on_loadSpecies_clicked() {
