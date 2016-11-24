@@ -6,6 +6,7 @@
 #include "fish_detector/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <iostream>
 namespace fish_detector { namespace image_annotator {
 
 namespace fs = boost::filesystem;
@@ -13,7 +14,8 @@ namespace fs = boost::filesystem;
 namespace { //anonymous
 
 static const std::vector<std::string> kDirExtensions = {
-  ".jpg", ".png", ".bmp", ".tif"};
+  ".jpg", ".png", ".bmp", ".tif", ".jpeg",
+  ".JPG", ".PNG", ".BMP", ".TIF", ".JPEG"};
 
 } // anonymous namespace
 
@@ -95,6 +97,7 @@ void MainWindow::on_imageSlider_valueChanged() {
 void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   image_files_.clear();
   fs::directory_iterator dir_it(image_dir.toStdString());
+  std::cout << "GOT HERE 1" << std::endl;
   fs::directory_iterator dir_end;
   for(; dir_it != dir_end; ++dir_it) {
     fs::path ext(dir_it->path().extension());
@@ -104,13 +107,21 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
       }
     }
   }
-  ui_->next->setEnabled(true);
-  ui_->prev->setEnabled(true);
-  ui_->saveAnnotations->setEnabled(true);
-  ui_->imageSlider->setEnabled(true);
-  ui_->imageSlider->setMinimum(0);
-  ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
-  ui_->imageSlider->setSingleStep(1);
+  std::cout << "GOT HERE 2" << std::endl;
+  if(image_files_.size() > 0) {
+    ui_->next->setEnabled(true);
+    ui_->prev->setEnabled(true);
+    ui_->saveAnnotations->setEnabled(true);
+    ui_->imageSlider->setEnabled(true);
+    ui_->imageSlider->setMinimum(0);
+    ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
+    ui_->imageSlider->setSingleStep(1);
+  }
+  else {
+    QMessageBox err;
+    err.critical(0, "Error", "No images found in this directory.");
+  }
+  std::cout << "GOT HERE 3" << std::endl;
 }
 
 #include "../../include/fish_detector/image_annotator/moc_mainwindow.cpp"
