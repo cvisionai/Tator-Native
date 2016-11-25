@@ -19,6 +19,9 @@ namespace fish_detector {
 
 class SpeciesControls : public QWidget {
   Q_OBJECT
+#ifndef NO_TESTING
+  friend class TestImageAnnotator;
+#endif
 public:
   /// @brief Constructor.
   ///
@@ -36,7 +39,7 @@ private slots:
   void on_saveSpecies_clicked();
 
   /// @brief Clears all species widgets after asking for confirmation.
-  void on_clearAllSpeciesWidgets_triggered();
+  void onClearAllSpeciesWidgetsTriggered();
 
   /// @brief Clears a specific species widget.
   void clearSpeciesWidget();
@@ -59,6 +62,16 @@ private:
 
   /// @brief Clears all species widgets.
   void clearAllSpeciesWidgets();
+
+  /// @brief Inserts a new species widget.
+  ///
+  /// @param species Species object used to construct the widget.
+  void insertSpeciesWidget(const Species &species);
+
+  /// @brief Loads species file.
+  ///
+  /// @param in_file Path to input species file.
+  void loadSpeciesFile(const QString &in_file);
 };
 
 } // namespace fish_detector

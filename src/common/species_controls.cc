@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "fish_detector/common/species_dialog.h"
 #include "fish_detector/common/species_controls.h"
@@ -17,34 +18,74 @@ SpeciesControls::SpeciesControls(QWidget *parent)
   clearAllSpeciesWidgets();
 }
 
+void SpeciesControls::insertSpeciesWidget(const Species &species) {
+  species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
+          new SpeciesWidget(species, this))));
+  ui_->speciesLayout->insertWidget(
+      static_cast<int>(species_widgets_.size()) - 1, 
+      species_widgets_.back().get());
+  QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
+  QObject::connect(edit, SIGNAL(triggered()), 
+      this, SLOT(editSpeciesWidget()));
+  QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
+  QObject::connect(clear, SIGNAL(triggered()), 
+      this, SLOT(clearSpeciesWidget()));
+}
+
 void SpeciesControls::on_addSpecies_clicked() {
   SpeciesDialog *dlg = new SpeciesDialog(this);
   if(dlg->exec()) {
     Species species = dlg->getSpecies();
     if(!species.getName().empty()) {
-      species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
-              new SpeciesWidget(species, this))));
-      ui_->speciesLayout->insertWidget(
-          static_cast<int>(species_widgets_.size()) - 1, 
-          species_widgets_.back().get());
+      insertSpeciesWidget(species);
     }
-    QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
-    QObject::connect(edit, SIGNAL(triggered()), 
-        this, SLOT(editSpeciesWidget()));
-    QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
-    QObject::connect(clear, SIGNAL(triggered()), 
-        this, SLOT(clearSpeciesWidget()));
   }
   delete dlg;
 }
 
 void SpeciesControls::on_loadSpecies_clicked() {
+  QString in_file = QFileDialog::getOpenFileName(this,
+      "Specify input species file", QString(), "JSON (*.json)");
+  if(!in_file.isEmpty()) {
+    loadSpeciesFile(in_file);
+  }
+}
+
+void SpeciesControls::loadSpeciesFile(const QString &in_file) {
+  SpeciesList list;
+  if(deserialize(list, in_file.toStdString())) {
+    for(auto &species : list.getSpecies()) {
+      insertSpeciesWidget(species);
+    }
+  }
+  else {
+    QMessageBox err;
+    err.critical(0, "Error", std::string(
+          std::string("Could not open file ")
+        + in_file.toStdString()
+        + std::string(".")).c_str());
+  }
 }
 
 void SpeciesControls::on_saveSpecies_clicked() {
+  QString out_file = QFileDialog::getSaveFileName(this, 
+      "Specify output species file", QString(), "JSON (*.json)");
+  if(!out_file.isEmpty()) {
+    SpeciesList list;
+    for(auto &widget : species_widgets_) {
+      list.getSpecies().push_back(widget->getSpecies());
+    }
+    if(!serialize(list, out_file.toStdString())) {
+      QMessageBox err;
+      err.critical(0, "Error", std::string(
+            std::string("Could not save file ")
+          + out_file.toStdString()
+          + std::string(".")).c_str());
+    }
+  }
 }
 
-void SpeciesControls::on_clearAllSpeciesWidgets_triggered() {
+void SpeciesControls::onClearAllSpeciesWidgetsTriggered() {
   QMessageBox::StandardButton reply = QMessageBox::question(
       this, "Clear Species", "Are you sure you want to clear all species?",
       QMessageBox::Yes | QMessageBox::No);
@@ -59,7 +100,7 @@ void SpeciesControls::clearAllSpeciesWidgets() {
   species_widgets_.clear();
   QAction *all = clear_species_menu_->addAction("All");
   QObject::connect(all, SIGNAL(triggered()), 
-      this, SLOT(on_clearAllSpeciesWidgets_triggered()));
+      this, SLOT(onClearAllSpeciesWidgetsTriggered()));
   clear_species_menu_->addSeparator();
 }
 
