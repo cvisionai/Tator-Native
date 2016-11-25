@@ -19,9 +19,6 @@ namespace fish_detector {
 
 class SpeciesDialog : public QDialog {
   Q_OBJECT
-#ifndef NO_TESTING
-  friend class TestSpeciesDialog;
-#endif
 public:
   /// @brief Constructor.
   ///
@@ -34,10 +31,10 @@ public:
   Species getSpecies();
 
 private slots:
-  /// @brief Emits the accepted signal.
+  /// @brief Calls inherited accept function.
   void on_ok_clicked();
 
-  /// @brief Emits the rejected signal.
+  /// @brief Calls inherited reject function.
   void on_cancel_clicked();
 
   /// @brief Removes currently selected subspecies.
