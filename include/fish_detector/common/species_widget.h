@@ -7,6 +7,7 @@
 #include <memory>
 
 #include <QWidget>
+#include <QMenu>
 
 #include "fish_detector/common/species.h"
 
@@ -28,16 +29,22 @@ public:
   /// @brief Gets const reference to species used to construct this widget.
   const Species &getSpecies() const {return species_;}
 
+  /// @brief Sets widget values according to input Species object.
+  void setSpecies(const Species &species);
+
 private slots:
   /// @brief Adds an individual of this species.
   void on_addIndividual_clicked();
 
-private:
   /// @brief Adds an individual of this species and subspecies.
   void onSubspeciesClicked();
 
+private:
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::SpeciesWidget> ui_;
+
+  /// @brief Subspecies menu.
+  std::unique_ptr<QMenu> subspecies_menu_;
 
   /// @brief Species used to construct this widget.
   Species species_;

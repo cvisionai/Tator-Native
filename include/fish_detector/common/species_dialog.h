@@ -30,6 +30,11 @@ public:
   /// @return Species object corresponding to the dialog values.
   Species getSpecies();
 
+  /// @brief Sets dialog values to values corresponding to input species.
+  ///
+  /// @param species Input Species object.
+  void setSpecies(const Species &species);
+
 private slots:
   /// @brief Calls inherited accept function.
   void on_ok_clicked();

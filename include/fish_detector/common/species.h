@@ -35,6 +35,11 @@ public:
   /// @return Reference to the subspecies list.
   std::vector<std::string> &getSubspecies();
 
+  /// @brief Gets a const reference to the subspecies list.
+  ///
+  /// @return Const reference to the subspecies list.
+  const std::vector<std::string> &getSubspecies() const;
+
   /// @brief Equality operator.
   ///
   /// @param rhs Right hand side argument.

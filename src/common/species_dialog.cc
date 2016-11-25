@@ -40,6 +40,15 @@ Species SpeciesDialog::getSpecies() {
   return species;
 }
 
+void SpeciesDialog::setSpecies(const Species &species) {
+  ui_->species->setText(species.getName().c_str());
+  for(auto &subspecies : species.getSubspecies()) {
+    QListWidgetItem *item = new QListWidgetItem(subspecies.c_str());
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
+    ui_->subspeciesList->addItem(item);
+  }
+}
+
 #include "../../include/fish_detector/common/moc_species_dialog.cpp"
 
 } // namespace fish_detector

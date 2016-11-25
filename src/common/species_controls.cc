@@ -43,6 +43,7 @@ void SpeciesControls::on_loadSpecies_clicked() {
 
 void SpeciesControls::on_saveSpecies_clicked() {
 }
+
 void SpeciesControls::on_clearAllSpeciesWidgets_triggered() {
   QMessageBox::StandardButton reply = QMessageBox::question(
       this, "Clear Species", "Are you sure you want to clear all species?",
@@ -81,6 +82,18 @@ void SpeciesControls::clearSpeciesWidget() {
 }
 
 void SpeciesControls::editSpeciesWidget() {
+  QAction *action = qobject_cast<QAction*>(QObject::sender());
+  SpeciesDialog *dlg = new SpeciesDialog(this);
+  auto widget = species_widgets_.begin();
+  for(; widget != species_widgets_.end(); ++widget) {
+    if((*widget)->getSpecies().getName() == action->text().toStdString()) {
+      dlg->setSpecies((*widget)->getSpecies());
+      break;
+    }
+  }
+  if(dlg->exec()) {
+    (*widget)->setSpecies(dlg->getSpecies());
+  }
 }
 
 #include "../../include/fish_detector/common/moc_species_controls.cpp"

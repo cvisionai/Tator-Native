@@ -16,6 +16,10 @@ std::vector<std::string> &Species::getSubspecies() {
   return subspecies_;
 }
 
+const std::vector<std::string> &Species::getSubspecies() const {
+  return subspecies_;
+}
+
 bool Species::operator==(Species &rhs) {
   if(name_ != rhs.name_) return false;
   if(subspecies_.size() != rhs.subspecies_.size()) return false;
