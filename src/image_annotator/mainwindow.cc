@@ -4,7 +4,6 @@
 #include <QMessageBox>
 
 #include "fish_detector/common/species_dialog.h"
-#include "fish_detector/common/species_widget.h"
 #include "fish_detector/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -25,7 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , pixmap_(nullptr)
   , ui_(new Ui::MainWidget)
-  , species_widgets_inserted_(0)
+  , species_widgets_()
+  , edit_species_menu_(new QMenu(this))
+  , clear_species_menu_(new QMenu(this))
   , image_files_() {
   ui_->setupUi(this);
   setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
@@ -38,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->prev->setEnabled(false);
   ui_->saveAnnotations->setEnabled(false);
   ui_->imageSlider->setEnabled(false);
+  ui_->clearSpecies->setMenu(clear_species_menu_.get());
+  ui_->editSpecies->setMenu(edit_species_menu_.get());
+  clearAllSpeciesWidgets();
 }
 
 void MainWindow::on_addSpecies_clicked() {
@@ -45,9 +49,11 @@ void MainWindow::on_addSpecies_clicked() {
   if(dlg->exec()) {
     Species species = dlg->getSpecies();
     if(!species.getName().empty()) {
-      SpeciesWidget *widget = new SpeciesWidget(species, this);
-      ui_->speciesLayout->insertWidget(species_widgets_inserted_, widget);
-      ++species_widgets_inserted_;
+      species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
+              new SpeciesWidget(species, this))));
+      ui_->speciesLayout->insertWidget(
+          static_cast<int>(species_widgets_.size()) - 1, 
+          species_widgets_.back().get());
     }
   }
   delete dlg;
@@ -134,6 +140,31 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     QMessageBox err;
     err.critical(0, "Error", "No images found in this directory.");
   }
+}
+
+void MainWindow::on_clearAllSpeciesWidgets_triggered() {
+  QMessageBox::StandardButton reply = QMessageBox::question(
+      this, "Clear Species", "Are you sure you want to clear all species?",
+      QMessageBox::Yes | QMessageBox::No);
+  if(reply == QMessageBox::Yes) {
+    clearAllSpeciesWidgets();
+  }
+}
+
+void MainWindow::clearAllSpeciesWidgets() {
+  clear_species_menu_->clear();
+  edit_species_menu_->clear();
+  species_widgets_.clear();
+  QAction *all = clear_species_menu_->addAction("All");
+  QObject::connect(all, SIGNAL(triggered()), 
+      this, SLOT(on_clearAllSpeciesWidgets_triggered()));
+  clear_species_menu_->addSeparator();
+}
+
+void MainWindow::clearSpeciesWidget() {
+}
+
+void MainWindow::editSpeciesWidget() {
 }
 
 #include "../../include/fish_detector/image_annotator/moc_mainwindow.cpp"
