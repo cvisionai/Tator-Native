@@ -25,6 +25,9 @@ public:
   /// @param parent Parent widget.
   explicit SpeciesWidget(const Species &species, QWidget *parent = 0);
 
+  /// @brief Gets const reference to species used to construct this widget.
+  const Species &getSpecies() const {return species_;}
+
 private slots:
   /// @brief Adds an individual of this species.
   void on_addIndividual_clicked();
@@ -35,6 +38,9 @@ private:
 
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::SpeciesWidget> ui_;
+
+  /// @brief Species used to construct this widget.
+  Species species_;
 };
 
 } // namespace fish_detector

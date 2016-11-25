@@ -5,7 +5,8 @@ namespace fish_detector {
 
 SpeciesWidget::SpeciesWidget(const Species &species, QWidget *parent)
   : QWidget(parent)
-  , ui_(new Ui::SpeciesWidget) {
+  , ui_(new Ui::SpeciesWidget)
+  , species_(species) {
   ui_->setupUi(this);
   ui_->name->setText(species.getName().c_str());
   ui_->count->setText("0");

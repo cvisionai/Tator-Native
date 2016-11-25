@@ -55,6 +55,12 @@ void MainWindow::on_addSpecies_clicked() {
           static_cast<int>(species_widgets_.size()) - 1, 
           species_widgets_.back().get());
     }
+    QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
+    QObject::connect(edit, SIGNAL(triggered()), 
+        this, SLOT(editSpeciesWidget()));
+    QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
+    QObject::connect(clear, SIGNAL(triggered()), 
+        this, SLOT(clearSpeciesWidget()));
   }
   delete dlg;
 }
@@ -162,6 +168,21 @@ void MainWindow::clearAllSpeciesWidgets() {
 }
 
 void MainWindow::clearSpeciesWidget() {
+  QAction *action = qobject_cast<QAction*>(QObject::sender());
+  for(auto edit : edit_species_menu_->actions()) {
+    if(edit->text() == action->text()) {
+      edit_species_menu_->removeAction(edit);
+      break;
+    }
+  }
+  auto widget = species_widgets_.begin();
+  for(; widget != species_widgets_.end(); ++widget) {
+    if((*widget)->getSpecies().getName() == action->text().toStdString()) {
+      species_widgets_.erase(widget);
+      break;
+    }
+  }
+  clear_species_menu_->removeAction(action);
 }
 
 void MainWindow::editSpeciesWidget() {
