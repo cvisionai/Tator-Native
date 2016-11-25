@@ -47,6 +47,10 @@ private slots:
   /// @brief Edits a specific species widget.
   void editSpeciesWidget();
 
+signals:
+  /// @brief Propagates add individual signal from species widgets.
+  void individualAdded(std::string species, std::string subspecies);
+
 private:
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::SpeciesControls> ui_;

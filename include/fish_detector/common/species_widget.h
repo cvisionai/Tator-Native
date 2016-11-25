@@ -39,6 +39,10 @@ private slots:
   /// @brief Adds an individual of this species and subspecies.
   void onSubspeciesClicked();
 
+signals:
+  /// @brief Signal for individual added.
+  void individualAdded(std::string species, std::string subspecies);
+
 private:
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::SpeciesWidget> ui_;

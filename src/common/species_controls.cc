@@ -30,6 +30,10 @@ void SpeciesControls::insertSpeciesWidget(const Species &species) {
   QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
   QObject::connect(clear, SIGNAL(triggered()), 
       this, SLOT(clearSpeciesWidget()));
+  QObject::connect(
+      species_widgets_.back().get(), 
+      SIGNAL(addIndividual(std::string, std::string)),
+      this, SIGNAL(addIndividual(std::string, std::string)));
 }
 
 void SpeciesControls::on_addSpecies_clicked() {

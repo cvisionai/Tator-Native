@@ -27,9 +27,12 @@ void SpeciesWidget::setSpecies(const Species &species) {
 }
 
 void SpeciesWidget::on_addIndividual_clicked() {
+  emit individualAdded(species_.getName(), "");
 }
 
 void SpeciesWidget::onSubspeciesClicked() {
+  QAction *action = qobject_cast<QAction*>(QObject::sender());
+  emit individualAdded(species_.getName(), action->text().toStdString());
 }
 
 #include "../../include/fish_detector/common/moc_species_widget.cpp"
