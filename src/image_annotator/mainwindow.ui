@@ -198,7 +198,7 @@
          <property name="title">
           <string/>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+         <layout class="QVBoxLayout" name="speciesLayout">
           <item>
            <spacer name="verticalSpacer">
             <property name="orientation">

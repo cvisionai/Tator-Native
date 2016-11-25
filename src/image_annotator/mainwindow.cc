@@ -4,6 +4,7 @@
 #include <QMessageBox>
 
 #include "fish_detector/common/species_dialog.h"
+#include "fish_detector/common/species_widget.h"
 #include "fish_detector/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , pixmap_(nullptr)
   , ui_(new Ui::MainWidget)
+  , species_widgets_inserted_(0)
   , image_files_() {
   ui_->setupUi(this);
   setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
@@ -42,6 +44,11 @@ void MainWindow::on_addSpecies_clicked() {
   SpeciesDialog *dlg = new SpeciesDialog(this);
   if(dlg->exec()) {
     Species species = dlg->getSpecies();
+    if(!species.getName().empty()) {
+      SpeciesWidget *widget = new SpeciesWidget(species, this);
+      ui_->speciesLayout->insertWidget(species_widgets_inserted_, widget);
+      ++species_widgets_inserted_;
+    }
   }
   delete dlg;
 }

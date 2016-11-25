@@ -68,6 +68,9 @@ private:
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::MainWidget> ui_;
 
+  /// @brief Number of species widgets inserted.
+  int species_widgets_inserted_;
+
   /// @brief Vector of image files in a directory.
   std::vector<std::string> image_files_;
 
