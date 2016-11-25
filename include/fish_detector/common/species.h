@@ -27,6 +27,9 @@ public:
   /// @brief Default constructor.
   Species();
 
+  /// @brief Gets the species name.
+  std::string getName() const {return name_;}
+
   /// @brief Gets a reference to the subspecies list.
   ///
   /// @return Reference to the subspecies list.
