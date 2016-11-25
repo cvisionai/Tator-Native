@@ -29,6 +29,13 @@ void TestImageAnnotator::testLoadImageDir() {
   mainwin.onLoadDirectorySuccess(full.string().c_str());
 }
 
+void TestImageAnnotator::testLoadSpeciesFile() {
+  fish_detector::image_annotator::MainWindow mainwin;
+  fs::path cwd(fs::current_path());
+  fs::path full = cwd / fs::path("blah.json");
+  mainwin.species_controls_->loadSpeciesFile(full.string().c_str());
+}
+
 QTEST_MAIN(TestImageAnnotator)
 #include "test_image_annotator.moc"
 
