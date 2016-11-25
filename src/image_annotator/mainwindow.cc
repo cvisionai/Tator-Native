@@ -24,9 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , pixmap_(nullptr)
   , ui_(new Ui::MainWidget)
-  , species_widgets_()
-  , edit_species_menu_(new QMenu(this))
-  , clear_species_menu_(new QMenu(this))
+  , species_controls_(new SpeciesControls(this))
   , image_files_() {
   ui_->setupUi(this);
   setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
@@ -39,36 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->prev->setEnabled(false);
   ui_->saveAnnotations->setEnabled(false);
   ui_->imageSlider->setEnabled(false);
-  ui_->clearSpecies->setMenu(clear_species_menu_.get());
-  ui_->editSpecies->setMenu(edit_species_menu_.get());
-  clearAllSpeciesWidgets();
-}
-
-void MainWindow::on_addSpecies_clicked() {
-  SpeciesDialog *dlg = new SpeciesDialog(this);
-  if(dlg->exec()) {
-    Species species = dlg->getSpecies();
-    if(!species.getName().empty()) {
-      species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
-              new SpeciesWidget(species, this))));
-      ui_->speciesLayout->insertWidget(
-          static_cast<int>(species_widgets_.size()) - 1, 
-          species_widgets_.back().get());
-    }
-    QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
-    QObject::connect(edit, SIGNAL(triggered()), 
-        this, SLOT(editSpeciesWidget()));
-    QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
-    QObject::connect(clear, SIGNAL(triggered()), 
-        this, SLOT(clearSpeciesWidget()));
-  }
-  delete dlg;
-}
-
-void MainWindow::on_loadSpecies_clicked() {
-}
-
-void MainWindow::on_saveSpecies_clicked() {
+  ui_->sideBarLayout->addWidget(species_controls_.get());
 }
 
 void MainWindow::on_next_clicked() {
@@ -146,46 +115,6 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     QMessageBox err;
     err.critical(0, "Error", "No images found in this directory.");
   }
-}
-
-void MainWindow::on_clearAllSpeciesWidgets_triggered() {
-  QMessageBox::StandardButton reply = QMessageBox::question(
-      this, "Clear Species", "Are you sure you want to clear all species?",
-      QMessageBox::Yes | QMessageBox::No);
-  if(reply == QMessageBox::Yes) {
-    clearAllSpeciesWidgets();
-  }
-}
-
-void MainWindow::clearAllSpeciesWidgets() {
-  clear_species_menu_->clear();
-  edit_species_menu_->clear();
-  species_widgets_.clear();
-  QAction *all = clear_species_menu_->addAction("All");
-  QObject::connect(all, SIGNAL(triggered()), 
-      this, SLOT(on_clearAllSpeciesWidgets_triggered()));
-  clear_species_menu_->addSeparator();
-}
-
-void MainWindow::clearSpeciesWidget() {
-  QAction *action = qobject_cast<QAction*>(QObject::sender());
-  for(auto edit : edit_species_menu_->actions()) {
-    if(edit->text() == action->text()) {
-      edit_species_menu_->removeAction(edit);
-      break;
-    }
-  }
-  auto widget = species_widgets_.begin();
-  for(; widget != species_widgets_.end(); ++widget) {
-    if((*widget)->getSpecies().getName() == action->text().toStdString()) {
-      species_widgets_.erase(widget);
-      break;
-    }
-  }
-  clear_species_menu_->removeAction(action);
-}
-
-void MainWindow::editSpeciesWidget() {
 }
 
 #include "../../include/fish_detector/image_annotator/moc_mainwindow.cpp"
