@@ -31,8 +31,7 @@ public:
 
     /// @brief Constructor.
     AnnotatedRegion(uint64_t uid, 
-                    std::shared_ptr<Info> annotation, 
-                    QRectF area);
+                    std::shared_ptr<Info> annotation);
 
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
@@ -60,12 +59,14 @@ protected:
 template<typename Info>
 AnnotatedRegion<Info>::AnnotatedRegion(
     uint64_t uid,
-    std::shared_ptr<Info> annotation,
-    QRectF area )
+    std::shared_ptr<Info> annotation)
     : annotation_(annotation)
     , uid_(uid)
     , drag_() {
-    setRect(area);
+    setRect(QRectF(annotation->area_.x, 
+                   annotation->area_.y,
+                   annotation->area_.w,
+                   annotation->area_.h));
     setAcceptHoverEvents(true);
     setFlags(ItemIsMovable | ItemIsSelectable);
 }
