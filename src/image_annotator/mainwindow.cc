@@ -89,6 +89,7 @@ void MainWindow::on_imageSlider_valueChanged() {
             annotation->id_, annotation, current.rect());
       scene_->addItem(region);
     }
+    species_controls_->resetCounts();
     auto counts = annotations_->getCounts(filename.toStdString());
     for(auto it = counts.begin(); it != counts.end(); it++) {
       species_controls_->setCount(it->second, it->first);

@@ -156,6 +156,12 @@ void SpeciesControls::editSpeciesWidget() {
   }
 }
 
+void SpeciesControls::resetCounts() {
+  for(auto &widget : species_widgets_) {
+    widget->setCount(0);
+  }
+}
+
 void SpeciesControls::setCount(uint64_t count, const std::string &species) {
   for(auto &widget : species_widgets_) {
     if(widget->getSpecies().getName() == species) {

@@ -28,6 +28,9 @@ public:
   /// @param parent Parent widget.
   explicit SpeciesControls(QWidget *parent = 0);
 
+  /// @brief Resets all counts to zero.
+  void resetCounts();
+
   /// @brief Sets count for a given species.
   void setCount(uint64_t count, const std::string &species);
 
