@@ -28,6 +28,9 @@ public:
   /// @param parent Parent widget.
   explicit SpeciesControls(QWidget *parent = 0);
 
+  /// @brief Sets count for a given species.
+  void setCount(uint64_t count, const std::string &species);
+
 private slots:
   /// @brief Brings up a dialog box to add a species.
   void on_addSpecies_clicked();

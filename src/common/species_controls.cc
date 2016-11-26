@@ -150,6 +150,14 @@ void SpeciesControls::editSpeciesWidget() {
   }
 }
 
+void SpeciesControls::setCount(uint64_t count, const std::string &species) {
+  for(auto &widget : species_widgets_) {
+    if(widget->getSpecies().getName() == species) {
+      widget->setCount(count);
+    }
+  }
+}
+
 #include "../../include/fish_detector/common/moc_species_controls.cpp"
 
 } // namespace fish_detector

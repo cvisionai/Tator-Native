@@ -32,6 +32,9 @@ public:
   /// @brief Sets widget values according to input Species object.
   void setSpecies(const Species &species);
 
+  /// @brief Updates individual counts.
+  void setCount(uint64_t count);
+
 private slots:
   /// @brief Adds an individual of this species.
   void on_addIndividual_clicked();

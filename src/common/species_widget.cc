@@ -35,6 +35,10 @@ void SpeciesWidget::onSubspeciesClicked() {
   emit individualAdded(species_.getName(), action->text().toStdString());
 }
 
+void SpeciesWidget::setCount(uint64_t count) {
+  ui_->count->setText(std::to_string(count).c_str());
+}
+
 #include "../../include/fish_detector/common/moc_species_widget.cpp"
 
 } // namespace fish_detector
