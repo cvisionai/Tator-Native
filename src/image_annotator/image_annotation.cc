@@ -129,6 +129,35 @@ ImageAnnotationList::getCounts(const std::string &image_file) {
   return counts;
 }
 
+std::vector<Species> ImageAnnotationList::getAllSpecies() {
+  std::vector<Species> vec;
+  for(auto &elem : by_species_.left) {
+    const std::string &species = elem.first.first;
+    const std::string &subspecies = elem.first.second;
+    auto it = std::find_if(vec.begin(), vec.end(), 
+        [&species](const Species &s) {
+          return species == s.getName();
+        });
+    if(it == vec.end()) {
+      vec.push_back(Species(species));
+      if(!subspecies.empty()) {
+        vec.back().getSubspecies().push_back(subspecies);
+      }
+    }
+    else if(!subspecies.empty()) {
+      auto &subs = it->getSubspecies();
+      auto sub_it = std::find_if(subs.begin(), subs.end(),
+        [&subspecies](const std::string &s) {
+          return subspecies == s;
+        });
+      if(sub_it == subs.end()) {
+        subs.push_back(subspecies);
+      }
+    }
+  }
+  return vec;
+}
+
 bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
   if(list_.size() != rhs.list_.size()) return false;
   auto it = list_.begin();

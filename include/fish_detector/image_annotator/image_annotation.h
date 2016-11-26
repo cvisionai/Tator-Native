@@ -16,6 +16,7 @@
 
 #include "fish_detector/common/serialization.h"
 #include "fish_detector/common/rect.h"
+#include "fish_detector/common/species.h"
 
 #ifndef NO_TESTING
 class TestImageAnnotation;
@@ -116,6 +117,9 @@ public:
 
   /// @brief Gets counts for each species in a given image.
   std::map<std::string, uint64_t> getCounts(const std::string &image_file);
+
+  /// @brief Gets all species in the annotations.
+  std::vector<Species> getAllSpecies();
 
   /// @brief Equality operator.
   ///
