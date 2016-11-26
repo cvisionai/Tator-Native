@@ -86,7 +86,7 @@ void MainWindow::on_imageSlider_valueChanged() {
       annotations_->getImageAnnotations(filename.toStdString());
     for(auto annotation : annotations) {
       auto region = new AnnotatedRegion<ImageAnnotation>(
-            annotation->id_, annotation);
+            annotation->id_, annotation, current.rect());
       scene_->addItem(region);
     }
   }
@@ -104,11 +104,9 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
     std::string current_image = image_files_[ui_->imageSlider->value()];
     uint64_t id = annotations_->nextId(current_image);
     auto annotation = std::make_shared<ImageAnnotation>(
-      current_image, species, subspecies, id, 
-      Rect(0, 0, 100, 100));
+      current_image, species, subspecies, id, Rect(0, 0, 0, 0));
     annotations_->insert(annotation);
-    auto region = new AnnotatedRegion<ImageAnnotation>(id, annotation);
-    scene_->addItem(region);
+    on_imageSlider_valueChanged();
   }
 }
 

@@ -68,7 +68,8 @@ void MainWindow::processAnnotations(uint64_t frame) {
   current_annotations_.clear();
   // add new annotations
   for (auto ann : document_->getAnnotations(frame)) {
-    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, ann.second);
+    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, 
+        ann.second, player_->getOneFrame().rect());
     scene_->addItem(region);
     current_annotations_.push_back(region);
   }
@@ -401,7 +402,7 @@ bool MainWindow::addRegion() {
     }
     auto loc = document_->addAnnotationLocation(fishID, frame, area);
     auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
-        fishID,loc);
+        fishID, loc, player_->getOneFrame().rect());
     current_annotations_.push_back(annotationArea);
     scene_->addItem(annotationArea);
     return true;
