@@ -136,6 +136,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setSingleStep(1);
     ui_->imageSlider->setValue(0);
     annotations_->read(image_files_);
+    species_controls_->loadFromVector(annotations_->getAllSpecies());
     on_imageSlider_valueChanged();
   }
   else {
