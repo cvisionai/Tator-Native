@@ -112,6 +112,23 @@ ImageAnnotationList::getImageAnnotations(const std::string &image_file) {
   return annotations;
 }
 
+std::map<std::string, uint64_t> 
+ImageAnnotationList::getCounts(const std::string &image_file) {
+  std::map<std::string, uint64_t> counts;
+  auto range = by_file_.left.equal_range(image_file);
+  for(auto it = range.first; it != range.second; ++it) {
+    std::string species = (*(it->second))->species_;
+    auto count_it = counts.find(species);
+    if(count_it != counts.end()) {
+      count_it->second++;
+    }
+    else {
+      counts.insert({species, 1});
+    }
+  }
+  return counts;
+}
+
 bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
   if(list_.size() != rhs.list_.size()) return false;
   auto it = list_.begin();

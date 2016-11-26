@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <map>
 #include <memory>
 
 #include <boost/property_tree/ptree.hpp>
@@ -112,6 +113,9 @@ public:
   /// @brief Gets annotations for a given image.
   std::vector<std::shared_ptr<ImageAnnotation>> 
     getImageAnnotations(const std::string &image_file);
+
+  /// @brief Gets counts for each species in a given image.
+  std::map<std::string, uint64_t> getCounts(const std::string &image_file);
 
   /// @brief Equality operator.
   ///
