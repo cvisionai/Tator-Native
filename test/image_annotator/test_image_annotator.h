@@ -5,4 +5,5 @@ class TestImageAnnotator : public QObject {
 private slots:
   void testLoadImageDir();
   void testLoadSpeciesFile();
+  void testAddRegionAndNext();
 };

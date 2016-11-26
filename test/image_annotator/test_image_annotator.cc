@@ -36,6 +36,15 @@ void TestImageAnnotator::testLoadSpeciesFile() {
   mainwin.species_controls_->loadSpeciesFile(full.string().c_str());
 }
 
+void TestImageAnnotator::testAddRegionAndNext() {
+  fish_detector::image_annotator::MainWindow mainwin;
+  fs::path cwd(fs::current_path());
+  fs::path full = cwd / fs::path("crashed");
+  mainwin.onLoadDirectorySuccess(full.string().c_str());
+  mainwin.addIndividual("sahsdogiha", "jdhbfkaj");
+  mainwin.on_next_clicked();
+}
+
 QTEST_MAIN(TestImageAnnotator)
 #include "test_image_annotator.moc"
 
