@@ -23,6 +23,7 @@ void TestImageAnnotation::testSerialize() {
   list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[3], "ahspda8", "ashaahsgha", 0, 
     fish_detector::Rect(4, 3, 2, 8)));
+  QVERIFY(list.getAllSpecies().size() == 3);
   QVERIFY(list.by_file_.left.count(image_list[0]) == 2);
   list.write(image_list);
   ia::ImageAnnotationList deserialized_list;

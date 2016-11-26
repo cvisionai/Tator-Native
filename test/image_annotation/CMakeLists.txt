@@ -1,7 +1,5 @@
 set( TEST_IMAGE_ANNOTATION_SOURCES test_image_annotation.cc )
 set( IMAGE_ANNOTATION_SOURCES
-  "../../src/common/serialization.cc"
-  "../../src/common/rect.cc"
   "../../src/image_annotator/image_annotation.cc"
   )
 include_directories( 
@@ -15,6 +13,7 @@ if( WIN32 )
     )
   target_link_libraries( 
     test_image_annotation 
+    common
     ${WINDOWS_LIBRARIES}
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
