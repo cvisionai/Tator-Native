@@ -14,6 +14,7 @@
 #include <QGraphicsPixmapItem>
 
 #include "fish_detector/common/species_controls.h"
+#include "fish_detector/common/annotatedregion.h"
 #include "fish_detector/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
 
@@ -46,6 +47,9 @@ private slots:
   /// @brief Moves to the image indicated by image slider.
   void on_imageSlider_valueChanged();
 
+  /// @brief Adds an individual and enables bounding box drawing.
+  void addIndividual(std::string species, std::string subspecies);
+
 private:
   /// @brief Annotations associated with this directory.
   std::unique_ptr<ImageAnnotationList> annotations_;
@@ -64,6 +68,9 @@ private:
 
   /// @brief Vector of image files in a directory.
   std::vector<std::string> image_files_;
+
+  /// @brief Map of image filenames to annotated regions.
+  std::multimap<std::string, AnnotatedRegion<ImageAnnotation>*> regions_;
 
   /// @brief Runs when image directory loaded successfully.
   void onLoadDirectorySuccess(const QString &image_dir);

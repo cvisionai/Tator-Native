@@ -4,6 +4,7 @@
 #include <QMessageBox>
 
 #include "fish_detector/common/species_dialog.h"
+#include "fish_detector/image_annotator/image_annotation.h"
 #include "fish_detector/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -20,7 +21,7 @@ static const std::vector<std::string> kDirExtensions = {
 } // anonymous namespace
 
 MainWindow::MainWindow(QWidget *parent)
-  : annotations_(nullptr)
+  : annotations_(new ImageAnnotationList)
   , scene_(new QGraphicsScene)
   , pixmap_(nullptr)
   , ui_(new Ui::MainWidget)
@@ -38,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->saveAnnotations->setEnabled(false);
   ui_->imageSlider->setEnabled(false);
   ui_->sideBarLayout->addWidget(species_controls_.get());
+  QObject::connect(species_controls_.get(), 
+      SIGNAL(individualAdded(std::string, std::string)), 
+      this, SLOT(addIndividual(std::string, std::string)));
 }
 
 void MainWindow::on_next_clicked() {
@@ -85,6 +89,21 @@ void MainWindow::on_imageSlider_valueChanged() {
         std::string("Error loading image ")
       + filename.toStdString()
       + std::string(".")).c_str());
+  }
+}
+
+void MainWindow::addIndividual(std::string species, std::string subspecies) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    std::string current_image = image_files_[ui_->imageSlider->value()];
+    uint64_t id = annotations_->nextId(current_image);
+    auto annotation = std::make_shared<ImageAnnotation>(
+      current_image, species, subspecies, id, 
+      Rect(0, 0, 0, 0));
+    annotations_->insert(annotation);
+    auto region = new AnnotatedRegion<ImageAnnotation>(
+          id, annotation, QRectF(0, 0, 100, 100));
+    regions_.insert({current_image, region});
+    scene_->addItem(region);
   }
 }
 
