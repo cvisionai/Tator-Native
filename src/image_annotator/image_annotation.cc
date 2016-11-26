@@ -93,13 +93,23 @@ void ImageAnnotationList::remove(const std::string &image_file, uint64_t id) {
 
 uint64_t ImageAnnotationList::nextId(const std::string &image_file) {
   auto range = by_file_.left.equal_range(image_file);
-  uint64_t max_id = 1;
+  uint64_t max_id = 0;
   for(auto it = range.first; it != range.second; ++it) {
     if((*(it->second))->id_ > max_id) {
       max_id = (*(it->second))->id_;
     }
   }
   return max_id + 1;
+}
+
+std::vector<std::shared_ptr<ImageAnnotation>> 
+ImageAnnotationList::getImageAnnotations(const std::string &image_file) {
+  std::vector<std::shared_ptr<ImageAnnotation>> annotations;
+  auto range = by_file_.left.equal_range(image_file);
+  for(auto it = range.first; it != range.second; ++it) {
+    annotations.push_back(*(it->second));
+  }
+  return annotations;
 }
 
 bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {

@@ -109,6 +109,10 @@ public:
   /// @param image_file Image file name.
   uint64_t nextId(const std::string &image_file);
 
+  /// @brief Gets annotations for a given image.
+  std::vector<std::shared_ptr<ImageAnnotation>> 
+    getImageAnnotations(const std::string &image_file);
+
   /// @brief Equality operator.
   ///
   /// @param rhs Right hand side argument.
