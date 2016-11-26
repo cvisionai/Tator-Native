@@ -138,7 +138,7 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     case DRAG_TOP: {
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
-            annotation_->area.y = sceneBoundingRect().y() + 2;
+            annotation_->area_.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
 
@@ -155,7 +155,7 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     case DRAG_LEFT: {
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
-            annotation_->area.x = sceneBoundingRect().x() + 2;
+            annotation_->area_.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
@@ -171,13 +171,13 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     case DRAG_TOP_LEFT: {
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
-            annotation_->area.x = sceneBoundingRect().x() + 2;
+            annotation_->area_.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
-            annotation_->area.y = sceneBoundingRect().y() + 2;
+            annotation_->area_.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
 
@@ -187,7 +187,7 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     case DRAG_TOP_RIGHT: {
         qreal new_height = area.height() - from_top;
         if (new_height > 2*margin) {
-            annotation_->area.y = sceneBoundingRect().y() + 2;
+            annotation_->area_.y = sceneBoundingRect().y() + 2;
             area.setHeight(area.height() - from_top);
             area.translate(0, from_top);
 
@@ -205,7 +205,7 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         }
         qreal new_width = area.width() - from_left;
         if (new_width > 2*margin) {
-            annotation_->area.x = sceneBoundingRect().x() + 2;
+            annotation_->area_.x = sceneBoundingRect().x() + 2;
             area.setWidth(area.width() - from_left);
             area.translate(from_left, 0);
         }
@@ -225,14 +225,14 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     default:
         QGraphicsRectItem::mouseMoveEvent(event);
         auto pos = this->pos();
-        annotation_->area.x = area.left() + pos.x();
-        annotation_->area.y = area.top() + pos.y();
+        annotation_->area_.x = area.left() + pos.x();
+        annotation_->area_.y = area.top() + pos.y();
         setRect(area);
         return;
     }
     setRect(area);
-    annotation_->area.w = area.width();
-    annotation_->area.h = area.height();
+    annotation_->area_.w = area.width();
+    annotation_->area_.h = area.height();
     prepareGeometryChange();
     update();
 }

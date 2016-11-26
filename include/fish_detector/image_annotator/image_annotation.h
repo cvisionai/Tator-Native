@@ -4,11 +4,10 @@
 #ifndef IMAGE_ANNOTATIONS_H
 #define IMAGE_ANNOTATIONS_H
 
-#include <map>
 #include <string>
 #include <vector>
 #include <list>
-#include <functional>
+#include <memory>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/bimap.hpp>
@@ -69,11 +68,11 @@ struct ImageAnnotation : public Serialization {
   std::string species_; ///< Species of the individual.
   std::string subspecies_; ///< Subspecies of the individual.
   uint64_t id_; ///< ID of the individual within the image.
-  Rect rect_; ///< Rectangle defining the annotation. 
+  Rect area_; ///< Rectangle defining the annotation. 
 };
 
 /// @brief List of image annotations.
-typedef std::list<ImageAnnotation> List;
+typedef std::list<std::shared_ptr<ImageAnnotation>> List;
 
 /// @brief Makes iterator sortable so it can be used as key in maps.
 ///
@@ -97,13 +96,18 @@ public:
   /// @brief Inserts an annotation.
   ///
   /// @param annotation Annotation to be inserted.
-  void insert(const ImageAnnotation &annotation);
+  void insert(std::shared_ptr<ImageAnnotation> annotation);
 
   /// @brief Removes an annotation.
   ///
-  /// @param image_file Image file name (not including path).
+  /// @param image_file Image file name.
   /// @param id ID of the individual within the image.
   void remove(const std::string &image_file, uint64_t id);
+
+  /// @brief Gets next ID for a given image.
+  ///
+  /// @param image_file Image file name.
+  uint64_t nextId(const std::string &image_file);
 
   /// @brief Equality operator.
   ///
@@ -142,7 +146,8 @@ private:
     boost::bimaps::multiset_of<std::pair<std::string, std::string>>,
     boost::bimaps::set_of<List::iterator>> ByStringPair;
 
-  std::list<ImageAnnotation> list_; ///< List of image annotations.
+  /// @brief List of image annotations.
+  List list_; 
 
   /// @brief Map between image filename and reference to image annotations.
   ByString by_file_;
