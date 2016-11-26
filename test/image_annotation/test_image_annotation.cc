@@ -11,16 +11,16 @@ void TestImageAnnotation::testSerialize() {
     "ceres/ceres3.jpg",
     "ceres/ceres4.jpg"};
   ia::ImageAnnotationList list;
-  list.insert(ia::ImageAnnotation(
+  list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[0], "asdfa", "ljklg", 0, 
     fish_detector::Rect(1, 2, 3, 4)));
-  list.insert(ia::ImageAnnotation(
+  list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[0], "ahsdifuasega", "ljsdasdhaklg", 1, 
     fish_detector::Rect(3, 2, 1, 9)));
-  list.insert(ia::ImageAnnotation(
+  list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[1], "ahspda8", "asha", 0, 
     fish_detector::Rect(4, 3, 2, 8)));
-  list.insert(ia::ImageAnnotation(
+  list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[3], "ahspda8", "ashaahsgha", 0, 
     fish_detector::Rect(4, 3, 2, 8)));
   QVERIFY(list.by_file_.left.count(image_list[0]) == 2);
