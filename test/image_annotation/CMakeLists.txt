@@ -15,6 +15,7 @@ if( WIN32 )
     test_image_annotation 
     common
     ${WINDOWS_LIBRARIES}
+    Qt5::Widgets
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${Boost_LIBRARIES}

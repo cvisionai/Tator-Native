@@ -2,6 +2,10 @@
 #include "fish_detector/image_annotator/image_annotation.h"
 #include "test_image_annotation.h"
 
+#ifdef _WIN32
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+#endif
+
 namespace ia = fish_detector::image_annotator;
 
 void TestImageAnnotation::testSerialize() {
