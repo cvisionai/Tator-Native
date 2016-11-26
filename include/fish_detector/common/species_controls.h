@@ -31,6 +31,11 @@ public:
   /// @brief Sets count for a given species.
   void setCount(uint64_t count, const std::string &species);
 
+  /// @brief Loads species from an external source.
+  ///
+  /// @param vec Vector of species used to insert widgets.
+  void loadFromVector(const std::vector<Species> &vec);
+
 private slots:
   /// @brief Brings up a dialog box to add a species.
   void on_addSpecies_clicked();

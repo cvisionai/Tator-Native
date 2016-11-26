@@ -80,6 +80,12 @@ void SpeciesControls::loadSpeciesFile(const QString &in_file) {
   }
 }
 
+void SpeciesControls::loadFromVector(const std::vector<Species> &vec) {
+  for(const auto &species : vec) {
+    insertSpeciesWidget(species);
+  }
+}
+
 void SpeciesControls::on_saveSpecies_clicked() {
   QString out_file = QFileDialog::getSaveFileName(this, 
       "Specify output species file", QString(), "JSON (*.json)");
