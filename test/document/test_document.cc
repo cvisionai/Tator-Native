@@ -35,10 +35,10 @@ void TestDocument::testReadJSON()
     auto locations = annotation->getLocations();
     auto location = locations.front();
     QCOMPARE(location->frame, uint64_t(1));
-    QCOMPARE(location->area.x,uint64_t(1));
-    QCOMPARE(location->area.y,uint64_t(1));
-    QCOMPARE(location->area.h,uint64_t(5));
-    QCOMPARE(location->area.w,uint64_t(5));
+    QCOMPARE(location->area_.x,uint64_t(1));
+    QCOMPARE(location->area_.y,uint64_t(1));
+    QCOMPARE(location->area_.h,uint64_t(5));
+    QCOMPARE(location->area_.w,uint64_t(5));
     QCOMPARE(test.keyExists(uint64_t(0)),true);
 }
 

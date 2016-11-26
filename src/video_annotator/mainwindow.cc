@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , f_index_(0)
   , next_id_(1)
-  , display_image_(NULL)
+  , display_image_(nullptr)
   , current_annotations_()
   , images_save_path_("")
   , progress_bar_stylesheet_("QProgressBar {"
@@ -68,8 +68,8 @@ void MainWindow::processAnnotations(uint64_t frame) {
   current_annotations_.clear();
   // add new annotations
   for (auto ann : document_->getAnnotations(frame)) {
-    auto rect = QRectF(ann.second->area.x, ann.second->area.y, ann.second->area.w, ann.second->area.h);
-    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, ann.second, rect);
+    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, 
+        ann.second, player_->getOneFrame().rect());
     scene_->addItem(region);
     current_annotations_.push_back(region);
   }
@@ -207,7 +207,7 @@ void MainWindow::on_minusThreeSecond_clicked() {
 }
 
 void MainWindow::rewindVideo(int seconds_to_rewind) {
-	if (!(player_ == NULL))
+	if (!(player_ == nullptr))
 	{
 		if (!player_->isStopped())
 		{
@@ -272,7 +272,7 @@ void MainWindow::on_plusOneFrame_clicked()
 
 void MainWindow::on_goToFrame_clicked()
 {
-  if (!(player_==NULL))
+  if (!(player_==nullptr))
   {
     if (!player_->isStopped())
     {
@@ -402,7 +402,7 @@ bool MainWindow::addRegion() {
     }
     auto loc = document_->addAnnotationLocation(fishID, frame, area);
     auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
-        fishID,loc, QRect(0, 0, 100, 100));
+        fishID, loc, player_->getOneFrame().rect());
     current_annotations_.push_back(annotationArea);
     scene_->addItem(annotationArea);
     return true;
@@ -463,7 +463,7 @@ void MainWindow::on_nextAndCopy_clicked()
     if(list_pos_ != my_fish_list_.end()) {
       if(list_pos_->getID() == id) {
         auto frame = ann.second->frame+1;
-        auto area = ann.second->area;
+        auto area = ann.second->area_;
         auto loc = document_->addAnnotationLocation(ann.first,frame, area);
         break;
       }

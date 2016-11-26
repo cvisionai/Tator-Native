@@ -55,8 +55,6 @@ private slots:
   void updateSubTypeMenu(int typeIndex);
 
   /// @brief Retrieves information for fish number currently in goToFishVal.
-  ///
-  /// @return no return.
   void goToFish();
 
   /// @brief Converts time in seconds into hours, minutes, seconds.
