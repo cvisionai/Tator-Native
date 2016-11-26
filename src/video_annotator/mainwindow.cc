@@ -68,8 +68,7 @@ void MainWindow::processAnnotations(uint64_t frame) {
   current_annotations_.clear();
   // add new annotations
   for (auto ann : document_->getAnnotations(frame)) {
-    auto rect = QRectF(ann.second->area_.x, ann.second->area_.y, ann.second->area_.w, ann.second->area_.h);
-    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, ann.second, rect);
+    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, ann.second);
     scene_->addItem(region);
     current_annotations_.push_back(region);
   }
@@ -402,7 +401,7 @@ bool MainWindow::addRegion() {
     }
     auto loc = document_->addAnnotationLocation(fishID, frame, area);
     auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
-        fishID,loc, QRect(0, 0, 100, 100));
+        fishID,loc);
     current_annotations_.push_back(annotationArea);
     scene_->addItem(annotationArea);
     return true;
