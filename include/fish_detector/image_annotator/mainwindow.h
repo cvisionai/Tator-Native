@@ -57,9 +57,6 @@ private:
   /// @brief Scene for displaying images.
   std::unique_ptr<QGraphicsScene> scene_;
 
-  /// @brief Pixel map from current image.
-  std::unique_ptr<QGraphicsPixmapItem> pixmap_;
-
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::MainWidget> ui_;
 
@@ -68,9 +65,6 @@ private:
 
   /// @brief Vector of image files in a directory.
   std::vector<std::string> image_files_;
-
-  /// @brief Map of image filenames to annotated regions.
-  std::multimap<std::string, AnnotatedRegion<ImageAnnotation>*> regions_;
 
   /// @brief Runs when image directory loaded successfully.
   void onLoadDirectorySuccess(const QString &image_dir);

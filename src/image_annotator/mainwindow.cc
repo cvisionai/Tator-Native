@@ -23,7 +23,6 @@ static const std::vector<std::string> kDirExtensions = {
 MainWindow::MainWindow(QWidget *parent)
   : annotations_(new ImageAnnotationList)
   , scene_(new QGraphicsScene)
-  , pixmap_(nullptr)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
   , image_files_() {
@@ -67,21 +66,29 @@ void MainWindow::on_loadImageDir_clicked() {
 }
 
 void MainWindow::on_saveAnnotations_clicked() {
+  if(image_files_.size() > 0) {
+    annotations_->write(image_files_);
+  }
 }
 
 void MainWindow::on_imageSlider_valueChanged() {
-  if(pixmap_ != nullptr) {
-    scene_->removeItem(pixmap_.get());
-  }
+  scene_->clear();
   QString filename(image_files_[ui_->imageSlider->value()].c_str());
   QImage current(filename);
   if(!current.isNull()) {
-    pixmap_.reset(scene_->addPixmap(QPixmap::fromImage(current)));
+    scene_->addPixmap(QPixmap::fromImage(current));
     scene_->setSceneRect(current.rect());
     ui_->imageWindow->setScene(scene_.get());
     ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->imageWindow->show();
     ui_->fileNameValue->setText(filename);
+    auto annotations = 
+      annotations_->getImageAnnotations(filename.toStdString());
+    for(auto annotation : annotations) {
+      auto region = new AnnotatedRegion<ImageAnnotation>(
+            annotation->id_, annotation);
+      scene_->addItem(region);
+    }
   }
   else {
     QMessageBox err;
@@ -98,11 +105,9 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
     uint64_t id = annotations_->nextId(current_image);
     auto annotation = std::make_shared<ImageAnnotation>(
       current_image, species, subspecies, id, 
-      Rect(0, 0, 0, 0));
+      Rect(0, 0, 100, 100));
     annotations_->insert(annotation);
-    auto region = new AnnotatedRegion<ImageAnnotation>(
-          id, annotation, QRectF(0, 0, 100, 100));
-    regions_.insert({current_image, region});
+    auto region = new AnnotatedRegion<ImageAnnotation>(id, annotation);
     scene_->addItem(region);
   }
 }
@@ -128,6 +133,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
     ui_->imageSlider->setSingleStep(1);
     ui_->imageSlider->setValue(0);
+    annotations_->read(image_files_);
     on_imageSlider_valueChanged();
   }
   else {
