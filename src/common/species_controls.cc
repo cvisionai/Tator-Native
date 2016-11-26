@@ -19,21 +19,30 @@ SpeciesControls::SpeciesControls(QWidget *parent)
 }
 
 void SpeciesControls::insertSpeciesWidget(const Species &species) {
-  species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
-          new SpeciesWidget(species, this))));
-  ui_->speciesLayout->insertWidget(
-      static_cast<int>(species_widgets_.size()) - 1, 
-      species_widgets_.back().get());
-  QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
-  QObject::connect(edit, SIGNAL(triggered()), 
-      this, SLOT(editSpeciesWidget()));
-  QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
-  QObject::connect(clear, SIGNAL(triggered()), 
-      this, SLOT(clearSpeciesWidget()));
-  QObject::connect(
-      species_widgets_.back().get(), 
-      SIGNAL(individualAdded(std::string, std::string)),
-      this, SIGNAL(individualAdded(std::string, std::string)));
+  bool widget_exists = false;
+  for(auto &widget : species_widgets_) {
+    if(widget->getSpecies().getName() == species.getName()) {
+      widget_exists = true;
+      break;
+    }
+  }
+  if(!widget_exists) {
+    species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
+            new SpeciesWidget(species, this))));
+    ui_->speciesLayout->insertWidget(
+        static_cast<int>(species_widgets_.size()) - 1, 
+        species_widgets_.back().get());
+    QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
+    QObject::connect(edit, SIGNAL(triggered()), 
+        this, SLOT(editSpeciesWidget()));
+    QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
+    QObject::connect(clear, SIGNAL(triggered()), 
+        this, SLOT(clearSpeciesWidget()));
+    QObject::connect(
+        species_widgets_.back().get(), 
+        SIGNAL(individualAdded(std::string, std::string)),
+        this, SIGNAL(individualAdded(std::string, std::string)));
+  }
 }
 
 void SpeciesControls::on_addSpecies_clicked() {
