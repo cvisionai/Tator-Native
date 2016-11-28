@@ -23,7 +23,7 @@
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="sideBarLayout" stretch="0">
+      <layout class="QVBoxLayout" name="sideBarLayout" stretch="0,0">
        <property name="spacing">
         <number>6</number>
        </property>
@@ -188,6 +188,31 @@
             <font>
              <pointsize>10</pointsize>
             </font>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QPushButton" name="removeAnnotation">
+           <property name="text">
+            <string>Remove Annotation</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="annotationDetails">
+           <property name="text">
+            <string>Annotation Details</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="showAnnotations">
+           <property name="text">
+            <string>Show Annotations</string>
            </property>
           </widget>
          </item>
