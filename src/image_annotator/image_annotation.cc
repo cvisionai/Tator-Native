@@ -1,6 +1,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+#include <QProgressDialog>
+
 #include "fish_detector/image_annotator/image_annotation.h"
 
 namespace fish_detector { namespace image_annotator {
@@ -170,6 +172,12 @@ bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
 
 void ImageAnnotationList::write(
   const std::vector<std::string> &filenames) const {
+  std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
+        "Saving annotations...", "Abort", 0, 
+        static_cast<int>(filenames.size()-1)));
+  dlg->setWindowModality(Qt::WindowModal);
+  dlg->show();
+  int iter = 0;
   for(auto &image_file : filenames) {
     pt::ptree tree;
     auto range = by_file_.left.equal_range(image_file);
@@ -179,6 +187,10 @@ void ImageAnnotationList::write(
     boost::filesystem::path json_file(image_file);
     json_file.replace_extension(".json");
     pt::write_json(json_file.string(), tree);
+    dlg->setValue(iter++);
+    if(dlg->wasCanceled()) {
+      break;
+    }
   }
 }
 

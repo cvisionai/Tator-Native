@@ -73,6 +73,9 @@ void MainWindow::on_saveAnnotations_clicked() {
 
 void MainWindow::on_imageSlider_valueChanged() {
   scene_->clear();
+  ui_->idSelection->clear();
+  ui_->speciesValue->setText("");
+  ui_->subspeciesValue->setText("");
   QString filename(image_files_[ui_->imageSlider->value()].c_str());
   QImage current(filename);
   if(!current.isNull()) {
@@ -85,9 +88,12 @@ void MainWindow::on_imageSlider_valueChanged() {
     auto annotations = 
       annotations_->getImageAnnotations(filename.toStdString());
     for(auto annotation : annotations) {
-      auto region = new AnnotatedRegion<ImageAnnotation>(
-            annotation->id_, annotation, current.rect());
-      scene_->addItem(region);
+      if(ui_->showAnnotations->isChecked()) {
+          auto region = new AnnotatedRegion<ImageAnnotation>(
+                annotation->id_, annotation, current.rect());
+          scene_->addItem(region);
+      }
+      ui_->idSelection->addItem(QString::number(annotation->id_));
     }
     species_controls_->resetCounts();
     auto counts = annotations_->getCounts(filename.toStdString());
@@ -101,6 +107,33 @@ void MainWindow::on_imageSlider_valueChanged() {
         std::string("Error loading image ")
       + filename.toStdString()
       + std::string(".")).c_str());
+  }
+}
+
+void MainWindow::on_showAnnotations_stateChanged() {
+  on_imageSlider_valueChanged();
+}
+
+void MainWindow::on_idSelection_currentIndexChanged(const QString &id) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    std::string current_image = image_files_[ui_->imageSlider->value()];
+    auto annotations = 
+      annotations_->getImageAnnotations(current_image);
+    for(auto annotation : annotations) {
+      if(annotation->id_ == id.toInt()) {
+        ui_->speciesValue->setText(annotation->species_.c_str());
+        ui_->subspeciesValue->setText(annotation->subspecies_.c_str());
+      }
+    }
+  }
+}
+
+void MainWindow::on_removeAnnotation_clicked() {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    std::string current_image = image_files_[ui_->imageSlider->value()];
+    int id = ui_->idSelection->currentText().toInt();
+    annotations_->remove(current_image, id);
+    on_imageSlider_valueChanged();
   }
 }
 

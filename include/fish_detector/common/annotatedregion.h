@@ -99,7 +99,8 @@ AnnotatedRegion<Info>::AnnotatedRegion(
     , pen_(QColor(255, 0, 0)) {
     if(annotation_->area_.w == 0 && annotation_->area_.h == 0) {
       // Default rectangle.
-      setRect(QRectF(0, 0, 0.1 * min_dim_, 0.1 * min_dim_));
+      setRect(QRectF(bounding_rect_.x(), bounding_rect_.y(), 
+            0.1 * min_dim_, 0.1 * min_dim_));
     }
     else {
       // Rectangle from annotation.
@@ -110,7 +111,7 @@ AnnotatedRegion<Info>::AnnotatedRegion(
             annotation_->area_.h));
     }
     pen_.setWidthF(std::min(
-          bounding_rect_.width(), bounding_rect_.height()) * 0.01);
+          bounding_rect_.width(), bounding_rect_.height()) * 0.005);
     updateAnnotation();
     setAcceptHoverEvents(true);
     setFlags(ItemIsMovable | ItemIsSelectable);
@@ -261,10 +262,17 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         area.translate(pos.x() - old_pos.x(), pos.y() - old_pos.y());
         break;
     }
-    setRect(area);
-    prepareGeometryChange();
-    update();
-    updateAnnotation();
+    if(area.left() >= bounding_rect_.left()
+        && area.top() >= bounding_rect_.top()
+        && area.width() + area.left() <= 
+          bounding_rect_.width() + bounding_rect_.left()
+        && area.height() + area.top() <=
+          bounding_rect_.height() + bounding_rect_.top()) {
+      setRect(area);
+      prepareGeometryChange();
+      update();
+      updateAnnotation();
+    }
 }
 
 template<typename Info>
