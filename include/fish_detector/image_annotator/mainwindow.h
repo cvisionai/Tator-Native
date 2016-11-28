@@ -47,6 +47,9 @@ private slots:
   /// @brief Moves to the image indicated by image slider.
   void on_imageSlider_valueChanged();
 
+  /// @brief Updates display to show/hide annotations.
+  void on_showAnnotations_stateChanged();
+
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 

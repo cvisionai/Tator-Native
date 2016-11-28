@@ -82,12 +82,14 @@ void MainWindow::on_imageSlider_valueChanged() {
     ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->imageWindow->show();
     ui_->fileNameValue->setText(filename);
-    auto annotations = 
-      annotations_->getImageAnnotations(filename.toStdString());
-    for(auto annotation : annotations) {
-      auto region = new AnnotatedRegion<ImageAnnotation>(
-            annotation->id_, annotation, current.rect());
-      scene_->addItem(region);
+    if(ui_->showAnnotations->isChecked()) {
+      auto annotations = 
+        annotations_->getImageAnnotations(filename.toStdString());
+      for(auto annotation : annotations) {
+        auto region = new AnnotatedRegion<ImageAnnotation>(
+              annotation->id_, annotation, current.rect());
+        scene_->addItem(region);
+      }
     }
     species_controls_->resetCounts();
     auto counts = annotations_->getCounts(filename.toStdString());
@@ -102,6 +104,10 @@ void MainWindow::on_imageSlider_valueChanged() {
       + filename.toStdString()
       + std::string(".")).c_str());
   }
+}
+
+void MainWindow::on_showAnnotations_stateChanged() {
+  on_imageSlider_valueChanged();
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
