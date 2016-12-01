@@ -1,4 +1,4 @@
-FishDetector                                                   {#mainpage}
+FishAnnotator                                                  {#mainpage}
 ============
 
 Introduction
@@ -13,7 +13,7 @@ Building and testing
 Dependencies
 ------------
 
-FishDetector uses the following 3rd party libraries:
+FishAnnotator uses the following 3rd party libraries:
 
 * [Qt5][Qt5]
 * [Boost.PropertyTree][BoostPropertyTree]
