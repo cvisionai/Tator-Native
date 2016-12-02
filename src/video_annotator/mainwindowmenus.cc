@@ -86,7 +86,7 @@ int MainWindow::getFishSpecies (FishTypeEnum fType,
     if (sString == "Windowpane") return 2;
     if (sString == "Summer") return 3;
 	if (sString == "Winter") return 4;
-    if (sString == "FourSport") return 5;
+    if (sString == "Fourspot") return 5;
     if (sString == "Grey Sole") return 6;
     if (sString == "Halibut") return 7;
     if (sString == "Unknown") return 8;
