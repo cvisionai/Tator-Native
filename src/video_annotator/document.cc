@@ -9,25 +9,25 @@ namespace pt = boost::property_tree;
 
 AnnotationLocation::AnnotationLocation(uint64_t frame, Rect area)
   : frame(frame)
-  , area(area) {
+  , area_(area) {
 }
 
 pt::ptree AnnotationLocation::write() const {
   pt::ptree node;
   node.add("annotation.frame", frame);
-  node.add("annotation.x", area.x);
-  node.add("annotation.y", area.y);
-  node.add("annotation.w", area.w);
-  node.add("annotation.h", area.h);
+  node.add("annotation.x", area_.x);
+  node.add("annotation.y", area_.y);
+  node.add("annotation.w", area_.w);
+  node.add("annotation.h", area_.h);
   return node;
 }
 
 void AnnotationLocation::read(const pt::ptree &tree) {
   frame = tree.get("annotation.frame",0);
-  area.x = tree.get("annotation.x",0);
-  area.y = tree.get("annotation.y",0);
-  area.w = tree.get("annotation.w",0);
-  area.h = tree.get("annotation.h",0);
+  area_.x = tree.get("annotation.x",0);
+  area_.y = tree.get("annotation.y",0);
+  area_.w = tree.get("annotation.w",0);
+  area_.h = tree.get("annotation.h",0);
 }
 
 void FrameAnnotations::add(ptr_t annotation) {
@@ -62,7 +62,7 @@ std::shared_ptr<AnnotationLocation> Annotation::addLocation(uint64_t frame, Rect
 
 void Annotation::copyLastLocation(uint64_t frame) {
   auto lastLoc = locations.back();
-  addLocation(frame, lastLoc->area);
+  addLocation(frame, lastLoc->area_);
 }
 
 bool Annotation::frameHasAnn(uint64_t frame) {

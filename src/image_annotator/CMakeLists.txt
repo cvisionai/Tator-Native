@@ -1,29 +1,31 @@
-# Find the sources for video annotator
-file( GLOB VIDEO_ANNOTATOR_SOURCES "*.cc" )
+# Find the sources for image annotator
+file( GLOB IMAGE_ANNOTATOR_SOURCES "*.cc" )
 
-# Add video annotator executable
+# Add image_annotator executable
 if( WIN32 )
-  add_executable( video_annotator WIN32 
-    ${VIDEO_ANNOTATOR_SOURCES} 
+  add_executable( image_annotator WIN32 
+    ${IMAGE_ANNOTATOR_SOURCES} 
     )
   target_link_libraries(
-    video_annotator
+    image_annotator
     common
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
   set_target_properties( 
-    video_annotator 
+    image_annotator 
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
 elseif( APPLE )
-  add_executable( video_annotator ${VIDEO_ANNOTATOR_SOURCES} )
+  add_executable( image_annotator ${IMAGE_ANNOTATOR_SOURCES} )
   target_link_libraries(
-    video_annotator
+    image_annotator
+    common
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
@@ -35,7 +37,7 @@ endif()
 
 # Add install target 
 install( 
-  TARGETS video_annotator 
+  TARGETS image_annotator 
   DESTINATION . 
   )
 

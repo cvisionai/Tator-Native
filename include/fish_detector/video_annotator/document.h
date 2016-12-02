@@ -39,7 +39,7 @@ struct AnnotationLocation : public Serialization {
   void read(const boost::property_tree::ptree &tree);
 
   uint64_t frame; ///< Video frame in which this annotation was made.
-  Rect area; ///< Rectangle bounding the annotation.
+  Rect area_; ///< Rectangle bounding the annotation.
 };
 
 /// @brief Contains all annotation information for a video.

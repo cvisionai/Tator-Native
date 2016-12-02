@@ -17,5 +17,19 @@ void deserialize(Serialization &obj, std::istream &in) {
   obj.read(tree);
 }
 
+bool serialize(const Serialization &obj, const std::string &out) {
+  std::ofstream stream(out, std::ios::out);
+  if(stream.fail()) return false;
+  serialize(obj, stream);
+  return true;
+}
+
+bool deserialize(Serialization &obj, const std::string &in) {
+  std::ifstream stream(in, std::ios::in);
+  if(stream.fail()) return false;
+  deserialize(obj, stream);
+  return true;
+}
+
 } // namespace fish_detector
 

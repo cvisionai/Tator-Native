@@ -1,4 +1,4 @@
-FishDetector                                                   {#mainpage}
+FishAnnotator                                                  {#mainpage}
 ============
 
 Introduction
@@ -13,7 +13,7 @@ Building and testing
 Dependencies
 ------------
 
-FishDetector uses the following 3rd party libraries:
+FishAnnotator uses the following 3rd party libraries:
 
 * [Qt5][Qt5]
 * [Boost.PropertyTree][BoostPropertyTree]
@@ -348,6 +348,12 @@ or on linux/mac:
 make test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Developer Info
+==============
+
+This project uses the [Google C++ style guide][StyleGuide].  Refer to this for
+coding practices and naming conventions.
+
 [Qt5]: https://www.qt.io/developers/
 [BoostPropertyTree]: http://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html
 [OpenCV]: http://opencv.org/
@@ -363,3 +369,4 @@ make test
 [doxysite]: https://sourceforge.net/projects/doxygen/
 [latexsite]: https://miktex.org/
 [nsissite]: http://nsis.sourceforge.net/Main_Page
+[StyleGuide]: https://google.github.io/styleguide/cppguide.html
