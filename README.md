@@ -4,7 +4,7 @@ FishAnnotator                                                  {#mainpage}
 Introduction
 ============
 
-**FishDetector** is an application that facilitates annotation of videos 
+**FishAnnotator** is an application that facilitates annotation of videos 
 and images of fish.  Eventually it will be expanded to automatically create
 annotations using computer vision algorithms.
 
@@ -204,18 +204,18 @@ Building the application on Windows
 
 1\. It is recommended on Windows to use the CMake GUI to configure the
     build.  Open the CMake GUI, set the source directory to the top level
-    FishDetector repository directory, and set the build directory to a
+    FishAnnotator repository directory, and set the build directory to a
     subdirectory of this called *build*.  Something like:
 
-    Where is the source code: C:/local/FishDetector
-    Where to build the binaries: C:/local/FishDetector/build
+    Where is the source code: C:/local/FishAnnotator
+    Where to build the binaries: C:/local/FishAnnotator/build
 
 2\. Press configure, allow CMake to create the build directory, and select
     the same generator that was used to build the dependencies.
 
-3\. FishDetector uses find_package commands to find dependencies.  Sometimes
+3\. FishAnnotator uses find_package commands to find dependencies.  Sometimes
 these libraries require hints to be found properly, especially on Windows.
-The first time FishDetector is built, it will generate a file at
+The first time FishAnnotator is built, it will generate a file at
 cmake/FishDetFindLibsHints.cmake which contains the hints for these
 libraries.  The default values are set to the environment variables for
 the system, however if they are not set you can modify this file manually
@@ -229,7 +229,7 @@ For example,
     set( OpenCV_DIR "D:/Projects/opencv/build/install")  
 
 After the file is generated it will
-  not be overwritten next FishDetector is built, so this manual modification
+  not be overwritten next FishAnnotator is built, so this manual modification
   is only necessary for fresh builds.  Modify this file until the libraries
   are found and the configure step completes successfully.
 
@@ -250,16 +250,16 @@ cmake --build . --target INSTALL --config Release
 Building the application on Mac
 -------------------------------
 
-1\. From top level FishDetector directory:
+1\. From top level FishAnnotator directory:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 mkdir build
 cd build
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2\. FishDetector uses find_package commands to find dependencies.  Sometimes
+2\. FishAnnotator uses find_package commands to find dependencies.  Sometimes
 these libraries require hints to be found properly, especially on Windows.
-The first time FishDetector is built, it will generate a file at
+The first time FishAnnotator is built, it will generate a file at
 cmake/FishDetFindLibsHints.cmake which contains the hints for these
 libraries.  The default values are set to the environment variables for
 the system, however if they are not set you can modify this file manually
@@ -276,7 +276,7 @@ For example,
     set( PNG_LIBRARIES "/Users/jtakahashi/dev/libpng/build/inst/lib/libpng.a" )
 
 After the file is generated it will
-not be overwritten next FishDetector is built, so this manual modification
+not be overwritten next FishAnnotator is built, so this manual modification
 is only necessary for fresh builds.  Modify this file until the libraries
 are found and the configure step completes successfully.
 
@@ -326,7 +326,7 @@ doxygen/manual/latex/refman.pdf.
 Building installer
 ------------------
 
-After FishDetector has been built and installed, the installer can be built
+After FishAnnotator has been built and installed, the installer can be built
 by typing the following from a Visual Studio command prompt:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
