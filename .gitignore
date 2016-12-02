@@ -9,7 +9,6 @@
 *.ilk
 *.user
 *.dll
-*.json
 *.app
 Makefile*
 fishguibuild*
