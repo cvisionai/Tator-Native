@@ -20,7 +20,7 @@ if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
     )
 endif()
 
-# FishDetector subdirectories
+# FishAnnotator subdirectories
 set( FISHDET_SRC_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src" )
 set( FISHDET_INCLUDE_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 set( FISHDET_CMAKE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
@@ -82,13 +82,13 @@ if( ${DOXYGEN_FOUND} STREQUAL "YES" )
 endif()
 
 # Set icon paths
-set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishDetector.ico" )
-set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishDetector.bmp" )
+set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.ico" )
+set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.bmp" )
 
 # Configure CPack
 set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
 include( InstallRequiredSystemLibraries )
-set( CPACK_PACKAGE_NAME "FishDetector" )
+set( CPACK_PACKAGE_NAME "FishAnnotator" )
 set( CPACK_PACKAGE_DESCRIPTION_SUMMARY 
      "An application for assisting estimation of fish populations." )
 set( CPACK_PACKAGE_VENDOR "CVision Consulting LLC" )
@@ -115,9 +115,9 @@ if( WIN32 )
   set( CPACK_CREATE_DESKTOP_LINKS fish_gui video_slicer )
 elseif( APPLE )
   set( CPACK_GENERATOR "Bundle" )
-  set( CPACK_PACKAGE_FILE_NAME "FishDetector" )
+  set( CPACK_PACKAGE_FILE_NAME "FishAnnotator" )
   set( CPACK_PACKAGE_ICON "${FISHDET_ICON}" )
-  set( CPACK_BUNDLE_NAME "FishDetector" )
+  set( CPACK_BUNDLE_NAME "FishAnnotator" )
   set( CPACK_BUNDLE_ICON "${FISHDET_ICON}" )
   set( CPACK_BUNDLE_PLIST "" )
   set( CPACK_BUNDLE_STARTUP_COMMAND "" )

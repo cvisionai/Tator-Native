@@ -1,7 +1,7 @@
-/// @brief Top level namespace for FishDetector.
-namespace fish_detector {
+/// @brief Top level namespace for FishAnnotator.
+namespace fish_annotator {
 
-/// @brief Namespace for the FishDetector GUI.
+/// @brief Namespace for the FishAnnotator GUI.
 namespace gui {}
 
 /// @brief Namespace for Video Slicer.
