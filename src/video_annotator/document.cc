@@ -1,9 +1,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/foreach.hpp>
 
-#include "fish_detector/video_annotator/document.h"
+#include "fish_annotator/video_annotator/document.h"
 
-namespace fish_detector { namespace video_annotator {
+namespace fish_annotator { namespace video_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -160,5 +160,5 @@ void Document::read(const pt::ptree &tree) {
   }
 }
 
-}} // namespace fish_detector::video_annotator
+}} // namespace fish_annotator::video_annotator
 

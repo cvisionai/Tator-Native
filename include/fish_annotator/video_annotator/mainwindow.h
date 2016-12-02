@@ -19,13 +19,13 @@
 #include <QKeyEvent>
 #include <QProgressDialog>
 
-#include "fish_detector/common/annotatedregion.h"
-#include "fish_detector/video_annotator/fish.h"
-#include "fish_detector/video_annotator/document.h"
-#include "fish_detector/video_annotator/player.h"
+#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/video_annotator/fish.h"
+#include "fish_annotator/video_annotator/document.h"
+#include "fish_annotator/video_annotator/player.h"
 #include "ui_mainwindow.h"
 
-namespace fish_detector { namespace video_annotator {
+namespace fish_annotator { namespace video_annotator {
 
 class MainWindow : public QWidget
 {
@@ -183,7 +183,7 @@ T remove_reviewer(T const & filename)
   return p > 0 && p != T::npos ? filename.substr(0, p) : filename;
 }
 
-}} // namespace fish_detector::video_annotator
+}} // namespace fish_annotator::video_annotator
 
 #endif // MAINWINDOW_H
 

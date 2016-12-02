@@ -3,9 +3,9 @@
 
 #include <QProgressDialog>
 
-#include "fish_detector/image_annotator/image_annotation.h"
+#include "fish_annotator/image_annotator/image_annotation.h"
 
-namespace fish_detector { namespace image_annotator {
+namespace fish_annotator { namespace image_annotator {
 
 ImageAnnotation::ImageAnnotation(const std::string& image_file, 
                                  const std::string& species,
@@ -213,4 +213,4 @@ void ImageAnnotationList::read(const std::vector<std::string> &filenames) {
   }
 }
 
-}} // namespace fish_detector::image_annotator
+}} // namespace fish_annotator::image_annotator

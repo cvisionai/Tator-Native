@@ -9,13 +9,13 @@
 
 #include <QMenu>
 
-#include "fish_detector/common/species_widget.h"
+#include "fish_annotator/common/species_widget.h"
 
 namespace Ui {
   class SpeciesControls;
 }
 
-namespace fish_detector {
+namespace fish_annotator {
 
 class SpeciesControls : public QWidget {
   Q_OBJECT
@@ -89,6 +89,6 @@ private:
   void loadSpeciesFile(const QString &in_file);
 };
 
-} // namespace fish_detector
+} // namespace fish_annotator
 
 #endif // SPECIES_CONTROLS_H

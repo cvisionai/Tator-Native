@@ -1,11 +1,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "fish_detector/common/species_dialog.h"
-#include "fish_detector/common/species_controls.h"
+#include "fish_annotator/common/species_dialog.h"
+#include "fish_annotator/common/species_controls.h"
 #include "ui_species_controls.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 SpeciesControls::SpeciesControls(QWidget *parent)
   : ui_(new Ui::SpeciesControls)
@@ -170,7 +170,7 @@ void SpeciesControls::setCount(uint64_t count, const std::string &species) {
   }
 }
 
-#include "../../include/fish_detector/common/moc_species_controls.cpp"
+#include "../../include/fish_annotator/common/moc_species_controls.cpp"
 
-} // namespace fish_detector
+} // namespace fish_annotator
 

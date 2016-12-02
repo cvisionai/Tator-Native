@@ -1,9 +1,9 @@
 #include <string>
 
-#include "fish_detector/video_slicer/mainwindow.h"
+#include "fish_annotator/video_slicer/mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_detector { namespace video_slicer {
+namespace fish_annotator { namespace video_slicer {
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -77,6 +77,6 @@ void MainWindow::on_run_clicked() {
     std::cout << "Finished writing" << std::endl;
 }
 
-#include "../../include/fish_detector/video_slicer/moc_mainwindow.cpp"
+#include "../../include/fish_annotator/video_slicer/moc_mainwindow.cpp"
 
-}} // namespace fish_detector::video_slicer
+}} // namespace fish_annotator::video_slicer

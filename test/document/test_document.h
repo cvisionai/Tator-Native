@@ -3,7 +3,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include "fish_detector/video_annotator/document.h"
+#include "fish_annotator/video_annotator/document.h"
 // unit test class for Document
 using namespace std;
 
@@ -11,7 +11,7 @@ using boost::property_tree::ptree;
 using boost::property_tree::json_parser::write_json;
 using boost::property_tree::json_parser::read_json;
 
-struct TestClass : public fish_detector::Serialization {
+struct TestClass : public fish_annotator::Serialization {
   int x, y;
 
   TestClass(int x, int y) 

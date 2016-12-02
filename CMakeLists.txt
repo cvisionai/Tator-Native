@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
 
-project( fish_detector )
+project( fish_annotator )
 
 set( CMAKE_BUILD_TYPE Release )
 

@@ -13,10 +13,10 @@
 #include <iostream>
 #include <sstream>
 
-#include "fish_detector/common/rect.h"
-#include "fish_detector/common/serialization.h"
+#include "fish_annotator/common/rect.h"
+#include "fish_annotator/common/serialization.h"
 
-namespace fish_detector { namespace video_annotator {
+namespace fish_annotator { namespace video_annotator {
 
 /// @brief Location of an annotation in a video.
 ///
@@ -175,7 +175,7 @@ private:
     AnnotationMap annotations;
 };
 
-}} // namespace fish_detector::video_annotator
+}} // namespace fish_annotator::video_annotator
 
 #endif // DOCUMENT_H
 

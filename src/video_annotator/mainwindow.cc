@@ -1,6 +1,6 @@
-#include "fish_detector/video_annotator/mainwindow.h"
+#include "fish_annotator/video_annotator/mainwindow.h"
 
-namespace fish_detector { namespace video_annotator {
+namespace fish_annotator { namespace video_annotator {
 
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
@@ -592,6 +592,6 @@ void MainWindow::enableControls()
   ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
 }
 
-#include "../../include/fish_detector/video_annotator/moc_mainwindow.cpp"
+#include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"
 
-}} // namespace fish_detector::video_annotator
+}} // namespace fish_annotator::video_annotator

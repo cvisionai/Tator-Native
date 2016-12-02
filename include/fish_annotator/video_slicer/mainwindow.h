@@ -19,7 +19,7 @@
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat)
 #include <opencv2/highgui/highgui.hpp>  // Video write
 
-namespace fish_detector { namespace video_slicer {
+namespace fish_annotator { namespace video_slicer {
 
 namespace Ui {
 class MainWindow;
@@ -43,6 +43,6 @@ private:
     QString filename;
 };
 
-}} // namespace fish_detector::video_slicer
+}} // namespace fish_annotator::video_slicer
 
 #endif // MAINWINDOW_H

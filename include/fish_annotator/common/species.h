@@ -10,9 +10,9 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "fish_detector/common/serialization.h"
+#include "fish_annotator/common/serialization.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -106,7 +106,7 @@ private:
   std::vector<Species> species_;
 };
 
-} // namespace fish_detector
+} // namespace fish_annotator
 
 #endif // SPECIES_H
 

@@ -1,7 +1,7 @@
 #include <QtPlugin>
 #include <QApplication>
 
-#include "fish_detector/video_slicer/mainwindow.h"
+#include "fish_annotator/video_slicer/mainwindow.h"
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
@@ -12,7 +12,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    fish_detector::video_slicer::MainWindow w;
+    fish_annotator::video_slicer::MainWindow w;
     w.show();
 
     return a.exec();

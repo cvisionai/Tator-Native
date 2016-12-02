@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>fish_detector::video_annotator::NavigatorWidget</class>
+ <class>fish_annotator::video_annotator::NavigatorWidget</class>
  <widget class="QWidget" name="NavigatorWidget">
   <property name="geometry">
    <rect>

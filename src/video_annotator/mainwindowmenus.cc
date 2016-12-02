@@ -1,7 +1,7 @@
-#include "fish_detector/video_annotator/mainwindow.h"
+#include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_detector { namespace video_annotator {
+namespace fish_annotator { namespace video_annotator {
 
 namespace Ui {
   class MainWidget;
@@ -177,5 +177,5 @@ std::string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species) {
   }
 }
 
-}} // namespace fish_detector::video_annotator
+}} // namespace fish_annotator::video_annotator
 

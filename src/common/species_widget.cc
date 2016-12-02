@@ -1,7 +1,7 @@
-#include "fish_detector/common/species_widget.h"
+#include "fish_annotator/common/species_widget.h"
 #include "ui_species_widget.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 SpeciesWidget::SpeciesWidget(const Species &species, QWidget *parent)
   : QWidget(parent)
@@ -39,6 +39,6 @@ void SpeciesWidget::setCount(uint64_t count) {
   ui_->count->setText(std::to_string(count).c_str());
 }
 
-#include "../../include/fish_detector/common/moc_species_widget.cpp"
+#include "../../include/fish_annotator/common/moc_species_widget.cpp"
 
-} // namespace fish_detector
+} // namespace fish_annotator

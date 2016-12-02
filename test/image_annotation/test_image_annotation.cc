@@ -1,12 +1,12 @@
-#include "fish_detector/common/rect.h"
-#include "fish_detector/image_annotator/image_annotation.h"
+#include "fish_annotator/common/rect.h"
+#include "fish_annotator/image_annotator/image_annotation.h"
 #include "test_image_annotation.h"
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 #endif
 
-namespace ia = fish_detector::image_annotator;
+namespace ia = fish_annotator::image_annotator;
 
 void TestImageAnnotation::testSerialize() {
   std::vector<std::string> image_list = {
@@ -17,16 +17,16 @@ void TestImageAnnotation::testSerialize() {
   ia::ImageAnnotationList list;
   list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[0], "asdfa", "ljklg", 0, 
-    fish_detector::Rect(1, 2, 3, 4)));
+    fish_annotator::Rect(1, 2, 3, 4)));
   list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[0], "ahsdifuasega", "ljsdasdhaklg", 1, 
-    fish_detector::Rect(3, 2, 1, 9)));
+    fish_annotator::Rect(3, 2, 1, 9)));
   list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[1], "ahspda8", "asha", 0, 
-    fish_detector::Rect(4, 3, 2, 8)));
+    fish_annotator::Rect(4, 3, 2, 8)));
   list.insert(std::make_shared<ia::ImageAnnotation>(
     image_list[3], "ahspda8", "ashaahsgha", 0, 
-    fish_detector::Rect(4, 3, 2, 8)));
+    fish_annotator::Rect(4, 3, 2, 8)));
   QVERIFY(list.getAllSpecies().size() == 3);
   QVERIFY(list.by_file_.left.count(image_list[0]) == 2);
   list.write(image_list);

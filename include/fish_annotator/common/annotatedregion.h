@@ -8,7 +8,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 
-namespace fish_detector {
+namespace fish_annotator {
 
 enum Drag {
     DRAG_NONE = 0,
@@ -307,7 +307,7 @@ void AnnotatedRegion<Info>::updateAnnotation() {
   annotation_->area_.h = area.height();
 }
 
-} // namespace fish_detector
+} // namespace fish_annotator
 
 #endif // ANNOTATEDREGION_H
 

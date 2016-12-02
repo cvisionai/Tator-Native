@@ -1,7 +1,7 @@
-#include "fish_detector/common/species_dialog.h"
+#include "fish_annotator/common/species_dialog.h"
 #include "ui_species_dialog.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 SpeciesDialog::SpeciesDialog(QWidget *parent)
   : QDialog(parent) 
@@ -49,6 +49,6 @@ void SpeciesDialog::setSpecies(const Species &species) {
   }
 }
 
-#include "../../include/fish_detector/common/moc_species_dialog.cpp"
+#include "../../include/fish_annotator/common/moc_species_dialog.cpp"
 
-} // namespace fish_detector
+} // namespace fish_annotator

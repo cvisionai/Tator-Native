@@ -9,13 +9,13 @@
 #include <QWidget>
 #include <QDialog>
 
-#include "fish_detector/common/species.h"
+#include "fish_annotator/common/species.h"
 
 namespace Ui {
   class SpeciesDialog;
 }
 
-namespace fish_detector {
+namespace fish_annotator {
 
 class SpeciesDialog : public QDialog {
   Q_OBJECT
@@ -53,6 +53,6 @@ private:
   std::unique_ptr<Ui::SpeciesDialog> ui_;
 };
 
-} // namespace fish_detector
+} // namespace fish_annotator
 
 #endif // SPECIES_DIALOG_H

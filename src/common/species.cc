@@ -1,6 +1,6 @@
-#include "fish_detector/common/species.h"
+#include "fish_annotator/common/species.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 Species::Species(const std::string& name)
   : name_(name)
@@ -87,4 +87,4 @@ void SpeciesList::read(const pt::ptree &tree) {
   }
 }
 
-} // namespace fish_detector
+} // namespace fish_annotator

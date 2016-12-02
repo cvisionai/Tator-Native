@@ -1,9 +1,9 @@
 
 #include <boost/property_tree/json_parser.hpp>
 
-#include "fish_detector/common/serialization.h"
+#include "fish_annotator/common/serialization.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -31,5 +31,5 @@ bool deserialize(Serialization &obj, const std::string &in) {
   return true;
 }
 
-} // namespace fish_detector
+} // namespace fish_annotator
 

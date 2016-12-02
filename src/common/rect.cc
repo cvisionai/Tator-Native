@@ -1,6 +1,6 @@
-#include "fish_detector/common/rect.h"
+#include "fish_annotator/common/rect.h"
 
-namespace fish_detector {
+namespace fish_annotator {
 
 Rect::Rect(const Rect &r) {
   x = r.x;
@@ -16,5 +16,5 @@ Rect::Rect(uint64_t x, uint64_t y, uint64_t w, uint64_t h)
   , h(h) {
 }
 
-} // namespace fish_detector
+} // namespace fish_annotator
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>fish_detector::video_annotator::MainWidget</class>
+ <class>fish_annotator::video_annotator::MainWidget</class>
  <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
@@ -1283,9 +1283,9 @@ QPushButton#addOther:pressed {
  </widget>
  <customwidgets>
   <customwidget>
-    <class>fish_detector::video_annotator::NavigatorWidget</class>
+    <class>fish_annotator::video_annotator::NavigatorWidget</class>
     <extends>QWidget</extends>
-    <header>fish_detector/video_annotator/navigatorwidget.h</header>
+    <header>fish_annotator/video_annotator/navigatorwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

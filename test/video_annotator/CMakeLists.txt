@@ -11,8 +11,8 @@ set( VIDEO_ANNOTATOR_SOURCES
   "../../src/common/serialization.cc"
   )
 include_directories( 
-  "../../include/fish_detector/video_annotator"
-  "../../include/fish_detector/common"
+  "../../include/fish_annotator/video_annotator"
+  "../../include/fish_annotator/common"
   )
 if( WIN32 )
   add_executable( test_video_annotator WIN32 

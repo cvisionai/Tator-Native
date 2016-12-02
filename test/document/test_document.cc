@@ -9,7 +9,7 @@ void TestDocument::testSerialize() {
     std::ostringstream out;
     TestClass test(1, 2);
 
-    fish_detector::serialize(test, out);
+    fish_annotator::serialize(test, out);
     QCOMPARE(expected, out.str());
 }
 
@@ -17,7 +17,7 @@ void TestDocument::testDeserialize() {
     std::string data = "{\"x\":\"1\",\"y\":\"2\"}\n";
     std::istringstream input(data);
     TestClass test(0, 0);
-    fish_detector::deserialize(test, input);
+    fish_annotator::deserialize(test, input);
     QCOMPARE(test.x, 1);
     QCOMPARE(test.y, 2);
 }
@@ -28,8 +28,8 @@ void TestDocument::testReadJSON()
                       \"frame\":\"1\",\"x\":\"1\",\"y\":\"1\",\"h\":\"5\",\"w\":\"5\"\
                       }}]}\n";
     std::istringstream input(data);
-    fish_detector::video_annotator::Document test;
-    fish_detector::deserialize(test, input);
+    fish_annotator::video_annotator::Document test;
+    fish_annotator::deserialize(test, input);
     auto annotations = test.getAnnotations();
     auto annotation = annotations[0];
     auto locations = annotation->getLocations();

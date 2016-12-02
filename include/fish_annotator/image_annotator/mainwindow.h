@@ -13,12 +13,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 
-#include "fish_detector/common/species_controls.h"
-#include "fish_detector/common/annotatedregion.h"
-#include "fish_detector/image_annotator/image_annotation.h"
+#include "fish_annotator/common/species_controls.h"
+#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
 
-namespace fish_detector { namespace image_annotator {
+namespace fish_annotator { namespace image_annotator {
 
 class MainWindow : public QWidget {
   Q_OBJECT
@@ -79,6 +79,6 @@ private:
   void onLoadDirectorySuccess(const QString &image_dir);
 };
 
-}} // namespace fish_detector::image_annotator
+}} // namespace fish_annotator::image_annotator
 
 #endif //IMAGE_ANNOTATOR_MAINWINDOW_H

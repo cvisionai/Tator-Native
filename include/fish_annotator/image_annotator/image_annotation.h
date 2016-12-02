@@ -14,15 +14,15 @@
 #include <boost/bimap.hpp>
 #include <boost/bimap/multiset_of.hpp>
 
-#include "fish_detector/common/serialization.h"
-#include "fish_detector/common/rect.h"
-#include "fish_detector/common/species.h"
+#include "fish_annotator/common/serialization.h"
+#include "fish_annotator/common/rect.h"
+#include "fish_annotator/common/species.h"
 
 #ifndef NO_TESTING
 class TestImageAnnotation;
 #endif
 
-namespace fish_detector { namespace image_annotator {
+namespace fish_annotator { namespace image_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -168,6 +168,6 @@ private:
   ByStringPair by_species_;
 };
 
-}} // namespace fish_detector::image_annotator
+}} // namespace fish_annotator::image_annotator
 
 #endif // IMAGE_ANNOTATIONS_H

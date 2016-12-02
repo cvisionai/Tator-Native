@@ -4,8 +4,8 @@ set( IMAGE_ANNOTATOR_SOURCES
   "../../src/image_annotator/mainwindow.cc"
   )
 include_directories(
-  "../../include/fish_detector/image_annotator"
-  "../../include/fish_detector/common"
+  "../../include/fish_annotator/image_annotator"
+  "../../include/fish_annotator/common"
   )
 if( WIN32 )
   add_executable( test_image_annotator WIN32

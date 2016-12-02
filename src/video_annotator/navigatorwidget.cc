@@ -1,7 +1,7 @@
-#include "fish_detector/video_annotator/navigatorwidget.h"
+#include "fish_annotator/video_annotator/navigatorwidget.h"
 #include "ui_navigatorwidget.h"
 
-namespace fish_detector { namespace video_annotator {
+namespace fish_annotator { namespace video_annotator {
 
 NavigatorWidget::NavigatorWidget(QWidget *parent) :
     QWidget(parent),
@@ -14,7 +14,7 @@ NavigatorWidget::~NavigatorWidget()
 {
 }
 
-#include "../../include/fish_detector/video_annotator/moc_navigatorwidget.cpp"
+#include "../../include/fish_annotator/video_annotator/moc_navigatorwidget.cpp"
 
-}} // namespace fish_detector::video_annotator
+}} // namespace fish_annotator::video_annotator
 
