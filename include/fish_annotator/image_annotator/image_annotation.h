@@ -89,7 +89,7 @@ inline bool operator<(const List::iterator& lhs, const List::iterator& rhs) {
 /// @brief Defines annotation information for a series of images.
 class ImageAnnotationList {
 #ifndef NO_TESTING
-  friend class TestImageAnnotation;
+  friend class ::TestImageAnnotation;
 #endif
 public:
   /// @brief Constructor.
