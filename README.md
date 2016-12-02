@@ -4,8 +4,9 @@ FishAnnotator                                                  {#mainpage}
 Introduction
 ============
 
-**FishDetector** is an application that aids and performs video analysis
-on videos of fish.
+**FishDetector** is an application that facilitates annotation of videos 
+and images of fish.  Eventually it will be expanded to automatically create
+annotations using computer vision algorithms.
 
 Building and testing
 ====================
@@ -16,15 +17,16 @@ Dependencies
 FishAnnotator uses the following 3rd party libraries:
 
 * [Qt5][Qt5]
-* [Boost.PropertyTree][BoostPropertyTree]
+* [Boost][Boost]
 * [OpenCV][OpenCV]
 
 [CMake][CMake] is also required to build.
 
-To simplify distribution, Qt and OpenCV must be built as static libraries.
-Boost.PropertyTree is include only, so the Boost libraries do not need to
-be built.  It is recommended to download compiled Boost binaries for your
-compiler if they are available.
+To simplify distribution, Boost, Qt and OpenCV must be built as static 
+libraries.  It is recommended to download compiled Boost binaries for your
+compiler if they are available, which typically include static libraries.
+Most likely Qt and OpenCV will need to be built from scratch; see detailed
+instructions below.
 
 **IMPORTANT: Make sure that you build Qt and OpenCV with the same compiler you
 will use for building the application (e.g. all MSVC 32 bit, or all MSVC 64 bit).**
@@ -37,6 +39,8 @@ Building static Qt on Windows
 -----------------------------
 
 1\. Make sure that the Windows SDK is installed along with Visual Studio.
+    This project uses C++11 features which are only fully implemented on 
+    Visual Studio 2015 or later.
 
 2\. Clone the [Qt5 repository][QtRepo] from github.
 
@@ -355,7 +359,7 @@ This project uses the [Google C++ style guide][StyleGuide].  Refer to this for
 coding practices and naming conventions.
 
 [Qt5]: https://www.qt.io/developers/
-[BoostPropertyTree]: http://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html
+[Boost]: http://www.boost.org
 [OpenCV]: http://opencv.org/
 [CMake]: https://cmake.org/
 [QtRepo]: https://github.com/qt/qt5
