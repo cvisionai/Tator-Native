@@ -123,6 +123,7 @@ private:
   std::string getFishSpeciesString (FishTypeEnum fType, int species);
   void disableControls();
   void enableControls();
+  void writeFrameWithAnnotations(QString filename);
   void keyPressEvent(QKeyEvent *e);
 
   /// @brief Adds a region.

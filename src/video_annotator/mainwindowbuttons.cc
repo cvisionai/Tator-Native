@@ -222,6 +222,11 @@ void MainWindow::on_removeFish_clicked() {
     }
 }
 
+void MainWindow::writeFrameWithAnnotations(QString filename) {
+	player_->write_image(filename);
+	// write the annotations out now
+}
+
 void MainWindow::on_writeImage_clicked() {
   // filename needs to be procedurally generated
 
