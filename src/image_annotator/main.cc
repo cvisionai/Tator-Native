@@ -9,6 +9,7 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 #endif
 
+#ifdef _WIN32
 Q_IMPORT_PLUGIN(QDDSPlugin)
 Q_IMPORT_PLUGIN(QGifPlugin)
 Q_IMPORT_PLUGIN(QICNSPlugin)
@@ -19,6 +20,7 @@ Q_IMPORT_PLUGIN(QTgaPlugin)
 Q_IMPORT_PLUGIN(QTiffPlugin)
 Q_IMPORT_PLUGIN(QWbmpPlugin)
 Q_IMPORT_PLUGIN(QWebpPlugin)
+#endif
 
 int main(int argc, char* argv[])
 {
