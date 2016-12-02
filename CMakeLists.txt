@@ -109,10 +109,10 @@ if( WIN32 )
   set( CPACK_NSIS_MUI_UNIHEADERIMAGE_RIGHT ON )
   set( CPACK_NSIS_INSTALLED_ICON_NAME ${FISHDET_ICON} )
   set( CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME} )
-  set( CPACK_NSIS_CONTACT "bgwoodward@gmail.com" )
+  set( CPACK_NSIS_CONTACT "benjamin.woodward@cvisionconsulting.com" )
   set( CPACK_NSIS_MODIFY_PATH ON )
   set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
-  set( CPACK_CREATE_DESKTOP_LINKS fish_gui video_slicer )
+  set( CPACK_CREATE_DESKTOP_LINKS video_annotator video_slicer image_annotator Uninstall)
 elseif( APPLE )
   set( CPACK_GENERATOR "Bundle" )
   set( CPACK_PACKAGE_FILE_NAME "FishAnnotator" )
@@ -128,8 +128,9 @@ else()
   message( FATAL_ERROR "Unsupported operating system." )
 endif()
 set( CPACK_PACKAGE_EXECUTABLES 
-  fish_gui "Fish GUI" 
+  video_annotator "Video Annotator" 
   video_slicer "Video Slicer" 
+  image_annotator "Image Annotator" 
   uninstall "Uninstall" 
   )
 include( CPack )
