@@ -24,6 +24,7 @@ elseif( APPLE )
   add_executable( video_annotator ${VIDEO_ANNOTATOR_SOURCES} )
   target_link_libraries(
     video_annotator
+    common
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets

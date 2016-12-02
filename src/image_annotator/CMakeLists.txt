@@ -32,6 +32,7 @@ elseif( APPLE )
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
 endif()
 
