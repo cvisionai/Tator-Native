@@ -18,12 +18,16 @@
 #include "fish_annotator/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
 
+#ifndef NO_TESTING
+class TestImageAnnotator;
+#endif
+
 namespace fish_annotator { namespace image_annotator {
 
 class MainWindow : public QWidget {
   Q_OBJECT
 #ifndef NO_TESTING
-  friend class TestImageAnnotator;
+  friend class ::TestImageAnnotator;
 #endif
 public:
   /// @brief Constructor.

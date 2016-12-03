@@ -12,12 +12,16 @@
 #include "fish_annotator/common/species_widget.h"
 #include "../../src/common/ui_species_controls.h"
 
+#ifndef NO_TESTING
+class TestImageAnnotator;
+#endif
+
 namespace fish_annotator {
 
 class SpeciesControls : public QWidget {
   Q_OBJECT
 #ifndef NO_TESTING
-  friend class TestImageAnnotator;
+  friend class ::TestImageAnnotator;
 #endif
 public:
   /// @brief Constructor.
