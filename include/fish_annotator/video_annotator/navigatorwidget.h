@@ -1,14 +1,13 @@
 #ifndef NAVIGATORWIDGET_H
 #define NAVIGATORWIDGET_H
 
-#include <QWidget>
 #include <memory>
 
-namespace fish_annotator { namespace video_annotator {
+#include <QWidget>
 
-namespace Ui {
-  class NavigatorWidget;
-}
+#include "ui_navigatorwidget.h"
+
+namespace fish_annotator { namespace video_annotator {
 
 class NavigatorWidget : public QWidget
 {
