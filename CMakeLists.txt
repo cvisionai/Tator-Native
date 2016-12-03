@@ -59,6 +59,11 @@ include_directories(
 
 enable_testing()
 
+if( APPLE )
+  set( FISHDET_ICON "FishAnnotator.icns" )
+  set( FISHDET_ICON_FULL "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons/FishAnnotator.icns" )
+endif()
+
 add_subdirectory( ${FISHDET_SRC_DIR} )
 add_subdirectory( ${FISHDET_TEST_DIR} )
 
@@ -81,10 +86,6 @@ if( ${DOXYGEN_FOUND} STREQUAL "YES" )
   endif()
 endif()
 
-# Set icon paths
-set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.ico" )
-set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.bmp" )
-
 # Configure CPack
 set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
 include( InstallRequiredSystemLibraries )
@@ -100,6 +101,8 @@ set( CPACK_PACKAGE_VERSION_MINOR "0" )
 set( CPACK_PACKAGE_VERSION_PATCH "0" )
 set( CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME} )
 if( WIN32 )
+  set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.ico" )
+  set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.bmp" )
   set( CPACK_GENERATOR "NSIS" )
   set( CPACK_NSIS_MUI_ICON ${FISHDET_ICON} )
   set( CPACK_NSIS_MUI_HEADERIMAGE_BITMAP ${FISHDET_ICON} )
@@ -114,13 +117,7 @@ if( WIN32 )
   set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
   set( CPACK_CREATE_DESKTOP_LINKS video_annotator video_slicer image_annotator Uninstall)
 elseif( APPLE )
-  set( CPACK_GENERATOR "Bundle" )
-  set( CPACK_PACKAGE_FILE_NAME "FishAnnotator" )
-  set( CPACK_PACKAGE_ICON "${FISHDET_ICON}" )
-  set( CPACK_BUNDLE_NAME "FishAnnotator" )
-  set( CPACK_BUNDLE_ICON "${FISHDET_ICON}" )
-  set( CPACK_BUNDLE_PLIST "" )
-  set( CPACK_BUNDLE_STARTUP_COMMAND "" )
+  set( CPACK_GENERATOR "DragNDrop" )
 elseif( UNIX )
   set( CPACK_GENERATOR "STGZ" )
   set( CPACK_SOURCE_STRIP_FILES "" )
