@@ -115,7 +115,7 @@ void MainWindow::on_saveAnnotate_clicked() {
 
 void MainWindow::saveAnnotations(const QString &dir_name) {
   QProgressDialog * progress = genProgressDialog("Saving");
-  std::string basename = ui_->fileNameValue->text().toStdString() 
+  std::string basename = ui_->fileNameValue->text().toStdString()
     + "_" + ui_->reviewerNameValue->text().toStdString();
   std::string path_csv = QDir(dir_name).filePath(QString::fromUtf8(
     std::string(basename + ".csv").c_str())).toStdString();
@@ -127,7 +127,7 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
     err.critical( 0, "Error", std::string(
         std::string( "Failed to open file " )
       + path_json
-      + std::string( "!" ) 
+      + std::string( "!" )
       ).c_str() );
   }
   else {
@@ -141,13 +141,13 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
     err.critical( 0, "Error", std::string(
         std::string( "Failed to open file " )
       + path_csv
-      + std::string( "!" ) 
+      + std::string( "!" )
       ).c_str() );
   }
   else {
-    csv_file << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer" 
-      << "," << "Tow_Type" << "," << "Fish_Number" << "," << "Fish_Type" 
-      << "," << "Species" << "," << "Frame" << "," << "Time_In_Video" 
+    csv_file << "Trip_ID" << "," << "Tow_Number" << "," << "Reviewer"
+      << "," << "Tow_Type" << "," << "Fish_Number" << "," << "Fish_Type"
+      << "," << "Species" << "," << "Frame" << "," << "Time_In_Video"
       << std::endl;
     std::string towStatus;
     if (ui_->towStatus->isChecked()) {
@@ -159,13 +159,13 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
     int fishCount = 1;
     progress->setValue(7);
     for(auto it = my_fish_list_.begin(); it != my_fish_list_.end(); ++it) {
-      csv_file << ui_->tripIDValue->text().toStdString() << "," 
-        << ui_->towIDValue->text().toStdString() << "," 
-        << ui_->reviewerNameValue->text().toStdString() << "," << towStatus 
-        << "," << it->getID() << "," << getFishTypeString(it->getFishType()) 
-        << "," << getFishSpeciesString(it->getFishType(),it->getFishSubType()) 
-        << "," << it->frameCounted << "," 
-        << (double) it->frameCounted / player_->getFrameRate() / 60.0 / 60.0 
+      csv_file << ui_->tripIDValue->text().toStdString() << ","
+        << ui_->towIDValue->text().toStdString() << ","
+        << ui_->reviewerNameValue->text().toStdString() << "," << towStatus
+        << "," << it->getID() << "," << getFishTypeString(it->getFishType())
+        << "," << getFishSpeciesString(it->getFishType(),it->getFishSubType())
+        << "," << it->frameCounted << ","
+        << (double) it->frameCounted / player_->getFrameRate() / 60.0 / 60.0
         << std::endl;
       fishCount++;
     }
@@ -223,7 +223,7 @@ void MainWindow::on_removeFish_clicked() {
 }
 
 void MainWindow::on_writeImage_clicked() {
-  // filename needs to be procedurally generated
+  // filename needs to be procedurally generated. 
 
   if (images_save_path_.isEmpty())
     images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
