@@ -20,7 +20,12 @@ if( WIN32 )
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
 else()
-  add_executable( video_slicer ${VIDEO_SLICER_SOURCES} )
+  add_executable( video_slicer MACOSX_BUNDLE
+    ${VIDEO_SLICER_SOURCES} ${FISHDET_ICON_FULL} )
+  set_target_properties( video_slicer PROPERTIES
+    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON} )
+  set_source_files_properties( ${FISHDET_ICON_FULL} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources" )
   target_link_libraries(
     video_slicer
     ${OpenCV_LIBS}
