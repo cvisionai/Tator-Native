@@ -10,10 +10,7 @@
 #include <QMenu>
 
 #include "fish_annotator/common/species.h"
-
-namespace Ui {
-  class SpeciesWidget;
-}
+#include "../../src/common/ui_species_widget.h"
 
 namespace fish_annotator {
 

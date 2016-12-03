@@ -25,13 +25,17 @@
 #include "fish_annotator/video_annotator/player.h"
 #include "ui_mainwindow.h"
 
+#ifndef NO_TESTING
+class TestVideoAnnotator;
+#endif
+
 namespace fish_annotator { namespace video_annotator {
 
 class MainWindow : public QWidget
 {
   Q_OBJECT
 #ifndef NO_TESTING
-  friend class TestVideoAnnotator;
+  friend class ::TestVideoAnnotator;
 #endif
 public:
   /// @brief Mainwindow constructor.

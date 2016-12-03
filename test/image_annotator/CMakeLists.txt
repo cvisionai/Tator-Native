@@ -15,7 +15,6 @@ if( WIN32 )
   target_link_libraries(
     test_image_annotator
     common
-    ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
     Qt5::Test
@@ -37,7 +36,33 @@ if( WIN32 )
     test_image_annotator PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
-  file( COPY ${OpenCV_SHARED_LIBS} DESTINATION Release )
   file( COPY crashed DESTINATION Release )
   file( COPY blah.json DESTINATION Release )
+elseif( APPLE )
+  add_executable( test_image_annotator
+    ${TEST_IMAGE_ANNOTATOR_SOURCES}
+    ${IMAGE_ANNOTATOR_SOURCES}
+    )
+  target_link_libraries(
+    test_image_annotator
+    common
+    ${APPLE_LIBRARIES}
+    Qt5::Widgets
+    Qt5::PrintSupport
+    Qt5::Test
+    ${QT_THIRD_PARTY_LIBS}
+    ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    )
+  add_test(
+    NAME test_image_annotator
+    COMMAND test_image_annotator
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+  set_tests_properties(
+    test_image_annotator PROPERTIES
+    FAIL_REGULAR_EXPRESSION "FAIL"
+    )
+  file( COPY crashed DESTINATION . )
+  file( COPY blah.json DESTINATION . )
 endif()

@@ -19,6 +19,8 @@ find_package( Qt5Test )
 if( NOT Qt5Test_FOUND )
   message( FATAL_ERROR "Could not find Qt5Test.  Build cannot continue." )
 endif()
+get_target_property(QT5_WIDGETS_LOCATION Qt5::Widgets LOCATION )
+message( STATUS "Found Qt5 at ${QT5_WIDGETS_LOCATION}" )
 if( WIN32 )
   set( QT_THIRD_PARTY_LIBS
     "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"
@@ -49,6 +51,7 @@ else()
     "${_qt5Widgets_install_prefix}/plugins/platforms/libqminimal.a"
     "${_qt5Widgets_install_prefix}/plugins/platforms/libqoffscreen.a"
     "${_qt5Widgets_install_prefix}/plugins/printsupport/libcocoaprintersupport.a"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/libqico.a"
     )
 endif() 
 
@@ -101,15 +104,14 @@ endif()
 # --- Mac ---
 if( APPLE )
   find_library( COCOA_LIBRARY Cocoa )
+  message( STATUS "Found Cocoa at ${COCOA_LIBRARY}" )
   find_library( CARBON_LIBRARY Carbon )
+  message( STATUS "Found Carbon at ${CARBON_LIBRARY}" )
   find_library( IOKIT_LIBRARY IOKit )
+  message( STATUS "Found IOKit at ${IOKIT_LIBRARY}" )
   find_package( Cups )
   if( NOT CUPS_FOUND )
     message (FATAL_ERROR "Could not find Cups.  Build cannot continue." )
-  endif()
-  find_package( ZLIB )
-  if( NOT ZLIB_FOUND )
-    message( FATAL_ERROR "Could not find zlib.  Build cannot continue." )
   endif()
   set( APPLE_LIBRARIES
     ${COCOA_LIBRARY}

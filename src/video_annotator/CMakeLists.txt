@@ -21,9 +21,15 @@ if( WIN32 )
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
 elseif( APPLE )
-  add_executable( video_annotator ${VIDEO_ANNOTATOR_SOURCES} )
+  add_executable( video_annotator MACOSX_BUNDLE
+    ${VIDEO_ANNOTATOR_SOURCES} ${FISHDET_ICON_FULL} )
+  set_target_properties( video_annotator PROPERTIES
+    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON} )
+  set_source_files_properties( ${FISHDET_ICON_FULL} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources" )
   target_link_libraries(
     video_annotator
+    common
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
