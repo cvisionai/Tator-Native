@@ -3,7 +3,10 @@ file( GLOB VIDEO_SLICER_SOURCES "*.cc" )
 
 # Add video slicer executable
 if( WIN32 )
-  add_executable( video_slicer WIN32 ${VIDEO_SLICER_SOURCES} )
+  file( COPY ${FISHDET_ICON} DESTINATION . )
+  file( GLOB VIDEO_SLICER_RESOURCES "*.rc" )
+  add_executable( video_slicer WIN32 
+    ${VIDEO_SLICER_SOURCES} ${VIDEO_SLICER_RESOURCES} )
   target_link_libraries(
     video_slicer
     ${OpenCV_LIBS}

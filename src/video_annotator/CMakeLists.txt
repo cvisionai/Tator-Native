@@ -3,8 +3,10 @@ file( GLOB VIDEO_ANNOTATOR_SOURCES "*.cc" )
 
 # Add video annotator executable
 if( WIN32 )
+  file( COPY ${FISHDET_ICON} DESTINATION . )
+  file( GLOB VIDEO_ANNOTATOR_RESOURCES "*.rc" )
   add_executable( video_annotator WIN32 
-    ${VIDEO_ANNOTATOR_SOURCES} 
+    ${VIDEO_ANNOTATOR_SOURCES} ${VIDEO_ANNOTATOR_RESOURCES}
     )
   target_link_libraries(
     video_annotator
