@@ -9,7 +9,6 @@ if( WIN32 )
   target_link_libraries(
     image_annotator
     common
-    ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
     ${QT_THIRD_PARTY_LIBS}
@@ -26,7 +25,6 @@ elseif( APPLE )
   target_link_libraries(
     image_annotator
     common
-    ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
     Qt5::PrintSupport
