@@ -22,7 +22,7 @@ if( WIN32 )
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
-else()
+elseif( APPLE )
   add_executable( video_slicer MACOSX_BUNDLE
     ${VIDEO_SLICER_SOURCES} ${FISHDET_ICON_FULL} )
   set_target_properties( video_slicer PROPERTIES
@@ -40,6 +40,23 @@ else()
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    )
+elseif( UNIX )
+  add_executable( video_slicer
+    ${VIDEO_SLICER_SOURCES} )
+  target_link_libraries(
+    video_slicer
+    dl
+    ${UNIX_LIBRARIES}
+    Qt5::Widgets
+    Qt5::Core
+    Qt5::Gui
+    Qt5::PrintSupport
+    Qt5::QXcbIntegrationPlugin
+    ${QT_THIRD_PARTY_LIBS}
+    Qt5::DBus
+    ${OPENGL_LIBRARIES}
+    ${OpenCV_LIBS}
     )
 endif()
 

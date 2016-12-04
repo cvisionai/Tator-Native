@@ -40,6 +40,24 @@ elseif( APPLE )
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     )
+elseif( UNIX )
+  add_executable( video_annotator
+    ${VIDEO_ANNOTATOR_SOURCES} )
+  target_link_libraries(
+    video_annotator
+    dl
+    common
+    ${OpenCV_LIBS}
+    ${UNIX_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::PrintSupport
+    Qt5::QXcbIntegrationPlugin
+    ${QT_THIRD_PARTY_LIBS}
+    Qt5::DBus
+    ${OPENGL_LIBRARIES}
+    )
 endif()
 
 # Add install target 

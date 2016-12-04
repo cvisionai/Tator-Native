@@ -41,6 +41,24 @@ elseif( APPLE )
     ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
     )
+elseif( UNIX )
+  add_executable( image_annotator
+    ${IMAGE_ANNOTATOR_SOURCES} )
+  target_link_libraries(
+    image_annotator
+    dl
+    common
+    ${UNIX_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::PrintSupport
+    Qt5::QXcbIntegrationPlugin
+    ${QT_THIRD_PARTY_LIBS}
+    Qt5::DBus
+    ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    )
 endif()
 
 # Add install target 

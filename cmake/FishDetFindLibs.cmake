@@ -15,6 +15,10 @@ find_package( Qt5PrintSupport )
 if( NOT Qt5PrintSupport_FOUND )
   message( FATAL_ERROR "Could not find Qt5PrintSupport.  Build cannot continue." )
 endif()
+find_package( Qt5DBus )
+if( NOT Qt5DBus_FOUND )
+  message( FATAL_ERROR "Could not find Qt5DBus.  Build cannot continue." )
+endif()
 find_package( Qt5Test )
 if( NOT Qt5Test_FOUND )
   message( FATAL_ERROR "Could not find Qt5Test.  Build cannot continue." )
@@ -41,17 +45,31 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwebp.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
     )
-else()
+elseif( APPLE )
   set( QT_THIRD_PARTY_LIBS
     "${_qt5Widgets_install_prefix}/lib/libqtpcre.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtfreetype.a"
     "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a"
-    "${_qt5Widgets_install_prefix}/lib/libQt5PlatformSupport.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtfreetype.a"
     "${_qt5Widgets_install_prefix}/plugins/platforms/libqcocoa.a"
     "${_qt5Widgets_install_prefix}/plugins/platforms/libqminimal.a"
     "${_qt5Widgets_install_prefix}/plugins/platforms/libqoffscreen.a"
     "${_qt5Widgets_install_prefix}/plugins/printsupport/libcocoaprintersupport.a"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/libqico.a"
+    )
+elseif( UNIX )
+  set( QT_THIRD_PARTY_LIBS
+    "${_qt5Widgets_install_prefix}/lib/libQt5XcbQpa.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtpcre.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtpng.a"
+    "${_qt5Widgets_install_prefix}/lib/libQt5PlatformSupport.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqxcb.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqlinuxfb.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqminimal.a"
+    "${_qt5Widgets_install_prefix}/plugins/platforms/libqoffscreen.a"
+    "${_qt5Widgets_install_prefix}/plugins/imageformats/libqico.a"
+    "${_qt5Widgets_install_prefix}/lib/libxcb-static.a"
+    "${_qt5Widgets_install_prefix}/lib/libqtfreetype.a"
     )
 endif() 
 
@@ -99,10 +117,9 @@ if( MSVC )
     imm32
     Dwmapi
     )
-endif()
 
 # --- Mac ---
-if( APPLE )
+elseif( APPLE )
   find_library( COCOA_LIBRARY Cocoa )
   message( STATUS "Found Cocoa at ${COCOA_LIBRARY}" )
   find_library( CARBON_LIBRARY Carbon )
@@ -121,5 +138,19 @@ if( APPLE )
     ${ZLIB_LIBRARIES}
     ${JPEG_LIBRARIES}
     ${PNG_LIBRARIES}
+    )
+
+# --- UNIX ---
+elseif( UNIX )
+  find_package( X11 REQUIRED )
+  if( NOT X11_FOUND )
+    message( FATAL_ERROR "Could not find X11. Build cannot continue." )
+  endif()
+  find_package( Threads )
+  set( UNIX_LIBRARIES
+    ${CMAKE_THREAD_LIBS_INIT}
+    xcb
+    X11-xcb
+    ${X11_LIBRARIES}
     )
 endif()
