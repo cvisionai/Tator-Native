@@ -41,6 +41,13 @@ elseif( APPLE )
     )
 endif()
 
+# Change executable name
+set_target_properties(
+  video_annotator
+  PROPERTIES
+  OUTPUT_NAME "Video Annotator" 
+  )
+
 # Add install target 
 install( 
   TARGETS video_annotator 

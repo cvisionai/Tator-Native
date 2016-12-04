@@ -41,6 +41,13 @@ elseif( APPLE )
     )
 endif()
 
+# Change executable name
+set_target_properties(
+  image_annotator
+  PROPERTIES
+  OUTPUT_NAME "Image Annotator" 
+  )
+
 # Add install target 
 install( 
   TARGETS image_annotator 
