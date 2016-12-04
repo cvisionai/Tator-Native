@@ -3,8 +3,10 @@ file( GLOB IMAGE_ANNOTATOR_SOURCES "*.cc" )
 
 # Add image_annotator executable
 if( WIN32 )
+  file( COPY ${FISHDET_ICON} DESTINATION . )
+  file( GLOB IMAGE_ANNOTATOR_RESOURCES "*.rc" )
   add_executable( image_annotator WIN32 
-    ${IMAGE_ANNOTATOR_SOURCES} 
+    ${IMAGE_ANNOTATOR_SOURCES} ${IMAGE_ANNOTATOR_RESOURCES} 
     )
   target_link_libraries(
     image_annotator

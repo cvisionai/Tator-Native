@@ -23,6 +23,7 @@
 #include "fish_annotator/video_annotator/fish.h"
 #include "fish_annotator/video_annotator/document.h"
 #include "fish_annotator/video_annotator/player.h"
+#include "fish_annotator/video_annotator/navigatorwidget.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING
@@ -155,6 +156,7 @@ private:
 private:
   std::unique_ptr<Document> document_;
   std::unique_ptr<Ui::MainWidget> ui_;
+  std::unique_ptr<NavigatorWidget> navigator_widget_;
   std::unique_ptr<Player> player_;
   std::vector<Fish> my_fish_list_;
   std::vector<Fish>::iterator list_pos_;

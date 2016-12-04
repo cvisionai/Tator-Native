@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>fish_annotator::video_annotator::MainWidget</class>
+ <class>MainWidget</class>
  <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1012</width>
-    <height>809</height>
+    <height>874</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Video Annotator</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -962,26 +962,13 @@ QPushButton#addOther:pressed {
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="navigatorLayout">
          <property name="spacing">
           <number>0</number>
          </property>
          <property name="topMargin">
           <number>0</number>
          </property>
-         <item>
-          <widget class="NavigatorWidget" name="navigator" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>215</height>
-            </size>
-           </property>
-           <property name="autoFillBackground">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
@@ -1017,7 +1004,11 @@ QPushButton#addOther:pressed {
        <item>
         <layout class="QHBoxLayout" name="videoWindowLayout">
          <item>
-          <widget class="QGraphicsView" name="videoWindow"/>
+          <widget class="QGraphicsView" name="videoWindow">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -1281,13 +1272,6 @@ QPushButton#addOther:pressed {
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-    <class>fish_annotator::video_annotator::NavigatorWidget</class>
-    <extends>QWidget</extends>
-    <header>fish_annotator/video_annotator/navigatorwidget.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

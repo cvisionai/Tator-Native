@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include <memory>
 
 #include <QWidget>
 #include <QGraphicsScene>
