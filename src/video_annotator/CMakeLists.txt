@@ -26,7 +26,8 @@ elseif( APPLE )
   add_executable( video_annotator MACOSX_BUNDLE
     ${VIDEO_ANNOTATOR_SOURCES} ${FISHDET_ICON_FULL} )
   set_target_properties( video_annotator PROPERTIES
-    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON} )
+    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON}
+    OUTPUT_NAME "Video Annotator" )
   set_source_files_properties( ${FISHDET_ICON_FULL} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources" )
   target_link_libraries(
@@ -40,13 +41,6 @@ elseif( APPLE )
     ${OPENGL_LIBRARIES}
     )
 endif()
-
-# Change executable name
-set_target_properties(
-  video_annotator
-  PROPERTIES
-  OUTPUT_NAME "Video Annotator" 
-  )
 
 # Add install target 
 install( 

@@ -26,7 +26,9 @@ elseif( APPLE )
   add_executable( image_annotator MACOSX_BUNDLE
     ${IMAGE_ANNOTATOR_SOURCES} ${FISHDET_ICON_FULL} )
   set_target_properties( image_annotator PROPERTIES
-    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON} )
+    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON}
+    OUTPUT_NAME "Image Annotator" 
+  )
   set_source_files_properties( ${FISHDET_ICON_FULL} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources" )
   target_link_libraries(
@@ -40,13 +42,6 @@ elseif( APPLE )
     ${Boost_LIBRARIES}
     )
 endif()
-
-# Change executable name
-set_target_properties(
-  image_annotator
-  PROPERTIES
-  OUTPUT_NAME "Image Annotator" 
-  )
 
 # Add install target 
 install( 
