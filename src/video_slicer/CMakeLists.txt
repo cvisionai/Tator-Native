@@ -42,6 +42,13 @@ else()
     )
 endif()
 
+# Change executable name
+set_target_properties(
+  video_slicer
+  PROPERTIES
+  OUTPUT_NAME "Video Slicer" 
+  )
+
 # Add install target
 install( 
   TARGETS video_slicer 
