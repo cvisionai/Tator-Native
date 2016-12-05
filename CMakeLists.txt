@@ -110,7 +110,6 @@ endif()
 set( CPACK_PACKAGE_EXECUTABLES 
   video_annotator "Video Annotator" 
   video_slicer "Video Slicer" 
-  image_annotator "Image Annotator" 
   uninstall "Uninstall" 
   )
 include( CPack )

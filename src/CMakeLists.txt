@@ -1,5 +1,5 @@
 add_subdirectory( common )
-add_subdirectory( image_annotator )
+#add_subdirectory( image_annotator )
 add_subdirectory( video_annotator )
 add_subdirectory( video_slicer )
 
