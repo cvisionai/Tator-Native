@@ -1,4 +1,5 @@
 #include "fish_annotator/video_annotator/mainwindow.h"
+#include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace video_annotator {
 
@@ -6,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
   , document_(new Document)
   , ui_(new Ui::MainWidget)
+  , navigator_widget_(new NavigatorWidget(this))
   , player_(new Player)
   , my_fish_list_()
   , list_pos_(my_fish_list_.end())
@@ -22,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(player_.get(), SIGNAL(processedImage(QImage)),
            this, SLOT(updatePlayerUI(QImage)));
   ui_->setupUi(this);
+  ui_->navigatorLayout->addWidget(navigator_widget_.get());
+#ifdef _WIN32
+  setWindowIcon(QIcon("FishAnnotator.ico"));
+#endif
   disableControls();
   updateTypeMenu();
   QObject::connect(ui_->typeMenu, SIGNAL(currentIndexChanged(int)),
@@ -34,19 +40,19 @@ MainWindow::MainWindow(QWidget *parent)
 	  "QPushButton:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
 
-  auto next_button = ui_->navigator->findChild<QPushButton *>("next_button");
+  auto next_button = navigator_widget_->findChild<QPushButton *>("next_button");
   connect(next_button, SIGNAL(clicked()), this, SLOT(on_plusOneFrame_clicked()));
 
-  auto prev_button = ui_->navigator->findChild<QPushButton *>("prev_button");
+  auto prev_button = navigator_widget_->findChild<QPushButton *>("prev_button");
   connect(prev_button, SIGNAL(clicked()), this, SLOT(on_minusOneFrame_clicked()));
 
-  auto add_region_button = ui_->navigator->findChild<QPushButton *>("add_region_button");
+  auto add_region_button = navigator_widget_->findChild<QPushButton *>("add_region_button");
   connect(add_region_button, SIGNAL(clicked()), this, SLOT(on_addRegion_clicked()));
 
-  auto remove_region_button = ui_->navigator->findChild<QPushButton *>("remove_region_button");
+  auto remove_region_button = navigator_widget_->findChild<QPushButton *>("remove_region_button");
   connect(remove_region_button, SIGNAL(clicked()), this, SLOT(on_removeRegion_clicked()));
 
-  auto next_and_copy_button = ui_->navigator->findChild<QPushButton *>("next_with_copy_button");
+  auto next_and_copy_button = navigator_widget_->findChild<QPushButton *>("next_with_copy_button");
   connect(next_and_copy_button, SIGNAL(clicked()), this, SLOT(on_nextAndCopy_clicked()));
 }
 
@@ -352,23 +358,23 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
     ui_->Play->setFocus();
     break;
   case 4:
-    ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->animateClick();
+    navigator_widget_->findChild<QPushButton *>("next_with_copy_button")->animateClick();
     ui_->Play->setFocus();
     break;
   case 5:
-    ui_->navigator->findChild<QPushButton *>("prev_button")->animateClick();
+    navigator_widget_->findChild<QPushButton *>("prev_button")->animateClick();
     ui_->Play->setFocus();
     break;
   case 6:
-    ui_->navigator->findChild<QPushButton *>("next_button")->animateClick();
+    navigator_widget_->findChild<QPushButton *>("next_button")->animateClick();
     ui_->Play->setFocus();
     break;
   case 7:
-    ui_->navigator->findChild<QPushButton *>("add_region_button")->animateClick();
+    navigator_widget_->findChild<QPushButton *>("add_region_button")->animateClick();
     ui_->Play->setFocus();
     break;
   case 8:
-    ui_->navigator->findChild<QPushButton *>("remove_region_button")->animateClick();
+    navigator_widget_->findChild<QPushButton *>("remove_region_button")->animateClick();
     ui_->Play->setFocus();
     break;
   case 9:
@@ -555,11 +561,11 @@ void MainWindow::disableControls()
   ui_->minusOneSecond->setEnabled(false);
   ui_->minusThreeSecond->setEnabled(false);
   ui_->writeImage->setEnabled(false);
-  ui_->navigator->findChild<QPushButton *>("next_button")->setEnabled(false);
-  ui_->navigator->findChild<QPushButton *>("prev_button")->setEnabled(false);
-  ui_->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(false);
-  ui_->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(false);
-  ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(false);
+  navigator_widget_->findChild<QPushButton *>("next_button")->setEnabled(false);
+  navigator_widget_->findChild<QPushButton *>("prev_button")->setEnabled(false);
+  navigator_widget_->findChild<QPushButton *>("add_region_button")->setEnabled(false);
+  navigator_widget_->findChild<QPushButton *>("remove_region_button")->setEnabled(false);
+  navigator_widget_->findChild<QPushButton *>("next_with_copy_button")->setEnabled(false);
 }
 
 void MainWindow::enableControls()
@@ -585,11 +591,11 @@ void MainWindow::enableControls()
   ui_->minusOneSecond->setEnabled(true);
   ui_->minusThreeSecond->setEnabled(true);
   ui_->writeImage->setEnabled(true);
-  ui_->navigator->findChild<QPushButton *>("next_button")->setEnabled(true);
-  ui_->navigator->findChild<QPushButton *>("prev_button")->setEnabled(true);
-  ui_->navigator->findChild<QPushButton *>("add_region_button")->setEnabled(true);
-  ui_->navigator->findChild<QPushButton *>("remove_region_button")->setEnabled(true);
-  ui_->navigator->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
+  navigator_widget_->findChild<QPushButton *>("next_button")->setEnabled(true);
+  navigator_widget_->findChild<QPushButton *>("prev_button")->setEnabled(true);
+  navigator_widget_->findChild<QPushButton *>("add_region_button")->setEnabled(true);
+  navigator_widget_->findChild<QPushButton *>("remove_region_button")->setEnabled(true);
+  navigator_widget_->findChild<QPushButton *>("next_with_copy_button")->setEnabled(true);
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"

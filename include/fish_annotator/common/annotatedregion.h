@@ -1,6 +1,7 @@
 #ifndef ANNOTATEDREGION_H
 #define ANNOTATEDREGION_H
 
+#include <cmath>
 #include <algorithm>
 
 #include <QGraphicsRectItem>
