@@ -223,8 +223,18 @@ void MainWindow::on_removeFish_clicked() {
 }
 
 void MainWindow::writeFrameWithAnnotations(QString filename) {
-	player_->write_image(filename);
+	QPixmap tempPixmap = display_image_->pixmap();
+	QImage tempImage = tempPixmap.toImage();
+	auto frame = uint64_t(player_->getCurrentFrame());
+	tempImage.save(filename + "_" + std::to_string(frame).c_str() + ".png");
+	//player_->write_image(filename + ".png");
+	std::ofstream annotation_file(filename.toStdString() + ".txt");
 	// write the annotations out now. 
+	for (auto ann : current_annotations_) {
+		QRectF tmpRect = ann->getAnnBox();
+		annotation_file << (int)tmpRect.x() << " " << (int)tmpRect.y() << " " << (int)tmpRect.width() << " " << (int)tmpRect.height() << std::endl;
+	}
+	annotation_file.close();
 }
 
 void MainWindow::on_writeImage_clicked() {
@@ -233,6 +243,7 @@ void MainWindow::on_writeImage_clicked() {
   if (images_save_path_.isEmpty())
     images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
 
+  writeFrameWithAnnotations(images_save_path_ + QStringLiteral("\\%1").arg(list_pos_->getID()));
   QImage img(scene_->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
   QPainter p(&img);
   scene_->render(&p);
