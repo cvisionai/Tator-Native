@@ -38,12 +38,12 @@ void MainWindow::on_loadAnnotate_clicked() {
   QProgressDialog * progress = genProgressDialog("Loading");
 
   if (!inputJSON.fail()) {
-  progress->setValue(2);
+  progress->setValue(20);
   Document* newDoc = new Document;
   deserialize(*newDoc, inputJSON);
   document_.reset(newDoc);
   }
-  progress->setValue(3);
+  progress->setValue(30);
 
   std::string filenameBaseNoReviewer = remove_reviewer(filenameBaseNoExt);
   QString qFilename = QString::fromStdString(filenameBaseNoReviewer);
@@ -55,7 +55,7 @@ void MainWindow::on_loadAnnotate_clicked() {
   getline(inFile,line);
   line.clear();
   bool first = true;
-  progress->setValue(6);
+  progress->setValue(60);
   while(getline(inFile,line)) {
     std::stringstream linestream(line);
     std::string tempToken;
@@ -101,7 +101,7 @@ void MainWindow::on_loadAnnotate_clicked() {
   ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
   ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
   updateVecIndex();
-  progress->setValue(10);
+  progress->setValue(100);
   progress->cancel();
   delete progress;
 }
@@ -131,9 +131,9 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
       ).c_str() );
   }
   else {
-    progress->setValue(3);
+    progress->setValue(30);
     serialize(*document_, json_file);
-    progress->setValue(5);
+    progress->setValue(50);
   }
   std::ofstream csv_file(path_csv);
   if(csv_file.fail()) {
@@ -157,7 +157,7 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
       towStatus = "Closed";
     }
     int fishCount = 1;
-    progress->setValue(7);
+    progress->setValue(70);
     for(auto it = my_fish_list_.begin(); it != my_fish_list_.end(); ++it) {
       csv_file << ui_->tripIDValue->text().toStdString() << ","
         << ui_->towIDValue->text().toStdString() << ","
@@ -171,7 +171,7 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
     }
     csv_file.close();
   }
-  progress->setValue(10);
+  progress->setValue(100);
   progress->cancel();
   delete progress;
 }
@@ -228,7 +228,7 @@ void MainWindow::writeFrameWithAnnotations(QString filename) {
 }
 
 void MainWindow::on_writeImage_clicked() {
-  // filename needs to be procedurally generated
+  // filename needs to be procedurally generated. 
 
   if (images_save_path_.isEmpty())
     images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
@@ -244,7 +244,7 @@ QProgressDialog * MainWindow::genProgressDialog(QString dialog_text) {
   QProgressBar * myBar = new QProgressBar(this);
   myBar->setStyleSheet(progress_bar_stylesheet_);
   QProgressDialog * progress = new QProgressDialog(
-      dialog_text, "Cancel", 0, 10, this, Qt::WindowTitleHint);
+      dialog_text, "Cancel", 0, 100, this, Qt::WindowTitleHint);
   // progress owns myBar and will delete it.
   progress->setBar(myBar);
   progress->setWindowModality(Qt::WindowModal);

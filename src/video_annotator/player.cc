@@ -39,7 +39,7 @@ void Player::run()
     {
       stop = true;
     }
-    frameIndex++;
+    frameIndex = capture->get(CV_CAP_PROP_POS_FRAMES);
     if (frame.channels() == 3)
     {
       cv::cvtColor(frame, RGBframe, CV_BGR2RGB);

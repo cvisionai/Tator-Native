@@ -31,4 +31,24 @@ if( WIN32 )
     test_species PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
+elseif( APPLE )
+  add_executable( test_species 
+    ${TEST_SPECIES_SOURCES} 
+    ${SPECIES_SOURCES}
+    )
+  target_link_libraries( 
+    test_species 
+    ${APPLE_LIBRARIES}
+    Qt5::Test
+    ${QT_THIRD_PARTY_LIBS}
+    )
+  add_test( 
+    NAME test_species 
+    COMMAND test_species 
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+  set_tests_properties( 
+    test_species PROPERTIES
+    FAIL_REGULAR_EXPRESSION "FAIL"
+    )
 endif()

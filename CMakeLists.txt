@@ -59,31 +59,17 @@ include_directories(
 
 enable_testing()
 
-add_subdirectory( ${FISHDET_SRC_DIR} )
-add_subdirectory( ${FISHDET_TEST_DIR} )
-
-# Add documentation target
-if( ${DOXYGEN_FOUND} STREQUAL "YES" )
-  if( ${LATEX_FOUND} )
-    configure_file( ${FISHDET_DOC_DIR}/manual.md.in ${FISHDET_DOC_DIR}/manual.md )
-    add_custom_target( doc
-      ${DOXYGEN_EXECUTABLE} "${FISHDET_DOC_DIR}/doxyfile"
-      COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/doxygen/latex/make.bat"
-      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-      COMMENT "Generating API documentation with Doxygen." VERBATIM
-      )
-    add_custom_target( manual
-      ${DOXYGEN_EXECUTABLE} "${FISHDET_DOC_DIR}/doxyfile_manual"
-      COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/doxygen/manual/latex/make.bat"
-      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-      COMMENT "Generating manual with Doxygen." VERBATIM
-      )
-  endif()
+if( WIN32 )
+  set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.ico" )
+  set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.bmp" )
+elseif( APPLE )
+  set( FISHDET_ICON "FishAnnotator.icns" )
+  set( FISHDET_ICON_FULL "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons/FishAnnotator.icns" )
 endif()
 
-# Set icon paths
-set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.ico" )
-set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.bmp" )
+add_subdirectory( ${FISHDET_SRC_DIR} )
+add_subdirectory( ${FISHDET_TEST_DIR} )
+add_subdirectory( ${FISHDET_DOC_DIR} )
 
 # Configure CPack
 set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
@@ -114,13 +100,7 @@ if( WIN32 )
   set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
   set( CPACK_CREATE_DESKTOP_LINKS video_annotator video_slicer image_annotator Uninstall)
 elseif( APPLE )
-  set( CPACK_GENERATOR "Bundle" )
-  set( CPACK_PACKAGE_FILE_NAME "FishAnnotator" )
-  set( CPACK_PACKAGE_ICON "${FISHDET_ICON}" )
-  set( CPACK_BUNDLE_NAME "FishAnnotator" )
-  set( CPACK_BUNDLE_ICON "${FISHDET_ICON}" )
-  set( CPACK_BUNDLE_PLIST "" )
-  set( CPACK_BUNDLE_STARTUP_COMMAND "" )
+  set( CPACK_GENERATOR "DragNDrop" )
 elseif( UNIX )
   set( CPACK_GENERATOR "STGZ" )
   set( CPACK_SOURCE_STRIP_FILES "" )

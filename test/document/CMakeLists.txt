@@ -28,4 +28,23 @@ if( WIN32 )
     test_document PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
+elseif( APPLE )
+  add_executable( test_document 
+    ${TEST_DOCUMENT_SOURCES} 
+    ${DOCUMENT_SOURCES}
+    )
+  target_link_libraries( 
+    test_document 
+    ${APPLE_LIBRARIES}
+    Qt5::Test
+    ${QT_THIRD_PARTY_LIBS}
+    )
+  add_test( 
+    NAME test_document 
+    COMMAND test_document 
+    )
+  set_tests_properties( 
+    test_document PROPERTIES
+    FAIL_REGULAR_EXPRESSION "FAIL"
+    )
 endif()

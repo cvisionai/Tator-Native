@@ -5,6 +5,8 @@
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+#elif __APPLE__
+Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 #endif
 
 void TestVideoAnnotator::testLoadVideo() {

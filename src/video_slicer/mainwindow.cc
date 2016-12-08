@@ -6,10 +6,13 @@
 namespace fish_annotator { namespace video_slicer {
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
+#ifdef _WIN32
+  setWindowIcon(QIcon("FishAnnotator.ico"));
+#endif
 }
 
 MainWindow::~MainWindow()

@@ -10,10 +10,7 @@
 #include <QDialog>
 
 #include "fish_annotator/common/species.h"
-
-namespace Ui {
-  class SpeciesDialog;
-}
+#include "../../src/common/ui_species_dialog.h"
 
 namespace fish_annotator {
 
