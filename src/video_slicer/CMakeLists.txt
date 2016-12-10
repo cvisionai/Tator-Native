@@ -6,7 +6,10 @@ if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )
   file( GLOB VIDEO_SLICER_RESOURCES "*.rc" )
   add_executable( video_slicer WIN32 
-    ${VIDEO_SLICER_SOURCES} ${VIDEO_SLICER_RESOURCES} )
+    ${VIDEO_SLICER_SOURCES} 
+    ${VIDEO_SLICER_RESOURCES} 
+    ${FISHDET_RES_FILE}
+    )
   target_link_libraries(
     video_slicer
     ${OpenCV_LIBS}
@@ -24,7 +27,10 @@ if( WIN32 )
     )
 elseif( APPLE )
   add_executable( video_slicer MACOSX_BUNDLE
-    ${VIDEO_SLICER_SOURCES} ${FISHDET_ICON_FULL} )
+    ${VIDEO_SLICER_SOURCES} 
+    ${FISHDET_ICON_FULL}
+    ${FISHDET_RES_FILE}
+    )
   set_target_properties( video_slicer PROPERTIES
     MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON}
     OUTPUT_NAME "Video Slicer" )
@@ -43,7 +49,9 @@ elseif( APPLE )
     )
 elseif( UNIX )
   add_executable( video_slicer
-    ${VIDEO_SLICER_SOURCES} )
+    ${VIDEO_SLICER_SOURCES}
+    ${FISHDET_RES_FILE}
+    )
   target_link_libraries(
     video_slicer
     dl

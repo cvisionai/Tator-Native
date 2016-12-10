@@ -6,7 +6,9 @@ if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )
   file( GLOB IMAGE_ANNOTATOR_RESOURCES "*.rc" )
   add_executable( image_annotator WIN32 
-    ${IMAGE_ANNOTATOR_SOURCES} ${IMAGE_ANNOTATOR_RESOURCES} 
+    ${IMAGE_ANNOTATOR_SOURCES} 
+    ${IMAGE_ANNOTATOR_RESOURCES} 
+    ${FISHDET_RES_FILE} 
     )
   target_link_libraries(
     image_annotator
@@ -24,7 +26,10 @@ if( WIN32 )
     )
 elseif( APPLE )
   add_executable( image_annotator MACOSX_BUNDLE
-    ${IMAGE_ANNOTATOR_SOURCES} ${FISHDET_ICON_FULL} )
+    ${IMAGE_ANNOTATOR_SOURCES} 
+    ${FISHDET_ICON_FULL} 
+    ${FISHDET_RES_FILE} 
+    )
   set_target_properties( image_annotator PROPERTIES
     MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON}
     OUTPUT_NAME "Image Annotator" 
@@ -43,7 +48,9 @@ elseif( APPLE )
     )
 elseif( UNIX )
   add_executable( image_annotator
-    ${IMAGE_ANNOTATOR_SOURCES} )
+    ${IMAGE_ANNOTATOR_SOURCES}
+    ${FISHDET_RES_FILE} 
+    )
   target_link_libraries(
     image_annotator
     dl

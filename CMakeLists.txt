@@ -30,6 +30,7 @@ set( FISHDET_INCLUDE_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 set( FISHDET_CMAKE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 set( FISHDET_TEST_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/test" )
 set( FISHDET_DOC_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/doc" )
+set( FISHDET_RES_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/res" )
 
 # Set the cmake module path
 set( CMAKE_MODULE_PATH ${FISHDET_CMAKE_DIR} )
@@ -38,6 +39,7 @@ set( CMAKE_MODULE_PATH ${FISHDET_CMAKE_DIR} )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
 set( CMAKE_AUTOUIC ON )
+set( CMAKE_AUTORCC ON )
 
 # Generate the library hints file if necessary
 set( HINTS_PATH "${FISHDET_CMAKE_DIR}/FishDetFindLibsHints.cmake" )
@@ -64,12 +66,13 @@ include_directories(
 enable_testing()
 
 if( WIN32 )
-  set( FISHDET_ICON "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.ico" )
-  set( FISHDET_BMP "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons\\\\FishAnnotator.bmp" )
+  set( FISHDET_ICON "${FISHDET_RES_DIR}/icons\\\\FishAnnotator.ico" )
+  set( FISHDET_BMP "${FISHDET_RES_DIR}/icons\\\\FishAnnotator.bmp" )
 elseif( APPLE )
   set( FISHDET_ICON "FishAnnotator.icns" )
-  set( FISHDET_ICON_FULL "${CMAKE_CURRENT_SOURCE_DIR}/doc/icons/FishAnnotator.icns" )
+  set( FISHDET_ICON_FULL "${FISHDET_RES_DIR}/icons/FishAnnotator.icns" )
 endif()
+set( FISHDET_RES_FILE "${FISHDET_RES_DIR}/resources.qrc" )
 
 add_subdirectory( ${FISHDET_SRC_DIR} )
 add_subdirectory( ${FISHDET_TEST_DIR} )
