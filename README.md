@@ -404,11 +404,11 @@ make manual
 from the build subdirectory.  This will generate a user manual at
 doxygen/manual/latex/refman.pdf.
 
-Building installer
-------------------
+Building installer (any platform)
+---------------------------------
 
 After FishAnnotator has been built and installed, the installer can be built
-by typing the following from a Visual Studio command prompt:
+by typing the following from a command prompt:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 cpack
