@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 #ifdef _WIN32
-  setWindowIcon(QIcon("FishAnnotator.ico"));
+  setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
 #endif
 }
 

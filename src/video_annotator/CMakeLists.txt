@@ -6,7 +6,9 @@ if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )
   file( GLOB VIDEO_ANNOTATOR_RESOURCES "*.rc" )
   add_executable( video_annotator WIN32 
-    ${VIDEO_ANNOTATOR_SOURCES} ${VIDEO_ANNOTATOR_RESOURCES}
+    ${VIDEO_ANNOTATOR_SOURCES} 
+    ${VIDEO_ANNOTATOR_RESOURCES}
+    ${FISHDET_RES_FILE} 
     )
   target_link_libraries(
     video_annotator
@@ -24,7 +26,10 @@ if( WIN32 )
     )
 elseif( APPLE )
   add_executable( video_annotator MACOSX_BUNDLE
-    ${VIDEO_ANNOTATOR_SOURCES} ${FISHDET_ICON_FULL} )
+    ${VIDEO_ANNOTATOR_SOURCES} 
+    ${FISHDET_ICON_FULL}
+    ${FISHDET_RES_FILE} 
+    )
   set_target_properties( video_annotator PROPERTIES
     MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON}
     OUTPUT_NAME "Video Annotator" )
@@ -38,6 +43,26 @@ elseif( APPLE )
     Qt5::Widgets
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
+    ${OPENGL_LIBRARIES}
+    )
+elseif( UNIX )
+  add_executable( video_annotator
+    ${VIDEO_ANNOTATOR_SOURCES} 
+    ${FISHDET_RES_FILE}
+    )
+  target_link_libraries(
+    video_annotator
+    dl
+    common
+    ${OpenCV_LIBS}
+    ${UNIX_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::PrintSupport
+    Qt5::QXcbIntegrationPlugin
+    ${QT_THIRD_PARTY_LIBS}
+    Qt5::DBus
     ${OPENGL_LIBRARIES}
     )
 endif()

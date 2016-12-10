@@ -199,6 +199,87 @@ make -j4 && make install
 
 The OpenCV static libraries should now be built.
 
+Building static Qt on Ubuntu
+----------------------------
+
+1\. Clone the [Qt5 repository][QtRepo] from github.
+
+2\. By default, the dev branch will be checked out.  If desired, change
+    your branch to a tagged release version.
+
+3\. Navigate to the top level repository directory and type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+git submodule update --init
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This will clone all the submodules of Qt and check out the branch
+corresponding to your current branch.
+
+4\. Install necessary packages with apt:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+sudo apt install ruby perl python freeglut3 freeglut3-dev libglew1.5 
+libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx 
+libgl1-mesa-dev
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5\. Type the following from the top level directory:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+./configure -static -release -prefix "your/working/dir/qtbase"
+-qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz
+-opengl desktop -no-openssl -opensource -confirm-license -make libs -nomake
+tools -nomake examples -nomake tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+6\. Type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make -j4 && make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Qt5 static libraries should now be built.
+
+7\. Important: Do not link to the 3rd party image libraries provided
+    in the Qt build.  To ensure compatibility across that application,
+    use the static libraries from the OpenCV build in the directory
+    build/3rdparty/lib.
+
+Building static OpenCV on Ubuntu 
+--------------------------------
+
+1\. Install required video packages:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+sudo apt install ffmpeg libavcodec-dev libavfilter-dev libavformat-dev
+libavutil-dev libpostproc-dev libswscale-dev
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2\. Clone the [OpenCV repository][OpenCVRepo] from github.
+
+3\. By default, the master branch will be checked out.  If desired, change
+    your branch to a tagged release version.
+
+4\. Navigate to the top level opencv directory and create a subdirectory
+    called build.
+
+5\. From a Visual Studio command prompt, navigate to the build directory
+    and type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=ON
+-DCMAKE_INSTALL_PREFIX=./inst ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5\. Type:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+make -j4 && make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The OpenCV static libraries should now be built.
+
 Building the application on Windows
 -----------------------------------
 
@@ -247,8 +328,8 @@ cmake --build . --target INSTALL --config Release
     desired, cmake can be invoked with the variable CMAKE_INSTALL_PREFIX
     set to the install directory.
 
-Building the application on Mac
--------------------------------
+Building the application on Mac/Ubuntu
+--------------------------------------
 
 1\. From top level FishAnnotator directory:
 
@@ -276,9 +357,9 @@ For example,
     set( PNG_LIBRARIES "/Users/jtakahashi/dev/libpng/build/inst/lib/libpng.a" )
 
 After the file is generated it will
-not be overwritten next FishAnnotator is built, so this manual modification
-is only necessary for fresh builds.  Modify this file until the libraries
-are found and the configure step completes successfully.
+not be overwritten next time FishAnnotator is built, so this manual 
+modification is only necessary for fresh builds.  Modify this file until 
+the libraries are found and the configure step completes successfully.
 
 3\. Type:
 
@@ -323,11 +404,11 @@ make manual
 from the build subdirectory.  This will generate a user manual at
 doxygen/manual/latex/refman.pdf.
 
-Building installer
-------------------
+Building installer (any platform)
+---------------------------------
 
 After FishAnnotator has been built and installed, the installer can be built
-by typing the following from a Visual Studio command prompt:
+by typing the following from a command prompt:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 cpack

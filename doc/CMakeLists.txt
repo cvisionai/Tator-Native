@@ -17,7 +17,3 @@ if( ${DOXYGEN_FOUND} STREQUAL "YES" )
   endif()
 endif()
 
-if( WIN32 )
-    install( FILES "icons/FishAnnotator.ico" DESTINATION . )
-endif()
-

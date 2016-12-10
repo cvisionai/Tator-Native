@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->setupUi(this);
   ui_->navigatorLayout->addWidget(navigator_widget_.get());
 #ifdef _WIN32
-  setWindowIcon(QIcon("FishAnnotator.ico"));
+  setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
 #endif
   disableControls();
   updateTypeMenu();

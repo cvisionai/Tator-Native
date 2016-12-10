@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+  <file>fonts/DejaVuSansCondensed.ttf</file>
+  <file>icons/FishAnnotator.bmp</file>
+  <file>icons/FishAnnotator.icns</file>
+  <file>icons/FishAnnotator.ico</file>
+</qresource>
+</RCC>
