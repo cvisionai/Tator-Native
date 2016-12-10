@@ -1,5 +1,6 @@
 #include <QtPlugin>
 #include <QApplication>
+#include <QFontDatabase>
 
 #include "fish_annotator/image_annotator/mainwindow.h"
 
@@ -21,13 +22,15 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 #endif
 
-int main(int argc, char* argv[])
-{
-	QApplication a(argc, argv);
-	fish_annotator::image_annotator::MainWindow* w = 
+int main(int argc, char* argv[]) {
+  QApplication a(argc, argv);
+#if __unix__
+  QFontDatabase::addApplicationFont(":/fonts/DejaVuSansCondensed.ttf");
+#endif
+  fish_annotator::image_annotator::MainWindow* w = 
     new fish_annotator::image_annotator::MainWindow();
-	w->setAttribute(Qt::WA_DeleteOnClose, true);
-	w->show();
-	return a.exec();
+  w->setAttribute(Qt::WA_DeleteOnClose, true);
+  w->show();
+  return a.exec();
 }
  
