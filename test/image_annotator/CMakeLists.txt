@@ -65,4 +65,36 @@ elseif( APPLE )
     )
   file( COPY crashed DESTINATION . )
   file( COPY blah.json DESTINATION . )
+elseif( UNIX )
+  add_executable( test_image_annotator
+    ${TEST_IMAGE_ANNOTATOR_SOURCES}
+    ${IMAGE_ANNOTATOR_SOURCES}
+    )
+  target_link_libraries(
+    test_image_annotator
+    dl
+    common
+    ${UNIX_LIBRARIES}
+    Qt5::Widgets
+    Qt5::Core
+    Qt5::Gui
+    Qt5::PrintSupport
+    Qt5::Test
+    Qt5::QXcbIntegrationPlugin
+    ${QT_THIRD_PARTY_LIBS}
+    Qt5::DBus
+    ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    )
+  add_test(
+    NAME test_image_annotator
+    COMMAND test_image_annotator
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+  set_tests_properties(
+    test_image_annotator PROPERTIES
+    FAIL_REGULAR_EXPRESSION "FAIL"
+    )
+  file( COPY crashed DESTINATION . )
+  file( COPY blah.json DESTINATION . )
 endif()

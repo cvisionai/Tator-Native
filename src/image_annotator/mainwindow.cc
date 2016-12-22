@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
   , image_files_() {
   ui_->setupUi(this);
 #ifdef _WIN32
-  setWindowIcon(QIcon("FishAnnotator.ico"));
+  setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
 #endif
   setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
 	  "border-style: outset; border-radius: 5px; border-width: 2px; "

@@ -1,5 +1,6 @@
 #include <QtPlugin>
 #include <QApplication>
+#include <QFontDatabase>
 
 #include "fish_annotator/video_annotator/mainwindow.h"
 
@@ -8,18 +9,19 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 Q_IMPORT_PLUGIN(QICOPlugin)
 #elif __APPLE__
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
+#elif __unix__
+Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 #endif
 
-int main(int argc, char* argv[])
-{
-	QApplication a(argc, argv);
-	
-
-	fish_annotator::video_annotator::MainWindow* w = new fish_annotator::video_annotator::MainWindow();
-	w->setAttribute(Qt::WA_DeleteOnClose, true);
-
-	w->show();
-
-	return a.exec();
+int main(int argc, char* argv[]) {
+  QApplication a(argc, argv);
+#if __unix__
+  QFontDatabase::addApplicationFont(":/fonts/DejaVuSansCondensed.ttf");
+#endif
+  fish_annotator::video_annotator::MainWindow* w = 
+    new fish_annotator::video_annotator::MainWindow();
+  w->setAttribute(Qt::WA_DeleteOnClose, true);
+  w->show();
+  return a.exec();
 }
  
