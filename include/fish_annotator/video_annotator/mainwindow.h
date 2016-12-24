@@ -150,7 +150,7 @@ private:
   /// @brief Rewinds the video by seconds_to_rewind seconds.
   ///
   /// @param seconds_to_rewind The number of seconds in the video to rewind.
-  void rewindVideo(int seconds_to_rewind);
+  void skipVideo(int seconds_to_skip);
   void updateTypeMenu();
   QProgressDialog * genProgressDialog(QString dialog_text);
 
