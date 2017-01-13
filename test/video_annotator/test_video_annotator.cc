@@ -7,8 +7,6 @@
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 #elif __APPLE__
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
-#elif __unix__
-Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 #endif
 
 void TestVideoAnnotator::testLoadVideo() {

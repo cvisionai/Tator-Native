@@ -57,20 +57,6 @@ elseif( APPLE )
     "${_qt5Widgets_install_prefix}/plugins/imageformats/libqico.a"
     )
 elseif( UNIX )
-  set( QT_THIRD_PARTY_LIBS
-    "${_qt5Widgets_install_prefix}/lib/libQt5XcbQpa.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtpcre.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtpng.a"
-    "${_qt5Widgets_install_prefix}/lib/libQt5PlatformSupport.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqxcb.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqlinuxfb.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqminimal.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqoffscreen.a"
-    "${_qt5Widgets_install_prefix}/plugins/imageformats/libqico.a"
-    "${_qt5Widgets_install_prefix}/lib/libxcb-static.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtfreetype.a"
-    )
 endif() 
 
 # --- Boost ---

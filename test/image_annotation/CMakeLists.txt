@@ -75,7 +75,6 @@ elseif( UNIX )
     Qt5::Core
     Qt5::Gui
     Qt5::PrintSupport
-    Qt5::QXcbIntegrationPlugin
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus

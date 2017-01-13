@@ -80,7 +80,6 @@ elseif( UNIX )
     Qt5::Gui
     Qt5::PrintSupport
     Qt5::Test
-    Qt5::QXcbIntegrationPlugin
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
     ${OPENGL_LIBRARIES}
