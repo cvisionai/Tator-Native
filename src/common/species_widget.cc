@@ -19,7 +19,7 @@ void SpeciesWidget::setSpecies(const Species &species) {
   ui_->name->setText(species.getName().c_str());
   subspecies_menu_->clear();
   for(const auto &subspecies : species.getSubspecies()) {
-    QAction *action = new QAction(subspecies.c_str());
+    QAction *action = new QAction(subspecies.c_str(), this);
     QObject::connect(action, SIGNAL(triggered()), 
         this, SLOT(onSubspeciesClicked()));
     subspecies_menu_->addAction(action);
