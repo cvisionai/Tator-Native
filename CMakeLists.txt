@@ -6,13 +6,9 @@ set( CMAKE_BUILD_TYPE Release )
 
 if( MSVC )
   set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /MP" )
-endif()
-
-if( APPLE )
+elseif( APPLE )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
-endif()
-
-if( UNIX )
+elseif( UNIX )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -Wl,--no-as-needed" )
 endif()
 
