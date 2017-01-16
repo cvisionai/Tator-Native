@@ -15,9 +15,11 @@ find_package( Qt5PrintSupport )
 if( NOT Qt5PrintSupport_FOUND )
   message( FATAL_ERROR "Could not find Qt5PrintSupport.  Build cannot continue." )
 endif()
-find_package( Qt5DBus )
-if( NOT Qt5DBus_FOUND )
-  message( FATAL_ERROR "Could not find Qt5DBus.  Build cannot continue." )
+if( NOT APPLE )
+  find_package( Qt5DBus )
+  if( NOT Qt5DBus_FOUND )
+    message( FATAL_ERROR "Could not find Qt5DBus.  Build cannot continue." )
+  endif()
 endif()
 find_package( Qt5Test )
 if( NOT Qt5Test_FOUND )
@@ -46,16 +48,6 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
     )
 elseif( APPLE )
-  set( QT_THIRD_PARTY_LIBS
-    "${_qt5Widgets_install_prefix}/lib/libqtpcre.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a"
-    "${_qt5Widgets_install_prefix}/lib/libqtfreetype.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqcocoa.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqminimal.a"
-    "${_qt5Widgets_install_prefix}/plugins/platforms/libqoffscreen.a"
-    "${_qt5Widgets_install_prefix}/plugins/printsupport/libcocoaprintersupport.a"
-    "${_qt5Widgets_install_prefix}/plugins/imageformats/libqico.a"
-    )
 elseif( UNIX )
 endif() 
 

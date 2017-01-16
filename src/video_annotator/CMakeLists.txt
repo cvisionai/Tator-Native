@@ -42,7 +42,6 @@ elseif( APPLE )
     ${APPLE_LIBRARIES}
     Qt5::Widgets
     Qt5::PrintSupport
-    ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     )
 elseif( UNIX )
