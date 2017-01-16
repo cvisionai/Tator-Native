@@ -7,8 +7,6 @@
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 Q_IMPORT_PLUGIN(QICOPlugin)
-#elif __APPLE__
-Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 #endif
 
 int main(int argc, char *argv[]) {
