@@ -205,14 +205,14 @@ void MainWindow::on_SlowDown_clicked() {
 
 void MainWindow::on_minusOneSecond_clicked()
 {
-	rewindVideo(1);
+	skipVideo(-1);
 }
 
 void MainWindow::on_minusThreeSecond_clicked() {
-	rewindVideo(3);
+	skipVideo(-3);
 }
 
-void MainWindow::rewindVideo(int seconds_to_rewind) {
+void MainWindow::skipVideo(int seconds_to_skip) {
 	if (!(player_ == nullptr))
 	{
 		if (!player_->isStopped())
@@ -221,11 +221,18 @@ void MainWindow::rewindVideo(int seconds_to_rewind) {
 			ui_->Play->setText(tr("Play"));
 		}
 
-		bool valid_rewind = player_->getCurrentFrame() > 
-      seconds_to_rewind * player_->getFrameRate();
-
-		QImage image = player_->setFrame(player_->getCurrentFrame() 
-        - valid_rewind * seconds_to_rewind * player_->getFrameRate());
+		bool valid_rewind = false;
+		if (seconds_to_skip > 0) {
+			valid_rewind = (player_->getCurrentFrame()
+				+ seconds_to_skip * player_->getFrameRate()) < 
+				player_->getNumberOfFrames();
+		}
+		else {
+			valid_rewind = player_->getCurrentFrame() >
+				std::abs(seconds_to_skip) * player_->getFrameRate();
+		}
+		QImage image = player_->setFrame(player_->getCurrentFrame()
+			+ valid_rewind * seconds_to_skip * player_->getFrameRate();
 
 		if (!image.isNull())
 		{
