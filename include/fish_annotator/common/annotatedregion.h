@@ -52,6 +52,13 @@ public:
 
     /// @brief Gets the ID associated with this region.
     uint64_t getUID() {return uid_;}
+
+    /// @brief Gets the bounding box associated with this region.
+    QRectF getAnnBox() { return QRectF(
+	annotation_->area_.x,
+	annotation_->area_.y,
+	annotation_->area_.w,
+	annotation_->area_.h);}
 private:
     /// @brief Pointer to the annotation location.
     std::shared_ptr<Info> annotation_;

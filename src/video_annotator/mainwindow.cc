@@ -232,7 +232,7 @@ void MainWindow::skipVideo(int seconds_to_skip) {
 				std::abs(seconds_to_skip) * player_->getFrameRate();
 		}
 		QImage image = player_->setFrame(player_->getCurrentFrame()
-			+ valid_rewind * seconds_to_skip * player_->getFrameRate();
+			+ valid_rewind * seconds_to_skip * player_->getFrameRate());
 
 		if (!image.isNull())
 		{

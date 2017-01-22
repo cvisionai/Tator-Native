@@ -222,17 +222,36 @@ void MainWindow::on_removeFish_clicked() {
     }
 }
 
+void MainWindow::writeFrameWithAnnotations(QString filename) {
+	QPixmap tempPixmap = display_image_->pixmap();
+	QImage tempImage = tempPixmap.toImage();
+	auto frame = uint64_t(player_->getCurrentFrame());
+	tempImage.save(filename + "_" + std::to_string(frame).c_str() + ".png");
+	//player_->write_image(filename + ".png");
+	std::ofstream annotation_file(filename.toStdString() + "_" + std::to_string(frame).c_str() + ".bboxes.tsv");
+	std::ofstream label_file(filename.toStdString() + "_" + std::to_string(frame).c_str() + ".bboxes.labels.tsv");
+	// write the annotations out now. 
+	for (auto ann : current_annotations_) {
+		QRectF tmpRect = ann->getAnnBox();
+		annotation_file << (int)tmpRect.x() << "\t" << (int)tmpRect.y() << "\t" << (int)(tmpRect.x() + tmpRect.width()) << "\t" << (int)(tmpRect.y() + tmpRect.height()) << std::endl;
+		label_file << "flat" << std::endl;
+	}
+	annotation_file.close();
+}
+
 void MainWindow::on_writeImage_clicked() {
   // filename needs to be procedurally generated. 
 
   if (images_save_path_.isEmpty())
     images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
 
+//  writeFrameWithAnnotations(images_save_path_ + QStringLiteral("/") + QStringLiteral("/%1").arg(list_pos_->getID()));
+//
   QImage img(scene_->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
   QPainter p(&img);
   scene_->render(&p);
   p.end();
-  img.save(images_save_path_ + QStringLiteral("\\Fish_%1.png").arg(list_pos_->getID()));
+  img.save(images_save_path_ + QStringLiteral("/") + QStringLiteral("/Fish_%1.png").arg(list_pos_->getID()));
 }
 
 QProgressDialog * MainWindow::genProgressDialog(QString dialog_text) {

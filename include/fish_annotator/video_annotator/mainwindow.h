@@ -126,6 +126,7 @@ private:
   int getFishSpecies (FishTypeEnum fType, std::string const &sString);
   std::string getFishTypeString (FishTypeEnum fType);
   std::string getFishSpeciesString (FishTypeEnum fType, int species);
+  void writeFrameWithAnnotations(QString filename);
   void disableControls();
   void enableControls();
   void keyPressEvent(QKeyEvent *e);
