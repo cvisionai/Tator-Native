@@ -168,6 +168,7 @@ private:
   std::list<AnnotatedRegion<AnnotationLocation> *> current_annotations_;
   QString images_save_path_;
   QString progress_bar_stylesheet_;
+  QGraphicsRectItem* visibility_box_;
 };
 
 template<class T>
