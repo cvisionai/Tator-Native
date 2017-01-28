@@ -154,6 +154,10 @@ void MainWindow::onLoadVideoSuccess(const QFileInfo &name) {
   scene_->setSceneRect(firstImage.rect());
   ui_->videoWindow->setScene(scene_.get());
   ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
+  visibility_box_ = new QGraphicsRectItem(scene_->sceneRect());
+  QPen testPen;
+  testPen.setWidth(std::min(
+	  scene_->sceneRect().width(), scene_->sceneRect().height()) * 0.005);
   ui_->videoWindow->show();
   ui_->currentSpeed->setText("Current Speed: 100%");
   ui_->Play->setFocus();
