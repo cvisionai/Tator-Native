@@ -33,6 +33,7 @@ void MainWindow::on_loadAnnotate_clicked() {
   std::string filenameBase = base_name(filename.toStdString());
   std::string filenameBaseNoExt = remove_extension(filenameBase);
   std::string filenameJSON = remove_extension(filename.toStdString()) + ".json";
+  std::string filenameDegraded = remove_extension(filename.toStdString()) + ".csv1";
   std::ifstream inputJSON(filenameJSON.c_str(), std::ios::in);
 
   QProgressDialog * progress = genProgressDialog("Loading");
@@ -101,6 +102,25 @@ void MainWindow::on_loadAnnotate_clicked() {
   ui_->typeMenu->setCurrentIndex((int) list_pos_->getFishType());
   ui_->subTypeMenu->setCurrentIndex((int) list_pos_->getFishSubType());
   updateVecIndex();
+
+  std::ifstream inFileDegraded(filenameDegraded.c_str());
+  if (!inFileDegraded.fail()) {
+	  getline(inFileDegraded, line);
+	  line.clear();
+	  progress->setValue(80);
+	  while (getline(inFileDegraded, line)) {
+		  std::stringstream linestream(line);
+		  std::string frame_degraded_s, degraded_state_s;
+		  std::getline(linestream, frame_degraded_s, ',');
+		  std::getline(linestream, degraded_state_s, ',');
+		  uint64_t frame_degraded_i = std::stoi(frame_degraded_s);
+		  bool degraded_state_b = !(std::strcmp(degraded_state_s.c_str(), "degraded"));
+		  decltype(my_degraded_list_)::value_type tmp_degraded(frame_degraded_i, degraded_state_b);
+		  my_degraded_list_.insert(tmp_degraded);
+	  }
+  }
+  inFileDegraded.close();
+
   progress->setValue(100);
   progress->cancel();
   delete progress;
@@ -121,6 +141,9 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
     std::string(basename + ".csv").c_str())).toStdString();
   std::string path_json = QDir(dir_name).filePath(QString::fromUtf8(
     std::string(basename + ".json").c_str())).toStdString();
+  std::string path_degraded_csv = QDir(dir_name).filePath(QString::fromUtf8(
+	std::string(basename + ".csv1").c_str())).toStdString();
+
   std::ofstream json_file(path_json.c_str(), std::ofstream::out);
   if(json_file.fail()) {
     QMessageBox err;
@@ -170,6 +193,25 @@ void MainWindow::saveAnnotations(const QString &dir_name) {
       fishCount++;
     }
     csv_file.close();
+  }
+  progress->setValue(80);
+  std::ofstream csv_degraded_file(path_degraded_csv);
+  if (csv_degraded_file.fail()) {
+	  QMessageBox err;
+	  err.critical(0, "Error", std::string(
+		  std::string("Failed to open file ")
+		  + path_degraded_csv
+		  + std::string("!")
+	  ).c_str());
+  }
+  else {
+	  csv_degraded_file << "Frame" << "," << "Degraded_State" << std::endl;
+	  for (auto it = my_degraded_list_.begin(); it != my_degraded_list_.end(); ++it) {
+		  std::string tmp_degraded = (it->second) ? "degraded" : "visible";
+		  csv_degraded_file << std::to_string(it->first) << ","
+			  << tmp_degraded << std::endl;
+	  }
+	  csv_degraded_file.close();
   }
   progress->setValue(100);
   progress->cancel();
@@ -267,6 +309,27 @@ QProgressDialog * MainWindow::genProgressDialog(QString dialog_text) {
   progress->show();
   progress->setValue(1);
   return progress;
+}
+
+void MainWindow::on_degraded_stateChanged() {
+	//Get the frame where this change occurs, and log the appropriate transition
+	bool degraded_state = ui_->degraded->isChecked();
+	if (degraded_state) {
+		QPen testPen;
+		testPen.setWidth(std::min(
+			scene_->sceneRect().width(), scene_->sceneRect().height()) * 0.03);
+		testPen.setColor(QColor(255, 92, 33));
+		visibility_box_->setPen(testPen);
+		scene_->addItem(visibility_box_);
+		decltype(my_degraded_list_)::value_type tmp_element(player_->getCurrentFrame(), degraded_state);
+		my_degraded_list_.insert(tmp_element);
+	}
+	else {
+		scene_->removeItem(visibility_box_);
+		decltype(my_degraded_list_)::value_type tmp_element(player_->getCurrentFrame(), degraded_state);
+		my_degraded_list_.insert(tmp_element);
+	}
+
 }
 
 }} // namespace fish_annotator::video_annotator

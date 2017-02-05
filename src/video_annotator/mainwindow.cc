@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
   , player_(new Player)
   , my_fish_list_()
   , list_pos_(my_fish_list_.end())
+  , my_degraded_list_()
+  , degraded_list_pos_(my_degraded_list_.end())
   , scene_(new QGraphicsScene)
   , f_index_(0)
   , next_id_(1)
@@ -59,11 +61,13 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::nextFrame() {
   updateImage(player_->nextFrame()); // get next frame
   processAnnotations(player_->getCurrentFrame());
+  processDegraded(player_->getCurrentFrame());
 }
 
 void MainWindow::prevFrame() {
   updateImage(player_->prevFrame()); // get next frame
   processAnnotations(player_->getCurrentFrame());
+  processDegraded(player_->getCurrentFrame());
 }
 
 void MainWindow::processAnnotations(uint64_t frame) {
@@ -81,6 +85,19 @@ void MainWindow::processAnnotations(uint64_t frame) {
   }
 }
 
+void MainWindow::processDegraded(uint64_t frame) {
+	auto tmp_val = my_degraded_list_.find(frame);
+	if (tmp_val != my_degraded_list_.end()) {
+		ui_->degraded->setChecked(tmp_val->second);
+		if (tmp_val->second) {
+			emit ui_->degraded->stateChanged(Qt::Checked);
+		}
+		else {
+			emit ui_->degraded->stateChanged(Qt::Unchecked);
+		}
+	}
+}
+
 void MainWindow::updatePlayerUI(QImage img) {
   if (!img.isNull())
   {
@@ -91,6 +108,7 @@ void MainWindow::updatePlayerUI(QImage img) {
     ui_->currentTime->setText(getFormattedTime((int)player_->
     getCurrentFrame() / (int)player_->getFrameRate()));
     processAnnotations(player_->getCurrentFrame());
+	processDegraded(player_->getCurrentFrame());
   }
 }
 
@@ -155,9 +173,6 @@ void MainWindow::onLoadVideoSuccess(const QFileInfo &name) {
   ui_->videoWindow->setScene(scene_.get());
   ui_->videoWindow->fitInView(scene_->sceneRect(),Qt::KeepAspectRatio);
   visibility_box_ = new QGraphicsRectItem(scene_->sceneRect());
-  QPen testPen;
-  testPen.setWidth(std::min(
-	  scene_->sceneRect().width(), scene_->sceneRect().height()) * 0.005);
   ui_->videoWindow->show();
   ui_->currentSpeed->setText("Current Speed: 100%");
   ui_->Play->setFocus();
@@ -248,6 +263,7 @@ void MainWindow::skipVideo(int seconds_to_skip) {
 				getCurrentFrame() / (int)player_->getFrameRate()));
 		}
 		processAnnotations(player_->getCurrentFrame());
+		processDegraded(player_->getCurrentFrame());
 	}
 }
 
@@ -308,6 +324,7 @@ void MainWindow::on_goToFrame_clicked()
         getCurrentFrame() / (int)player_->getFrameRate()));
     }
     processAnnotations(player_->getCurrentFrame());
+	processDegraded(player_->getCurrentFrame());
   }
 }
 
@@ -487,6 +504,7 @@ void MainWindow::on_nextAndCopy_clicked()
     }
   }
   processAnnotations(player_->getCurrentFrame());
+  processDegraded(player_->getCurrentFrame());
 }
 
 void MainWindow::addFish(FishTypeEnum fType)

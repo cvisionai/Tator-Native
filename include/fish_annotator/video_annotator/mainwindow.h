@@ -115,6 +115,7 @@ private slots:
   void on_typeMenu_currentIndexChanged(int tIdx);
   void on_subTypeMenu_currentIndexChanged(int sIdx);
   void on_writeImage_clicked();
+  void on_degraded_stateChanged();
 public:
   void updateImage(const QImage &image);
 private:
@@ -147,6 +148,11 @@ private:
   /// @param frame The frame for which you want to retrieve annotations.
   void processAnnotations(uint64_t frame);
 
+  /// @brief Retrieves degraded state associated with frame.
+  ///
+  /// @param frame The frame for which you want to retrieve degraded state.
+  void processDegraded(uint64_t frame);
+
   /// @brief Rewinds the video by seconds_to_rewind seconds.
   ///
   /// @param seconds_to_skip The number of seconds in the video to skip.
@@ -161,6 +167,8 @@ private:
   std::unique_ptr<Player> player_;
   std::vector<Fish> my_fish_list_;
   std::vector<Fish>::iterator list_pos_;
+  std::map<uint64_t, bool> my_degraded_list_;
+  std::map<uint64_t, bool>::iterator degraded_list_pos_;
   std::unique_ptr<QGraphicsScene> scene_;
   int f_index_;
   int next_id_;
