@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
   , player_(new Player)
   , my_fish_list_()
   , list_pos_(my_fish_list_.end())
-  , scene_(new QGraphicsScene)
+  , scene_(new Scene(this))
   , f_index_(0)
   , next_id_(1)
   , display_image_(nullptr)
@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
   QObject::connect(player_.get(), SIGNAL(processedImage(QImage)),
            this, SLOT(updatePlayerUI(QImage)));
+  QObject::connect(scene_.get(), SIGNAL(line_finished(QLineF const)),
+	  this, SLOT(add_region_slot(QLineF const)));
   ui_->setupUi(this);
   ui_->navigatorLayout->addWidget(navigator_widget_.get());
 #ifdef _WIN32
@@ -74,8 +76,7 @@ void MainWindow::processAnnotations(uint64_t frame) {
   current_annotations_.clear();
   // add new annotations
   for (auto ann : document_->getAnnotations(frame)) {
-    auto region = new AnnotatedRegion<AnnotationLocation>(ann.first, 
-        ann.second, display_image_->pixmap().toImage().rect());
+	auto region = new LineAnnotation<AnnotationLocation>(ann.first, ann.second);
     scene_->addItem(region);
     current_annotations_.push_back(region);
   }
@@ -149,7 +150,7 @@ void MainWindow::onLoadVideoSuccess(const QFileInfo &name) {
   ui_->totalTime->setText(getFormattedTime((int)player_->
   getNumberOfFrames() / (int)player_->getFrameRate()));
   QImage firstImage = player_->getOneFrame();
-  scene_.reset(new QGraphicsScene(this));
+  scene_.reset(new Scene(this));
   display_image_ = scene_->addPixmap(QPixmap::fromImage(firstImage));
   scene_->setSceneRect(firstImage.rect());
   ui_->videoWindow->setScene(scene_.get());
@@ -394,15 +395,23 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 }
 
 void MainWindow::on_addRegion_clicked() {
-  if(!addRegion()) {
+	scene_->setMode(Scene::Mode::DrawLine);
+  /*
+	if(!addRegion()) {
     QMessageBox err;
     err.critical(0, "Error", "Please add a fish before adding a region.");
   }
+  */
 }
 
-bool MainWindow::addRegion() {
+void MainWindow::add_region_slot(const QLineF line_to_add) {
+	addRegion(line_to_add);
+}
+
+bool MainWindow::addRegion(const QLineF line_to_add) {
   if(list_pos_ != my_fish_list_.end()) {
-    Rect area(0, 0, 100, 100);
+    Rect area(line_to_add.x1(), line_to_add.y1(),
+			  line_to_add.x2(), line_to_add.y2());
     auto fishID = uint64_t(list_pos_->getID());
     auto frame = uint64_t(player_->getCurrentFrame());
     //First check to see if there's an annotation for this ID already.
@@ -414,11 +423,19 @@ bool MainWindow::addRegion() {
       document_->addAnnotation(fishID);
     }
     auto loc = document_->addAnnotationLocation(fishID, frame, area);
-    auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
+
+	auto annotationArea = new LineAnnotation<AnnotationLocation>(fishID, loc);
+    /*
+	auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
         fishID, loc, display_image_->pixmap().toImage().rect());
-    current_annotations_.push_back(annotationArea);
+    */
+	current_annotations_.push_back(annotationArea);
     scene_->addItem(annotationArea);
-    return true;
+	QGraphicsLineItem *test_item = new QGraphicsLineItem(line_to_add);
+	test_item->setPen(QPen(Qt::black, 3, Qt::SolidLine));
+	scene_->addItem(test_item);
+	//annotationArea->setLine(line_to_add);
+	return true;
   }
   return false;
 }
@@ -442,7 +459,7 @@ void MainWindow::removeRegion(uint64_t id, uint64_t frame) {
       currentAnn->removeFrameAnn(frame);
       document_->removeFrameAnnotation(id, frame);
       auto it = find_if(current_annotations_.begin(), current_annotations_.end(), \
-                [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
+                [&id](LineAnnotation<AnnotationLocation>* obj) {return obj->getUID() == id;});
       if (it != current_annotations_.end()) {
         scene_->removeItem(*it);
         current_annotations_.erase(it);

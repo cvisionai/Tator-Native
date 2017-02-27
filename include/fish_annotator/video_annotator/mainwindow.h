@@ -20,6 +20,7 @@
 #include <QProgressDialog>
 
 #include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/video_annotator/scene.h"
 #include "fish_annotator/video_annotator/fish.h"
 #include "fish_annotator/video_annotator/document.h"
 #include "fish_annotator/video_annotator/player.h"
@@ -115,6 +116,7 @@ private slots:
   void on_typeMenu_currentIndexChanged(int tIdx);
   void on_subTypeMenu_currentIndexChanged(int sIdx);
   void on_writeImage_clicked();
+  void add_region_slot(const QLineF line_to_add);
 public:
   void updateImage(const QImage &image);
 private:
@@ -134,7 +136,7 @@ private:
   /// @brief Adds a region.
   ///
   /// @return True if success, false if failure.
-  bool addRegion();
+  bool addRegion(const QLineF line_to_add);
   void removeRegion(uint64_t id, uint64_t frame);
 
   /// @brief Saves annotations to a given directory.
@@ -161,11 +163,11 @@ private:
   std::unique_ptr<Player> player_;
   std::vector<Fish> my_fish_list_;
   std::vector<Fish>::iterator list_pos_;
-  std::unique_ptr<QGraphicsScene> scene_;
+  std::unique_ptr<Scene> scene_;
   int f_index_;
   int next_id_;
   QGraphicsPixmapItem *display_image_;
-  std::list<AnnotatedRegion<AnnotationLocation> *> current_annotations_;
+  std::list<LineAnnotation<AnnotationLocation> *> current_annotations_;
   QString images_save_path_;
   QString progress_bar_stylesheet_;
 };

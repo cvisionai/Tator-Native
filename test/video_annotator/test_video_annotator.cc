@@ -25,7 +25,8 @@ void TestVideoAnnotator::testAddRegionNoFish() {
   std::string name = "slow_motion_drop.mp4";
   QVERIFY(mainwin.player_->loadVideo(name));
   mainwin.onLoadVideoSuccess(QString::fromUtf8(name.c_str()));
-  QVERIFY(!mainwin.addRegion());
+  const QLineF tmp = QLineF(0, 0, 0, 0);
+  QVERIFY(!mainwin.addRegion(tmp));
   mainwin.on_removeRegion_clicked();
   mainwin.on_nextAndCopy_clicked();
 }

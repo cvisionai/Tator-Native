@@ -206,7 +206,7 @@ void MainWindow::on_removeFish_clicked() {
         auto id = list_pos_->getID();
 
         auto it = find_if(current_annotations_.begin(), current_annotations_.end(), \
-                          [&id](AnnotatedRegion<AnnotationLocation>* obj) {return obj->getUID() == id;});
+                          [&id](LineAnnotation<AnnotationLocation>* obj) {return obj->getUID() == id;});
         if (it != current_annotations_.end()) {
             scene_->removeItem(*it);
             current_annotations_.erase(it);
@@ -230,12 +230,14 @@ void MainWindow::writeFrameWithAnnotations(QString filename) {
 	//player_->write_image(filename + ".png");
 	std::ofstream annotation_file(filename.toStdString() + "_" + std::to_string(frame).c_str() + ".bboxes.tsv");
 	std::ofstream label_file(filename.toStdString() + "_" + std::to_string(frame).c_str() + ".bboxes.labels.tsv");
-	// write the annotations out now. 
+	// write the annotations out now.
+	/*
 	for (auto ann : current_annotations_) {
 		QRectF tmpRect = ann->getAnnBox();
 		annotation_file << (int)tmpRect.x() << "\t" << (int)tmpRect.y() << "\t" << (int)(tmpRect.x() + tmpRect.width()) << "\t" << (int)(tmpRect.y() + tmpRect.height()) << std::endl;
 		label_file << "flat" << std::endl;
 	}
+	*/
 	annotation_file.close();
 }
 

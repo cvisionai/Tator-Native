@@ -23,6 +23,30 @@ enum Drag {
     DRAG_BOTTOM_RIGHT
 };
 
+template<typename Info>
+class LineAnnotation : public QGraphicsLineItem
+{
+public:
+	uint64_t uid_;
+	std::shared_ptr<Info> annotation_;
+public:
+	LineAnnotation(uint64_t uid,
+		std::shared_ptr<Info> annotation);
+	uint64_t getUID() { return uid_; }
+};
+
+template<typename Info>
+LineAnnotation<Info>::LineAnnotation(
+	uint64_t uid,
+	std::shared_ptr<Info> annotation)
+	: QGraphicsLineItem(annotation_->area_.x, annotation_->area_.y,
+		annotation_->area_.w,
+		annotation_->area_.h)
+	, uid_(uid)
+    , annotation_(annotation) {
+	setPen(QPen(Qt::black, 3, Qt::SolidLine));
+}
+
 
 /// @brief Displays bounding boxes drawn by user.
 ///

@@ -7,6 +7,7 @@ set( VIDEO_ANNOTATOR_SOURCES
   "../../src/video_annotator/mainwindowmenus.cc"
   "../../src/video_annotator/navigatorwidget.cc"
   "../../src/video_annotator/player.cc"
+  "../../src/video_annotator/scene.cc"
   )
 include_directories( 
   "../../include/fish_annotator/video_annotator"
