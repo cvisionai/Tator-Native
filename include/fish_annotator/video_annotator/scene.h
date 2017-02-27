@@ -10,28 +10,28 @@
 #include <QKeyEvent>
 
 namespace fish_annotator {
-	namespace video_annotator {
+  namespace video_annotator {
 
-		class Scene : public QGraphicsScene
-		{
-			Q_OBJECT
-		public:
-			enum Mode { NoMode, SelectObject, DrawLine };
-			Scene(QObject* parent = 0);
-			void setMode(Mode mode);
-		protected:
-			void mousePressEvent(QGraphicsSceneMouseEvent *event);
-			void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-			void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-			void keyPressEvent(QKeyEvent *event);
-		private:
-			Mode sceneMode;
-			QGraphicsLineItem* itemToDraw;
-			void makeItemsControllable(bool areControllable);
-		signals:
-			void line_finished(const QLineF line_to_add);
-		};
-	}
+    class Scene : public QGraphicsScene
+    {
+      Q_OBJECT
+    public:
+      enum Mode { NoMode, SelectObject, DrawLine };
+      Scene(QObject* parent = 0);
+      void setMode(Mode mode);
+    protected:
+      void mousePressEvent(QGraphicsSceneMouseEvent *event);
+      void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+      void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+      void keyPressEvent(QKeyEvent *event);
+    private:
+      Mode sceneMode;
+      QGraphicsLineItem* itemToDraw;
+      void makeItemsControllable(bool areControllable);
+    signals:
+      void line_finished(const QLineF line_to_add);
+    };
+  }
 } // namespace fish_annotator
 
 #endif // ANNOTATEDREGION_H
