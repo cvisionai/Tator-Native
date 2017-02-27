@@ -6,6 +6,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsLineItem>
 #include <QAction>
+#include <QMessageBox>
 #include <QGraphicsView>
 #include <QKeyEvent>
 
@@ -29,7 +30,7 @@ namespace fish_annotator {
 			QGraphicsLineItem* itemToDraw;
 			void makeItemsControllable(bool areControllable);
 		signals:
-			void line_finished(const QLineF line_to_add);
+			void lineFinished(const QLineF &line_to_add);
 		};
 	}
 } // namespace fish_annotator

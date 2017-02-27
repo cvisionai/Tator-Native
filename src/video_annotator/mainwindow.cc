@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
   QObject::connect(player_.get(), SIGNAL(processedImage(QImage)),
            this, SLOT(updatePlayerUI(QImage)));
-  QObject::connect(scene_.get(), SIGNAL(line_finished(QLineF const)),
-	  this, SLOT(add_region_slot(QLineF const)));
+  QObject::connect(scene_.get(), SIGNAL(lineFinished(QLineF)),
+	  this, SLOT(addRegionSlot(QLineF)));
   ui_->setupUi(this);
   ui_->navigatorLayout->addWidget(navigator_widget_.get());
 #ifdef _WIN32
@@ -150,7 +150,7 @@ void MainWindow::onLoadVideoSuccess(const QFileInfo &name) {
   ui_->totalTime->setText(getFormattedTime((int)player_->
   getNumberOfFrames() / (int)player_->getFrameRate()));
   QImage firstImage = player_->getOneFrame();
-  scene_.reset(new Scene(this));
+  //scene_.reset(new Scene(this));
   display_image_ = scene_->addPixmap(QPixmap::fromImage(firstImage));
   scene_->setSceneRect(firstImage.rect());
   ui_->videoWindow->setScene(scene_.get());
@@ -404,11 +404,15 @@ void MainWindow::on_addRegion_clicked() {
   */
 }
 
-void MainWindow::add_region_slot(const QLineF line_to_add) {
+void MainWindow::addRegionSlot(QLineF line_to_add) {
+	QMessageBox err;
+	err.critical(0, "Error", "Made it to add region.");
 	addRegion(line_to_add);
 }
 
-bool MainWindow::addRegion(const QLineF line_to_add) {
+bool MainWindow::addRegion(QLineF line_to_add) {
+	QMessageBox err;
+	err.critical(0, "Error", "Made it to add region.");
   if(list_pos_ != my_fish_list_.end()) {
     Rect area(line_to_add.x1(), line_to_add.y1(),
 			  line_to_add.x2(), line_to_add.y2());
@@ -422,18 +426,19 @@ bool MainWindow::addRegion(const QLineF line_to_add) {
     else {
       document_->addAnnotation(fishID);
     }
-    auto loc = document_->addAnnotationLocation(fishID, frame, area);
+    auto loc = document_->addAnnotationLocation(fishID, frame, Rect(0,0,100,100));
 
 	auto annotationArea = new LineAnnotation<AnnotationLocation>(fishID, loc);
-    /*
-	auto annotationArea = new AnnotatedRegion<AnnotationLocation>(
+  
+	auto annotationBox = new AnnotatedRegion<AnnotationLocation>(
         fishID, loc, display_image_->pixmap().toImage().rect());
-    */
 	current_annotations_.push_back(annotationArea);
-    scene_->addItem(annotationArea);
-	QGraphicsLineItem *test_item = new QGraphicsLineItem(line_to_add);
-	test_item->setPen(QPen(Qt::black, 3, Qt::SolidLine));
-	scene_->addItem(test_item);
+    scene_->addItem(annotationBox);
+	auto tmp_rect = display_image_->pixmap().toImage().rect();
+	test_item_ = new QGraphicsLineItem(tmp_rect.x(), tmp_rect.y(), tmp_rect.width()*0.2, tmp_rect.height()*0.2);
+	test_item_->setPen(QPen(Qt::black, 3, Qt::SolidLine));
+	scene_->addItem(test_item_);
+	//test_item->setLine(tmp_rect.x(),tmp_rect.y(),tmp_rect.width()*0.1,tmp_rect.height()*0.1);
 	//annotationArea->setLine(line_to_add);
 	return true;
   }

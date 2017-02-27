@@ -31,8 +31,8 @@ namespace fish_annotator {
 		void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 			//Here is where you'll add the itemToDraw to the annotation list before resetting the poionter
 			if (sceneMode == DrawLine && itemToDraw != 0) {
+				emit lineFinished(itemToDraw->line());
 				removeItem(itemToDraw);
-				emit line_finished(itemToDraw->line());
 				sceneMode = SelectObject;
 			}
 			QGraphicsScene::mouseReleaseEvent(event);

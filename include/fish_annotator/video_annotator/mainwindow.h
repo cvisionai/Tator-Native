@@ -59,6 +59,7 @@ private slots:
   /// @param img The image to display in the GUI window
   void updatePlayerUI(QImage img);
   void updateSubTypeMenu(int typeIndex);
+  void addRegionSlot(QLineF line_to_add);
 
   /// @brief Retrieves information for fish number currently in goToFishVal.
   void goToFish();
@@ -116,7 +117,6 @@ private slots:
   void on_typeMenu_currentIndexChanged(int tIdx);
   void on_subTypeMenu_currentIndexChanged(int sIdx);
   void on_writeImage_clicked();
-  void add_region_slot(const QLineF line_to_add);
 public:
   void updateImage(const QImage &image);
 private:
@@ -136,7 +136,7 @@ private:
   /// @brief Adds a region.
   ///
   /// @return True if success, false if failure.
-  bool addRegion(const QLineF line_to_add);
+  bool addRegion(QLineF line_to_add);
   void removeRegion(uint64_t id, uint64_t frame);
 
   /// @brief Saves annotations to a given directory.
@@ -170,6 +170,7 @@ private:
   std::list<LineAnnotation<AnnotationLocation> *> current_annotations_;
   QString images_save_path_;
   QString progress_bar_stylesheet_;
+  QGraphicsLineItem *test_item_;
 };
 
 template<class T>
