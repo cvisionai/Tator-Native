@@ -11,8 +11,7 @@
 #include <QKeyEvent>
 
 namespace fish_annotator {
-	namespace video_annotator {
-
+  namespace video_annotator {
 		class Scene : public QGraphicsScene
 		{
 			Q_OBJECT
