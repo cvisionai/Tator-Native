@@ -25,8 +25,9 @@ namespace fish_annotator {
 			void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 			void keyPressEvent(QKeyEvent *event);
 		private:
-			Mode sceneMode;
-			QGraphicsLineItem* itemToDraw;
+			Mode scene_mode_;
+			QGraphicsLineItem* item_to_draw_;
+      QLineF line_to_draw_;
 			void makeItemsControllable(bool areControllable);
 		signals:
 			void lineFinished(const QLineF &line_to_add);

@@ -396,51 +396,32 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 
 void MainWindow::on_addRegion_clicked() {
 	scene_->setMode(Scene::Mode::DrawLine);
-  /*
-	if(!addRegion()) {
-    QMessageBox err;
-    err.critical(0, "Error", "Please add a fish before adding a region.");
-  }
-  */
 }
 
 void MainWindow::addRegionSlot(QLineF line_to_add) {
-	QMessageBox err;
-	err.critical(0, "Error", "Made it to add region.");
 	addRegion(line_to_add);
 }
 
 bool MainWindow::addRegion(QLineF line_to_add) {
-	QMessageBox err;
-	err.critical(0, "Error", "Made it to add region.");
   if(list_pos_ != my_fish_list_.end()) {
-    Rect area(line_to_add.x1(), line_to_add.y1(),
-			  line_to_add.x2(), line_to_add.y2());
+    Rect area((uint64_t) line_to_add.x1(), (uint64_t) line_to_add.y1(),
+      (uint64_t)line_to_add.x2(), (uint64_t)line_to_add.y2());
     auto fishID = uint64_t(list_pos_->getID());
     auto frame = uint64_t(player_->getCurrentFrame());
     //First check to see if there's an annotation for this ID already.
     if (document_->keyExists(fishID))
-    {
+    { 
       removeRegion(fishID, frame);
     }
     else {
       document_->addAnnotation(fishID);
     }
-    auto loc = document_->addAnnotationLocation(fishID, frame, Rect(0,0,100,100));
-
-	auto annotationArea = new LineAnnotation<AnnotationLocation>(fishID, loc);
-  
-	auto annotationBox = new AnnotatedRegion<AnnotationLocation>(
-        fishID, loc, display_image_->pixmap().toImage().rect());
-	current_annotations_.push_back(annotationArea);
-    scene_->addItem(annotationBox);
-	auto tmp_rect = display_image_->pixmap().toImage().rect();
-	test_item_ = new QGraphicsLineItem(tmp_rect.x(), tmp_rect.y(), tmp_rect.width()*0.2, tmp_rect.height()*0.2);
-	test_item_->setPen(QPen(Qt::black, 3, Qt::SolidLine));
-	scene_->addItem(test_item_);
-	//test_item->setLine(tmp_rect.x(),tmp_rect.y(),tmp_rect.width()*0.1,tmp_rect.height()*0.1);
-	//annotationArea->setLine(line_to_add);
-	return true;
+    auto loc = document_->addAnnotationLocation(fishID, frame, area);
+	  auto annotation_area = new LineAnnotation<AnnotationLocation>(fishID, loc);
+	  current_annotations_.push_back(annotation_area);
+	  annotation_area->setPen(QPen(Qt::black, 7, Qt::SolidLine));
+	  scene_->addItem(annotation_area);
+	  return true;
   }
   return false;
 }

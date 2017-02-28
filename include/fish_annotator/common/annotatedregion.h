@@ -39,9 +39,9 @@ template<typename Info>
 LineAnnotation<Info>::LineAnnotation(
 	uint64_t uid,
 	std::shared_ptr<Info> annotation)
-	: QGraphicsLineItem(annotation_->area_.x, annotation_->area_.y,
-		annotation_->area_.w,
-		annotation_->area_.h)
+	: QGraphicsLineItem(annotation->area_.x, annotation->area_.y,
+		annotation->area_.w,
+		annotation->area_.h)
 	, uid_(uid)
     , annotation_(annotation) {
 	setPen(QPen(Qt::black, 3, Qt::SolidLine));
