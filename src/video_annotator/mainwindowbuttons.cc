@@ -248,6 +248,9 @@ void MainWindow::writeFrameWithAnnotations(QString filename) {
 			case OTHER:
 				tmp_fish_type.assign("Misc");
 				break;
+			case DNC:
+				tmp_fish_type.assign("DontCare");
+				break;
 			default:
 				tmp_fish_type.assign("DontCare");
 				break;

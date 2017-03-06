@@ -454,6 +454,8 @@ void MainWindow::removeRegion(uint64_t id, uint64_t frame) {
 
 void MainWindow::on_nextAndCopy_clicked()
 {
+  addFish((FishTypeEnum) DNC);
+  /*
   // remove old annotations
   for (auto ann : current_annotations_) {
     scene_->removeItem(ann);
@@ -483,6 +485,7 @@ void MainWindow::on_nextAndCopy_clicked()
     }
   }
   processAnnotations(player_->getCurrentFrame());
+  */
 }
 
 void MainWindow::addFish(FishTypeEnum fType)

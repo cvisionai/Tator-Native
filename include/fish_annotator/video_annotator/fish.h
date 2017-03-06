@@ -12,7 +12,8 @@ enum FishTypeEnum
   ROUND,
   FLAT,
   SKATE,
-  OTHER
+  OTHER,
+  DNC
 };
 
 class Fish

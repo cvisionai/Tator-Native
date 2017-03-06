@@ -13,6 +13,7 @@ void MainWindow::updateTypeMenu() {
   typeList.append("Flat");
   typeList.append("Skate");
   typeList.append("Other");
+  typeList.append("DNC");
   ui_->typeMenu->addItems(typeList);
 }
 
@@ -53,6 +54,9 @@ void MainWindow::updateSubTypeMenu(int typeIndex) {
     sTypeList.append("Lobster");
     sTypeList.append("Scallop");
   }
+  else if (typeIndex == 4) {
+    sTypeList.append("DNC");
+  }
   ui_->subTypeMenu->addItems(sTypeList);
   ui_->subTypeMenu->setCurrentIndex(0);
   ui_->subTypeMenu->blockSignals(false);
@@ -63,6 +67,7 @@ FishTypeEnum MainWindow::getFishType (std::string const& inString) {
   if (inString == "FLAT") return FLAT;
   if (inString == "SKATE") return SKATE;
   if (inString == "OTHER") return OTHER;
+  if (inString == "DNC") return DNC;
   return OTHER;
 }
 
@@ -106,6 +111,9 @@ int MainWindow::getFishSpecies (FishTypeEnum fType,
     if (sString == "Scallop") return 4;
     return 0;
     break;
+  case DNC:
+    return 0;
+    break;
   default:
     return 0;
     break;
@@ -125,6 +133,9 @@ std::string MainWindow::getFishTypeString (FishTypeEnum fType) {
     break;
   case OTHER:
     return "OTHER";
+    break;
+  case DNC:
+    return "DNC";
     break;
   default:
     return "OTHER";
@@ -170,6 +181,9 @@ std::string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species) {
     if (species == 3) return "Lobster";
     if (species == 4) return "Scallop";
     return "Unknown";
+    break;
+  case DNC:
+    return "DNC";
     break;
   default:
     return "Unknown";
