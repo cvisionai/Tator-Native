@@ -205,7 +205,7 @@ void MainWindow::on_SlowDown_clicked() {
 
 void MainWindow::on_minusOneSecond_clicked()
 {
-	skipVideo(-1);
+	skipVideo(3);
 }
 
 void MainWindow::on_minusThreeSecond_clicked() {
@@ -292,7 +292,7 @@ void MainWindow::on_goToFrame_clicked()
       player_->Stop();
       ui_->Play->setText(tr("Play"));
     }
-    QImage image = player_->setFrame(list_pos_->getFrameCounted());
+    QImage image = player_->setFrame(list_pos_->getFrameCounted()-1);
 
     if (!image.isNull())
     {
