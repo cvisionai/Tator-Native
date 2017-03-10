@@ -6,9 +6,6 @@
 #include "fish_annotator/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <fstream>
-std::ofstream outfile("BLAHBLAH.txt", std::ios::out);
-
 namespace fish_annotator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
@@ -89,14 +86,11 @@ void MainWindow::on_imageSlider_valueChanged() {
     ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->imageWindow->show();
     ui_->fileNameValue->setText(filename);
-    outfile << "GOT TO NEW FRAME!!!" << std::endl;
     fs::path img_path(filename.toStdString());
     auto annotations = 
       annotations_->getImageAnnotations(img_path.filename());
-    outfile << "SIZE OF FETCHED ANNOTATIONS IS: " << annotations.size() << std::endl;
     for(auto annotation : annotations) {
       if(ui_->showAnnotations->isChecked()) {
-          outfile << "CREATING A REGION!!!" << std::endl;
           auto region = new AnnotatedRegion<ImageAnnotation>(
                 annotation->id_, annotation, current.rect());
           scene_->addItem(region);
