@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -163,6 +165,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
       }
     }
   }
+  std::sort(image_files_.begin(), image_files_.end());
   if(image_files_.size() > 0) {
     ui_->next->setEnabled(true);
     ui_->prev->setEnabled(true);
