@@ -113,6 +113,8 @@ public:
   uint64_t nextId(const boost::filesystem::path &image_file);
 
   /// @brief Gets annotations for a given image.
+  ///
+  /// @param image_file Image file path.
   std::vector<std::shared_ptr<ImageAnnotation>> 
     getImageAnnotations(const boost::filesystem::path &image_file);
 
