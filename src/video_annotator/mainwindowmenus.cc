@@ -11,7 +11,7 @@ void MainWindow::updateTypeMenu() {
   QStringList typeList;
   typeList.append("Round");
   typeList.append("Flat");
-  typeList.append("Skate");
+  typeList.append("RedFish");
   typeList.append("Other");
   ui_->typeMenu->addItems(typeList);
 }
@@ -39,6 +39,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex) {
     sTypeList.append("Fourspot");
     sTypeList.append("Grey Sole");
     sTypeList.append("Halibut");
+    sTypeList.append("Plaice");
     sTypeList.append("Unknown");
   }
   else if (typeIndex == 2) {
@@ -52,6 +53,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex) {
     sTypeList.append("Monkfish");
     sTypeList.append("Lobster");
     sTypeList.append("Scallop");
+    sTypeList.append("WolfFish");
   }
   ui_->subTypeMenu->addItems(sTypeList);
   ui_->subTypeMenu->setCurrentIndex(0);
@@ -61,7 +63,7 @@ void MainWindow::updateSubTypeMenu(int typeIndex) {
 FishTypeEnum MainWindow::getFishType (std::string const& inString) {
   if (inString == "ROUND") return ROUND;
   if (inString == "FLAT") return FLAT;
-  if (inString == "SKATE") return SKATE;
+  if (inString == "REDFISH") return REDFISH;
   if (inString == "OTHER") return OTHER;
   return OTHER;
 }
@@ -85,15 +87,16 @@ int MainWindow::getFishSpecies (FishTypeEnum fType,
     if (sString == "Yellowtail") return 1;
     if (sString == "Windowpane") return 2;
     if (sString == "Summer") return 3;
-	if (sString == "Winter") return 4;
+    if (sString == "Winter") return 4;
     if (sString == "Fourspot") return 5;
     if (sString == "Grey Sole") return 6;
     if (sString == "Halibut") return 7;
-    if (sString == "Unknown") return 8;
+    if (sString == "Plaice") return 8;
+    if (sString == "Unknown") return 9;
     return 0;
     break;
-  case SKATE:
-    if (sString == "Skate") return 0;
+  case REDFISH:
+    if (sString == "RedFish") return 0;
     if (sString == "Barndoor") return 1;
     if (sString == "Unknown") return 2;
     return 0;
@@ -104,6 +107,7 @@ int MainWindow::getFishSpecies (FishTypeEnum fType,
     if (sString == "Monkfish") return 2;
     if (sString == "Lobster") return 3;
     if (sString == "Scallop") return 4;
+    if (sString == "WolfFish") return 5;
     return 0;
     break;
   default:
@@ -120,8 +124,8 @@ std::string MainWindow::getFishTypeString (FishTypeEnum fType) {
   case FLAT:
     return "FLAT";
     break;
-  case SKATE:
-    return "SKATE";
+  case REDFISH:
+    return "REDFISH";
     break;
   case OTHER:
     return "OTHER";
@@ -150,15 +154,16 @@ std::string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species) {
     if (species == 1) return "Yellowtail";
     if (species == 2) return "Windowpane";
     if (species == 3) return "Summer";
-	if (species == 4) return "Winter";
+    if (species == 4) return "Winter";
     if (species == 5) return "FourSport";
     if (species == 6) return "Grey Sole";
     if (species == 7) return "Halibut";
-    if (species == 8) return "Unknown";
+    if (species == 8) return "Plaice";
+    if (species == 9) return "Unknown";
     return "Unknown";
     break;
-  case SKATE:
-    if (species == 0) return "Skate";
+  case REDFISH:
+    if (species == 0) return "RedFish";
     if (species == 1) return "Barndoor";
     if (species == 2) return "Unknown";
     return "Unknown";
@@ -169,6 +174,7 @@ std::string MainWindow::getFishSpeciesString (FishTypeEnum fType, int species) {
     if (species == 2) return "Monkfish";
     if (species == 3) return "Lobster";
     if (species == 4) return "Scallop";
+    if (species == 5) return "WolfFish";
     return "Unknown";
     break;
   default:

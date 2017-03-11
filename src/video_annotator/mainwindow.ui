@@ -753,7 +753,7 @@ padding: 6px;</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>146</width>
+              <width>186</width>
               <height>0</height>
              </size>
             </property>
@@ -803,7 +803,7 @@ QPushButton#addFlat:pressed {
             </property>
             <property name="minimumSize">
              <size>
-              <width>146</width>
+              <width>186</width>
               <height>0</height>
              </size>
             </property>
@@ -839,7 +839,7 @@ QPushButton#addSkate:pressed {
 }</string>
             </property>
             <property name="text">
-             <string>Skate</string>
+             <string>RedFish</string>
             </property>
            </widget>
           </item>
@@ -856,7 +856,7 @@ QPushButton#addSkate:pressed {
             </property>
             <property name="minimumSize">
              <size>
-              <width>146</width>
+              <width>186</width>
               <height>0</height>
              </size>
             </property>
@@ -921,7 +921,7 @@ QPushButton#addRound:pressed {
             </property>
             <property name="minimumSize">
              <size>
-              <width>146</width>
+              <width>186</width>
               <height>0</height>
              </size>
             </property>

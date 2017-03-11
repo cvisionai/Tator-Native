@@ -11,7 +11,7 @@ enum FishTypeEnum
 {
   ROUND,
   FLAT,
-  SKATE,
+  REDFISH,
   OTHER
 };
 

@@ -44,7 +44,7 @@ LineAnnotation<Info>::LineAnnotation(
 		annotation->area_.h)
 	, uid_(uid)
     , annotation_(annotation) {
-	setPen(QPen(Qt::black, 3, Qt::SolidLine));
+	setPen(QPen(Qt::black, 7, Qt::SolidLine));
 }
 
 

@@ -19,7 +19,7 @@ void MainWindow::on_addFlat_clicked() {
 }
 
 void MainWindow::on_addSkate_clicked() {
-  addFish((FishTypeEnum) SKATE);
+  addFish((FishTypeEnum) REDFISH);
 }
 
 void MainWindow::on_addOther_clicked() {
