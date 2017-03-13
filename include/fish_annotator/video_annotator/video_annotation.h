@@ -27,40 +27,37 @@ namespace fish_annotator { namespace video_annotator {
 
 namespace pt = boost::property_tree;
 
-/// @brief Defines annotation information for one frame.
-struct FrameAnnotation : public Serialization {
+/// @brief Defines annotation information for one detection.
+struct DetectionAnnotation : public Serialization {
   /// @brief Constructor.
   ///
   /// @param frame Frame associated with the annotation.
-  /// @param species Species of the individual.
-  /// @param subspecies Subspecies of the individual.
   /// @param id ID of the individual.
   /// @param rect Rectangle defining the annotation.
-  FrameAnnotation(uint64_t frame,
-                  const std::string& species,
-                  const std::string& subspecies,
-                  uint64_t id,
-                  const Rect &rect);
+  DetectionAnnotation(
+    uint64_t frame,
+    uint64_t id,
+    const Rect &rect);
 
   /// @brief Default constructor.
-  FrameAnnotation();
-
-  /// @brief Writes to a property tree.
-  ///
-  /// @return Property tree constructed from the object.
-  pt::ptree write() const;
+  DetectionAnnotation();
 
   /// @brief Equality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is equal to rhs.
-  bool operator==(const FrameAnnotation &rhs) const;
+  bool operator==(const DetectionAnnotation &rhs) const;
 
   /// @brief Inequality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is not equal to rhs.
-  bool operator!=(const FrameAnnotation &rhs) const;
+  bool operator!=(const DetectionAnnotation &rhs) const;
+
+  /// @brief Writes to a property tree.
+  ///
+  /// @return Property tree constructed from the object.
+  pt::ptree write() const;
 
   /// @brief Reads from a property tree.
   ///
@@ -68,14 +65,12 @@ struct FrameAnnotation : public Serialization {
   void read(const pt::ptree &tree);
 
   uint64_t frame_; ///< Frame of this annotation.
-  std::string species_; ///< Species of the individual.
-  std::string subspecies_; ///< Subspecies of the individual.
   uint64_t id_; ///< ID of the individual.
   Rect area_; ///< Rectangle defining the annotation.
 };
 
-/// @brief List of video annotations.
-typedef std::list<std::shared_ptr<FrameAnnotation>> List;
+/// @brief List of detection annotations.
+typedef std::list<std::shared_ptr<DetectionAnnotation>> DetectionList;
 
 /// @brief Makes iterator sortable so it can be used as key in maps.
 ///
@@ -83,7 +78,66 @@ typedef std::list<std::shared_ptr<FrameAnnotation>> List;
 ///
 /// @param lhs Left hand side argument.
 /// @param rhs Right hand side argument.
-inline bool operator<(const List::iterator& lhs, const List::iterator& rhs) {
+inline bool operator<(
+  const DetectionList::iterator& lhs, 
+  const DetectionList::iterator& rhs) {
+  return &(*lhs) < &(*rhs);
+}
+
+/// @brief Defines annotation information for a track.
+class TrackAnnotation {
+public:
+  /// @brief Constructor.
+  ///
+  /// @param species Species of the individual.
+  /// @param subspecies Subspecies of the individual.
+  TrackAnnotation(
+    uint64_t id,
+    const std::string& species,
+    const std::string &subspecies);
+
+  /// @brief Default constructor.
+  TrackAnnotation();
+
+  /// @brief Equality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is equal to rhs.
+  bool operator==(const TrackAnnotation &rhs) const;
+
+  /// @brief Inequality operator.
+  ///
+  /// @param rhs Right hand side argument.
+  /// @return Whether the object is not equal to rhs.
+  bool operator!=(const TrackAnnotation &rhs) const;
+
+  /// @brief Writes to a string containing comma separated values.
+  ///
+  /// @return String containing comma separated values.
+  std::string write() const;
+
+  /// @brief Reads from a string containing comma separated values.
+  ///
+  /// @param csv_row String to be read.
+  void read(const std::string &csv_row);
+private:
+  uint64_t id_; ///< ID of the individual.
+  std::string species_; ///< Species of the individual.
+  std::string subspecies_; ///< Subspecies of the individual.
+};
+
+/// @brief List of track annotations.
+typedef std::list<std::shared_ptr<TrackAnnotation>> TrackList;
+
+/// @brief Makes iterator sortable so it can be used as key in maps.
+///
+/// Works by converting both iterators to pointers and applying operator<.
+///
+/// @param lhs Left hand side argument.
+/// @param rhs Right hand side argument.
+inline bool operator<(
+  const TrackList::iterator& lhs, 
+  const TrackList::iterator& rhs) {
   return &(*lhs) < &(*rhs);
 }
 
@@ -99,7 +153,7 @@ public:
   /// @brief Inserts an annotation.
   ///
   /// @param annotation Annotation to be inserted.
-  void insert(std::shared_ptr<FrameAnnotation> annotation);
+  void insert(std::shared_ptr<DetectionAnnotation> annotation);
 
   /// @brief Removes an annotation.
   ///
@@ -115,8 +169,8 @@ public:
   /// @brief Gets annotations for a given frame.
   ///
   /// @param frame Frame in the video.
-  std::vector<std::shared_ptr<FrameAnnotation>>
-    getFrameAnnotations(uint64_t frame);
+  std::vector<std::shared_ptr<DetectionAnnotation>>
+    getDetectionAnnotations(uint64_t frame);
 
   /// @brief Gets counts for each species in a given frame.
   std::map<uint64_t, uint64_t> getCounts(uint64_t frame);
@@ -154,27 +208,38 @@ public:
   /// @param csv_path Path to csv file.
   void read(const boost::filesystem::path &csv_path);
 private:
-  /// @brief For mapping integers to frame annotations.
+  /// @brief For mapping integers to detection annotations.
   typedef boost::bimap<
     boost::bimaps::multiset_of<uint64_t>,
-    boost::bimaps::multiset_of<List::iterator>> ByInteger;
+    boost::bimaps::multiset_of<DetectionList::iterator>> DetectionsByInteger;
 
-  /// @brief For mapping pair of strings to frame annotations.
+  /// @brief For mapping integers to track annotations.
+  typedef boost::bimap<
+    boost::bimaps::multiset_of<uint64_t>,
+    boost::bimaps::multiset_of<TrackList::iterator>> TracksByInteger;
+
+  /// @brief For mapping pair of strings to track annotations.
   typedef boost::bimap<
     boost::bimaps::multiset_of<std::pair<std::string, std::string>>,
-    boost::bimaps::multiset_of<List::iterator>> ByStringPair;
+    boost::bimaps::multiset_of<TrackList::iterator>> TracksByStringPair;
 
-  /// @brief List of frame annotations.
-  List list_;
+  /// @brief List of detection annotations.
+  DetectionList detection_list_;
 
-  /// @brief Map between frame and reference to frame annotations.
-  ByInteger by_frame_;
+  /// @brief List of track annotations.
+  TrackList track_list_;
 
-  /// @brief Map between id and reference to frame annotations.
-  ByInteger by_id_;
+  /// @brief Map between frame and iterator to detection annotations.
+  DetectionsByInteger detections_by_frame_;
 
-  /// @brief Map between species/subspecies and reference to frame annotations.
-  ByStringPair by_species_;
+  /// @brief Map between id and iterator to detection annotations.
+  DetectionsByInteger detections_by_id_;
+
+  /// @brief Map between id and iterator to track annotations.
+  TracksByInteger tracks_by_id_;
+
+  /// @brief Map between species/subspecies and iterator to track annotations. 
+  TracksByStringPair tracks_by_species_;
 };
 
 }} // namespace fish_annotator::video_annotator
