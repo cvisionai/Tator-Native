@@ -1,4 +1,4 @@
-#include <boost/filesystem.hpp>
+#include <algorithm>
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -88,8 +88,9 @@ void MainWindow::on_imageSlider_valueChanged() {
     ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->imageWindow->show();
     ui_->fileNameValue->setText(filename);
+    fs::path img_path(filename.toStdString());
     auto annotations = 
-      annotations_->getImageAnnotations(filename.toStdString());
+      annotations_->getImageAnnotations(img_path.filename());
     for(auto annotation : annotations) {
       if(ui_->showAnnotations->isChecked()) {
           auto region = new AnnotatedRegion<ImageAnnotation>(
@@ -119,7 +120,7 @@ void MainWindow::on_showAnnotations_stateChanged() {
 
 void MainWindow::on_idSelection_currentIndexChanged(const QString &id) {
   if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
-    std::string current_image = image_files_[ui_->imageSlider->value()];
+    auto current_image = image_files_[ui_->imageSlider->value()];
     auto annotations = 
       annotations_->getImageAnnotations(current_image);
     for(auto annotation : annotations) {
@@ -133,7 +134,7 @@ void MainWindow::on_idSelection_currentIndexChanged(const QString &id) {
 
 void MainWindow::on_removeAnnotation_clicked() {
   if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
-    std::string current_image = image_files_[ui_->imageSlider->value()];
+    auto current_image = image_files_[ui_->imageSlider->value()];
     int id = ui_->idSelection->currentText().toInt();
     annotations_->remove(current_image, id);
     on_imageSlider_valueChanged();
@@ -142,10 +143,11 @@ void MainWindow::on_removeAnnotation_clicked() {
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
-    std::string current_image = image_files_[ui_->imageSlider->value()];
+    auto current_image = image_files_[ui_->imageSlider->value()];
     uint64_t id = annotations_->nextId(current_image);
     auto annotation = std::make_shared<ImageAnnotation>(
-      current_image, species, subspecies, id, Rect(0, 0, 0, 0));
+      current_image.filename().string(), species, subspecies, id, 
+      Rect(0, 0, 0, 0));
     annotations_->insert(annotation);
     on_imageSlider_valueChanged();
   }
@@ -159,10 +161,11 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
-        image_files_.push_back(dir_it->path().generic_string());
+        image_files_.push_back(dir_it->path());
       }
     }
   }
+  std::sort(image_files_.begin(), image_files_.end());
   if(image_files_.size() > 0) {
     ui_->next->setEnabled(true);
     ui_->prev->setEnabled(true);

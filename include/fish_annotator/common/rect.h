@@ -16,17 +16,17 @@ struct Rect {
   /// @param y Vertical coordinate of top-left corner.
   /// @param w Width.
   /// @param h Height.
-  Rect(uint64_t x, uint64_t y, uint64_t w, uint64_t h);
+  Rect(int64_t x, int64_t y, int64_t w, int64_t h);
 
   /// @brief Copy constructor.
   ///
   /// @param r Rect object to be copied.
   Rect(const Rect &r);
 
-  uint64_t x; ///< Horizontal coordinate of top-left corner.
-  uint64_t y; ///< Vertical coordinate of top-left corner.
-  uint64_t w; ///< Width.
-  uint64_t h; ///< Height.
+  int64_t x; ///< Horizontal coordinate of top-left corner.
+  int64_t y; ///< Vertical coordinate of top-left corner.
+  int64_t w; ///< Width.
+  int64_t h; ///< Height.
 };
 
 } // namespace fish_annotator

@@ -1,4 +1,3 @@
-#include <boost/filesystem.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
 #include <QProgressDialog>
@@ -6,6 +5,8 @@
 #include "fish_annotator/image_annotator/image_annotation.h"
 
 namespace fish_annotator { namespace image_annotator {
+
+namespace fs = boost::filesystem;
 
 ImageAnnotation::ImageAnnotation(const std::string& image_file, 
                                  const std::string& species,
@@ -81,8 +82,8 @@ void ImageAnnotationList::insert(std::shared_ptr<ImageAnnotation> annotation) {
                       list_.begin()});
 }
 
-void ImageAnnotationList::remove(const std::string &image_file, uint64_t id) {
-  auto range = by_file_.left.equal_range(image_file);
+void ImageAnnotationList::remove(const fs::path &image_file, uint64_t id) {
+  auto range = by_file_.left.equal_range(image_file.filename().string());
   for(auto it = range.first; it != range.second; ++it) {
     if((*(it->second))->id_ == id) {
       list_.erase(it->second);
@@ -93,8 +94,8 @@ void ImageAnnotationList::remove(const std::string &image_file, uint64_t id) {
   }
 }
 
-uint64_t ImageAnnotationList::nextId(const std::string &image_file) {
-  auto range = by_file_.left.equal_range(image_file);
+uint64_t ImageAnnotationList::nextId(const fs::path &image_file) {
+  auto range = by_file_.left.equal_range(image_file.filename().string());
   uint64_t max_id = 0;
   for(auto it = range.first; it != range.second; ++it) {
     if((*(it->second))->id_ > max_id) {
@@ -105,9 +106,9 @@ uint64_t ImageAnnotationList::nextId(const std::string &image_file) {
 }
 
 std::vector<std::shared_ptr<ImageAnnotation>> 
-ImageAnnotationList::getImageAnnotations(const std::string &image_file) {
+ImageAnnotationList::getImageAnnotations(const fs::path &image_file) {
   std::vector<std::shared_ptr<ImageAnnotation>> annotations;
-  auto range = by_file_.left.equal_range(image_file);
+  auto range = by_file_.left.equal_range(image_file.filename().string());
   for(auto it = range.first; it != range.second; ++it) {
     annotations.push_back(*(it->second));
   }
@@ -171,7 +172,7 @@ bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
 }
 
 void ImageAnnotationList::write(
-  const std::vector<std::string> &filenames) const {
+  const std::vector<fs::path> &filenames) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
         "Saving annotations...", "Abort", 0, 
         static_cast<int>(filenames.size()-1)));
@@ -180,11 +181,11 @@ void ImageAnnotationList::write(
   int iter = 0;
   for(auto &image_file : filenames) {
     pt::ptree tree;
-    auto range = by_file_.left.equal_range(image_file);
+    auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
       tree.add_child("annotation_list.annotation", (*(it->second))->write());
     }
-    boost::filesystem::path json_file(image_file);
+    fs::path json_file(image_file);
     json_file.replace_extension(".json");
     pt::write_json(json_file.string(), tree);
     dlg->setValue(iter++);
@@ -194,11 +195,12 @@ void ImageAnnotationList::write(
   }
 }
 
-void ImageAnnotationList::read(const std::vector<std::string> &filenames) {
+void ImageAnnotationList::read(
+  const std::vector<fs::path> &filenames) {
   for(auto &image_file : filenames) {
-    boost::filesystem::path json_file(image_file);
+    fs::path json_file(image_file);
     json_file.replace_extension(".json");
-    if(boost::filesystem::exists(json_file)) {
+    if(fs::exists(json_file)) {
       pt::ptree tree;
       pt::read_json(json_file.string(), tree);
       auto it = tree.find("annotation_list");

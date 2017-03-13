@@ -107,11 +107,19 @@ AnnotatedRegion<Info>::AnnotatedRegion(
     , pen_(QColor(255, 0, 0)) {
     if(annotation_->area_.w == 0 && annotation_->area_.h == 0) {
       // Default rectangle.
-      setRect(QRectF(bounding_rect_.x(), bounding_rect_.y(), 
+      setRect(QRectF(bounding_rect_.x() * 0.5, bounding_rect_.y() * 0.5, 
             0.1 * min_dim_, 0.1 * min_dim_));
     }
     else {
-      // Rectangle from annotation.
+      // Rectangle from annotation. Make sure we don't have offscreen boxes
+      if (annotation_->area_.x < 0) {
+	annotation_->area_.w = annotation_->area_.w + annotation_->area_.x;
+        annotation_->area_.x = 0;
+      }
+      if (annotation_->area_.y < 0) {
+	annotation_->area_.h = annotation_->area_.h + annotation_->area_.y;
+        annotation_->area_.y = 0;
+      }
       setRect(QRectF(
             annotation_->area_.x, 
             annotation_->area_.y,

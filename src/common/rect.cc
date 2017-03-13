@@ -9,7 +9,7 @@ Rect::Rect(const Rect &r) {
   h = r.h;
 }
 
-Rect::Rect(uint64_t x, uint64_t y, uint64_t w, uint64_t h) 
+Rect::Rect(int64_t x, int64_t y, int64_t w, int64_t h) 
   : x(x)
   , y(y)
   , w(w)

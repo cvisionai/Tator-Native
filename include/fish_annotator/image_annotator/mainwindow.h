@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 
+#include <boost/filesystem.hpp>
+
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
@@ -76,7 +78,7 @@ private:
   std::unique_ptr<SpeciesControls> species_controls_;
 
   /// @brief Vector of image files in a directory.
-  std::vector<std::string> image_files_;
+  std::vector<boost::filesystem::path> image_files_;
 
   /// @brief Runs when image directory loaded successfully.
   void onLoadDirectorySuccess(const QString &image_dir);

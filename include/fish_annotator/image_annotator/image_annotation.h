@@ -13,6 +13,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/bimap.hpp>
 #include <boost/bimap/multiset_of.hpp>
+#include <boost/filesystem.hpp>
 
 #include "fish_annotator/common/serialization.h"
 #include "fish_annotator/common/rect.h"
@@ -102,18 +103,20 @@ public:
 
   /// @brief Removes an annotation.
   ///
-  /// @param image_file Image file name.
+  /// @param image_file Image file path.
   /// @param id ID of the individual within the image.
-  void remove(const std::string &image_file, uint64_t id);
+  void remove(const boost::filesystem::path &image_file, uint64_t id);
 
   /// @brief Gets next ID for a given image.
   ///
-  /// @param image_file Image file name.
-  uint64_t nextId(const std::string &image_file);
+  /// @param image_file Image file path.
+  uint64_t nextId(const boost::filesystem::path &image_file);
 
   /// @brief Gets annotations for a given image.
+  ///
+  /// @param image_file Image file path.
   std::vector<std::shared_ptr<ImageAnnotation>> 
-    getImageAnnotations(const std::string &image_file);
+    getImageAnnotations(const boost::filesystem::path &image_file);
 
   /// @brief Gets counts for each species in a given image.
   std::map<std::string, uint64_t> getCounts(const std::string &image_file);
@@ -138,15 +141,15 @@ public:
   /// Writes one file per image.  Multiple annotations for the same image
   /// are written to the same file.
   ///
-  /// @param filenames Vector of strings, each containing the full path 
+  /// @param filenames Vector of paths, each containing the full path 
   ///        to an image.
-  void write(const std::vector<std::string> &filenames) const;
+  void write(const std::vector<boost::filesystem::path> &filenames) const;
 
   /// @brief Reads annotations from a given list of input files.
   ///
-  /// @param filenames Vector of strings, each containing the full path 
+  /// @param filenames Vector of paths, each containing the full path 
   ///        to an image.
-  void read(const std::vector<std::string> &filenames);
+  void read(const std::vector<boost::filesystem::path> &filenames);
 private:
   /// @brief For mapping strings to image annotations.
   typedef boost::bimap<
