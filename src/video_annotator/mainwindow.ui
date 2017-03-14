@@ -283,6 +283,9 @@
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="typeLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -307,6 +310,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QComboBox" name="typeMenu">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -337,6 +343,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="subTypeLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -355,6 +364,9 @@
          </item>
          <item row="1" column="1">
           <widget class="QComboBox" name="subTypeMenu">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -526,6 +538,9 @@
          <layout class="QGridLayout" name="gridLayout">
           <item row="0" column="0">
            <widget class="QPushButton" name="prevFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -561,6 +576,9 @@ padding: 6px;</string>
           </item>
           <item row="1" column="0">
            <widget class="QPushButton" name="removeFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -598,6 +616,9 @@ padding: 6px;</string>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="goToFishLabel">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -627,6 +648,9 @@ border-radius: 2px;</string>
           </item>
           <item row="0" column="1">
            <widget class="QPushButton" name="nextFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -662,6 +686,9 @@ padding: 6px;</string>
           </item>
           <item row="2" column="1">
            <widget class="QLineEdit" name="goToFishVal">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -690,6 +717,9 @@ border-radius: 3px;</string>
           </item>
           <item row="1" column="1">
            <widget class="QPushButton" name="goToFrame">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -745,6 +775,36 @@ padding: 6px;</string>
          <property name="topMargin">
           <number>0</number>
          </property>
+         <item>
+          <widget class="QPushButton" name="addRegion">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Add Region</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeRegion">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Remove Region</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="nextAndCopy">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Next + Copy</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -845,6 +905,9 @@ padding: 6px;</string>
                </item>
                <item>
                 <widget class="QSlider" name="videoSlider">
+                 <property name="tracking">
+                  <bool>false</bool>
+                 </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -872,7 +935,10 @@ padding: 6px;</string>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
                 <item>
-                 <widget class="QPushButton" name="Play">
+                 <widget class="QPushButton" name="play">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -885,7 +951,10 @@ padding: 6px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="checkBox">
+                 <widget class="QCheckBox" name="reverse">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="maximumSize">
                    <size>
                     <width>60</width>
@@ -898,9 +967,9 @@ padding: 6px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="SpeedUp">
+                 <widget class="QPushButton" name="faster">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -929,7 +998,10 @@ padding: 6px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="SlowDown">
+                 <widget class="QPushButton" name="slower">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -952,6 +1024,9 @@ padding: 6px;</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="minusOneFrame">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
                   </property>
@@ -962,6 +1037,9 @@ padding: 6px;</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="plusOneFrame">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
                   </property>
@@ -980,7 +1058,7 @@ padding: 6px;</string>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-                 <widget class="QPushButton" name="LoadVideo">
+                 <widget class="QPushButton" name="loadVideo">
                   <property name="minimumSize">
                    <size>
                     <width>80</width>
@@ -999,14 +1077,20 @@ padding: 6px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="loadAnnotate">
+                 <widget class="QPushButton" name="loadAnnotationFile">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Load Annotation File</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="saveAnnotate">
+                 <widget class="QPushButton" name="saveAnnotationFile">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Save Annotation File</string>
                   </property>
@@ -1014,6 +1098,9 @@ padding: 6px;</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="writeImage">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Write Image</string>
                   </property>
