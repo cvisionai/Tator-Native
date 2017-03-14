@@ -1,16 +1,7 @@
 set( TEST_VIDEO_ANNOTATOR_SOURCES test_video_annotator.cc )
 set( VIDEO_ANNOTATOR_SOURCES
-  "../../src/video_annotator/document.cc"
-  "../../src/video_annotator/fish.cc"
   "../../src/video_annotator/mainwindow.cc"
-  "../../src/video_annotator/mainwindowbuttons.cc"
-  "../../src/video_annotator/mainwindowmenus.cc"
-  "../../src/video_annotator/navigatorwidget.cc"
-  "../../src/video_annotator/player.cc"
-  )
-include_directories( 
-  "../../include/fish_annotator/video_annotator"
-  "../../include/fish_annotator/common"
+  "../../src/video_annotator/video_annotation.cc"
   )
 if( WIN32 )
   add_executable( test_video_annotator WIN32 
@@ -23,9 +14,12 @@ if( WIN32 )
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
+    Qt5::Network
+    Qt5::Multimedia
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
   set_target_properties(
     test_video_annotator
@@ -54,10 +48,13 @@ elseif( APPLE )
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
+    Qt5::Multimedia
+    Qt5::Network
     Qt5::PrintSupport
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
   add_test( 
     NAME test_video_annotator 
@@ -85,11 +82,14 @@ elseif( UNIX )
     Qt5::Widgets
     Qt5::Core
     Qt5::Gui
+    Qt5::Multimedia
+    Qt5::Network
     Qt5::PrintSupport
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
   add_test( 
     NAME test_video_annotator 
@@ -103,3 +103,9 @@ elseif( UNIX )
   file( COPY ${OpenCV_SHARED_LIBS} DESTINATION . )
   file( COPY slow_motion_drop.mp4 DESTINATION . )
 endif()
+target_include_directories( test_video_annotator PUBLIC
+  "../../include/fish_annotator/video_annotator"
+  "../../include/fish_annotator/common"
+  ${Qt5Multimedia_INCLUDE_DIRS}
+  ${Qt5Network_INCLUDE_DIRS}
+  )
