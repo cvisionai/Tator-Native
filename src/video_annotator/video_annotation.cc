@@ -4,7 +4,7 @@
 #include <QProgressDialog>
 
 #include "fish_annotator/video_annotator/video_annotation.h"
-
+#include <iostream>
 namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
@@ -26,6 +26,20 @@ DetectionAnnotation::DetectionAnnotation()
 }
 
 bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
+  std::cout << "DETECTION 1: " << std::endl;
+  std::cout << id_ << std::endl;
+  std::cout << frame_ << std::endl;
+  std::cout << area_.x << std::endl;
+  std::cout << area_.y << std::endl;
+  std::cout << area_.w << std::endl;
+  std::cout << area_.h << std::endl;
+  std::cout << "DETECTION 2: " << std::endl;
+  std::cout << rhs.id_ << std::endl;
+  std::cout << rhs.frame_ << std::endl;
+  std::cout << rhs.area_.x << std::endl;
+  std::cout << rhs.area_.y << std::endl;
+  std::cout << rhs.area_.w << std::endl;
+  std::cout << rhs.area_.h << std::endl;
   if(frame_ != rhs.frame_) return false;
   if(id_ != rhs.id_) return false;
   if(area_.x != rhs.area_.x) return false;
@@ -75,6 +89,14 @@ TrackAnnotation::TrackAnnotation()
 }
 
 bool TrackAnnotation::operator==(const TrackAnnotation &rhs) const {
+  std::cout << "TRACK 1: " << std::endl;
+  std::cout << id_ << std::endl;
+  std::cout << species_ << std::endl;
+  std::cout << subspecies_ << std::endl;
+  std::cout << "TRACK 2: " << std::endl;
+  std::cout << rhs.id_ << std::endl;
+  std::cout << rhs.species_ << std::endl;
+  std::cout << rhs.subspecies_ << std::endl;
   if(id_ != rhs.id_) return false;
   if(species_ != rhs.species_) return false;
   if(subspecies_ != rhs.subspecies_) return false;
@@ -96,7 +118,7 @@ std::string TrackAnnotation::write() const {
 void TrackAnnotation::read(const std::string &csv_row) {
   std::vector<std::string> vals;
   boost::split(vals, csv_row, boost::is_any_of(","));
-  id_ = std::stoi(vals[4]);
+  id_ = std::stoull(vals[4]);
   species_ = vals[5];
   subspecies_ = vals[6];
 }
@@ -111,6 +133,7 @@ VideoAnnotation::VideoAnnotation()
 }
 
 void VideoAnnotation::insert(std::shared_ptr<DetectionAnnotation> annotation) {
+  remove(annotation->frame_, annotation->id_);
   detection_list_.push_front(annotation);
   detections_by_frame_.insert({annotation->frame_, detection_list_.begin()});
   detections_by_id_.insert({annotation->id_, detection_list_.begin()});
@@ -127,10 +150,12 @@ void VideoAnnotation::remove(uint64_t frame, uint64_t id) {
   auto range = detections_by_frame_.left.equal_range(frame);
   for(auto it = range.first; it != range.second; ++it) {
     if((*(it->second))->id_ == id) {
+      std::cout << "REMOVING FRAME " << frame << ", ID " << id << std::endl;
       detection_list_.erase(it->second);
       detections_by_id_.right.erase(
         detections_by_id_.right.find(it->second));
       detections_by_frame_.left.erase(it);
+      break;
     }
   }
 }
@@ -141,14 +166,15 @@ void VideoAnnotation::remove(uint64_t id) {
     track_list_.erase(it->second);
     tracks_by_species_.right.erase(tracks_by_species_.right.find(it->second));
     tracks_by_id_.left.erase(it);
+    break;
   }
   auto drange = detections_by_id_.left.equal_range(id);
   for(auto it = drange.first; it != drange.second; ++it) {
     detection_list_.erase(it->second);
     detections_by_frame_.right.erase(
       detections_by_frame_.right.find(it->second));
-    detections_by_id_.left.erase(it);
   }
+  detections_by_id_.left.erase(drange.first, drange.second);
 }
 
 uint64_t VideoAnnotation::nextId() {
@@ -216,19 +242,35 @@ std::vector<Species> VideoAnnotation::getAllSpecies() {
 }
 
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
+  std::cout << "COMPARING TRACK LIST SIZE..." << std::endl;
+  std::cout << "SIZE 1: " << track_list_.size() << std::endl;
+  std::cout << "SIZE 2: " << rhs.track_list_.size() << std::endl;
   if(track_list_.size() != rhs.track_list_.size()) return false;
-  auto it = track_list_.begin();
-  auto it_rhs = rhs.track_list_.begin();
-  for(; it != track_list_.end() && it_rhs != rhs.track_list_.end(); 
+  std::cout << " PASS!" << std::endl;
+  std::cout << "COMPARING TRACKS...";
+  auto it = tracks_by_id_.left.begin();
+  auto it_rhs = rhs.tracks_by_id_.left.begin();
+  for(; 
+    it != tracks_by_id_.left.end() && 
+    it_rhs != rhs.tracks_by_id_.left.end(); 
     ++it, ++it_rhs) {
-    if(**it != **it_rhs) return false;
+    std::cout << "GOT HERE" << std::endl;
+    std::cout << *(it->second) << std::endl;
+    std::cout << *(it_rhs->second) << std::endl;
+    if(**(it->second) != **(it_rhs->second)) return false;
   }
+  std::cout << " PASS!" << std::endl;
+  std::cout << "COMPARING DETECTION LIST SIZE..." << std::endl;;
+  std::cout << "SIZE 1: " << detection_list_.size() << std::endl;
+  std::cout << "SIZE 2: " << rhs.detection_list_.size() << std::endl;
   if(detection_list_.size() != rhs.detection_list_.size()) return false;
-  auto dit = detection_list_.begin();
-  auto dit_rhs = rhs.detection_list_.begin();
-  for(; dit != detection_list_.end() && dit_rhs != rhs.detection_list_.end(); 
+  auto dit = detections_by_frame_.left.begin();
+  auto dit_rhs = rhs.detections_by_frame_.left.begin();
+  for(; 
+    dit != detections_by_frame_.left.end() && 
+    dit_rhs != rhs.detections_by_frame_.left.end(); 
     ++dit, ++dit_rhs) {
-    if(**dit != **dit_rhs) return false;
+    if(**(dit->second) != **(dit_rhs->second)) return false;
   }
   return true;
 }
@@ -250,13 +292,14 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
   dlg->show();
   int iter = 0;
   std::string meta;
-  meta += trip_id; meta += ",";
-  meta += tow_number; meta += ",";
+  meta += std::to_string(trip_id); meta += ",";
+  meta += std::to_string(tow_number); meta += ",";
   meta += reviewer; meta += ",";
   meta += tow_type;
   std::ofstream csv(csv_path.string());
   csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
   csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
+  csv << std::endl;
   for(const auto &t : tracks_by_id_.left) {
     auto first_det = std::find_if(
       detections_by_frame_.left.begin(), 
@@ -266,6 +309,7 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
       });
     csv << meta;
     csv << (*(t.second))->write();
+    csv << ",";
     if(first_det == detections_by_frame_.left.end()) {
       csv << 0 << ",";
       csv << 0.0;
@@ -291,11 +335,13 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
 
 void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
   std::ifstream csv(csv_path.string());
-  for(std::string line; std::getline(csv, line);) {
+  std::string line;
+  std::getline(csv, line);
+  for(; std::getline(csv, line);) {
     std::vector<std::string> tokens;
     boost::split(tokens, line, boost::is_any_of(","));
     insert(std::make_shared<TrackAnnotation>(
-      std::stoi(tokens[4]), tokens[5], tokens[6]));
+      std::stoull(tokens[4]), tokens[5], tokens[6]));
   }
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");

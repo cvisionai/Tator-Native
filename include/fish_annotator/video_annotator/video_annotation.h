@@ -235,10 +235,10 @@ private:
     boost::bimaps::multiset_of<uint64_t>,
     boost::bimaps::multiset_of<DetectionList::iterator>> DetectionsByInteger;
 
-  /// @brief For mapping integers to track annotations.
+  /// @brief For mapping unique integers to track annotations.
   typedef boost::bimap<
-    boost::bimaps::multiset_of<uint64_t>,
-    boost::bimaps::multiset_of<TrackList::iterator>> TracksByInteger;
+    uint64_t,
+    boost::bimaps::multiset_of<TrackList::iterator>> TracksByUniqueInteger;
 
   /// @brief For mapping pair of strings to track annotations.
   typedef boost::bimap<
@@ -258,7 +258,7 @@ private:
   DetectionsByInteger detections_by_id_;
 
   /// @brief Map between id and iterator to track annotations.
-  TracksByInteger tracks_by_id_;
+  TracksByUniqueInteger tracks_by_id_;
 
   /// @brief Map between species/subspecies and iterator to track annotations. 
   TracksByStringPair tracks_by_species_;
