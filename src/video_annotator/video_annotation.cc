@@ -97,40 +97,217 @@ void TrackAnnotation::read(const std::string &csv_row) {
   subspecies_ = vals[6];
 }
 
-VideoAnnotation::VideoAnnotation() {
+VideoAnnotation::VideoAnnotation() 
+  : detection_list_()
+  , track_list_()
+  , detections_by_frame_()
+  , detections_by_id_()
+  , tracks_by_id_()
+  , tracks_by_species_() {
 }
 
 void VideoAnnotation::insert(std::shared_ptr<DetectionAnnotation> annotation) {
+  detection_list_.push_front(annotation);
+  detections_by_frame_.insert({annotation->frame_, detection_list_.begin()});
+  detections_by_id_.insert({annotation->id_, detection_list.begin()});
+}
+
+void VideoAnnotation::insert(std::shared_ptr<TrackAnnotation> annotation) {
+  track_list_.push_front(annotation);
+  tracks_by_id_.insert({annotation->id_, track_list_.begin()});
+  tracks_by_species_.insert({
+    {annotation->species_, annotation->subspecies}, track_list_.begin()});
 }
 
 void VideoAnnotation::remove(uint64_t frame, uint64_t id) {
+  auto range = detections_by_frame_.left.equal_range(frame);
+  for(auto it = range.first; it != range.second; ++it) {
+    if((*(it->second))->id_ == id) {
+      detection_list_.erase(it->second);
+      detections_by_id_.right.erase(
+        detections_by_id_.right.find(it->second));
+      detections_by_frame_.left.erase(it);
+    }
+  }
 }
 
-uint64_t VideoAnnotation::nextId(uint64_t frame) {
+void VideoAnnotation::remove(uint64_t id) {
+  auto range = tracks_by_id_.left.equal_range(id);
+  for(auto it = range.first; it != range.second; ++it) {
+    track_list_.erase(it->second);
+    tracks_by_species_.right.erase(tracks_by_species_.right.find(it->second));
+    tracks_by_id_.left.erase(it);
+  }
+  auto drange = detections_by_id_.left.equal_range(id);
+  for(auto it = drange.first; it != drange.second; ++it) {
+    detection_list_.erase(it->second);
+    detections_by_frame_.right.erase(
+      detections_by_frame_.right.find(it->second));
+    detections_by_id_.left.erase(it);
+  }
+}
+
+uint64_t VideoAnnotation::nextId() {
+  uint64_t max_id = 0;
+  for(auto const &t : tracks_by_id_.left) {
+    if(t.first > max_id) {
+      max_id = t.first;
+    }
+  }
+  return max_id + 1;
 }
 
 std::vector<std::shared_ptr<DetectionAnnotation>>
 VideoAnnotation::getDetectionAnnotations(uint64_t frame) {
+  std::vector<std::shared_ptr<DetectionAnnotation>> annotations;
+  auto range = detections_by_frame_.left.equal_range(frame);
+  for(auto it = range.first; it != range.second; ++it) {
+    annotations.push_back(*(it->second));
+  }
+  return annotations;
 }
 
-std::map<uint64_t, uint64_t> VideoAnnotation::getCounts(uint64_t frame) {
+std::map<std::string, uint64_t> VideoAnnotation::getCounts() {
+  std::map<std::string, uint64_t> counts;
+  for(auto const &t : tracks_by_species_.left) {
+    const std::string &species = t.first.first;
+    auto count_it = counts.find(species);
+    if(counts_it != counts.end()) {
+      count_it->second++;
+    }
+    else {
+      counts.insert({species, 1});
+    }
+  }
+  return counts;
 }
 
 std::vector<Species> VideoAnnotation::getAllSpecies() {
+  std::vector<Species> vec;
+  for(auto const &t : tracks_by_species_.left) {
+    const std::string &species = t.first.first;
+    const std::string &subspecies = t.first.second;
+    auto it = std::find_if(vec.begin(), vec.end(),
+      [&species](const Species &s) {
+        return species == s.getName();
+      });
+    if(it == vec.end()) {
+      vec.push_back(Species(species));
+      if(!subspecies.empty()) {
+        vec.back().getSubspecies().push_back(subspecies);
+      }
+    }
+    else if(!subspecies.empty()) {
+      auto &subs = it->getSubspecies();
+      auto sub_it = std::find_if(subs.begin(), subs.end(),
+        [&subspecies](const std::string &s) {
+          return subspecies == s;
+        });
+      if(sub_it == subs.end()) {
+        subs.push_back(subspecies);
+      }
+    }
+  }
+  return vec;
 }
 
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
+  if(track_list_.size() != rhs.track_list_.size()) return false;
+  auto it = track_list_.begin();
+  auto it_rhs = rhs.track_list_.begin();
+  for(; it != track_list_.end() && it_rhs != rhs.track_list_.end(); 
+    ++it, ++it_rhs) {
+    if(**it != **it_rhs) return false;
+  }
+  if(detection_list_.size() != rhs.detection_list_.size()) return false;
+  auto dit = detection_list_.begin();
+  auto dit_rhs = rhs.detection_list_.begin();
+  for(; dit != detection_list_.end() && dit_rhs != rhs.detection_list_.end(); 
+    ++dit, ++dit_rhs) {
+    if(**dit != **dit_rhs) return false;
+  }
+  return true;
 }
 
 bool VideoAnnotation::operator!=(VideoAnnotation &rhs) {
+  return !operator==(rhs);
 }
 
-void VideoAnnotation::write(const boost::filesystem::path &csv_path) const {
+void VideoAnnotation::write(const boost::filesystem::path &csv_path,
+    uint64_t trip_id,
+    uint64_t tow_number,
+    const std::string &reviewer,
+    const std::string &tow_type,
+    double fps) const {
+  std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
+    "Saving annotations...", "Abort", 0,
+    static_cast<int>(track_list_.size() + detection_list_.size());
+  dlg->setWindowModality(Qt::WindowModal);
+  dlg->show();
+  int iter = 0;
+  std::string meta;
+  meta << trip_id << ",";
+  meta << tow_number << ",";
+  meta << reviewer << ",";
+  meta << tow_type;
+  std::ofstream csv(csv_path.string());
+  csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
+  csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
+  for(const auto &t : tracks_by_id_) {
+    auto first_det = std::find_if(
+      detections_by_frame_.left.begin(), 
+      detections_by_frame_.left.end(),
+      [&t.first](const DetectionsByInteger::value_type &d) {
+        return t.first == (*(d.second))->id_;
+      });
+    csv << meta;
+    csv << (*(t.second))->write();
+    if(first_det == detections_by_frame_.left.end()) {
+      csv << 0 << ",";
+      csv << 0.0;
+    }
+    else {
+      csv << first_det->first << ",";
+      csv << static_cast<double>(first_det->first) / fps;
+    }
+    csv << std::endl;
+    dlg->setValue(++iter);
+    if(dlg->wasCanceled()) break;
+  }
+  pt::ptree tree;
+  for(const auto &d : detections_by_frame_.left) {
+    tree.add_child("Annotation Array.annotation", (*(det.second))->write());
+    dlg->setValue(++iter);
+    if(dlg->wasCanceled()) break;
+  }
+  fs::path json_path(csv_path);
+  json_path.replace_extension(".json");
+  pt::write_json(json_path.string());
 }
 
 void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
+  std::ifstream csv(csv_path.string());
+  for(std::string line; std::getline(csv, line);) {
+    std::vector<std::string> tokens;
+    boost::split(tokens, line, boost::is_any_of(","));
+    insert(std::make_shared<TrackAnnotation>(
+      std::stoi(tokens[4]), tokens[5], tokens[6]));
+  }
+  fs::path json_path(csv_path);
+  json_path.replace_extension(".json");
+  if(fs::exists(json_file)) {
+    pt::tree tree;
+    pt::read_json(json_path.string(), tree);
+    auto it = tree.find("Annotation Array");
+    if(it != tree.not_found()) {
+      for(auto &val : tree.get_child("Annotation Array")) {
+        auto annotation = std::make_shared<DetectionAnnotation>();
+        annotation->read(val.second);
+        insert(annotation);
+      }
+    }
+  }
 }
-
 
 }} // namespace fish_annotator::video_annotator
 

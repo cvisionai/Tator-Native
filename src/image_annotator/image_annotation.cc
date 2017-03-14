@@ -134,7 +134,7 @@ ImageAnnotationList::getCounts(const std::string &image_file) {
 
 std::vector<Species> ImageAnnotationList::getAllSpecies() {
   std::vector<Species> vec;
-  for(auto &elem : by_species_.left) {
+  for(const auto &elem : by_species_.left) {
     const std::string &species = elem.first.first;
     const std::string &subspecies = elem.first.second;
     auto it = std::find_if(vec.begin(), vec.end(), 
@@ -179,7 +179,7 @@ void ImageAnnotationList::write(
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
   int iter = 0;
-  for(auto &image_file : filenames) {
+  for(const auto &image_file : filenames) {
     pt::ptree tree;
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
@@ -197,7 +197,7 @@ void ImageAnnotationList::write(
 
 void ImageAnnotationList::read(
   const std::vector<fs::path> &filenames) {
-  for(auto &image_file : filenames) {
+  for(const auto &image_file : filenames) {
     fs::path json_file(image_file);
     json_file.replace_extension(".json");
     if(fs::exists(json_file)) {

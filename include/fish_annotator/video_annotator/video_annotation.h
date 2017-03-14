@@ -150,21 +150,31 @@ public:
   /// @brief Constructor.
   VideoAnnotation();
 
-  /// @brief Inserts an annotation.
+  /// @brief Inserts a detection annotation.
   ///
   /// @param annotation Annotation to be inserted.
   void insert(std::shared_ptr<DetectionAnnotation> annotation);
 
-  /// @brief Removes an annotation.
+  /// @brief Inserts a track annotation.
+  ///
+  /// @param annotation Annotation to be inserted.
+  void insert(std::shared_ptr<TrackAnnotation> annotation);
+
+  /// @brief Removes a detection annotation.
   ///
   /// @param frame Frame of the annotation.
-  /// @param id ID of the individual within the frame.
+  /// @param id ID of the individual associated with the detection.
   void remove(uint64_t frame, uint64_t id);
 
-  /// @brief Gets next ID for a given frame.
+  /// @brief Removes a track annotation.
   ///
-  /// @param frame Frame in the video.
-  uint64_t nextId(uint64_t frame);
+  /// Also removes all detections with the same ID.
+  ///
+  /// @param id ID of the individual associated with the track.
+  void remove(uint64_t id);
+
+  /// @brief Gets next ID for a video.
+  uint64_t nextId();
 
   /// @brief Gets annotations for a given frame.
   ///
@@ -172,8 +182,8 @@ public:
   std::vector<std::shared_ptr<DetectionAnnotation>>
     getDetectionAnnotations(uint64_t frame);
 
-  /// @brief Gets counts for each species in a given frame.
-  std::map<uint64_t, uint64_t> getCounts(uint64_t frame);
+  /// @brief Gets counts for each species in a video.
+  std::map<std::string, uint64_t> getCounts();
 
   /// @brief Gets all species in the annotations.
   std::vector<Species> getAllSpecies();
@@ -198,7 +208,11 @@ public:
   /// path as the input csv path with different extension.
   ///
   /// @param csv_path Path to csv file.
-  void write(const boost::filesystem::path &csv_path) const;
+  void write(const boost::filesystem::path &csv_path,
+    uint64_t trip_id,
+    uint64_t tow_number,
+    const std::string &reviewer,
+    const std::string &tow_type) const;
 
   /// @brief Reads annotations from csv and json files.
   ///
