@@ -1,30 +1,10 @@
 # --- Qt5 ---
-find_package( Qt5Widgets )
-if( NOT Qt5Widgets_FOUND )
-  message( FATAL_ERROR "Could not find Qt5Widgets.  Build cannot continue." )
-endif()
-find_package( Qt5Core )
-if( NOT Qt5Core_FOUND )
-  message( FATAL_ERROR "Could not find Qt5Core.  Build cannot continue." )
-endif()
-find_package( Qt5Gui )
-if( NOT Qt5Gui_FOUND )
-  message( FATAL_ERROR "Could not find Qt5Gui.  Build cannot continue." )
-endif()
-find_package( Qt5PrintSupport )
-if( NOT Qt5PrintSupport_FOUND )
-  message( FATAL_ERROR "Could not find Qt5PrintSupport.  Build cannot continue." )
-endif()
+find_package( Qt5 REQUIRED COMPONENTS 
+  Core Gui Widgets Network Multimedia PrintSupport )
 if( NOT APPLE )
-  find_package( Qt5DBus )
-  if( NOT Qt5DBus_FOUND )
-    message( FATAL_ERROR "Could not find Qt5DBus.  Build cannot continue." )
-  endif()
+  find_package( Qt5DBus REQUIRED )
 endif()
-find_package( Qt5Test )
-if( NOT Qt5Test_FOUND )
-  message( FATAL_ERROR "Could not find Qt5Test.  Build cannot continue." )
-endif()
+find_package( Qt5Test REQUIRED )
 get_target_property(QT5_WIDGETS_LOCATION Qt5::Widgets LOCATION )
 message( STATUS "Found Qt5 at ${QT5_WIDGETS_LOCATION}" )
 if( WIN32 )
@@ -46,6 +26,7 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwbmp.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwebp.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
+    Iphlpapi
     )
 elseif( APPLE )
 elseif( UNIX )
@@ -54,25 +35,16 @@ endif()
 # --- Boost ---
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_STATIC_RUNTIME ON )
-find_package( Boost COMPONENTS filesystem system )
-if( NOT Boost_FOUND )
-  message( FATAL_ERROR "Could not find Boost.  Build cannot continue." )
-endif()
+find_package( Boost REQUIRED COMPONENTS filesystem system )
 
 # --- OpenCV ---
-find_package( OpenCV )
-if( NOT OpenCV_FOUND )
-  message( FATAL_ERROR "Could not find OpenCV.  Build cannot continue." )
-endif()
+find_package( OpenCV REQUIRED )
 if( WIN32 )
   file( GLOB_RECURSE OpenCV_SHARED_LIBS "${OpenCV_LIB_PATH}/../bin/*.dll" )
 endif()
 
 # --- OpenGL ---
-find_package( OpenGL )
-if( NOT OPENGL_FOUND )
-  message( FATAL_ERROR "Could not find OpenGL.  Build cannot continue." )
-endif()
+find_package( OpenGL REQUIRED )
 
 # --- Doxygen ---
 find_package( Doxygen )
@@ -104,10 +76,7 @@ elseif( APPLE )
   message( STATUS "Found Carbon at ${CARBON_LIBRARY}" )
   find_library( IOKIT_LIBRARY IOKit )
   message( STATUS "Found IOKit at ${IOKIT_LIBRARY}" )
-  find_package( Cups )
-  if( NOT CUPS_FOUND )
-    message (FATAL_ERROR "Could not find Cups.  Build cannot continue." )
-  endif()
+  find_package( Cups REQUIRED )
   set( APPLE_LIBRARIES
     ${COCOA_LIBRARY}
     ${CARBON_LIBRARY}
@@ -121,10 +90,7 @@ elseif( APPLE )
 # --- UNIX ---
 elseif( UNIX )
   find_package( X11 REQUIRED )
-  if( NOT X11_FOUND )
-    message( FATAL_ERROR "Could not find X11. Build cannot continue." )
-  endif()
-  find_package( Threads )
+  find_package( Threads REQUIRED )
   set( UNIX_LIBRARIES
     ${CMAKE_THREAD_LIBS_INIT}
     xcb
