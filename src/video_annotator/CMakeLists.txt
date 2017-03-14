@@ -16,6 +16,7 @@ if( WIN32 )
     ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
+    Qt5::Multimedia
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
@@ -42,6 +43,7 @@ elseif( APPLE )
     ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
+    Qt5::Multimedia
     Qt5::PrintSupport
     ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
@@ -60,6 +62,7 @@ elseif( UNIX )
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
+    Qt5::Multimedia
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
@@ -67,6 +70,11 @@ elseif( UNIX )
     ${Boost_LIBRARIES}
     )
 endif()
+
+target_include_directories(
+  video_annotator PUBLIC
+  ${Qt5Multimedia_INCLUDE_DIRS}
+  )
 
 # Add install target 
 install( 
