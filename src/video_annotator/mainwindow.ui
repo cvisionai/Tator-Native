@@ -23,7 +23,7 @@
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="sideBarLayout" stretch="0,0,0,0,0,0">
        <property name="spacing">
         <number>6</number>
        </property>
@@ -738,230 +738,6 @@ padding: 6px;</string>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string/>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <widget class="QPushButton" name="addFlat">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addFlat {
-background-color: rgb(210, 240, 215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addFlat:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Flat</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addSkate">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addSkate {
-background-color: rgb(210,240,215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addSkate:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Skate</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addRound">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addRound {
-background-color: rgb(210,240,215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addRound:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Round</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addOther">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addOther {
-background-color: rgb(210,240,215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addOther:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Other</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <layout class="QVBoxLayout" name="navigatorLayout">
          <property name="spacing">
           <number>0</number>
@@ -1109,6 +885,19 @@ QPushButton#addOther:pressed {
                  </widget>
                 </item>
                 <item>
+                 <widget class="QCheckBox" name="checkBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>60</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Reverse</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QPushButton" name="SpeedUp">
                   <property name="enabled">
                    <bool>true</bool>
@@ -1158,20 +947,6 @@ QPushButton#addOther:pressed {
                   </property>
                   <property name="text">
                    <string>Slower</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="minusOneSecond">
-                  <property name="text">
-                   <string>-1 Second</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="minusThreeSecond">
-                  <property name="text">
-                   <string>-3 Second</string>
                   </property>
                  </widget>
                 </item>
