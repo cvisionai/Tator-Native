@@ -7,7 +7,7 @@
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 #endif
-#include <iostream>
+
 namespace va = fish_annotator::video_annotator;
 
 void TestVideoAnnotation::testSerialize() {
@@ -22,33 +22,13 @@ void TestVideoAnnotation::testSerialize() {
     1231, 1, fish_annotator::Rect(1, 2, 3, 4)));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
     1031, 1, fish_annotator::Rect(1, 2, 3, 4)));
-  std::cout << "AFTER INSERTING 1031: " << std::endl;
-  for(const auto &a : ann.detections_by_id_.left) {
-    std::cout << "ID: " << (*a.second)->id_ << std::endl;
-    std::cout << "FRAME: " << (*a.second)->frame_ << std::endl;
-  }
   ann.insert(std::make_shared<va::DetectionAnnotation>(
     1151, 1, fish_annotator::Rect(5, 2, 34, 2)));
-  std::cout << "AFTER INSERTING 1151: " << std::endl;
-  for(const auto &a : ann.detections_by_id_.left) {
-    std::cout << "ID: " << (*a.second)->id_ << std::endl;
-    std::cout << "FRAME: " << (*a.second)->frame_ << std::endl;
-  }
   ann.insert(std::make_shared<va::DetectionAnnotation>(
     1151, 1, fish_annotator::Rect(15, 12, 3, 5)));
-  std::cout << "AFTER INSERTING A DIFFERENT 1151: " << std::endl;
-  for(const auto &a : ann.detections_by_id_.left) {
-    std::cout << "ID: " << (*a.second)->id_ << std::endl;
-    std::cout << "FRAME: " << (*a.second)->frame_ << std::endl;
-  }
   ann.insert(std::make_shared<va::DetectionAnnotation>(
     1151, 3, fish_annotator::Rect(5, 2, 34, 2)));
   QVERIFY(ann.getAllSpecies().size() == 3);
-  std::cout << "AFTER EVERYTHING: " << std::endl;
-  for(const auto &a : ann.detections_by_id_.left) {
-    std::cout << "ID: " << (*a.second)->id_ << std::endl;
-    std::cout << "FRAME: " << (*a.second)->frame_ << std::endl;
-  }
   QVERIFY(ann.detections_by_id_.left.count(1) == 3);
   QVERIFY(ann.detections_by_id_.left.count(2) == 0);
   QVERIFY(ann.detections_by_id_.left.count(3) == 1);

@@ -4,7 +4,7 @@
 #include <QProgressDialog>
 
 #include "fish_annotator/video_annotator/video_annotation.h"
-#include <iostream>
+
 namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
@@ -26,20 +26,6 @@ DetectionAnnotation::DetectionAnnotation()
 }
 
 bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
-  std::cout << "DETECTION 1: " << std::endl;
-  std::cout << id_ << std::endl;
-  std::cout << frame_ << std::endl;
-  std::cout << area_.x << std::endl;
-  std::cout << area_.y << std::endl;
-  std::cout << area_.w << std::endl;
-  std::cout << area_.h << std::endl;
-  std::cout << "DETECTION 2: " << std::endl;
-  std::cout << rhs.id_ << std::endl;
-  std::cout << rhs.frame_ << std::endl;
-  std::cout << rhs.area_.x << std::endl;
-  std::cout << rhs.area_.y << std::endl;
-  std::cout << rhs.area_.w << std::endl;
-  std::cout << rhs.area_.h << std::endl;
   if(frame_ != rhs.frame_) return false;
   if(id_ != rhs.id_) return false;
   if(area_.x != rhs.area_.x) return false;
@@ -89,14 +75,6 @@ TrackAnnotation::TrackAnnotation()
 }
 
 bool TrackAnnotation::operator==(const TrackAnnotation &rhs) const {
-  std::cout << "TRACK 1: " << std::endl;
-  std::cout << id_ << std::endl;
-  std::cout << species_ << std::endl;
-  std::cout << subspecies_ << std::endl;
-  std::cout << "TRACK 2: " << std::endl;
-  std::cout << rhs.id_ << std::endl;
-  std::cout << rhs.species_ << std::endl;
-  std::cout << rhs.subspecies_ << std::endl;
   if(id_ != rhs.id_) return false;
   if(species_ != rhs.species_) return false;
   if(subspecies_ != rhs.subspecies_) return false;
@@ -150,7 +128,6 @@ void VideoAnnotation::remove(uint64_t frame, uint64_t id) {
   auto range = detections_by_frame_.left.equal_range(frame);
   for(auto it = range.first; it != range.second; ++it) {
     if((*(it->second))->id_ == id) {
-      std::cout << "REMOVING FRAME " << frame << ", ID " << id << std::endl;
       detection_list_.erase(it->second);
       detections_by_id_.right.erase(
         detections_by_id_.right.find(it->second));
@@ -242,27 +219,15 @@ std::vector<Species> VideoAnnotation::getAllSpecies() {
 }
 
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
-  std::cout << "COMPARING TRACK LIST SIZE..." << std::endl;
-  std::cout << "SIZE 1: " << track_list_.size() << std::endl;
-  std::cout << "SIZE 2: " << rhs.track_list_.size() << std::endl;
   if(track_list_.size() != rhs.track_list_.size()) return false;
-  std::cout << " PASS!" << std::endl;
-  std::cout << "COMPARING TRACKS...";
   auto it = tracks_by_id_.left.begin();
   auto it_rhs = rhs.tracks_by_id_.left.begin();
   for(; 
     it != tracks_by_id_.left.end() && 
     it_rhs != rhs.tracks_by_id_.left.end(); 
     ++it, ++it_rhs) {
-    std::cout << "GOT HERE" << std::endl;
-    std::cout << *(it->second) << std::endl;
-    std::cout << *(it_rhs->second) << std::endl;
     if(**(it->second) != **(it_rhs->second)) return false;
   }
-  std::cout << " PASS!" << std::endl;
-  std::cout << "COMPARING DETECTION LIST SIZE..." << std::endl;;
-  std::cout << "SIZE 1: " << detection_list_.size() << std::endl;
-  std::cout << "SIZE 2: " << rhs.detection_list_.size() << std::endl;
   if(detection_list_.size() != rhs.detection_list_.size()) return false;
   auto dit = detections_by_frame_.left.begin();
   auto dit_rhs = rhs.detections_by_frame_.left.begin();
