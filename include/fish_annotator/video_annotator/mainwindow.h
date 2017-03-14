@@ -128,6 +128,11 @@ private:
 
   /// @brief Path to video file.
   boost::filesystem::path video_file_;
+
+  /// @brief Runs when video is loaded successfully.
+  ///
+  /// Defined as separate function for testing purposes.
+  void onLoadVideoSuccess(const QString &video_path);
 };
 
 }} // namespace fish_annotator::video_annotator
