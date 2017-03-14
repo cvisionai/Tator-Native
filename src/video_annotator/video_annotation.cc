@@ -1,11 +1,14 @@
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <QProgressDialog>
 
 #include "fish_annotator/video_annotator/video_annotation.h"
 
 namespace fish_annotator { namespace video_annotator {
+
+namespace fs = boost::filesystem;
+namespace pt = boost::property_tree;
 
 DetectionAnnotation::DetectionAnnotation(
   uint64_t frame,
@@ -60,15 +63,15 @@ TrackAnnotation::TrackAnnotation(
   uint64_t id,
   const std::string &species,
   const std::string &subspecies)
-  : id_(id),
-  , species_(species),
+  : id_(id)
+  , species_(species)
   , subspecies_(subspecies) {
 }
 
 TrackAnnotation::TrackAnnotation()
   : id_(0)
   , species_()
-  , subspecies() {
+  , subspecies_() {
 }
 
 bool TrackAnnotation::operator==(const TrackAnnotation &rhs) const {
@@ -84,9 +87,10 @@ bool TrackAnnotation::operator!=(const TrackAnnotation &rhs) const {
 
 std::string TrackAnnotation::write() const {
   std::string csv_row;
-  csv_row << "," << id_;
-  csv_row << "," << species_;
-  csv_row << "," << subspecies;
+  csv_row += ","; csv_row += std::to_string(id_);
+  csv_row += ","; csv_row += species_;
+  csv_row += ","; csv_row += subspecies_;
+  return csv_row;
 }
 
 void TrackAnnotation::read(const std::string &csv_row) {
@@ -109,14 +113,14 @@ VideoAnnotation::VideoAnnotation()
 void VideoAnnotation::insert(std::shared_ptr<DetectionAnnotation> annotation) {
   detection_list_.push_front(annotation);
   detections_by_frame_.insert({annotation->frame_, detection_list_.begin()});
-  detections_by_id_.insert({annotation->id_, detection_list.begin()});
+  detections_by_id_.insert({annotation->id_, detection_list_.begin()});
 }
 
 void VideoAnnotation::insert(std::shared_ptr<TrackAnnotation> annotation) {
   track_list_.push_front(annotation);
   tracks_by_id_.insert({annotation->id_, track_list_.begin()});
   tracks_by_species_.insert({
-    {annotation->species_, annotation->subspecies}, track_list_.begin()});
+    {annotation->species_, annotation->subspecies_}, track_list_.begin()});
 }
 
 void VideoAnnotation::remove(uint64_t frame, uint64_t id) {
@@ -172,7 +176,7 @@ std::map<std::string, uint64_t> VideoAnnotation::getCounts() {
   for(auto const &t : tracks_by_species_.left) {
     const std::string &species = t.first.first;
     auto count_it = counts.find(species);
-    if(counts_it != counts.end()) {
+    if(count_it != counts.end()) {
       count_it->second++;
     }
     else {
@@ -241,23 +245,23 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
     double fps) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
     "Saving annotations...", "Abort", 0,
-    static_cast<int>(track_list_.size() + detection_list_.size());
+    static_cast<int>(track_list_.size() + detection_list_.size())));
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
   int iter = 0;
   std::string meta;
-  meta << trip_id << ",";
-  meta << tow_number << ",";
-  meta << reviewer << ",";
-  meta << tow_type;
+  meta += trip_id; meta += ",";
+  meta += tow_number; meta += ",";
+  meta += reviewer; meta += ",";
+  meta += tow_type;
   std::ofstream csv(csv_path.string());
   csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
   csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
-  for(const auto &t : tracks_by_id_) {
+  for(const auto &t : tracks_by_id_.left) {
     auto first_det = std::find_if(
       detections_by_frame_.left.begin(), 
       detections_by_frame_.left.end(),
-      [&t.first](const DetectionsByInteger::value_type &d) {
+      [&t](const DetectionsByInteger::left_value_type &d) {
         return t.first == (*(d.second))->id_;
       });
     csv << meta;
@@ -276,13 +280,13 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
   }
   pt::ptree tree;
   for(const auto &d : detections_by_frame_.left) {
-    tree.add_child("Annotation Array.annotation", (*(det.second))->write());
+    tree.add_child("Annotation Array.annotation", (*(d.second))->write());
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");
-  pt::write_json(json_path.string());
+  pt::write_json(json_path.string(), tree);
 }
 
 void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
@@ -295,8 +299,8 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
   }
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");
-  if(fs::exists(json_file)) {
-    pt::tree tree;
+  if(fs::exists(json_path)) {
+    pt::ptree tree;
     pt::read_json(json_path.string(), tree);
     auto it = tree.find("Annotation Array");
     if(it != tree.not_found()) {

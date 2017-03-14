@@ -18,6 +18,7 @@ if( WIN32 )
     Qt5::Widgets
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
   set_target_properties( 
     video_annotator 
@@ -43,6 +44,7 @@ elseif( APPLE )
     Qt5::Widgets
     Qt5::PrintSupport
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
 elseif( UNIX )
   add_executable( video_annotator
@@ -62,6 +64,7 @@ elseif( UNIX )
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
     ${OPENGL_LIBRARIES}
+    ${Boost_LIBRARIES}
     )
 endif()
 

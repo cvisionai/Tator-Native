@@ -86,14 +86,16 @@ inline bool operator<(
 
 /// @brief Defines annotation information for a track.
 class TrackAnnotation {
+  friend class VideoAnnotation;
 public:
   /// @brief Constructor.
   ///
+  /// @param ID of the individual.
   /// @param species Species of the individual.
   /// @param subspecies Subspecies of the individual.
   TrackAnnotation(
     uint64_t id,
-    const std::string& species,
+    const std::string &species,
     const std::string &subspecies);
 
   /// @brief Default constructor.
@@ -208,11 +210,17 @@ public:
   /// path as the input csv path with different extension.
   ///
   /// @param csv_path Path to csv file.
+  /// @param trip_id Trip ID.
+  /// @param tow_number Tow number.
+  /// @param reviewer Name of reviewer.
+  /// @param tow_type Tow type.
+  /// @param fps Frames per second of the video.
   void write(const boost::filesystem::path &csv_path,
     uint64_t trip_id,
     uint64_t tow_number,
     const std::string &reviewer,
-    const std::string &tow_type) const;
+    const std::string &tow_type,
+    double fps) const;
 
   /// @brief Reads annotations from csv and json files.
   ///
