@@ -1,5 +1,8 @@
 #include <vector>
 
+#include <QMediaMetaData>
+#include <QGraphicsVideoItem>
+
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
@@ -32,6 +35,11 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
+  QGraphicsVideoItem *item = new QGraphicsVideoItem;
+  player_->setVideoOutput(item);
+  scene_->addItem(item);
+  ui_->videoWindow->setScene(scene_.get());
+  ui_->videoWindow->show();
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
@@ -110,6 +118,34 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
 }
 
 void MainWindow::onLoadVideoSuccess(const QString &video_path) {
+  ui_->videoSlider->setEnabled(true);
+  ui_->play->setEnabled(true);
+  ui_->reverse->setEnabled(true);
+  ui_->faster->setEnabled(true);
+  ui_->slower->setEnabled(true);
+  ui_->minusOneFrame->setEnabled(true);
+  ui_->plusOneFrame->setEnabled(true);
+  ui_->loadVideo->setEnabled(true);
+  ui_->loadAnnotationFile->setEnabled(true);
+  ui_->saveAnnotationFile->setEnabled(true);
+  ui_->writeImage->setEnabled(true);
+  ui_->typeLabel->setEnabled(true);
+  ui_->typeMenu->setEnabled(true);
+  ui_->subTypeLabel->setEnabled(true);
+  ui_->subTypeMenu->setEnabled(true);
+  ui_->prevFish->setEnabled(true);
+  ui_->nextFish->setEnabled(true);
+  ui_->removeFish->setEnabled(true);
+  ui_->goToFrame->setEnabled(true);
+  ui_->goToFishVal->setEnabled(true);
+  ui_->addRegion->setEnabled(true);
+  ui_->removeRegion->setEnabled(true);
+  ui_->nextAndCopy->setEnabled(true);
+  ui_->currentSpeed->setText("Current Speed: 100%");
+  ui_->play->setFocus();
+  ui_->videoSlider->setMaximum(
+      player_->metaData(QMediaMetaData::Duration).toInt());
+  annotation_.reset(new VideoAnnotation);
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"
