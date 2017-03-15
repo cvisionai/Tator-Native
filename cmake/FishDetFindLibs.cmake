@@ -1,6 +1,6 @@
 # --- Qt5 ---
 find_package( Qt5 REQUIRED COMPONENTS 
-  Core Gui Widgets Network Multimedia PrintSupport )
+  Core Gui Widgets Network Multimedia MultimediaWidgets PrintSupport OpenGL)
 if( NOT APPLE )
   find_package( Qt5DBus REQUIRED )
 endif()
