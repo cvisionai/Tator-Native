@@ -91,7 +91,14 @@ void MainWindow::updatePlayerUI(QImage img) {
     ui_->videoSlider->setValue(player_->getCurrentFrame());
     ui_->currentTime->setText(getFormattedTime((int)player_->
     getCurrentFrame() / (int)player_->getFrameRate()));
-    processAnnotations(player_->getCurrentFrame());
+    int frame_to_process_annotations;
+    if (player_->getCurrentFrame() > 0) {
+	frame_to_process_annotations = player_->getCurrentFrame() - 1;
+    }
+    else {
+	frame_to_process_annotations = 0;
+    }
+    processAnnotations(frame_to_process_annotations);
   }
 }
 
@@ -172,6 +179,7 @@ void MainWindow::on_Play_clicked() {
   else
   {
     player_->Stop();
+    nextFrame();
     ui_->Play->setText(tr("Play"));
   }
 }
