@@ -1,6 +1,6 @@
 # --- Qt5 ---
 find_package( Qt5 REQUIRED COMPONENTS 
-  Core Gui Widgets Network Multimedia MultimediaWidgets PrintSupport OpenGL)
+  Core Gui Widgets Network Multimedia MultimediaWidgets PrintSupport OpenGL )
 if( NOT APPLE )
   find_package( Qt5DBus REQUIRED )
 endif()
@@ -11,11 +11,13 @@ if( WIN32 )
   set( QT_THIRD_PARTY_LIBS
     "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"
     "${_qt5Widgets_install_prefix}/lib/qtfreetype.lib"
-    "${_qt5Widgets_install_prefix}/lib/qtpng.lib"
-    "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib"
-    "${_qt5Widgets_install_prefix}/lib/Qt5PlatformSupport.lib"
+    "${_qt5Widgets_install_prefix}/lib/qtlibpng.lib"
+    "${_qt5Widgets_install_prefix}/lib/qtharfbuzz.lib"
+    "${_qt5Widgets_install_prefix}/lib/Qt5FontDatabaseSupport.lib"
+    "${_qt5Widgets_install_prefix}/lib/Qt5EventDispatcherSupport.lib"
+    "${_qt5Widgets_install_prefix}/lib/Qt5ThemeSupport.lib"
+    "${_qt5Widgets_install_prefix}/lib/Qt5AccessibilitySupport.lib"
     "${_qt5Widgets_install_prefix}/plugins/platforms/qwindows.lib"
-    "${_qt5Widgets_install_prefix}/plugins/imageformats/qdds.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qgif.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qicns.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qico.lib"
@@ -25,8 +27,9 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qtiff.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwbmp.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwebp.lib"
+    "${_qt5Widgets_install_prefix}/plugins/mediaservice/wmfengine.lib"
+    "${_qt5Widgets_install_prefix}/plugins/mediaservice/qtmedia_audioengine.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
-    Iphlpapi
     )
 elseif( APPLE )
 elseif( UNIX )
@@ -66,6 +69,18 @@ if( MSVC )
     ws2_32
     imm32
     Dwmapi
+    Iphlpapi
+    D3d9
+    dxva2
+    evr
+    mf
+    mfplat
+    mfplay
+    mfreadwrite
+    mfuuid
+    dmoguids
+    strmiids
+    wmcodecdspuuid
     )
 
 # --- Mac ---

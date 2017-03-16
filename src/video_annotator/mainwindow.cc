@@ -1,26 +1,15 @@
 #include <vector>
 
-#include <QMediaMetaData>
-#include <QGraphicsVideoItem>
-
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace video_annotator {
 
-namespace { //anonymous
-
-static const std::vector<std::string> kVideoExtensions = {
-  ".mp4", ".avi",
-  ".MP4", ".AVI"};
-
-} // anonymous namespace
-
 MainWindow::MainWindow(QWidget *parent)
   : annotation_(new VideoAnnotation)
   , scene_(new QGraphicsScene)
-  , player_(new QMediaPlayer)
+  , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
   , video_file_() {
@@ -36,16 +25,34 @@ MainWindow::MainWindow(QWidget *parent)
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QGraphicsVideoItem *item = new QGraphicsVideoItem;
-  player_->setVideoOutput(item);
-  scene_->addItem(item);
+  item->setPos(100,100);
   ui_->videoWindow->setScene(scene_.get());
+  scene_->addItem(item);
+  QString filename = "C:/local/FishDData/GP062080_clip_1080p_crop.mp4";
+  player_->setMedia(QUrl::fromLocalFile(filename));
+  player_->play();
+  player_->setVideoOutput(item);
+  //player_->setNotifyInterval(1);
+  //ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  //ui_->videoWindow->setSceneRect(item->boundingRect());
+  //ui_->videoWindow->setScene(scene_.get());
   ui_->videoWindow->show();
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
+  QObject::connect(player_.get(), SIGNAL(positionChanged(int)),
+      ui_->videoSlider, SLOT(setValue(int)));
+  QObject::connect(player_.get(), SIGNAL(error(QMediaPlayer::Error)),
+      this, SLOT(handlePlayerError()));
 }
 
 void MainWindow::on_play_clicked() {
+  if(player_->state() != QMediaPlayer::PlayingState) {
+    player_->pause();
+  }
+  else {
+    player_->play();
+  }
 }
 
 void MainWindow::on_reverse_clicked() {
@@ -64,6 +71,18 @@ void MainWindow::on_minusOneFrame_clicked() {
 }
 
 void MainWindow::on_loadVideo_clicked() {
+  QString file = QFileDialog::getOpenFileName(
+      this,
+      tr("Open Video"), ".",
+      tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
+  if(!file.isEmpty()) {
+    player_->setMedia(QUrl::fromLocalFile(file));
+    if(player_->mediaStatus() == QMediaPlayer::InvalidMedia) {
+    }
+    else {
+      onLoadVideoSuccess(file);
+    }
+  }
 }
 
 void MainWindow::on_loadAnnotationFile_clicked() {
@@ -137,15 +156,22 @@ void MainWindow::onLoadVideoSuccess(const QString &video_path) {
   ui_->nextFish->setEnabled(true);
   ui_->removeFish->setEnabled(true);
   ui_->goToFrame->setEnabled(true);
+  ui_->goToFishLabel->setEnabled(true);
   ui_->goToFishVal->setEnabled(true);
   ui_->addRegion->setEnabled(true);
   ui_->removeRegion->setEnabled(true);
   ui_->nextAndCopy->setEnabled(true);
+  this->setWindowTitle(video_path);
   ui_->currentSpeed->setText("Current Speed: 100%");
   ui_->play->setFocus();
-  ui_->videoSlider->setMaximum(
-      player_->metaData(QMediaMetaData::Duration).toInt());
+  ui_->videoSlider->setRange(0, player_->duration());
   annotation_.reset(new VideoAnnotation);
+}
+
+void MainWindow::handlePlayerError() {
+  QMessageBox msgBox;
+  msgBox.setText(player_->errorString());
+  msgBox.exec();
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"

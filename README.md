@@ -44,8 +44,12 @@ Building static Qt on Windows
 
 2\. Clone the [Qt5 repository][QtRepo] from github.
 
-3\. By default, the dev branch will be checked out.  If desired, change
-    your branch to a tagged release version.
+3\. By default, the dev branch will be checked out.  Change the version to
+    v5.8.0:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+git checkout v5.8.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 4\. Navigate to the top level repository directory and type:
 
@@ -68,10 +72,10 @@ corresponding to your current branch.
 7\. Type the following from the top level directory:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-configure.bat -static -debug-and-release -prefix "your\working\dir\qtbase"
+configure.bat -static -release -prefix "your\working\dir\qtbase"
 -platform win32-msvc2015 -qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype
 -opengl desktop -no-openssl -opensource -confirm-license -make libs -nomake
-tools -nomake examples -nomake tests
+tools -nomake examples -nomake tests -wmf-backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 8\. Type:
@@ -87,8 +91,12 @@ Building static OpenCV on Windows
 
 1\. Clone the [OpenCV repository][OpenCVRepo] from github.
 
-2\. By default, the master branch will be checked out.  If desired, change
-    your branch to a tagged release version.
+2\. By default, the master branch will be checked out.  Change the version
+    to v3.2.0:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+git checkout v3.2.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 3\. Navigate to the top level opencv directory and create a subdirectory
     called build.

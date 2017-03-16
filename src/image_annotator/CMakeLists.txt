@@ -15,6 +15,7 @@ if( WIN32 )
     common
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
+    Qt5::Gui
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}

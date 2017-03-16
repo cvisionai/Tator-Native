@@ -9,6 +9,10 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QMediaPlayer>
+#include <QMediaMetaData>
+#include <QGraphicsVideoItem>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
@@ -109,6 +113,9 @@ private slots:
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
+
+  /// @brief Handles media player errors.
+  void handlePlayerError();
 
 private:
   /// @brief Annotations associated with this video.
