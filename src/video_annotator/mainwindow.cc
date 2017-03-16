@@ -1,5 +1,7 @@
 #include <vector>
 
+#include <QtMath>
+
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
@@ -35,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, SLOT(addIndividual(std::string, std::string)));
   QObject::connect(player_.get(), SIGNAL(positionChanged(qint64)),
       this, SLOT(handlePlayerPositionChanged(qint64)));
+  QObject::connect(player_.get(), SIGNAL(playbackRateChanged(qreal)),
+      this, SLOT(handlePlayerPlaybackRateChanged(qreal)));
   QObject::connect(player_.get(), SIGNAL(error(QMediaPlayer::Error)),
       this, SLOT(handlePlayerError()));
   QObject::connect(player_.get(), 
@@ -46,20 +50,33 @@ void MainWindow::on_play_clicked() {
   if(player_->state() != QMediaPlayer::PlayingState) {
     player_->play();
     ui_->play->setText("Pause");
+    ui_->reverse->setEnabled(true);
   }
   else {
     player_->pause();
     ui_->play->setText("Play");
+    ui_->reverse->setEnabled(false);
   }
 }
 
-void MainWindow::on_reverse_clicked() {
+void MainWindow::on_reverse_stateChanged(int state) {
+  qreal rate = qFabs(player_->playbackRate());
+  if(state == Qt::Checked) {
+    player_->setPlaybackRate(-rate);
+  }
+  else if(state == Qt::Unchecked) {
+    player_->setPlaybackRate(rate);
+  }
 }
 
 void MainWindow::on_faster_clicked() {
+  qreal rate = player_->playbackRate() * 2.0;
+  player_->setPlaybackRate(rate);
 }
 
 void MainWindow::on_slower_clicked() {
+  qreal rate = player_->playbackRate() / 2.0;
+  player_->setPlaybackRate(rate);
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
@@ -138,6 +155,10 @@ void MainWindow::handlePlayerPositionChanged(qint64 position) {
   ui_->videoSlider->setValue(position);
 }
 
+void MainWindow::handlePlayerPlaybackRateChanged(qreal rate) {
+  ui_->currentSpeed->setText(QString("Current Speed: %1%").arg(rate * 100));
+}
+
 void MainWindow::handlePlayerError() {
   QMessageBox msgBox;
   msgBox.setText(player_->errorString());
@@ -149,7 +170,6 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
   if(status == QMediaPlayer::LoadedMedia) {
     ui_->videoSlider->setEnabled(true);
     ui_->play->setEnabled(true);
-    ui_->reverse->setEnabled(true);
     ui_->faster->setEnabled(true);
     ui_->slower->setEnabled(true);
     ui_->minusOneFrame->setEnabled(true);
@@ -171,8 +191,8 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     ui_->addRegion->setEnabled(true);
     ui_->removeRegion->setEnabled(true);
     ui_->nextAndCopy->setEnabled(true);
-    this->setWindowTitle(player_->media().canonicalUrl().path());
     ui_->currentSpeed->setText("Current Speed: 100%");
+    this->setWindowTitle(player_->media().canonicalUrl().path());
     ui_->play->setFocus();
     ui_->videoSlider->setRange(0, player_->duration());
     annotation_.reset(new VideoAnnotation);

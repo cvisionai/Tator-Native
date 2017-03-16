@@ -41,7 +41,7 @@ private slots:
   void on_play_clicked();
 
   /// @brief Changes the playback direction of the video.
-  void on_reverse_clicked();
+  void on_reverse_stateChanged(int state);
 
   /// @brief Increases the playback speed of the video by a factor of two.
   void on_faster_clicked();
@@ -116,6 +116,9 @@ private slots:
 
   /// @brief Handles player position change.
   void handlePlayerPositionChanged(qint64 position);
+
+  /// @brief Handles player playback rate change.
+  void handlePlayerPlaybackRateChanged(qreal rate);
 
   /// @brief Handles media player errors.
   void handlePlayerError();
