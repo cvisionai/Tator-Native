@@ -114,8 +114,14 @@ private slots:
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
+  /// @brief Handles player position change.
+  void handlePlayerPositionChanged(qint64 position);
+
   /// @brief Handles media player errors.
   void handlePlayerError();
+
+  /// @brief Handles media player status changes.
+  void handlePlayerMedia(QMediaPlayer::MediaStatus status);
 
 private:
   /// @brief Annotations associated with this video.
