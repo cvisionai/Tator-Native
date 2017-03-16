@@ -80,9 +80,13 @@ void MainWindow::on_slower_clicked() {
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
+  qreal rate = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  player_->setPosition(player_->position() + 1000.0 / rate);
 }
 
 void MainWindow::on_minusOneFrame_clicked() {
+  qreal rate = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  player_->setPosition(player_->position() - 1000.0 / rate);
 }
 
 void MainWindow::on_loadVideo_clicked() {
