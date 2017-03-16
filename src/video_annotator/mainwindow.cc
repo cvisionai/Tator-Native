@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
+  QObject::connect(player_.get(), SIGNAL(durationChanged(qint64)),
+      this, SLOT(handlePlayerDurationChanged(qint64)));
   QObject::connect(player_.get(), SIGNAL(positionChanged(qint64)),
       this, SLOT(handlePlayerPositionChanged(qint64)));
   QObject::connect(player_.get(), SIGNAL(playbackRateChanged(qreal)),
@@ -155,6 +157,10 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
 void MainWindow::onLoadVideoSuccess(const QString &video_path) {
 }
 
+void MainWindow::handlePlayerDurationChanged(qint64 duration) {
+  ui_->videoSlider->setRange(0, duration);
+}
+
 void MainWindow::handlePlayerPositionChanged(qint64 position) {
   ui_->videoSlider->setValue(position);
 }
@@ -198,7 +204,6 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     ui_->currentSpeed->setText("Current Speed: 100%");
     this->setWindowTitle(player_->media().canonicalUrl().path());
     ui_->play->setFocus();
-    ui_->videoSlider->setRange(0, player_->duration());
     annotation_.reset(new VideoAnnotation);
     on_play_clicked();
   }

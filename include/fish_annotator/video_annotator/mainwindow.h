@@ -114,6 +114,9 @@ private slots:
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
+  /// @brief Handles player duration change.
+  void handlePlayerDurationChanged(qint64 duration);
+
   /// @brief Handles player position change.
   void handlePlayerPositionChanged(qint64 position);
 
