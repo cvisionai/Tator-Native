@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
   , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
-  , video_file_() {
+  , video_file_() 
+  , was_playing_(false) {
   ui_->setupUi(this);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -113,12 +114,16 @@ void MainWindow::on_writeImage_clicked() {
 }
 
 void MainWindow::on_videoSlider_sliderPressed() {
+  was_playing_ = player_->state() == QMediaPlayer::PlayingState;
+  player_->pause();
 }
 
 void MainWindow::on_videoSlider_sliderReleased() {
+  if(was_playing_ == true) player_->play();
 }
 
-void MainWindow::on_videoSlider_valueChanged() {
+void MainWindow::on_videoSlider_valueChanged(int value) {
+  player_->setPosition(value);
 }
 
 void MainWindow::on_typeMenu_currentTextChanged() {
@@ -159,6 +164,8 @@ void MainWindow::onLoadVideoSuccess(const QString &video_path) {
 
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   ui_->videoSlider->setRange(0, duration);
+  ui_->videoSlider->setSingleStep(1000.0);
+  ui_->videoSlider->setPageStep(10000.0);
 }
 
 void MainWindow::handlePlayerPositionChanged(qint64 position) {

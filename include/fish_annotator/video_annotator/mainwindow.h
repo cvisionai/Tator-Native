@@ -74,7 +74,7 @@ private slots:
   void on_videoSlider_sliderReleased();
 
   /// @brief Sets the current frame to a new position.
-  void on_videoSlider_valueChanged();
+  void on_videoSlider_valueChanged(int value);
 
   /// @brief Updates the current fish with a new species and updates the
   ///        subtype options.
@@ -147,6 +147,9 @@ private:
 
   /// @brief Path to video file.
   boost::filesystem::path video_file_;
+
+  /// @brief Used to store play state when slider moved.
+  bool was_playing_;
 
   /// @brief Runs when video is loaded successfully.
   ///
