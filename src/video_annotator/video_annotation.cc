@@ -288,11 +288,16 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
     if(dlg->wasCanceled()) break;
   }
   pt::ptree tree;
+  pt::ptree ann_array;
   for(const auto &d : detections_by_frame_.left) {
-    tree.add_child("Annotation Array.annotation", (*(d.second))->write());
+    pt::ptree ann;
+    pt::ptree ann_val = (*(d.second))->write();
+    ann.add_child("annotation", ann_val);
+    ann_array.push_back(std::make_pair("", ann));
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
+  tree.add_child("Annotation Array", ann_array);
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");
   pt::write_json(json_path.string(), tree);
@@ -317,7 +322,7 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
     if(it != tree.not_found()) {
       for(auto &val : tree.get_child("Annotation Array")) {
         auto annotation = std::make_shared<DetectionAnnotation>();
-        annotation->read(val.second);
+        annotation->read(val.second.get_child("annotation"));
         insert(annotation);
       }
     }

@@ -102,11 +102,6 @@ void MainWindow::on_loadVideo_clicked() {
     player_->setMedia(QUrl::fromLocalFile(file_str));
     player_->setNotifyInterval(1);
   }
-  else {
-    QMessageBox msgBox;
-    msgBox.setText("Invalid video file!");
-    msgBox.exec();
-  }
 }
 
 void MainWindow::on_loadAnnotationFile_clicked() {
@@ -116,13 +111,9 @@ void MainWindow::on_loadAnnotationFile_clicked() {
       tr("Annotation Files (*.csv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
+    out << file_str.toStdString() << std::endl;
     annotation_->read(file_str.toStdString());
     handlePlayerPositionChanged(player_->position());
-  }
-  else {
-    QMessageBox msgBox;
-    msgBox.setText("Invalid annotation file!");
-    msgBox.exec();
   }
 }
 
