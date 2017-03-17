@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QGraphicsVideoItem *item = new QGraphicsVideoItem;
   player_->setVideoOutput(item);
+  player_->setNotifyInterval(250);
   scene_->addItem(item);
   ui_->videoWindow->setScene(scene_.get());
   ui_->videoWindow->show();
@@ -100,7 +101,6 @@ void MainWindow::on_loadVideo_clicked() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     player_->setMedia(QUrl::fromLocalFile(file_str));
-    player_->setNotifyInterval(1);
   }
 }
 
