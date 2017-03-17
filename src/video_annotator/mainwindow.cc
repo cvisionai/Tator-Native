@@ -102,9 +102,28 @@ void MainWindow::on_loadVideo_clicked() {
     player_->setMedia(QUrl::fromLocalFile(file_str));
     player_->setNotifyInterval(1);
   }
+  else {
+    QMessageBox msgBox;
+    msgBox.setText("Invalid video file!");
+    msgBox.exec();
+  }
 }
 
 void MainWindow::on_loadAnnotationFile_clicked() {
+  QString file_str = QFileDialog::getOpenFileName(
+      this,
+      tr("Open Annotation File"), ".",
+      tr("Annotation Files (*.csv)"));
+  QFileInfo file(file_str);
+  if(file.exists() && file.isFile()) {
+    annotation_->read(file_str.toStdString());
+    handlePlayerPositionChanged(player_->position());
+  }
+  else {
+    QMessageBox msgBox;
+    msgBox.setText("Invalid annotation file!");
+    msgBox.exec();
+  }
 }
 
 void MainWindow::on_saveAnnotationFile_clicked() {
@@ -207,7 +226,6 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     ui_->nextAndCopy->setEnabled(true);
     ui_->currentSpeed->setText("Current Speed: 100%");
     this->setWindowTitle(player_->media().canonicalUrl().path());
-    ui_->play->setFocus();
     annotation_.reset(new VideoAnnotation);
     on_play_clicked();
   }
