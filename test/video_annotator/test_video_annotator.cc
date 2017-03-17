@@ -16,7 +16,6 @@ void TestVideoAnnotator::testSaveAnnotationsNoFish() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
   mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
-  mainwin.onLoadVideoSuccess(QString::fromUtf8(name.c_str()));
   mainwin.on_saveAnnotationFile_clicked();
 }
 
@@ -24,7 +23,6 @@ void TestVideoAnnotator::testAddRegionNoFish() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
   mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
-  mainwin.onLoadVideoSuccess(QString::fromUtf8(name.c_str()));
   mainwin.on_addRegion_clicked();
   mainwin.on_removeRegion_clicked();
   mainwin.on_nextAndCopy_clicked();
@@ -34,7 +32,6 @@ void TestVideoAnnotator::testSaveAnnotations() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
   mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
-  mainwin.onLoadVideoSuccess(QString::fromUtf8(name.c_str()));
   mainwin.addIndividual("flat", "aspodjhf");
   mainwin.addIndividual("round", "ahsjdah");
   mainwin.addIndividual("round", "ahsjdah");

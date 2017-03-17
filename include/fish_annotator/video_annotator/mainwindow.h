@@ -150,11 +150,6 @@ private:
 
   /// @brief Used to store play state when slider moved.
   bool was_playing_;
-
-  /// @brief Runs when video is loaded successfully.
-  ///
-  /// Defined as separate function for testing purposes.
-  void onLoadVideoSuccess(const QString &video_path);
 };
 
 }} // namespace fish_annotator::video_annotator

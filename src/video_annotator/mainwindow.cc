@@ -159,9 +159,6 @@ void MainWindow::on_nextAndCopy_clicked() {
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
 }
 
-void MainWindow::onLoadVideoSuccess(const QString &video_path) {
-}
-
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1000.0);
