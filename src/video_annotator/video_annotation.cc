@@ -245,8 +245,8 @@ bool VideoAnnotation::operator!=(VideoAnnotation &rhs) {
 }
 
 void VideoAnnotation::write(const boost::filesystem::path &csv_path,
-    uint64_t trip_id,
-    uint64_t tow_number,
+    const std::string &trip_id,
+    const std::string &tow_number,
     const std::string &reviewer,
     const std::string &tow_type,
     double fps) const {
@@ -257,8 +257,8 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
   dlg->show();
   int iter = 0;
   std::string meta;
-  meta += std::to_string(trip_id); meta += ",";
-  meta += std::to_string(tow_number); meta += ",";
+  meta += trip_id; meta += ",";
+  meta += tow_number; meta += ",";
   meta += reviewer; meta += ",";
   meta += tow_type;
   std::ofstream csv(csv_path.string());

@@ -1,5 +1,7 @@
 #include <vector>
 
+#include <boost/filesystem.hpp>
+
 #include <QtMath>
 
 #include "fish_annotator/common/species_dialog.h"
@@ -8,6 +10,8 @@
 #include <fstream>
 std::ofstream out("BLAHBLAH.txt");
 namespace fish_annotator { namespace video_annotator {
+
+namespace fs = boost::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
   : annotation_(new VideoAnnotation)
@@ -118,6 +122,15 @@ void MainWindow::on_loadAnnotationFile_clicked() {
 }
 
 void MainWindow::on_saveAnnotationFile_clicked() {
+  fs::path vid_path(
+      player_->media().canonicalUrl().toLocalFile().toStdString());
+  annotation_->write(
+      vid_path.replace_extension(".csv"),
+      ui_->tripIDValue->text().toStdString(),
+      ui_->towIDValue->text().toStdString(),
+      ui_->reviewerNameValue->text().toStdString(),
+      ui_->towStatus->isChecked() ? "Open" : "Closed",
+      player_->metaData(QMediaMetaData::VideoFrameRate).toReal());
 }
 
 void MainWindow::on_writeImage_clicked() {
@@ -216,7 +229,7 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     ui_->removeRegion->setEnabled(true);
     ui_->nextAndCopy->setEnabled(true);
     ui_->currentSpeed->setText("Current Speed: 100%");
-    this->setWindowTitle(player_->media().canonicalUrl().path());
+    this->setWindowTitle(player_->media().canonicalUrl().toLocalFile());
     annotation_.reset(new VideoAnnotation);
     on_play_clicked();
   }

@@ -216,8 +216,8 @@ public:
   /// @param tow_type Tow type.
   /// @param fps Frames per second of the video.
   void write(const boost::filesystem::path &csv_path,
-    uint64_t trip_id,
-    uint64_t tow_number,
+    const std::string &trip_id,
+    const std::string &tow_number,
     const std::string &reviewer,
     const std::string &tow_type,
     double fps) const;
