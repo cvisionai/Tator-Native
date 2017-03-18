@@ -190,6 +190,16 @@ public:
   /// @brief Gets all species in the annotations.
   std::vector<Species> getAllSpecies();
 
+  /// @brief Gets total tracks in the video.
+  uint64_t getTotal();
+
+  /// @brief Find detection for a given frame and ID.
+  ///
+  /// @param frame Detection frame.
+  /// @param id Track ID.
+  std::shared_ptr<DetectionAnnotation> 
+  findDetection(uint64_t frame, uint64_t id);
+
   /// @brief Equality operator.
   ///
   /// @param rhs Right hand side argument.

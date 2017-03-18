@@ -78,10 +78,14 @@ private slots:
 
   /// @brief Updates the current fish with a new species and updates the
   ///        subtype options.
-  void on_typeMenu_currentTextChanged();
+  ///
+  /// @param text Selected species.
+  void on_typeMenu_currentTextChanged(const QString &text);
 
   /// @brief Updates the current fish with a new subspecies.
-  void on_subTypeMenu_currentTextChanged();
+  ///
+  /// @param text Selected subspecies.
+  void on_subTypeMenu_currentTextChanged(const QString &text);
 
   /// @brief Sets current fish to next lowest ID.
   void on_prevFish_clicked();
@@ -150,6 +154,17 @@ private:
 
   /// @brief Used to store play state when slider moved.
   bool was_playing_;
+
+  /// @brief Currently selected fish ID.
+  uint64_t fish_id_;
+
+  /// @brief Computes the current frame.
+  ///
+  /// @return Current frame.
+  uint64_t currentFrame();
+
+  /// @brief Updates displayed fish statistics.
+  void updateStats();
 };
 
 }} // namespace fish_annotator::video_annotator

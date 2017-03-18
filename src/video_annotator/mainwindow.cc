@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
   , video_file_() 
-  , was_playing_(false) {
+  , was_playing_(false) 
+  , fish_id_(0) {
   ui_->setupUi(this);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -88,13 +89,13 @@ void MainWindow::on_slower_clicked() {
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
-  qreal rate = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  player_->setPosition(player_->position() + 1000.0 / rate);
+  qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  player_->setPosition(player_->position() + 1000.0 / fps);
 }
 
 void MainWindow::on_minusOneFrame_clicked() {
-  qreal rate = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  player_->setPosition(player_->position() - 1000.0 / rate);
+  qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  player_->setPosition(player_->position() - 1000.0 / fps);
 }
 
 void MainWindow::on_loadVideo_clicked() {
@@ -149,10 +150,10 @@ void MainWindow::on_videoSlider_valueChanged(int value) {
   player_->setPosition(value);
 }
 
-void MainWindow::on_typeMenu_currentTextChanged() {
+void MainWindow::on_typeMenu_currentTextChanged(const QString &text) {
 }
 
-void MainWindow::on_subTypeMenu_currentTextChanged() {
+void MainWindow::on_subTypeMenu_currentTextChanged(const QString &text) {
 }
 
 void MainWindow::on_prevFish_clicked() {
@@ -171,15 +172,36 @@ void MainWindow::on_goToFishVal_returnPressed() {
 }
 
 void MainWindow::on_addRegion_clicked() {
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+        currentFrame(),
+        fish_id_,
+        Rect(0, 0, 100, 100)));
 }
 
 void MainWindow::on_removeRegion_clicked() {
+  annotation_->remove(currentFrame(), fish_id_);
 }
 
 void MainWindow::on_nextAndCopy_clicked() {
+  auto det = annotation_->findDetection(currentFrame(), fish_id_);
+  if(det != nullptr) {
+    on_plusOneFrame_clicked();
+    annotation_->insert(std::make_shared<DetectionAnnotation>(
+          currentFrame(),
+          fish_id_,
+          det->area_));
+  }
+  else {
+    QMessageBox msgBox;
+    msgBox.setText("Could not find region to copy!");
+    msgBox.exec();
+  }
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
+  fish_id_ = annotation_->nextId();
+  annotation_->insert(std::make_shared<TrackAnnotation>(
+        fish_id_, species, subspecies));
 }
 
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
@@ -233,6 +255,17 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     annotation_.reset(new VideoAnnotation);
     on_play_clicked();
   }
+}
+
+uint64_t currentFrame() {
+  qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  return std::round(static_cast<double>(player_->position() * fps) / 1000.0);
+}
+
+void updateStats() {
+  ui_->fishNumVal->setText(QString::number(fish_id_));
+  ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
+  ui_->frameCountedVal->setText(QString::number(currentFrame()));
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"

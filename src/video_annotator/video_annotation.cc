@@ -218,6 +218,21 @@ std::vector<Species> VideoAnnotation::getAllSpecies() {
   return vec;
 }
 
+uint64_t VideoAnnotation::getTotal() {
+  return track_list_.size();
+}
+
+std::shared_ptr<DetectionAnnotation> 
+VideoAnnotation::findDetection(uint64_t frame, uint64_t id) {
+  auto range = detections_by_frame_.left.equal_range(frame);
+  for(auto it = range.first; it != range.second; ++it) {
+    if((*(it->second))->id_ == id) {
+      return *(it->second);
+    }
+  }
+  return std::shared_ptr<DetectionAnnotation>(nullptr);
+}
+
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();
