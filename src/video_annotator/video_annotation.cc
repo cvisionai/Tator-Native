@@ -222,6 +222,14 @@ uint64_t VideoAnnotation::getTotal() {
   return track_list_.size();
 }
 
+void VideoAnnotation::clear() {
+  track_list_.clear();
+  detections_by_frame_.clear();
+  detections_by_id_.clear();
+  tracks_by_id_.clear();
+  tracks_by_species_.clear();
+}
+
 std::shared_ptr<DetectionAnnotation> 
 VideoAnnotation::findDetection(uint64_t frame, uint64_t id) {
   auto range = detections_by_frame_.left.equal_range(frame);

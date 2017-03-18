@@ -193,6 +193,9 @@ public:
   /// @brief Gets total tracks in the video.
   uint64_t getTotal();
 
+  /// @brief Clears all annotations.
+  void clear();
+
   /// @brief Find detection for a given frame and ID.
   ///
   /// @param frame Detection frame.
