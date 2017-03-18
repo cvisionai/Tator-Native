@@ -13,14 +13,11 @@ namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
 
-AnnotationDisplay::AnnotationDisplay(
-  std::shared_ptr<VideoAnnotation> annotation,
-  QObject *parent)
-  : QAbstractVideoSurface(parent)
-  , annotation_(annotation) {
+FishVideoSurface::FishVideoSurface(QObject *parent)
+  : QAbstractVideoSurface(parent) {
 }
 
-bool AnnotationDisplay::present(const QVideoFrame &frame) {
+bool FishVideoSurface::present(const QVideoFrame &frame) {
   QVideoFrame draw_me(frame);
   if(!draw_me.map(QAbstractVideoBuffer::ReadOnly)) {
     return false;
@@ -37,7 +34,7 @@ bool AnnotationDisplay::present(const QVideoFrame &frame) {
 }
 
 QList<QVideoFrame::PixelFormat> 
-AnnotationDisplay::supportedPixelFormats(
+FishVideoSurface::supportedPixelFormats(
   QAbstractVideoBuffer::HandleType type) const {
   return QList<QVideoFrame::PixelFormat>()
     << QVideoFrame::Format_ARGB32
@@ -77,7 +74,7 @@ AnnotationDisplay::supportedPixelFormats(
 MainWindow::MainWindow(QWidget *parent)
   : annotation_(new VideoAnnotation)
   , scene_(new QGraphicsScene(this))
-  , display_(new AnnotationDisplay(annotation_, this))
+  , surface_(new FishVideoSurface(this))
   , pixmap_item_(nullptr)
   , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
@@ -85,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
   , was_playing_(false) 
   , fish_id_(0) {
   ui_->setupUi(this);
-  ui_->videoWindow->setViewport(new QGLWidget);
+  ui_->videoWindow->setViewport(new QOpenGLWidget);
   ui_->videoWindow->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -97,8 +94,8 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
-  player_->setVideoOutput(display_.get());
-  QObject::connect(display_.get(), SIGNAL(frameReady(std::shared_ptr<QImage>)),
+  player_->setVideoOutput(surface_.get());
+  QObject::connect(surface_.get(), SIGNAL(frameReady(std::shared_ptr<QImage>)),
       this, SLOT(showFrame(std::shared_ptr<QImage>)));
   player_->setNotifyInterval(500);
   QObject::connect(species_controls_.get(),

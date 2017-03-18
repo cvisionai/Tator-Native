@@ -16,6 +16,7 @@
 #include <QVideoFrame>
 #include <QAbstractVideoSurface>
 #include <QAbstractVideoBuffer>
+#include <QOpenGLWidget>
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
@@ -28,17 +29,14 @@ class TestVideoAnnotator;
 
 namespace fish_annotator { namespace video_annotator {
 
-/// @brief Displays video frames with annotations.
-class AnnotationDisplay : public QAbstractVideoSurface {
+/// @brief Displays and stores video frames.
+class FishVideoSurface : public QAbstractVideoSurface {
   Q_OBJECT
 public:
   /// @brief Constructor.
   ///
-  /// @param annotation Shared pointer to video annotation.
   /// @param parent Parent widget.
-  explicit AnnotationDisplay(
-      std::shared_ptr<VideoAnnotation> annotation,
-      QObject *parent = Q_NULLPTR);
+  explicit FishVideoSurface(QObject *parent = Q_NULLPTR);
 
   /// @brief Presents a video frame with annotations on it.
   ///
@@ -57,9 +55,6 @@ signals:
   ///
   /// @param frame Frame to be displayed.
   void frameReady(std::shared_ptr<QImage> frame);
-private:
-  /// @brief Shared pointer to annotation.
-  std::shared_ptr<VideoAnnotation> annotation_;
 };
 
 /// @brief Video annotation GUI.
@@ -76,7 +71,7 @@ public:
 
 protected:
   /// @brief Resizes the video and scene.
-  void resizeEvent(QResizeEvent *event);
+  void resizeEvent(QResizeEvent *event) override final;
 
 private slots:
   /// @brief Plays/pauses the video.
@@ -192,7 +187,7 @@ private:
   std::unique_ptr<QGraphicsScene> scene_;
 
   /// @brief Surface for displaying video.
-  std::unique_ptr<AnnotationDisplay> display_;
+  std::unique_ptr<FishVideoSurface> surface_;
 
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
