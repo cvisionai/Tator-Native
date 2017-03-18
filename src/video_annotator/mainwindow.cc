@@ -14,7 +14,8 @@ namespace fish_annotator { namespace video_annotator {
 namespace fs = boost::filesystem;
 
 FishVideoSurface::FishVideoSurface(QObject *parent)
-  : QAbstractVideoSurface(parent) {
+  : QAbstractVideoSurface(parent)
+  , last_image_(nullptr) {
 }
 
 bool FishVideoSurface::present(const QVideoFrame &frame) {
@@ -22,14 +23,14 @@ bool FishVideoSurface::present(const QVideoFrame &frame) {
   if(!draw_me.map(QAbstractVideoBuffer::ReadOnly)) {
     return false;
   }
-  auto image = std::make_shared<QImage>(
+  last_image_ = std::make_shared<QImage>(
     draw_me.bits(), 
     draw_me.width(), 
     draw_me.height(), 
     draw_me.bytesPerLine(),
     QVideoFrame::imageFormatFromPixelFormat(draw_me.pixelFormat()));
+  emit frameReady(last_image_);
   draw_me.unmap();
-  emit frameReady(image);
   return true;
 }
 
@@ -76,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene(this))
   , surface_(new FishVideoSurface(this))
   , pixmap_item_(nullptr)
+  , last_image_(nullptr)
   , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
@@ -262,6 +264,7 @@ void MainWindow::on_nextAndCopy_clicked() {
 }
 
 void MainWindow::showFrame(std::shared_ptr<QImage> frame) {
+  last_image_ = frame;
   auto pixmap = QPixmap::fromImage(*frame);
   if(pixmap_item_ == nullptr) {
     pixmap_item_ = scene_->addPixmap(pixmap);
@@ -269,13 +272,9 @@ void MainWindow::showFrame(std::shared_ptr<QImage> frame) {
     ui_->videoWindow->setScene(scene_.get());
     ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->videoWindow->show();
-    out << "PIXMAP ITEM WAS INITIALIZED!" << std::endl;
-    out << "FRAME WIDTH: " << frame->width() << std::endl;
-    out << "FRAME HEIGHT: " << frame->height() << std::endl;
   }
   else {
     pixmap_item_->setPixmap(pixmap);
-    out << "PIXMAP ITEM WAS UPDATED!" << std::endl;
   }
 }
 
@@ -335,13 +334,16 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     this->setWindowTitle(player_->media().canonicalUrl().toLocalFile());
     annotation_->clear();
     scene_->clear();
+    pixmap_item_ = nullptr;
+    last_image_ = nullptr;
     on_play_clicked();
   }
 }
 
 uint64_t MainWindow::currentFrame() {
   qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  return std::round(static_cast<double>(player_->position()) * fps / 1000.0);
+  auto pos = static_cast<double>(player_->position()) / 1000.0;
+  return std::round(pos * fps) + 1;
 }
 
 void MainWindow::updateStats() {

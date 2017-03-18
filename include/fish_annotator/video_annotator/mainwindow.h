@@ -55,6 +55,9 @@ signals:
   ///
   /// @param frame Frame to be displayed.
   void frameReady(std::shared_ptr<QImage> frame);
+private:
+  /// @brief Last image displayed by player.
+  std::shared_ptr<QImage> last_image_;
 };
 
 /// @brief Video annotation GUI.
@@ -191,6 +194,9 @@ private:
 
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
+
+  /// @brief Last image displayed by player.
+  std::shared_ptr<QImage> last_image_;
 
   /// @brief Media player.
   std::unique_ptr<QMediaPlayer> player_;
