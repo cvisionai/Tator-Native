@@ -85,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent)
   , was_playing_(false) 
   , fish_id_(0) {
   ui_->setupUi(this);
+  ui_->videoWindow->setViewport(new QGLWidget);
+  ui_->videoWindow->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
 #endif
@@ -96,9 +98,9 @@ MainWindow::MainWindow(QWidget *parent)
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
   player_->setVideoOutput(display_.get());
-  player_->setNotifyInterval(250);
   QObject::connect(display_.get(), SIGNAL(frameReady(std::shared_ptr<QImage>)),
       this, SLOT(showFrame(std::shared_ptr<QImage>)));
+  player_->setNotifyInterval(500);
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
@@ -113,6 +115,10 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(player_.get(), 
       SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
       this, SLOT(handlePlayerMedia(QMediaPlayer::MediaStatus)));
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::on_play_clicked() {

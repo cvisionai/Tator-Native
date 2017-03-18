@@ -74,6 +74,10 @@ public:
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
 
+protected:
+  /// @brief Resizes the video and scene.
+  void resizeEvent(QResizeEvent *event);
+
 private slots:
   /// @brief Plays/pauses the video.
   void on_play_clicked();
