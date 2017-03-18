@@ -13,6 +13,9 @@
 #include <QGraphicsVideoItem>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QVideoFrame>
+#include <QAbstractVideoSurface>
+#include <QAbstractVideoBuffer>
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
@@ -25,6 +28,41 @@ class TestVideoAnnotator;
 
 namespace fish_annotator { namespace video_annotator {
 
+/// @brief Displays video frames with annotations.
+class AnnotationDisplay : public QAbstractVideoSurface {
+  Q_OBJECT
+public:
+  /// @brief Constructor.
+  ///
+  /// @param annotation Shared pointer to video annotation.
+  /// @param parent Parent widget.
+  explicit AnnotationDisplay(
+      std::shared_ptr<VideoAnnotation> annotation,
+      QObject *parent = Q_NULLPTR);
+
+  /// @brief Presents a video frame with annotations on it.
+  ///
+  /// @param frame Current video frame.
+  /// @return True if presentation successful, false otherwise.
+  bool present(const QVideoFrame &frame) override final;
+
+  /// @brief Specifies supported pixel formats.
+  ///
+  /// @param type Handle type.
+  QList<QVideoFrame::PixelFormat> 
+  supportedPixelFormats(QAbstractVideoBuffer::HandleType type = 
+      QAbstractVideoBuffer::NoHandle) const override final;
+signals:
+  /// @brief Indicates that frame is ready to display.
+  ///
+  /// @param frame Frame to be displayed.
+  void frameReady(std::shared_ptr<QImage> frame);
+private:
+  /// @brief Shared pointer to annotation.
+  std::shared_ptr<VideoAnnotation> annotation_;
+};
+
+/// @brief Video annotation GUI.
 class MainWindow : public QWidget {
   Q_OBJECT
 #ifndef NO_TESTING
@@ -41,6 +79,8 @@ private slots:
   void on_play_clicked();
 
   /// @brief Changes the playback direction of the video.
+  ///
+  /// @param state State of the checkbox.
   void on_reverse_stateChanged(int state);
 
   /// @brief Increases the playback speed of the video by a factor of two.
@@ -74,6 +114,8 @@ private slots:
   void on_videoSlider_sliderReleased();
 
   /// @brief Sets the current frame to a new position.
+  ///
+  /// @param value New value of the 
   void on_videoSlider_valueChanged(int value);
 
   /// @brief Updates the current fish with a new species and updates the
@@ -115,6 +157,11 @@ private slots:
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
 
+  /// @brief Displays a video frame.
+  ///
+  /// @param frame Video frame to display.
+  void showFrame(std::shared_ptr<QImage> frame);
+
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
@@ -135,10 +182,16 @@ private slots:
 
 private:
   /// @brief Annotations associated with this video.
-  std::unique_ptr<VideoAnnotation> annotation_;
+  std::shared_ptr<VideoAnnotation> annotation_;
 
   /// @brief Scene for displaying video.
-  std::unique_ptr<QGraphicsScene> scene_;
+  std::shared_ptr<QGraphicsScene> scene_;
+
+  /// @brief Surface for displaying video.
+  std::unique_ptr<AnnotationDisplay> display_;
+
+  /// @brief Pixmap item for displaying video frames.
+  QGraphicsPixmapItem *pixmap_item_;
 
   /// @brief Media player.
   std::unique_ptr<QMediaPlayer> player_;
@@ -148,9 +201,6 @@ private:
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
-
-  /// @brief Path to video file.
-  boost::filesystem::path video_file_;
 
   /// @brief Used to store play state when slider moved.
   bool was_playing_;
