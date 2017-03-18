@@ -182,10 +182,10 @@ private slots:
 
 private:
   /// @brief Annotations associated with this video.
-  std::shared_ptr<VideoAnnotation> annotation_;
+  std::unique_ptr<VideoAnnotation> annotation_;
 
   /// @brief Scene for displaying video.
-  std::shared_ptr<QGraphicsScene> scene_;
+  std::unique_ptr<QGraphicsScene> scene_;
 
   /// @brief Surface for displaying video.
   std::unique_ptr<AnnotationDisplay> display_;
