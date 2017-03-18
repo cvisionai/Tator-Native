@@ -13,13 +13,75 @@ namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
 
+AnnotationDisplay::AnnotationDisplay(
+  std::shared_ptr<VideoAnnotation> annotation,
+  QObject *parent)
+  : QAbstractVideoSurface(parent)
+  , annotation_(annotation) {
+}
+
+bool AnnotationDisplay::present(const QVideoFrame &frame) {
+  QVideoFrame draw_me(frame);
+  if(!draw_me.map(QAbstractVideoBuffer::ReadOnly)) {
+    return false;
+  }
+  auto image = std::make_shared<QImage>(
+    draw_me.bits(), 
+    draw_me.width(), 
+    draw_me.height(), 
+    draw_me.bytesPerLine(),
+    QVideoFrame::imageFormatFromPixelFormat(draw_me.pixelFormat()));
+  draw_me.unmap();
+  emit frameReady(image);
+  return true;
+}
+
+QList<QVideoFrame::PixelFormat> 
+AnnotationDisplay::supportedPixelFormats(
+  QAbstractVideoBuffer::HandleType type) const {
+  return QList<QVideoFrame::PixelFormat>()
+    << QVideoFrame::Format_ARGB32
+    << QVideoFrame::Format_ARGB32_Premultiplied
+    << QVideoFrame::Format_RGB32
+    << QVideoFrame::Format_RGB24
+    << QVideoFrame::Format_RGB565
+    << QVideoFrame::Format_RGB555
+    << QVideoFrame::Format_ARGB8565_Premultiplied
+    << QVideoFrame::Format_BGRA32
+    << QVideoFrame::Format_BGRA32_Premultiplied
+    << QVideoFrame::Format_BGR32
+    << QVideoFrame::Format_BGR24
+    << QVideoFrame::Format_BGR565
+    << QVideoFrame::Format_BGR555
+    << QVideoFrame::Format_BGRA5658_Premultiplied
+    << QVideoFrame::Format_AYUV444
+    << QVideoFrame::Format_AYUV444_Premultiplied
+    << QVideoFrame::Format_YUV444
+    << QVideoFrame::Format_YUV420P
+    << QVideoFrame::Format_YV12
+    << QVideoFrame::Format_UYVY
+    << QVideoFrame::Format_YUYV
+    << QVideoFrame::Format_NV12
+    << QVideoFrame::Format_NV21
+    << QVideoFrame::Format_IMC1
+    << QVideoFrame::Format_IMC2
+    << QVideoFrame::Format_IMC3
+    << QVideoFrame::Format_IMC4
+    << QVideoFrame::Format_Y8
+    << QVideoFrame::Format_Y16
+    << QVideoFrame::Format_Jpeg
+    << QVideoFrame::Format_CameraRaw
+    << QVideoFrame::Format_AdobeDng;
+}
+
 MainWindow::MainWindow(QWidget *parent)
   : annotation_(new VideoAnnotation)
-  , scene_(new QGraphicsScene)
+  , scene_(new QGraphicsScene(this))
+  , display_(new AnnotationDisplay(annotation_, this))
+  , pixmap_item_(nullptr)
   , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
-  , video_file_() 
   , was_playing_(false) 
   , fish_id_(0) {
   ui_->setupUi(this);
@@ -33,12 +95,10 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
-  QGraphicsVideoItem *item = new QGraphicsVideoItem;
-  player_->setVideoOutput(item);
+  player_->setVideoOutput(display_.get());
   player_->setNotifyInterval(250);
-  scene_->addItem(item);
-  ui_->videoWindow->setScene(scene_.get());
-  ui_->videoWindow->show();
+  QObject::connect(display_.get(), SIGNAL(frameReady(std::shared_ptr<QImage>)),
+      this, SLOT(showFrame(std::shared_ptr<QImage>)));
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
@@ -198,6 +258,24 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
+void MainWindow::showFrame(std::shared_ptr<QImage> frame) {
+  auto pixmap = QPixmap::fromImage(*frame);
+  if(pixmap_item_ == nullptr) {
+    pixmap_item_ = scene_->addPixmap(pixmap);
+    scene_->setSceneRect(0, 0, frame->width(), frame->height());
+    ui_->videoWindow->setScene(scene_.get());
+    ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+    ui_->videoWindow->show();
+    out << "PIXMAP ITEM WAS INITIALIZED!" << std::endl;
+    out << "FRAME WIDTH: " << frame->width() << std::endl;
+    out << "FRAME HEIGHT: " << frame->height() << std::endl;
+  }
+  else {
+    pixmap_item_->setPixmap(pixmap);
+    out << "PIXMAP ITEM WAS UPDATED!" << std::endl;
+  }
+}
+
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   fish_id_ = annotation_->nextId();
   annotation_->insert(std::make_shared<TrackAnnotation>(
@@ -252,17 +330,18 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     ui_->nextAndCopy->setEnabled(true);
     ui_->currentSpeed->setText("Current Speed: 100%");
     this->setWindowTitle(player_->media().canonicalUrl().toLocalFile());
-    annotation_.reset(new VideoAnnotation);
+    annotation_->clear();
+    scene_->clear();
     on_play_clicked();
   }
 }
 
-uint64_t currentFrame() {
+uint64_t MainWindow::currentFrame() {
   qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  return std::round(static_cast<double>(player_->position() * fps) / 1000.0);
+  return std::round(static_cast<double>(player_->position()) * fps / 1000.0);
 }
 
-void updateStats() {
+void MainWindow::updateStats() {
   ui_->fishNumVal->setText(QString::number(fish_id_));
   ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
   ui_->frameCountedVal->setText(QString::number(currentFrame()));
