@@ -241,6 +241,14 @@ VideoAnnotation::findDetection(uint64_t frame, uint64_t id) {
   return std::shared_ptr<DetectionAnnotation>(nullptr);
 }
 
+std::shared_ptr<TrackAnnotation> VideoAnnotation::findTrack(uint64_t id) {
+  auto it = tracks_by_id_.left.find(id);
+  if(it != tracks_by_id_.left.end()) {
+    return *(it->second);
+  }
+  return std::shared_ptr<TrackAnnotation>(nullptr);
+}
+
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();

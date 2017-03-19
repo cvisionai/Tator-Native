@@ -85,9 +85,7 @@ inline bool operator<(
 }
 
 /// @brief Defines annotation information for a track.
-class TrackAnnotation {
-  friend class VideoAnnotation;
-public:
+struct TrackAnnotation {
   /// @brief Constructor.
   ///
   /// @param ID of the individual.
@@ -122,7 +120,7 @@ public:
   ///
   /// @param csv_row String to be read.
   void read(const std::string &csv_row);
-private:
+
   uint64_t id_; ///< ID of the individual.
   std::string species_; ///< Species of the individual.
   std::string subspecies_; ///< Subspecies of the individual.
@@ -202,6 +200,11 @@ public:
   /// @param id Track ID.
   std::shared_ptr<DetectionAnnotation> 
   findDetection(uint64_t frame, uint64_t id);
+
+  /// @brief Find track for a given frame and ID.
+  ///
+  /// @param id Track ID.
+  std::shared_ptr<TrackAnnotation> findTrack(uint64_t id);
 
   /// @brief Equality operator.
   ///
