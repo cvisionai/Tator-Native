@@ -249,6 +249,39 @@ std::shared_ptr<TrackAnnotation> VideoAnnotation::findTrack(uint64_t id) {
   return std::shared_ptr<TrackAnnotation>(nullptr);
 }
 
+std::shared_ptr<TrackAnnotation> VideoAnnotation::nextTrack(uint64_t id) {
+  auto it = tracks_by_id_.left.find(id);
+  if(it != tracks_by_id_.left.end()) {
+    return *(std::next(it)->second);
+  }
+  return std::shared_ptr<TrackAnnotation>(nullptr);
+}
+
+std::shared_ptr<TrackAnnotation> VideoAnnotation::prevTrack(uint64_t id) {
+  auto it = tracks_by_id_.left.find(id);
+  if(it != tracks_by_id_.left.end()) {
+    return *(std::prev(it)->second);
+  }
+  return std::shared_ptr<TrackAnnotation>(nullptr);
+}
+
+uint64_t VideoAnnotation::trackFirstFrame(uint64_t id) {
+  auto it = tracks_by_id_.left.find(id);
+  if(it != tracks_by_id_.left.end()) {
+    auto t = *(it->second);
+    auto first_det = std::find_if(
+      detections_by_frame_.left.begin(), 
+      detections_by_frame_.left.end(),
+      [&t](const DetectionsByInteger::left_value_type &d) {
+        return t->id_ == (*(d.second))->id_;
+      });
+    if(first_det != detections_by_frame_.left.end()) {
+      return first_det->first;
+    }
+  }
+  return 0;
+}
+
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();

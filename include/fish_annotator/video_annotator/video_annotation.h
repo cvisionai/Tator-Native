@@ -198,13 +198,33 @@ public:
   ///
   /// @param frame Detection frame.
   /// @param id Track ID.
+  /// @return Shared pointer to detection annotation, nullptr if not found.
   std::shared_ptr<DetectionAnnotation> 
   findDetection(uint64_t frame, uint64_t id);
 
-  /// @brief Find track for a given frame and ID.
+  /// @brief Find track for a given ID.
   ///
   /// @param id Track ID.
+  /// @return Shared pointer to track annotation, nullptr if not found.
   std::shared_ptr<TrackAnnotation> findTrack(uint64_t id);
+
+  /// @brief Retrieves next track after given ID.
+  ///
+  /// @param id Track ID.
+  /// @return Shared pointer to track annotation, nullptr if not found.
+  std::shared_ptr<TrackAnnotation> nextTrack(uint64_t id);
+
+  /// @brief Retrieves previous track before given ID.
+  ///
+  /// @param id Track ID.
+  /// @return Shared pointer to track annotation, nullptr if not found.
+  std::shared_ptr<TrackAnnotation> prevTrack(uint64_t id);
+
+  /// @brief Gets first frame where a track occurs.
+  ///
+  /// @param id Track ID.
+  /// @return Frame of first occurrence, zero if not found or no detections.
+  uint64_t trackFirstFrame(uint64_t id);
 
   /// @brief Equality operator.
   ///

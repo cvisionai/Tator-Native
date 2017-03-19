@@ -241,11 +241,6 @@ void MainWindow::on_typeMenu_currentTextChanged(const QString &text) {
   if(trk != nullptr) {
     trk->species_ = text.toStdString();
   }
-  else {
-    QMessageBox msgBox;
-    msgBox.setText("Could not set current fish subspecies!");
-    msgBox.exec();
-  }
 }
 
 void MainWindow::on_subTypeMenu_currentTextChanged(const QString &text) {
@@ -253,26 +248,40 @@ void MainWindow::on_subTypeMenu_currentTextChanged(const QString &text) {
   if(trk != nullptr) {
     trk->subspecies_ = text.toStdString();
   }
-  else {
-    QMessageBox msgBox;
-    msgBox.setText("Could not set current fish subspecies!");
-    msgBox.exec();
-  }
 }
 
 void MainWindow::on_prevFish_clicked() {
+  auto trk = annotation_->prevTrack(fish_id_);
+  if(trk != nullptr) {
+    fish_id_ = trk->id_;
+    updateStats();
+  }
 }
 
 void MainWindow::on_nextFish_clicked() {
+  auto trk = annotation_->nextTrack(fish_id_);
+  if(trk != nullptr) {
+    fish_id_ = trk->id_;
+    updateStats();
+  }
 }
 
 void MainWindow::on_removeFish_clicked() {
+  annotation_->remove(fish_id_);
+  drawAnnotations();
 }
 
 void MainWindow::on_goToFrame_clicked() {
+  auto frame = annotation_->trackFirstFrame(fish_id_);
+  qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  double sec = static_cast<double>(frame - 1) / fps;
+  uint64_t usec = static_cast<uint64_t>(sec * 1000.0);
+  player_->setPosition(usec);
 }
 
 void MainWindow::on_goToFishVal_returnPressed() {
+  fish_id_ = ui_->goToFishVal->text().toInt();
+  updateStats();
 }
 
 void MainWindow::on_addRegion_clicked() {
@@ -326,6 +335,9 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
   fish_id_ = annotation_->nextId();
   annotation_->insert(std::make_shared<TrackAnnotation>(
         fish_id_, species, subspecies));
+  on_addRegion_clicked();
+  updateStats();
+  drawAnnotations();
 }
 
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
@@ -393,7 +405,8 @@ uint64_t MainWindow::currentFrame() {
 void MainWindow::updateStats() {
   ui_->fishNumVal->setText(QString::number(fish_id_));
   ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
-  ui_->frameCountedVal->setText(QString::number(currentFrame()));
+  ui_->frameCountedVal->setText(QString::number(
+        annotation_->trackFirstFrame(fish_id_)));
 }
 
 void MainWindow::drawAnnotations() {
