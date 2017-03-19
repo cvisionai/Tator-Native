@@ -177,6 +177,21 @@ void MainWindow::on_loadVideo_clicked() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     player_->setMedia(QUrl::fromLocalFile(file_str));
+    fs::path csv(file_str.toStdString());
+    csv.replace_extension(".csv");
+    fs::path json(file_str.toStdString());
+    json.replace_extension(".json");
+    if(fs::exists(csv) && fs::exists(json)) {
+      auto reply = QMessageBox::question(this,
+          "Annotation File Found",
+          "Found annotation file with same base path,"
+          " would you like to load it?",
+          QMessageBox::Yes | QMessageBox::No);
+      if(reply == QMessageBox::Yes) {
+        annotation_->read(csv.string());
+        drawAnnotations();
+      }
+    }
   }
 }
 
@@ -187,9 +202,8 @@ void MainWindow::on_loadAnnotationFile_clicked() {
       tr("Annotation Files (*.csv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    out << file_str.toStdString() << std::endl;
     annotation_->read(file_str.toStdString());
-    handlePlayerPositionChanged(player_->position());
+    drawAnnotations();
   }
 }
 
