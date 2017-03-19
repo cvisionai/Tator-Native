@@ -237,9 +237,27 @@ void MainWindow::on_videoSlider_valueChanged(int value) {
 }
 
 void MainWindow::on_typeMenu_currentTextChanged(const QString &text) {
+  auto trk = annotation_->findTrack(fish_id_);
+  if(trk != nullptr) {
+    trk->species_ = text.toStdString();
+  }
+  else {
+    QMessageBox msgBox;
+    msgBox.setText("Could not set current fish subspecies!");
+    msgBox.exec();
+  }
 }
 
 void MainWindow::on_subTypeMenu_currentTextChanged(const QString &text) {
+  auto trk = annotation_->findTrack(fish_id_);
+  if(trk != nullptr) {
+    trk->subspecies_ = text.toStdString();
+  }
+  else {
+    QMessageBox msgBox;
+    msgBox.setText("Could not set current fish subspecies!");
+    msgBox.exec();
+  }
 }
 
 void MainWindow::on_prevFish_clicked() {
