@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 
 #include <QtMath>
-#include <QThread>
+#include <QTime>
 
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
@@ -16,7 +16,7 @@ namespace fs = boost::filesystem;
 
 FishVideoSurface::FishVideoSurface(QObject *parent)
   : QAbstractVideoSurface(parent)
-  , last_image_(nullptr) {
+  , last_frame_(nullptr) {
 }
 
 bool FishVideoSurface::present(const QVideoFrame &frame) {
@@ -27,13 +27,13 @@ bool FishVideoSurface::present(const QVideoFrame &frame) {
   if(!frame.isValid()) {
     return true;
   }
-  last_image_ = std::make_shared<QImage>(
+  last_frame_ = std::make_shared<QImage>(
     draw_me.bits(), 
     draw_me.width(), 
     draw_me.height(), 
     draw_me.bytesPerLine(),
     QVideoFrame::imageFormatFromPixelFormat(draw_me.pixelFormat()));
-  emit frameReady(last_image_, frame.startTime());
+  emit frameReady(last_frame_, frame.startTime());
   draw_me.unmap();
   return true;
 }
@@ -81,13 +81,17 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene(this))
   , surface_(new FishVideoSurface(this))
   , pixmap_item_(nullptr)
-  , last_image_(nullptr)
+  , last_frame_(nullptr)
+  , last_displayed_position_(0)
+  , buffer_()
+  , buffer_size_(0)
+  , do_buffering_(false)
+  , last_buffered_position_(0)
   , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
   , was_playing_(false) 
   , fish_id_(0) 
-  , last_displayed_position_(0)
   , current_annotations_() {
   ui_->setupUi(this);
   ui_->videoWindow->setViewport(new QOpenGLWidget);
@@ -130,13 +134,20 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 void MainWindow::on_play_clicked() {
   if(player_->state() != QMediaPlayer::PlayingState) {
     player_->play();
+    do_buffering_ = false;
     ui_->play->setText("Pause");
     ui_->reverse->setEnabled(true);
+    ui_->plusOneFrame->setEnabled(false);
+    ui_->minusOneFrame->setEnabled(false);
   }
   else {
     player_->pause();
+    do_buffering_ = true;
     ui_->play->setText("Play");
     ui_->reverse->setEnabled(false);
+    ui_->plusOneFrame->setEnabled(true);
+    ui_->minusOneFrame->setEnabled(true);
+    updateBuffer();
   }
 }
 
@@ -161,13 +172,37 @@ void MainWindow::on_slower_clicked() {
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
-  qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  player_->setPosition(player_->position() + 1000.0 / fps);
+  out << "ENTERED PLUS ONE FRAME" << std::endl;
+  out << "SEARCHING FOR FRAME AT POSITION: " << last_displayed_position_ << std::endl;
+  auto it = buffer_.find(last_displayed_position_);
+  if(it != buffer_.end()) {
+    out << "FOUND CURRENT FRAME" << std::endl;
+    it = std::next(it);
+    if(it != buffer_.end()) {
+      out << "FOUND NEXT FRAME" << std::endl;
+      do_buffering_ = false;
+      showFrame(it->second, it->first);
+    }
+    else {
+      do_buffering_ = true;
+      updateBuffer();
+    }
+  }
 }
 
 void MainWindow::on_minusOneFrame_clicked() {
-  qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  player_->setPosition(player_->position() - 1000.0 / fps);
+  auto it = buffer_.find(last_displayed_position_);
+  if(it != buffer_.end()) {
+    it = std::prev(it);
+    if(it != buffer_.end()) {
+      do_buffering_ = false;
+      showFrame(it->second, it->first);
+    }
+    else {
+      do_buffering_ = true;
+      updateBuffer();
+    }
+  }
 }
 
 void MainWindow::on_loadVideo_clicked() {
@@ -315,20 +350,29 @@ void MainWindow::on_nextAndCopy_clicked() {
 }
 
 void MainWindow::showFrame(std::shared_ptr<QImage> frame, qint64 pos) {
-  last_image_ = frame;
-  auto pixmap = QPixmap::fromImage(*frame);
-  if(pixmap_item_ == nullptr) {
-    pixmap_item_ = scene_->addPixmap(pixmap);
-    scene_->setSceneRect(0, 0, frame->width(), frame->height());
-    ui_->videoWindow->setScene(scene_.get());
-    ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
-    ui_->videoWindow->show();
+  if(do_buffering_ == true) {
+    out << "BUFFERING FRAME AT POSITION: " << pos << std::endl;
+    auto frame_copy = std::make_shared<QImage>(frame->copy());
+    buffer_.insert(decltype(buffer_)::value_type(pos, frame_copy));
+    buffer_size_ = buffer_.size();
+    last_buffered_position_ = pos;
   }
   else {
-    pixmap_item_->setPixmap(pixmap);
+    last_frame_ = frame;
+    auto pixmap = QPixmap::fromImage(*frame);
+    if(pixmap_item_ == nullptr) {
+      pixmap_item_ = scene_->addPixmap(pixmap);
+      scene_->setSceneRect(0, 0, frame->width(), frame->height());
+      ui_->videoWindow->setScene(scene_.get());
+      ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+      ui_->videoWindow->show();
+    }
+    else {
+      pixmap_item_->setPixmap(pixmap);
+    }
+    last_displayed_position_ = pos;
+    drawAnnotations();
   }
-  last_displayed_position_ = pos;
-  drawAnnotations();
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -390,7 +434,7 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     annotation_->clear();
     scene_->clear();
     pixmap_item_ = nullptr;
-    last_image_ = nullptr;
+    last_frame_ = nullptr;
     player_->play();
     player_->pause();
   }
@@ -419,6 +463,48 @@ void MainWindow::drawAnnotations() {
         ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
     scene_->addItem(region);
     current_annotations_.push_back(region);
+  }
+}
+
+void MainWindow::updateBuffer() {
+  out << "ENTERED UPDATEBUFFER" << std::endl;
+  QObject::disconnect(player_.get(), SIGNAL(positionChanged(qint64)),
+      this, SLOT(handlePlayerPositionChanged(qint64)));
+  QObject::disconnect(player_.get(), SIGNAL(playbackRateChanged(qreal)),
+      this, SLOT(handlePlayerPlaybackRateChanged(qreal)));
+  buffer_.clear();
+  buffer_size_ = 0;
+  auto volume = player_->volume();
+  auto rate = player_->playbackRate();
+  auto position = player_->position();
+  double fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
+  double start = 1000.0 * static_cast<double>(currentFrame() - 20) / fps;
+  player_->setVolume(0);
+  player_->setPlaybackRate(1.0);
+  player_->setPosition(static_cast<int>(start));
+  delay(250);
+  player_->play();
+  while(true) {
+    delay(50);
+    if(buffer_size_ > 50) {
+      out << "GOT MAH FRAMES" << std::endl;
+      break;
+    }
+  }
+  player_->pause();
+  player_->setVolume(volume);
+  player_->setPlaybackRate(rate);
+  player_->setPosition(position);
+  QObject::connect(player_.get(), SIGNAL(positionChanged(qint64)),
+      this, SLOT(handlePlayerPositionChanged(qint64)));
+  QObject::connect(player_.get(), SIGNAL(playbackRateChanged(qreal)),
+      this, SLOT(handlePlayerPlaybackRateChanged(qreal)));
+}
+
+void MainWindow::delay(uint64_t msec) {
+  QTime time = QTime::currentTime().addMSecs(msec);
+  while(QTime::currentTime() < time) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
   }
 }
 

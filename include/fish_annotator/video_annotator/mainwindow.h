@@ -5,6 +5,7 @@
 #define VIDEO_ANNOTATOR_MAINWINDOW_H
 
 #include <memory>
+#include <atomic>
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -58,7 +59,7 @@ signals:
   void frameReady(std::shared_ptr<QImage> frame, qint64 pos);
 private:
   /// @brief Last image displayed by player.
-  std::shared_ptr<QImage> last_image_;
+  std::shared_ptr<QImage> last_frame_;
 };
 
 /// @brief Video annotation GUI.
@@ -163,6 +164,7 @@ private slots:
   /// @brief Displays a video frame.
   ///
   /// @param frame Video frame to display.
+  /// @param position Position in video of frame (microseconds).
   void showFrame(std::shared_ptr<QImage> frame, qint64 pos);
 
   /// @brief Adds an individual and enables bounding box drawing.
@@ -196,8 +198,23 @@ private:
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
 
-  /// @brief Last image displayed by player.
-  std::shared_ptr<QImage> last_image_;
+  /// @brief Last frame displayed by player.
+  std::shared_ptr<QImage> last_frame_;
+
+  /// @brief Last displayed video position (microseconds).
+  uint64_t last_displayed_position_;
+
+  /// @brief Frame buffer.
+  std::map<uint64_t, std::shared_ptr<QImage>> buffer_;
+
+  /// @brief Frame buffer size.
+  std::atomic<uint64_t> buffer_size_;
+
+  /// @brief Frames buffered if true.
+  bool do_buffering_;
+
+  /// @brief Last buffered video position (microseconds).
+  uint64_t last_buffered_position_;
 
   /// @brief Media player.
   std::unique_ptr<QMediaPlayer> player_;
@@ -214,9 +231,6 @@ private:
   /// @brief Currently selected fish ID.
   uint64_t fish_id_;
 
-  /// @brief Last displayed video position (microseconds).
-  uint64_t last_displayed_position_;
-
   /// @brief Current annotations.
   std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
 
@@ -230,6 +244,12 @@ private:
 
   /// @brief Draws annotations for the last displayed frame.
   void drawAnnotations();
+
+  /// @brief Updates the frame buffer.
+  void updateBuffer();
+
+  /// @brief Delays execution for the given number of milliseconds.
+  void delay(uint64_t msec);
 };
 
 }} // namespace fish_annotator::video_annotator
