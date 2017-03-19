@@ -3,6 +3,7 @@
 #include <boost/filesystem.hpp>
 
 #include <QtMath>
+#include <QThread>
 
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
@@ -330,7 +331,6 @@ void MainWindow::handlePlayerError() {
 }
 
 void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
-  out << "STATUS: " << static_cast<int>(status) << std::endl;
   if(status == QMediaPlayer::LoadedMedia) {
     ui_->videoSlider->setEnabled(true);
     ui_->play->setEnabled(true);
@@ -361,7 +361,8 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
     scene_->clear();
     pixmap_item_ = nullptr;
     last_image_ = nullptr;
-    on_play_clicked();
+    player_->play();
+    player_->pause();
   }
 }
 
