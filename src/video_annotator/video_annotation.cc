@@ -327,6 +327,17 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
 }
 
 void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
+  std::ifstream f(csv_path.string());
+  int num_lines = std::count(
+      std::istreambuf_iterator<char>(f),
+      std::istreambuf_iterator<char>(),
+      '\n');
+  f.close();
+  std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
+    "Loading annotations...", "Abort", 0, 2 * num_lines));
+  dlg->setWindowModality(Qt::WindowModal);
+  dlg->show();
+  int iter = 0;
   std::ifstream csv(csv_path.string());
   std::string line;
   std::getline(csv, line);
@@ -335,6 +346,8 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
     boost::split(tokens, line, boost::is_any_of(","));
     insert(std::make_shared<TrackAnnotation>(
       std::stoull(tokens[4]), tokens[5], tokens[6]));
+    dlg->setValue(++iter);
+    if(dlg->wasCanceled()) break;
   }
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");
@@ -347,7 +360,9 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
         auto annotation = std::make_shared<DetectionAnnotation>();
         annotation->read(val.second.get_child("annotation"));
         insert(annotation);
+        if(dlg->wasCanceled()) break;
       }
+      dlg->setValue(2 * num_lines);
     }
   }
 }
