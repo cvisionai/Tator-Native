@@ -21,7 +21,10 @@ FishVideoSurface::FishVideoSurface(QObject *parent)
 bool FishVideoSurface::present(const QVideoFrame &frame) {
   QVideoFrame draw_me(frame);
   if(!draw_me.map(QAbstractVideoBuffer::ReadOnly)) {
-    return false;
+    return true;
+  }
+  if(!frame.isValid()) {
+    return true;
   }
   last_image_ = std::make_shared<QImage>(
     draw_me.bits(), 
@@ -29,7 +32,7 @@ bool FishVideoSurface::present(const QVideoFrame &frame) {
     draw_me.height(), 
     draw_me.bytesPerLine(),
     QVideoFrame::imageFormatFromPixelFormat(draw_me.pixelFormat()));
-  emit frameReady(last_image_);
+  emit frameReady(last_image_, frame.startTime());
   draw_me.unmap();
   return true;
 }
@@ -82,7 +85,9 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
   , was_playing_(false) 
-  , fish_id_(0) {
+  , fish_id_(0) 
+  , last_displayed_position_(0)
+  , current_annotations_() {
   ui_->setupUi(this);
   ui_->videoWindow->setViewport(new QOpenGLWidget);
   ui_->videoWindow->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
@@ -97,8 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
   player_->setVideoOutput(surface_.get());
-  QObject::connect(surface_.get(), SIGNAL(frameReady(std::shared_ptr<QImage>)),
-      this, SLOT(showFrame(std::shared_ptr<QImage>)));
+  QObject::connect(surface_.get(),
+      SIGNAL(frameReady(std::shared_ptr<QImage>, qint64)),
+      this, SLOT(showFrame(std::shared_ptr<QImage>, qint64)));
   player_->setNotifyInterval(500);
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
@@ -241,10 +247,12 @@ void MainWindow::on_addRegion_clicked() {
         currentFrame(),
         fish_id_,
         Rect(0, 0, 100, 100)));
+  drawAnnotations();
 }
 
 void MainWindow::on_removeRegion_clicked() {
   annotation_->remove(currentFrame(), fish_id_);
+  drawAnnotations();
 }
 
 void MainWindow::on_nextAndCopy_clicked() {
@@ -255,6 +263,7 @@ void MainWindow::on_nextAndCopy_clicked() {
           currentFrame(),
           fish_id_,
           det->area_));
+    drawAnnotations();
   }
   else {
     QMessageBox msgBox;
@@ -263,7 +272,7 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
-void MainWindow::showFrame(std::shared_ptr<QImage> frame) {
+void MainWindow::showFrame(std::shared_ptr<QImage> frame, qint64 pos) {
   last_image_ = frame;
   auto pixmap = QPixmap::fromImage(*frame);
   if(pixmap_item_ == nullptr) {
@@ -276,6 +285,8 @@ void MainWindow::showFrame(std::shared_ptr<QImage> frame) {
   else {
     pixmap_item_->setPixmap(pixmap);
   }
+  last_displayed_position_ = pos;
+  drawAnnotations();
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -342,7 +353,7 @@ void MainWindow::handlePlayerMedia(QMediaPlayer::MediaStatus status) {
 
 uint64_t MainWindow::currentFrame() {
   qreal fps = player_->metaData(QMediaMetaData::VideoFrameRate).toReal();
-  auto pos = static_cast<double>(player_->position()) / 1000.0;
+  auto pos = static_cast<double>(last_displayed_position_) / 1000000.0;
   return std::round(pos * fps) + 1;
 }
 
@@ -350,6 +361,19 @@ void MainWindow::updateStats() {
   ui_->fishNumVal->setText(QString::number(fish_id_));
   ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
   ui_->frameCountedVal->setText(QString::number(currentFrame()));
+}
+
+void MainWindow::drawAnnotations() {
+  for(auto ann : current_annotations_) {
+    scene_->removeItem(ann);
+  }
+  current_annotations_.clear();
+  for(auto ann : annotation_->getDetectionAnnotations(currentFrame())) {
+    auto region = new AnnotatedRegion<DetectionAnnotation>(
+        ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+    scene_->addItem(region);
+    current_annotations_.push_back(region);
+  }
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"

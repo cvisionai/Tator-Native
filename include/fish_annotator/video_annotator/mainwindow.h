@@ -54,7 +54,8 @@ signals:
   /// @brief Indicates that frame is ready to display.
   ///
   /// @param frame Frame to be displayed.
-  void frameReady(std::shared_ptr<QImage> frame);
+  /// @param pos Position of the frame (microseconds).
+  void frameReady(std::shared_ptr<QImage> frame, qint64 pos);
 private:
   /// @brief Last image displayed by player.
   std::shared_ptr<QImage> last_image_;
@@ -162,7 +163,7 @@ private slots:
   /// @brief Displays a video frame.
   ///
   /// @param frame Video frame to display.
-  void showFrame(std::shared_ptr<QImage> frame);
+  void showFrame(std::shared_ptr<QImage> frame, qint64 pos);
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
@@ -213,6 +214,12 @@ private:
   /// @brief Currently selected fish ID.
   uint64_t fish_id_;
 
+  /// @brief Last displayed video position (microseconds).
+  uint64_t last_displayed_position_;
+
+  /// @brief Current annotations.
+  std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
+
   /// @brief Computes the current frame.
   ///
   /// @return Current frame.
@@ -220,6 +227,9 @@ private:
 
   /// @brief Updates displayed fish statistics.
   void updateStats();
+
+  /// @brief Draws annotations for the last displayed frame.
+  void drawAnnotations();
 };
 
 }} // namespace fish_annotator::video_annotator
