@@ -211,10 +211,7 @@ private:
   std::atomic<uint64_t> buffer_size_;
 
   /// @brief Frames buffered if true.
-  bool do_buffering_;
-
-  /// @brief Last buffered video position (microseconds).
-  uint64_t last_buffered_position_;
+  std::atomic<bool> do_buffering_;
 
   /// @brief Media player.
   std::unique_ptr<QMediaPlayer> player_;

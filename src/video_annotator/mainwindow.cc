@@ -86,7 +86,6 @@ MainWindow::MainWindow(QWidget *parent)
   , buffer_()
   , buffer_size_(0)
   , do_buffering_(false)
-  , last_buffered_position_(0)
   , player_(new QMediaPlayer(this, QMediaPlayer::VideoSurface))
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
@@ -172,14 +171,10 @@ void MainWindow::on_slower_clicked() {
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
-  out << "ENTERED PLUS ONE FRAME" << std::endl;
-  out << "SEARCHING FOR FRAME AT POSITION: " << last_displayed_position_ << std::endl;
   auto it = buffer_.find(last_displayed_position_);
   if(it != buffer_.end()) {
-    out << "FOUND CURRENT FRAME" << std::endl;
     it = std::next(it);
     if(it != buffer_.end()) {
-      out << "FOUND NEXT FRAME" << std::endl;
       do_buffering_ = false;
       showFrame(it->second, it->first);
     }
@@ -351,11 +346,9 @@ void MainWindow::on_nextAndCopy_clicked() {
 
 void MainWindow::showFrame(std::shared_ptr<QImage> frame, qint64 pos) {
   if(do_buffering_ == true) {
-    out << "BUFFERING FRAME AT POSITION: " << pos << std::endl;
     auto frame_copy = std::make_shared<QImage>(frame->copy());
     buffer_.insert(decltype(buffer_)::value_type(pos, frame_copy));
     buffer_size_ = buffer_.size();
-    last_buffered_position_ = pos;
   }
   else {
     last_frame_ = frame;
@@ -467,7 +460,6 @@ void MainWindow::drawAnnotations() {
 }
 
 void MainWindow::updateBuffer() {
-  out << "ENTERED UPDATEBUFFER" << std::endl;
   QObject::disconnect(player_.get(), SIGNAL(positionChanged(qint64)),
       this, SLOT(handlePlayerPositionChanged(qint64)));
   QObject::disconnect(player_.get(), SIGNAL(playbackRateChanged(qreal)),
@@ -486,10 +478,7 @@ void MainWindow::updateBuffer() {
   player_->play();
   while(true) {
     delay(50);
-    if(buffer_size_ > 50) {
-      out << "GOT MAH FRAMES" << std::endl;
-      break;
-    }
+    if(buffer_size_ > 50) break;
   }
   player_->pause();
   player_->setVolume(volume);
