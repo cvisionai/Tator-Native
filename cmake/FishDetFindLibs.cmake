@@ -27,8 +27,6 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qtiff.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwbmp.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwebp.lib"
-    "${_qt5Widgets_install_prefix}/plugins/mediaservice/wmfengine.lib"
-    "${_qt5Widgets_install_prefix}/plugins/mediaservice/qtmedia_audioengine.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
     )
 elseif( APPLE )

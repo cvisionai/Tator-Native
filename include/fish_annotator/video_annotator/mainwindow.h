@@ -9,19 +9,15 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
-#include <QMediaPlayer>
-#include <QMediaMetaData>
 #include <QGraphicsVideoItem>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QVideoFrame>
-#include <QAbstractVideoSurface>
-#include <QAbstractVideoBuffer>
 #include <QOpenGLWidget>
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
+#include "fish_annotator/video_annotator/player.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING
@@ -29,38 +25,6 @@ class TestVideoAnnotator;
 #endif
 
 namespace fish_annotator { namespace video_annotator {
-
-/// @brief Displays and stores video frames.
-class FishVideoSurface : public QAbstractVideoSurface {
-  Q_OBJECT
-public:
-  /// @brief Constructor.
-  ///
-  /// @param parent Parent widget.
-  explicit FishVideoSurface(QObject *parent = Q_NULLPTR);
-
-  /// @brief Presents a video frame with annotations on it.
-  ///
-  /// @param frame Current video frame.
-  /// @return True if presentation successful, false otherwise.
-  bool present(const QVideoFrame &frame) override final;
-
-  /// @brief Specifies supported pixel formats.
-  ///
-  /// @param type Handle type.
-  QList<QVideoFrame::PixelFormat> 
-  supportedPixelFormats(QAbstractVideoBuffer::HandleType type = 
-      QAbstractVideoBuffer::NoHandle) const override final;
-signals:
-  /// @brief Indicates that frame is ready to display.
-  ///
-  /// @param frame Frame to be displayed.
-  /// @param pos Position of the frame (microseconds).
-  void frameReady(std::shared_ptr<QImage> frame, qint64 pos);
-private:
-  /// @brief Last image displayed by player.
-  std::shared_ptr<QImage> last_frame_;
-};
 
 /// @brief Video annotation GUI.
 class MainWindow : public QWidget {
@@ -180,10 +144,10 @@ private slots:
   void handlePlayerPlaybackRateChanged(qreal rate);
 
   /// @brief Handles media player errors.
-  void handlePlayerError();
+  void handlePlayerError(const std::string &err);
 
-  /// @brief Handles media player status changes.
-  void handlePlayerMedia(QMediaPlayer::MediaStatus status);
+  /// @brief Handles new media loaded.
+  void handlePlayerMedia();
 
 private:
   /// @brief Annotations associated with this video.
@@ -192,29 +156,17 @@ private:
   /// @brief Scene for displaying video.
   std::unique_ptr<QGraphicsScene> scene_;
 
-  /// @brief Surface for displaying video.
-  std::unique_ptr<FishVideoSurface> surface_;
-
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
 
   /// @brief Last frame displayed by player.
   std::shared_ptr<QImage> last_frame_;
 
-  /// @brief Last displayed video position (microseconds).
-  uint64_t last_displayed_position_;
-
-  /// @brief Frame buffer.
-  std::map<uint64_t, std::shared_ptr<QImage>> buffer_;
-
-  /// @brief Frame buffer size.
-  std::atomic<uint64_t> buffer_size_;
-
-  /// @brief Frames buffered if true.
-  std::atomic<bool> do_buffering_;
+  /// @brief Last displayed video position (frames).
+  uint64_t last_displayed_frame_;
 
   /// @brief Media player.
-  std::unique_ptr<QMediaPlayer> player_;
+  std::unique_ptr<Player> player_;
 
   /// @brief Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWidget> ui_;
@@ -231,22 +183,11 @@ private:
   /// @brief Current annotations.
   std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
 
-  /// @brief Computes the current frame.
-  ///
-  /// @return Current frame.
-  uint64_t currentFrame();
-
   /// @brief Updates displayed fish statistics.
   void updateStats();
 
   /// @brief Draws annotations for the last displayed frame.
   void drawAnnotations();
-
-  /// @brief Updates the frame buffer.
-  void updateBuffer();
-
-  /// @brief Delays execution for the given number of milliseconds.
-  void delay(uint64_t msec);
 };
 
 }} // namespace fish_annotator::video_annotator

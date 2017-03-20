@@ -10,19 +10,19 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 void TestVideoAnnotator::testLoadVideo() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
-  mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
+  mainwin.player_->loadVideo(name);
 }
 void TestVideoAnnotator::testSaveAnnotationsNoFish() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
-  mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
+  mainwin.player_->loadVideo(name);
   mainwin.on_saveAnnotationFile_clicked();
 }
 
 void TestVideoAnnotator::testAddRegionNoFish() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
-  mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
+  mainwin.player_->loadVideo(name);
   mainwin.on_addRegion_clicked();
   mainwin.on_removeRegion_clicked();
   mainwin.on_nextAndCopy_clicked();
@@ -31,7 +31,7 @@ void TestVideoAnnotator::testAddRegionNoFish() {
 void TestVideoAnnotator::testSaveAnnotations() {
   fish_annotator::video_annotator::MainWindow mainwin;
   std::string name = "slow_motion_drop.mp4";
-  mainwin.player_->setMedia(QUrl::fromLocalFile(name.c_str()));
+  mainwin.player_->loadVideo(name);
   mainwin.addIndividual("flat", "aspodjhf");
   mainwin.addIndividual("round", "ahsjdah");
   mainwin.addIndividual("round", "ahsjdah");
