@@ -16,14 +16,14 @@ namespace fs = boost::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
   : annotation_(new VideoAnnotation)
-  , scene_(new QGraphicsScene(this))
+  , scene_(new QGraphicsScene)
   , pixmap_item_(nullptr)
   , last_frame_(nullptr)
   , last_displayed_frame_(0)
-  , player_(new Player(this))
-  , player_thread_()
+  , player_(nullptr)
+  , player_thread_(nullptr)
   , ui_(new Ui::MainWidget)
-  , species_controls_(new SpeciesControls(this))
+  , species_controls_(new SpeciesControls)
   , was_playing_(false) 
   , fish_id_(0) 
   , current_annotations_() {
@@ -40,29 +40,17 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
-  player_->moveToThread(&player_thread_);
-  QObject::connect(player_.get(), 
-      SIGNAL(processedImage(std::shared_ptr<QImage>, uint64_t)),
-      this, SLOT(showFrame(std::shared_ptr<QImage>, uint64_t)));
+  //player_->moveToThread(player_thread_.get());
+  //player_thread_->setPriority(QThread::LowestPriority);
+  //player_thread_->start();
   QObject::connect(species_controls_.get(),
       SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
-  QObject::connect(player_.get(), SIGNAL(durationChanged(uint64_t)),
-      this, SLOT(handlePlayerDurationChanged(uint64_t)));
-  QObject::connect(player_.get(), SIGNAL(positionChanged(uint64_t)),
-      this, SLOT(handlePlayerPositionChanged(uint64_t)));
-  QObject::connect(player_.get(), SIGNAL(playbackRateChanged(double)),
-      this, SLOT(handlePlayerPlaybackRateChanged(double)));
-  QObject::connect(player_.get(), SIGNAL(error(const std::string&)),
-      this, SLOT(handlePlayerError(const std::string&)));
-  QObject::connect(player_.get(), SIGNAL(mediaLoaded()),
-      this, SLOT(handlePlayerMedia()));
-  player_thread_.start();
 }
 
 MainWindow::~MainWindow() {
-  player_thread_.quit();
-  player_thread_.wait();
+  //player_thread_->quit();
+  //player_thread_->wait();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -71,6 +59,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 
 void MainWindow::on_play_clicked() {
   if(player_->isStopped() == true) {
+    //emit requestPlay();
     player_->play();
     ui_->play->setText("Pause");
     ui_->reverse->setEnabled(true);
@@ -78,6 +67,7 @@ void MainWindow::on_play_clicked() {
     ui_->minusOneFrame->setEnabled(false);
   }
   else {
+    //emit requestStop();
     player_->stop();
     ui_->play->setText("Play");
     ui_->reverse->setEnabled(false);
@@ -110,9 +100,31 @@ void MainWindow::on_loadVideo_clicked() {
       tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    out << "ATTEMPTING TO LOAD VIDEO: " << file_str.toStdString() << std::endl;
+    if(player_thread_ != nullptr) {
+      player_thread_->quit();
+      player_thread_->wait();
+    }
+    player_.reset(new Player);
+    player_thread_.reset(new QThread);
+    QObject::connect(player_.get(), 
+        SIGNAL(processedImage(std::shared_ptr<QImage>, uint64_t)),
+        this, SLOT(showFrame(std::shared_ptr<QImage>, uint64_t)));
+    QObject::connect(player_.get(), SIGNAL(durationChanged(uint64_t)),
+        this, SLOT(handlePlayerDurationChanged(uint64_t)));
+    QObject::connect(player_.get(), SIGNAL(positionChanged(uint64_t)),
+        this, SLOT(handlePlayerPositionChanged(uint64_t)));
+    QObject::connect(player_.get(), SIGNAL(playbackRateChanged(double)),
+        this, SLOT(handlePlayerPlaybackRateChanged(double)));
+    QObject::connect(player_.get(), SIGNAL(error(const std::string&)),
+        this, SLOT(handlePlayerError(const std::string&)));
+    QObject::connect(player_.get(), SIGNAL(mediaLoaded()),
+        this, SLOT(handlePlayerMedia()));
+    QObject::connect(this, SIGNAL(requestPlay()), player_.get(), SLOT(play()));
+    QObject::connect(this, SIGNAL(requestStop()), player_.get(), SLOT(stop()));
     player_->loadVideo(file_str.toStdString());
-    out << "LOADED THE VIDEO" << std::endl;
+    player_->moveToThread(player_thread_.get());
+    player_thread_->start();
+    player_thread_->setPriority(QThread::LowestPriority);
     fs::path csv(file_str.toStdString());
     csv.replace_extension(".csv");
     fs::path json(file_str.toStdString());
@@ -159,11 +171,12 @@ void MainWindow::on_writeImage_clicked() {
 
 void MainWindow::on_videoSlider_sliderPressed() {
   was_playing_ = player_->isStopped() == false;
+  //emit requestStop();
   player_->stop();
 }
 
 void MainWindow::on_videoSlider_sliderReleased() {
-  if(was_playing_ == true) player_->play();
+  if(was_playing_ == true) player_->play();//emit requestPlay();
 }
 
 void MainWindow::on_videoSlider_valueChanged(int value) {
@@ -246,7 +259,6 @@ void MainWindow::on_nextAndCopy_clicked() {
 }
 
 void MainWindow::showFrame(std::shared_ptr<QImage> image, uint64_t frame) {
-  out << "RECEIVED FRAME AT: " << frame << std::endl;
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(*image);
   if(pixmap_item_ == nullptr) {

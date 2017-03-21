@@ -151,7 +151,21 @@ private slots:
 
   /// @brief Handles new media loaded.
   void handlePlayerMedia();
+signals:
+  /// @brief Requests play.
+  void requestPlay();
 
+  /// @brief Requests stop.
+  void requestStop();
+
+  /// @brief Requests load video.
+  void requestLoadVideo(const std::string &file);
+
+  /// @brief Requests speed up.
+  void requestSpeedUp();
+
+  /// @brief Requests slow down.
+  void requestSlowDown();
 private:
   /// @brief Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
@@ -172,7 +186,7 @@ private:
   std::unique_ptr<Player> player_;
 
   /// @brief Player thread.
-  QThread player_thread_;
+  std::unique_ptr<QThread> player_thread_;
 
   /// @brief Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWidget> ui_;

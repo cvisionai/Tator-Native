@@ -102,14 +102,6 @@ signals:
 
     /// @brief Emitted on error.
     void error(const std::string &err);
-protected:
-    /// @brief Plays the video.
-    void runForReal();
-
-    /// @brief Delays by specified number of microseconds.
-    ///
-    /// @param usec Number of microseconds to delay.
-    void usleep(int usec);
 private:
     /// @brief Path to loaded video.
     std::string video_path_;
@@ -140,6 +132,11 @@ private:
 
     /// @brief Sets the current frame.
     void setCurrentFrame(int64_t frame_num);
+
+    /// @brief Delays by specified number of microseconds.
+    ///
+    /// @param usec Number of microseconds to delay.
+    void usleep(int usec);
 };
 
 }} // namespace fish_annotator::video_annotator
