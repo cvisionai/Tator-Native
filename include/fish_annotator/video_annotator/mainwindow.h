@@ -127,21 +127,21 @@ private slots:
 
   /// @brief Displays a video frame.
   ///
-  /// @param frame Video frame to display.
-  /// @param position Position in video of frame (microseconds).
-  void showFrame(std::shared_ptr<QImage> frame, qint64 pos);
+  /// @param image Video frame to display.
+  /// @param frame Frame of the image.
+  void showFrame(std::shared_ptr<QImage> image, uint64_t frame);
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
   /// @brief Handles player duration change.
-  void handlePlayerDurationChanged(qint64 duration);
+  void handlePlayerDurationChanged(uint64_t duration);
 
   /// @brief Handles player position change.
-  void handlePlayerPositionChanged(qint64 position);
+  void handlePlayerPositionChanged(uint64_t position);
 
   /// @brief Handles player playback rate change.
-  void handlePlayerPlaybackRateChanged(qreal rate);
+  void handlePlayerPlaybackRateChanged(double rate);
 
   /// @brief Handles media player errors.
   void handlePlayerError(const std::string &err);
