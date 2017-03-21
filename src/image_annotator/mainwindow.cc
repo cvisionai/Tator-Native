@@ -79,7 +79,11 @@ void MainWindow::on_imageSlider_valueChanged() {
   ui_->idSelection->clear();
   ui_->speciesValue->setText("");
   ui_->subspeciesValue->setText("");
-  QString filename(image_files_[ui_->imageSlider->value()].c_str());
+  #ifdef _WIN32
+    QString filename(image_files_[ui_->imageSlider->value()].string().c_str());
+  #else
+    QString filename(image_files_[ui_->imageSlider->value()].c_str());
+  #endif
   QImage current(filename);
   if(!current.isNull()) {
     scene_->addPixmap(QPixmap::fromImage(current));
