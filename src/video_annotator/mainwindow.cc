@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
   , last_frame_(nullptr)
   , last_displayed_frame_(0)
   , player_(new Player(this))
+  , player_thread_()
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls(this))
   , was_playing_(false) 
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
+  player_->moveToThread(&player_thread_);
   QObject::connect(player_.get(), 
       SIGNAL(processedImage(std::shared_ptr<QImage>, uint64_t)),
       this, SLOT(showFrame(std::shared_ptr<QImage>, uint64_t)));
@@ -55,6 +57,12 @@ MainWindow::MainWindow(QWidget *parent)
       this, SLOT(handlePlayerError(const std::string&)));
   QObject::connect(player_.get(), SIGNAL(mediaLoaded()),
       this, SLOT(handlePlayerMedia()));
+  player_thread_.start();
+}
+
+MainWindow::~MainWindow() {
+  player_thread_.quit();
+  player_thread_.wait();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {

@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QOpenGLWidget>
+#include <QThread>
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
@@ -38,6 +39,8 @@ public:
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
 
+  /// @brief Destructor.
+  ~MainWindow();
 protected:
   /// @brief Resizes the video and scene.
   void resizeEvent(QResizeEvent *event) override final;
@@ -167,6 +170,9 @@ private:
 
   /// @brief Media player.
   std::unique_ptr<Player> player_;
+
+  /// @brief Player thread.
+  QThread player_thread_;
 
   /// @brief Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWidget> ui_;

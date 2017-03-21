@@ -7,12 +7,7 @@
 #include <thread>
 #include <memory>
 
-#include <QMutex>
-#include <QThread>
 #include <QImage>
-#include <QWaitCondition>
-#include <QMutexLocker>
-#include <QCoreApplication>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -20,7 +15,7 @@
 
 namespace fish_annotator { namespace video_annotator {
 
-class Player : public QThread {	
+class Player : public QObject {	
     Q_OBJECT
 public:
     /// @brief Constructor.
@@ -86,14 +81,6 @@ public:
 
     /// @brief Writes the last image to file.
     void writeImage(const QString &filename);
-protected:
-    /// @brief Plays the video.
-    void run();
-
-    /// @brief Delays by specified number of microseconds.
-    ///
-    /// @param usec Number of microseconds to delay.
-    void usleep(int usec);
 signals:
     /// @brief Emitted when a frame is ready to display.
     //
@@ -115,6 +102,14 @@ signals:
 
     /// @brief Emitted on error.
     void error(const std::string &err);
+protected:
+    /// @brief Plays the video.
+    void runForReal();
+
+    /// @brief Delays by specified number of microseconds.
+    ///
+    /// @param usec Number of microseconds to delay.
+    void usleep(int usec);
 private:
     /// @brief Path to loaded video.
     std::string video_path_;
@@ -130,12 +125,6 @@ private:
 
     /// @brief Stores most recent RGB frame.
     cv::Mat rgb_frame_mat_;
-
-    /// @brief Ben explain.
-    QMutex mutex_;
-
-    /// @brief Ben explain.
-    QWaitCondition condition_;
 
     /// @brief Current playback rate.
     double current_speed_;

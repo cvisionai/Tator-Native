@@ -1,6 +1,8 @@
 #include "fish_annotator/video_annotator/player.h"
 
 #include <QTime>
+#include <QCoreApplication>
+#include <QEventLoop>
 
 #include <fstream>
 std::ofstream fout("BLAHPLAYER.txt");
@@ -8,14 +10,11 @@ std::ofstream fout("BLAHPLAYER.txt");
 namespace fish_annotator { namespace video_annotator {
 
 Player::Player(QObject *parent)
-  : QThread(parent)
-  , video_path_()
+  : video_path_()
   , frame_rate_(0.0)
   , stopped_(true)
   , frame_mat_()
   , rgb_frame_mat_()
-  , mutex_()
-  , condition_()
   , current_speed_(0.0)
   , capture_(nullptr)
   , delay_(0.0)
@@ -29,6 +28,7 @@ void Player::loadVideo(const std::string &filename) {
     frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
     current_speed_ = frame_rate_;
     delay_ = (1000000.0 / frame_rate_);
+    fout << "DELAY IS " << delay_ << std::endl;
     emit mediaLoaded();
   }
   else {
@@ -49,19 +49,17 @@ double Player::getFrameRate() {
 }
 
 void Player::play() {
-  if (!QThread::isRunning()) {
-    if (isStopped()) {
-      stopped_ = false;
-    }
-    QThread::start(LowPriority);
+  if(stopped_ == true) {
+    stopped_ = false;
+    fout << "RUNNING FOR REAL" << std::endl;
+    runForReal();
   }
 }
 
-void Player::run() {
-  auto time = QTime::currentTime();
+void Player::runForReal() {
   while(!stopped_) {
+    auto time = QTime::currentTime();
     getOneFrame();
-    QThread::exec();
     double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
     usleep(std::round(delay_ - usec));
   }
@@ -72,6 +70,7 @@ void Player::getOneFrame() {
     stopped_ = true;
   }
   frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES);
+  fout << "GETTING FRAME AT " << frame_index_ << std::endl;
   if (frame_mat_.channels() == 3) {
     cv::cvtColor(frame_mat_, rgb_frame_mat_, CV_BGR2RGB);
     emit processedImage(
@@ -94,10 +93,7 @@ void Player::getOneFrame() {
 }
 
 Player::~Player() {
-  QMutexLocker locker(&mutex_);
   stopped_ = true;
-  condition_.wakeOne();
-  wait();
 }
 
 void Player::stop() {
@@ -105,7 +101,10 @@ void Player::stop() {
 }
 
 void Player::usleep(int usec) {
-  std::this_thread::sleep_for(std::chrono::microseconds(usec));
+  QTime die_time = QTime::currentTime().addMSecs(usec / 1000);
+  while(QTime::currentTime() < die_time) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  }
 }
 
 bool Player::isStopped() const{
