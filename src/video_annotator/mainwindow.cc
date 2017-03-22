@@ -9,22 +9,23 @@
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 #include <fstream>
-std::ofstream out("BLAHBLAH.txt");
 namespace fish_annotator { namespace video_annotator {
 
+std::ofstream out("BLAHBLAH.txt");
 namespace fs = boost::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
-  : annotation_(new VideoAnnotation)
+  : QWidget(parent)
+  , annotation_(new VideoAnnotation)
   , scene_(new QGraphicsScene)
   , pixmap_item_(nullptr)
-  , last_frame_(nullptr)
-  , last_displayed_frame_(0)
-  , player_(nullptr)
-  , player_thread_(nullptr)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls)
-  , was_playing_(false) 
+  , video_path_()
+  , last_frame_(nullptr)
+  , last_position_(0)
+  , stopped_(true) 
+  , rate_(0.0)
   , fish_id_(0) 
   , current_annotations_() {
   ui_->setupUi(this);
@@ -40,17 +41,42 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
-  //player_->moveToThread(player_thread_.get());
-  //player_thread_->setPriority(QThread::LowestPriority);
-  //player_thread_->start();
-  QObject::connect(species_controls_.get(),
-      SIGNAL(individualAdded(std::string, std::string)),
-      this, SLOT(addIndividual(std::string, std::string)));
-}
-
-MainWindow::~MainWindow() {
-  //player_thread_->quit();
-  //player_thread_->wait();
+  QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
+      this, &MainWindow::addIndividual);
+  Player *player = new Player();
+  thread = new QThread();
+  player->moveToThread(thread);
+  QObject::connect(player, &Player::processedImage, 
+      this, &MainWindow::showFrame);
+  QObject::connect(player, &Player::durationChanged, 
+      this, &MainWindow::handlePlayerDurationChanged);
+  QObject::connect(player, &Player::positionChanged,
+      this, &MainWindow::handlePlayerPositionChanged);
+  QObject::connect(player, &Player::playbackRateChanged,
+      this, &MainWindow::handlePlayerPlaybackRateChanged);
+  QObject::connect(player, &Player::stateChanged,
+      this, &MainWindow::handlePlayerStateChanged);
+  QObject::connect(player, &Player::mediaLoaded,
+      this, &MainWindow::handlePlayerMediaLoaded);
+  QObject::connect(player, &Player::error,
+      this, &MainWindow::handlePlayerError);
+  QObject::connect(this, &MainWindow::requestPlay, 
+      player, &Player::play);
+  QObject::connect(this, &MainWindow::requestStop, 
+      player, &Player::stop);
+  QObject::connect(this, &MainWindow::requestSpeedUp, 
+      player, &Player::speedUp);
+  QObject::connect(this, &MainWindow::requestSlowDown, 
+      player, &Player::slowDown);
+  QObject::connect(this, &MainWindow::requestSetFrame,
+      player, &Player::setFrame);
+  QObject::connect(this, &MainWindow::requestNextFrame,
+      player, &Player::nextFrame);
+  QObject::connect(this, &MainWindow::requestPrevFrame,
+      player, &Player::prevFrame);
+  QObject::connect(thread, &QThread::finished,
+      thread, &QThread::deleteLater);
+  thread->start();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -58,17 +84,15 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindow::on_play_clicked() {
-  if(player_->isStopped() == true) {
-    //emit requestPlay();
-    player_->play();
+  if(stopped_ == true) {
+    emit requestPlay();
     ui_->play->setText("Pause");
     ui_->reverse->setEnabled(true);
     ui_->plusOneFrame->setEnabled(false);
     ui_->minusOneFrame->setEnabled(false);
   }
   else {
-    //emit requestStop();
-    player_->stop();
+    emit requestStop();
     ui_->play->setText("Play");
     ui_->reverse->setEnabled(false);
     ui_->plusOneFrame->setEnabled(true);
@@ -76,70 +100,32 @@ void MainWindow::on_play_clicked() {
   }
 }
 
-void MainWindow::on_reverse_stateChanged(int state) {
-}
-
 void MainWindow::on_faster_clicked() {
-  player_->speedUp();
+  emit requestSpeedUp();
 }
 
 void MainWindow::on_slower_clicked() {
-  player_->slowDown();
+  emit requestSlowDown();
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
+  emit requestNextFrame();
 }
 
 void MainWindow::on_minusOneFrame_clicked() {
+  emit requestPrevFrame();
 }
 
 void MainWindow::on_loadVideo_clicked() {
+  out << "THREAD IS RUNNING?? " << thread->isRunning() << std::endl;
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Video"), ".",
       tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    if(player_thread_ != nullptr) {
-      player_thread_->quit();
-      player_thread_->wait();
-    }
-    player_.reset(new Player);
-    player_thread_.reset(new QThread);
-    QObject::connect(player_.get(), 
-        SIGNAL(processedImage(std::shared_ptr<QImage>, uint64_t)),
-        this, SLOT(showFrame(std::shared_ptr<QImage>, uint64_t)));
-    QObject::connect(player_.get(), SIGNAL(durationChanged(uint64_t)),
-        this, SLOT(handlePlayerDurationChanged(uint64_t)));
-    QObject::connect(player_.get(), SIGNAL(positionChanged(uint64_t)),
-        this, SLOT(handlePlayerPositionChanged(uint64_t)));
-    QObject::connect(player_.get(), SIGNAL(playbackRateChanged(double)),
-        this, SLOT(handlePlayerPlaybackRateChanged(double)));
-    QObject::connect(player_.get(), SIGNAL(error(const std::string&)),
-        this, SLOT(handlePlayerError(const std::string&)));
-    QObject::connect(player_.get(), SIGNAL(mediaLoaded()),
-        this, SLOT(handlePlayerMedia()));
-    QObject::connect(this, SIGNAL(requestPlay()), player_.get(), SLOT(play()));
-    QObject::connect(this, SIGNAL(requestStop()), player_.get(), SLOT(stop()));
-    player_->loadVideo(file_str.toStdString());
-    player_->moveToThread(player_thread_.get());
-    player_thread_->start();
-    player_thread_->setPriority(QThread::LowestPriority);
-    fs::path csv(file_str.toStdString());
-    csv.replace_extension(".csv");
-    fs::path json(file_str.toStdString());
-    json.replace_extension(".json");
-    if(fs::exists(csv) && fs::exists(json)) {
-      auto reply = QMessageBox::question(this,
-          "Annotation File Found",
-          "Found annotation file with same base path,"
-          " would you like to load it?",
-          QMessageBox::Yes | QMessageBox::No);
-      if(reply == QMessageBox::Yes) {
-        annotation_->read(csv.string());
-        drawAnnotations();
-      }
-    }
+    emit requestLoadVideo(file_str.toStdString());
+    out << "MAIN IS ON THREAD AT: " << QThread::currentThreadId() << std::endl;
   }
 }
 
@@ -156,31 +142,29 @@ void MainWindow::on_loadAnnotationFile_clicked() {
 }
 
 void MainWindow::on_saveAnnotationFile_clicked() {
-  fs::path vid_path(player_->getVideoPath());
+  fs::path vid_path(video_path_);
   annotation_->write(
       vid_path.replace_extension(".csv"),
       ui_->tripIDValue->text().toStdString(),
       ui_->towIDValue->text().toStdString(),
       ui_->reviewerNameValue->text().toStdString(),
       ui_->towStatus->isChecked() ? "Open" : "Closed",
-      player_->getFrameRate());
+      rate_);
 }
 
 void MainWindow::on_writeImage_clicked() {
 }
 
 void MainWindow::on_videoSlider_sliderPressed() {
-  was_playing_ = player_->isStopped() == false;
-  //emit requestStop();
-  player_->stop();
+  emit requestStop();
 }
 
 void MainWindow::on_videoSlider_sliderReleased() {
-  if(was_playing_ == true) player_->play();//emit requestPlay();
+  if(stopped_ == false) emit requestPlay();
 }
 
 void MainWindow::on_videoSlider_valueChanged(int value) {
-  player_->setFrame(value);
+  emit requestSetFrame(value);
 }
 
 void MainWindow::on_typeMenu_currentTextChanged(const QString &text) {
@@ -219,8 +203,8 @@ void MainWindow::on_removeFish_clicked() {
 }
 
 void MainWindow::on_goToFrame_clicked() {
-  auto frame = annotation_->trackFirstFrame(fish_id_);
-  player_->setFrame(frame);
+  uint64_t frame = annotation_->trackFirstFrame(fish_id_);
+  emit requestSetFrame(frame);
 }
 
 void MainWindow::on_goToFishVal_returnPressed() {
@@ -230,23 +214,23 @@ void MainWindow::on_goToFishVal_returnPressed() {
 
 void MainWindow::on_addRegion_clicked() {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
-        last_displayed_frame_,
+        last_position_,
         fish_id_,
         Rect(0, 0, 100, 100)));
   drawAnnotations();
 }
 
 void MainWindow::on_removeRegion_clicked() {
-  annotation_->remove(last_displayed_frame_, fish_id_);
+  annotation_->remove(last_position_, fish_id_);
   drawAnnotations();
 }
 
 void MainWindow::on_nextAndCopy_clicked() {
-  auto det = annotation_->findDetection(last_displayed_frame_, fish_id_);
+  auto det = annotation_->findDetection(last_position_, fish_id_);
   if(det != nullptr) {
     on_plusOneFrame_clicked();
     annotation_->insert(std::make_shared<DetectionAnnotation>(
-          last_displayed_frame_,
+          last_position_,
           fish_id_,
           det->area_));
     drawAnnotations();
@@ -271,7 +255,7 @@ void MainWindow::showFrame(std::shared_ptr<QImage> image, uint64_t frame) {
   else {
     pixmap_item_->setPixmap(pixmap);
   }
-  last_displayed_frame_ = frame;
+  last_position_ = frame;
   drawAnnotations();
 }
 
@@ -295,16 +279,16 @@ void MainWindow::handlePlayerPositionChanged(uint64_t position) {
 }
 
 void MainWindow::handlePlayerPlaybackRateChanged(double rate) {
+  rate_ = rate;
   ui_->currentSpeed->setText(QString("Current Speed: %1%").arg(rate * 100));
 }
 
-void MainWindow::handlePlayerError(const std::string &err) {
-  QMessageBox msgBox;
-  msgBox.setText(err.c_str());
-  msgBox.exec();
+void MainWindow::handlePlayerStateChanged(bool stopped) {
+  stopped_ = stopped;
 }
 
-void MainWindow::handlePlayerMedia() {
+void MainWindow::handlePlayerMediaLoaded(std::string video_path) {
+  video_path_ = video_path;
   ui_->videoSlider->setEnabled(true);
   ui_->play->setEnabled(true);
   ui_->faster->setEnabled(true);
@@ -329,11 +313,17 @@ void MainWindow::handlePlayerMedia() {
   ui_->removeRegion->setEnabled(true);
   ui_->nextAndCopy->setEnabled(true);
   ui_->currentSpeed->setText("Current Speed: 100%");
-  this->setWindowTitle(player_->getVideoPath().c_str());
+  this->setWindowTitle(video_path_.c_str());
   annotation_->clear();
   scene_->clear();
   pixmap_item_ = nullptr;
   last_frame_ = nullptr;
+}
+
+void MainWindow::handlePlayerError(std::string err) {
+  QMessageBox msgBox;
+  msgBox.setText(err.c_str());
+  msgBox.exec();
 }
 
 void MainWindow::updateStats() {
@@ -348,7 +338,7 @@ void MainWindow::drawAnnotations() {
     scene_->removeItem(ann);
   }
   current_annotations_.clear();
-  for(auto ann : annotation_->getDetectionAnnotations(last_displayed_frame_)) {
+  for(auto ann : annotation_->getDetectionAnnotations(last_position_)) {
     auto region = new AnnotatedRegion<DetectionAnnotation>(
         ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
     scene_->addItem(region);

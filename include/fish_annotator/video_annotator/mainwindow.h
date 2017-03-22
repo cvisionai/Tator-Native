@@ -38,21 +38,67 @@ public:
   ///
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
-
-  /// @brief Destructor.
-  ~MainWindow();
 protected:
   /// @brief Resizes the video and scene.
   void resizeEvent(QResizeEvent *event) override final;
+public slots:
+  /// @brief Displays a video frame.
+  ///
+  /// @param image Video frame to display.
+  /// @param frame Frame of the image.
+  void showFrame(std::shared_ptr<QImage> image, uint64_t frame);
 
+  /// @brief Adds an individual and enables bounding box drawing.
+  void addIndividual(std::string species, std::string subspecies);
+
+  /// @brief Handles player duration change.
+  void handlePlayerDurationChanged(uint64_t duration);
+
+  /// @brief Handles player position change.
+  void handlePlayerPositionChanged(uint64_t position);
+
+  /// @brief Handles player playback rate change.
+  void handlePlayerPlaybackRateChanged(double rate);
+
+  /// @brief Handles player state change.
+  ///
+  /// @param stopped True if player stopped, false otherwise.
+  void handlePlayerStateChanged(bool stopped);
+
+  /// @brief Handles new media loaded.
+  void handlePlayerMediaLoaded(std::string video_path);
+
+  /// @brief Handles media player errors.
+  void handlePlayerError(std::string err);
+signals:
+  /// @brief Requests play.
+  void requestPlay();
+
+  /// @brief Requests stop.
+  void requestStop();
+
+  /// @brief Requests load video.
+  void requestLoadVideo(std::string file);
+
+  /// @brief Requests speed up.
+  void requestSpeedUp();
+
+  /// @brief Requests slow down.
+  void requestSlowDown();
+
+  /// @brief Requests set frame.
+  ///
+  /// @param value Frame to go to.
+  void requestSetFrame(uint64_t value);
+
+  /// @brief Requests next frame.
+  void requestNextFrame();
+
+  /// @brief Requests previous frame.
+  void requestPrevFrame();
 private slots:
   /// @brief Plays/pauses the video.
   void on_play_clicked();
-
-  /// @brief Changes the playback direction of the video.
-  ///
-  /// @param state State of the checkbox.
-  void on_reverse_stateChanged(int state);
 
   /// @brief Increases the playback speed of the video by a factor of two.
   void on_faster_clicked();
@@ -127,45 +173,6 @@ private slots:
   /// @brief Goes to next frame and copies the region corresponding to
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
-
-  /// @brief Displays a video frame.
-  ///
-  /// @param image Video frame to display.
-  /// @param frame Frame of the image.
-  void showFrame(std::shared_ptr<QImage> image, uint64_t frame);
-
-  /// @brief Adds an individual and enables bounding box drawing.
-  void addIndividual(std::string species, std::string subspecies);
-
-  /// @brief Handles player duration change.
-  void handlePlayerDurationChanged(uint64_t duration);
-
-  /// @brief Handles player position change.
-  void handlePlayerPositionChanged(uint64_t position);
-
-  /// @brief Handles player playback rate change.
-  void handlePlayerPlaybackRateChanged(double rate);
-
-  /// @brief Handles media player errors.
-  void handlePlayerError(const std::string &err);
-
-  /// @brief Handles new media loaded.
-  void handlePlayerMedia();
-signals:
-  /// @brief Requests play.
-  void requestPlay();
-
-  /// @brief Requests stop.
-  void requestStop();
-
-  /// @brief Requests load video.
-  void requestLoadVideo(const std::string &file);
-
-  /// @brief Requests speed up.
-  void requestSpeedUp();
-
-  /// @brief Requests slow down.
-  void requestSlowDown();
 private:
   /// @brief Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
@@ -176,26 +183,26 @@ private:
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
 
-  /// @brief Last frame displayed by player.
-  std::shared_ptr<QImage> last_frame_;
-
-  /// @brief Last displayed video position (frames).
-  uint64_t last_displayed_frame_;
-
-  /// @brief Media player.
-  std::unique_ptr<Player> player_;
-
-  /// @brief Player thread.
-  std::unique_ptr<QThread> player_thread_;
-
   /// @brief Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWidget> ui_;
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
 
-  /// @brief Used to store play state when slider moved.
-  bool was_playing_;
+  /// @brief Path to loaded video.
+  std::string video_path_;
+
+  /// @brief Last frame displayed by player.
+  std::shared_ptr<QImage> last_frame_;
+
+  /// @brief Last video position (frames).
+  uint64_t last_position_;
+
+  /// @brief Whether player is stopped.
+  bool stopped_;
+
+  /// @brief Current playback rate.
+  double rate_;
 
   /// @brief Currently selected fish ID.
   uint64_t fish_id_;
@@ -208,6 +215,8 @@ private:
 
   /// @brief Draws annotations for the last displayed frame.
   void drawAnnotations();
+
+  QThread *thread;
 };
 
 }} // namespace fish_annotator::video_annotator

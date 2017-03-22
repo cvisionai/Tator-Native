@@ -3,14 +3,16 @@
 #include <QTime>
 #include <QCoreApplication>
 #include <QEventLoop>
+#include <QThread>
 
 #include <fstream>
-std::ofstream fout("BLAHPLAYER.txt");
 
 namespace fish_annotator { namespace video_annotator {
 
-Player::Player(QObject *parent)
-  : video_path_()
+std::ofstream fout("BLAHPLAYER.txt");
+Player::Player()
+  : QObject()
+  , video_path_()
   , frame_rate_(0.0)
   , stopped_(true)
   , frame_mat_()
@@ -21,14 +23,30 @@ Player::Player(QObject *parent)
   , frame_index_(0) {
 }
 
-void Player::loadVideo(const std::string &filename) {
+Player::~Player() {
+  stopped_ = true;
+  fout << "DELETING THE PLAYER!!" << std::endl;
+}
+
+bool Player::event(QEvent *ev) {
+  if(ev->type() == QEvent::ThreadChange) {
+    fout << "CHANGED THREADS!!!" << std::endl;
+  }
+  return QObject::event(ev);
+}
+
+void Player::loadVideo(std::string filename) {
+  fout << "PLAYER IS ON THREAD LOAD VID AT: " << QThread::currentThreadId() << std::endl;
   video_path_ = filename;
   capture_.reset(new cv::VideoCapture(filename));
   if (capture_->isOpened()) {
     frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
     current_speed_ = frame_rate_;
     delay_ = (1000000.0 / frame_rate_);
-    emit mediaLoaded();
+    fout << "ABOUT TO EMIT MEDIA LOADED SIGNAL!!" << std::endl;
+    emit mediaLoaded(filename);
+    emit playbackRateChanged(frame_rate_);
+    emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
   }
   else {
     std::string msg(
@@ -37,14 +55,6 @@ void Player::loadVideo(const std::string &filename) {
         std::string("!"));
     emit error(msg);
   }
-}
-
-const std::string &Player::getVideoPath() {
-  return video_path_;
-}
-
-double Player::getFrameRate() {
-  return frame_rate_;
 }
 
 void Player::play() {
@@ -57,6 +67,12 @@ void Player::play() {
       usleep(std::round(delay_ - usec));
     }
   }
+  emit stateChanged(stopped_);
+}
+
+void Player::stop() {
+  stopped_ = true;
+  emit stateChanged(stopped_);
 }
 
 void Player::getOneFrame() {
@@ -85,23 +101,11 @@ void Player::getOneFrame() {
   }
 }
 
-Player::~Player() {
-  stopped_ = true;
-}
-
-void Player::stop() {
-  stopped_ = true;
-}
-
-void Player::usleep(int usec) {
+void Player::usleep(uint64_t usec) {
   QTime die_time = QTime::currentTime().addMSecs(usec / 1000);
   while(QTime::currentTime() < die_time) {
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
   }
-}
-
-bool Player::isStopped() const{
-  return stopped_;
 }
 
 void Player::speedUp() {
@@ -125,15 +129,7 @@ void Player::prevFrame() {
   getOneFrame();
 }
 
-int64_t Player::getCurrentFrame() {
-  return frame_index_;
-}
-
-double Player::getNumberOfFrames() {
-  return capture_->get(CV_CAP_PROP_FRAME_COUNT);
-}
-
-void Player::setCurrentFrame(int64_t frame_num) {
+void Player::setCurrentFrame(uint64_t frame_num) {
   capture_->set(CV_CAP_PROP_POS_MSEC, 
       1000.0 * static_cast<double>(frame_num) / frame_rate_);
   if (frame_num > 0) {
@@ -144,18 +140,9 @@ void Player::setCurrentFrame(int64_t frame_num) {
   }
 }
 
-void Player::setFrame(std::int64_t frame) {
+void Player::setFrame(uint64_t frame) {
   setCurrentFrame(frame);
   return getOneFrame();
-}
-
-double Player::getCurrentSpeed() {
-  return current_speed_;
-}
-
-void Player::writeImage(const QString &filename) {
-	cv::Mat mat = frame_mat_;
-	cv::imwrite(filename.toStdString(), mat);
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_player.cpp"

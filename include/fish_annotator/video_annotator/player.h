@@ -8,6 +8,7 @@
 #include <memory>
 
 #include <QImage>
+#include <QEvent>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -19,36 +20,23 @@ class Player : public QObject {
     Q_OBJECT
 public:
     /// @brief Constructor.
-    ///
-    /// @param parent Parent widget.
-    Player(QObject *parent = 0);
+    explicit Player();
 
     /// @brief Destructor.
     ~Player();
 
-    /// @brief Loads the video.
-    void loadVideo(const std::string &filename);
-
-    /// @brief Gets loaded video path.
-    ///
-    /// @return Path to loaded video.
-    const std::string &getVideoPath();
-
-    /// @brief Gets loaded video frame rate.
-    ///
-    /// @return Video frame rate (fps).
-    double getFrameRate();
-
+    bool event(QEvent* ev) override;
+public slots:
     /// @brief Plays the video.
     void play();
     
     /// @brief Stops the video.
     void stop();
 
-    /// @brief Gets the play/stop state of the video.
+    /// @brief Loads the video.
     ///
-    /// @return True if stopped, false otherwise.
-    bool isStopped() const;
+    /// @param filename Path to video.
+    void loadVideo(std::string filename);
 
     /// @brief Increases the speed of the video by a factor of two.
     void speedUp();
@@ -56,31 +44,16 @@ public:
     /// @brief Decreases the speed of the video by a factor of two.
     void slowDown();
 
-    /// @brief Get number of frames from loaded video.
-    double getNumberOfFrames();
-
-    /// @brief Get current playback rate.
-    double getCurrentSpeed();
-
-    /// @brief Emits next frame.
-    void nextFrame();
-
-    /// @brief Emits previous frame.
-    void prevFrame();
-
-    /// @brief Emits specified frame.
+    /// @brief Sets position to specified frame.
     ///
     /// @param frame Frame to emit.
-    void setFrame(int64_t frame);
+    void setFrame(uint64_t frame);
 
-    /// @brief 
-    int64_t getCurrentFrame();
+    /// @brief Sets position to next frame.
+    void nextFrame();
 
-    /// @brief Processes a single frame and emits it.
-    void getOneFrame();
-
-    /// @brief Writes the last image to file.
-    void writeImage(const QString &filename);
+    /// @brief Sets position to previous frame.
+    void prevFrame();
 signals:
     /// @brief Emitted when a frame is ready to display.
     //
@@ -89,19 +62,34 @@ signals:
     void processedImage(std::shared_ptr<QImage> image, uint64_t frame);
 
     /// @brief Emitted when duration changes.
-    void durationChanged(uint64_t);
+    ///
+    /// @param New video duration.
+    void durationChanged(uint64_t duration);
 
     /// @brief Emitted when position changes.
-    void positionChanged(uint64_t);
+    ///
+    /// @param position New video position.
+    void positionChanged(uint64_t position);
 
     /// @brief Emitted when playback rate changes.
-    void playbackRateChanged(double);
+    ///
+    /// @param rate Playback rate (fps).
+    void playbackRateChanged(double rate);
+
+    /// @brief Emitted when play/pause state changed.
+    ///
+    /// @param stopped True if stopped, false otherwise.
+    void stateChanged(bool stopped);
 
     /// @brief Emitted when new media is loaded.
-    void mediaLoaded();
+    ///
+    /// @param video_path Path to loaded video file.
+    void mediaLoaded(std::string video_path);
 
     /// @brief Emitted on error.
-    void error(const std::string &err);
+    ///
+    /// @param err Error message.
+    void error(std::string err);
 private:
     /// @brief Path to loaded video.
     std::string video_path_;
@@ -131,12 +119,15 @@ private:
     uint64_t frame_index_;
 
     /// @brief Sets the current frame.
-    void setCurrentFrame(int64_t frame_num);
+    void setCurrentFrame(uint64_t frame_num);
 
     /// @brief Delays by specified number of microseconds.
     ///
     /// @param usec Number of microseconds to delay.
-    void usleep(int usec);
+    void usleep(uint64_t usec);
+
+    /// @brief Processes a single frame and emits it.
+    void getOneFrame();
 };
 
 }} // namespace fish_annotator::video_annotator
