@@ -8,7 +8,9 @@
 #include <memory>
 
 #include <QImage>
-#include <QEvent>
+#include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -16,7 +18,7 @@
 
 namespace fish_annotator { namespace video_annotator {
 
-class Player : public QObject {	
+class Player : public QThread {	
     Q_OBJECT
 public:
     /// @brief Constructor.
@@ -24,8 +26,9 @@ public:
 
     /// @brief Destructor.
     ~Player();
-
-    bool event(QEvent* ev) override;
+protected:
+    /// @brief Plays the video.
+    void run() override final;
 public slots:
     /// @brief Plays the video.
     void play();
@@ -59,7 +62,13 @@ signals:
     //
     /// @param image Captured image.
     /// @param frame Frame number that corresponds to this image.
-    void processedImage(std::shared_ptr<QImage> image, uint64_t frame);
+    void processedImageFromThread(QImage image, uint64_t frame);
+
+    /// @brief Emitted when a frame is ready to display.
+    //
+    /// @param image Captured image.
+    /// @param frame Frame number that corresponds to this image.
+    void processedImage(QImage image, uint64_t frame);
 
     /// @brief Emitted when duration changes.
     ///
@@ -118,16 +127,20 @@ private:
     /// @brief Current frame index.
     uint64_t frame_index_;
 
+    /// @brief Mutex for deletion.
+    QMutex mutex_;
+
+    /// @brief Wait condition for deletion.
+    QWaitCondition condition_;
+
     /// @brief Sets the current frame.
     void setCurrentFrame(uint64_t frame_num);
 
-    /// @brief Delays by specified number of microseconds.
-    ///
-    /// @param usec Number of microseconds to delay.
-    void usleep(uint64_t usec);
-
     /// @brief Processes a single frame and emits it.
-    void getOneFrame();
+    inline QImage getOneFrame();
+
+    /// @brief Waits for specified time while allowing events to process.
+    void processWait(uint64_t usec);
 };
 
 }} // namespace fish_annotator::video_annotator

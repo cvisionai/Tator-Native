@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
   , pixmap_item_(nullptr)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls)
+  , player_()
   , video_path_()
   , last_frame_(nullptr)
   , last_position_(0)
@@ -43,40 +44,38 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
-  Player *player = new Player();
-  thread = new QThread();
-  player->moveToThread(thread);
-  QObject::connect(player, &Player::processedImage, 
+  QObject::connect(&player_, &Player::processedImageFromThread, 
       this, &MainWindow::showFrame);
-  QObject::connect(player, &Player::durationChanged, 
+  QObject::connect(&player_, &Player::processedImage, 
+      this, &MainWindow::showFrame);
+  QObject::connect(&player_, &Player::durationChanged, 
       this, &MainWindow::handlePlayerDurationChanged);
-  QObject::connect(player, &Player::positionChanged,
+  QObject::connect(&player_, &Player::positionChanged,
       this, &MainWindow::handlePlayerPositionChanged);
-  QObject::connect(player, &Player::playbackRateChanged,
+  QObject::connect(&player_, &Player::playbackRateChanged,
       this, &MainWindow::handlePlayerPlaybackRateChanged);
-  QObject::connect(player, &Player::stateChanged,
+  QObject::connect(&player_, &Player::stateChanged,
       this, &MainWindow::handlePlayerStateChanged);
-  QObject::connect(player, &Player::mediaLoaded,
+  QObject::connect(&player_, &Player::mediaLoaded,
       this, &MainWindow::handlePlayerMediaLoaded);
-  QObject::connect(player, &Player::error,
+  QObject::connect(&player_, &Player::error,
       this, &MainWindow::handlePlayerError);
+  QObject::connect(this, &MainWindow::requestLoadVideo, 
+      &player_, &Player::loadVideo);
   QObject::connect(this, &MainWindow::requestPlay, 
-      player, &Player::play);
+      &player_, &Player::play);
   QObject::connect(this, &MainWindow::requestStop, 
-      player, &Player::stop);
+      &player_, &Player::stop);
   QObject::connect(this, &MainWindow::requestSpeedUp, 
-      player, &Player::speedUp);
+      &player_, &Player::speedUp);
   QObject::connect(this, &MainWindow::requestSlowDown, 
-      player, &Player::slowDown);
+      &player_, &Player::slowDown);
   QObject::connect(this, &MainWindow::requestSetFrame,
-      player, &Player::setFrame);
+      &player_, &Player::setFrame);
   QObject::connect(this, &MainWindow::requestNextFrame,
-      player, &Player::nextFrame);
+      &player_, &Player::nextFrame);
   QObject::connect(this, &MainWindow::requestPrevFrame,
-      player, &Player::prevFrame);
-  QObject::connect(thread, &QThread::finished,
-      thread, &QThread::deleteLater);
-  thread->start();
+      &player_, &Player::prevFrame);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -117,7 +116,6 @@ void MainWindow::on_minusOneFrame_clicked() {
 }
 
 void MainWindow::on_loadVideo_clicked() {
-  out << "THREAD IS RUNNING?? " << thread->isRunning() << std::endl;
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Video"), ".",
@@ -242,12 +240,13 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
-void MainWindow::showFrame(std::shared_ptr<QImage> image, uint64_t frame) {
+void MainWindow::showFrame(QImage image, uint64_t frame) {
+  out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
   last_frame_ = image;
-  auto pixmap = QPixmap::fromImage(*image);
+  auto pixmap = QPixmap::fromImage(image);
   if(pixmap_item_ == nullptr) {
     pixmap_item_ = scene_->addPixmap(pixmap);
-    scene_->setSceneRect(0, 0, image->width(), image->height());
+    scene_->setSceneRect(0, 0, image.width(), image.height());
     ui_->videoWindow->setScene(scene_.get());
     ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->videoWindow->show();
@@ -317,7 +316,6 @@ void MainWindow::handlePlayerMediaLoaded(std::string video_path) {
   annotation_->clear();
   scene_->clear();
   pixmap_item_ = nullptr;
-  last_frame_ = nullptr;
 }
 
 void MainWindow::handlePlayerError(std::string err) {

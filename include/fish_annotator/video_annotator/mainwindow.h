@@ -46,7 +46,7 @@ public slots:
   ///
   /// @param image Video frame to display.
   /// @param frame Frame of the image.
-  void showFrame(std::shared_ptr<QImage> image, uint64_t frame);
+  void showFrame(QImage image, uint64_t frame);
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
@@ -189,11 +189,14 @@ private:
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
 
+  /// @brief Video player.
+  Player player_;
+
   /// @brief Path to loaded video.
   std::string video_path_;
 
   /// @brief Last frame displayed by player.
-  std::shared_ptr<QImage> last_frame_;
+  QImage last_frame_;
 
   /// @brief Last video position (frames).
   uint64_t last_position_;
@@ -215,8 +218,6 @@ private:
 
   /// @brief Draws annotations for the last displayed frame.
   void drawAnnotations();
-
-  QThread *thread;
 };
 
 }} // namespace fish_annotator::video_annotator
