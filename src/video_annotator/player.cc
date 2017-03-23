@@ -37,6 +37,7 @@ Player::~Player() {
 void Player::run() {
   std::ofstream threadout("BLAHTHREAD.txt");
   while(stopped_ == false) {
+    threadout << "GETTING FRAME " << frame_index_ << std::endl;
     auto time = QTime::currentTime();
     emit processedImageFromThread(getOneFrame());//, frame_index_);
     double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
@@ -117,13 +118,13 @@ void Player::slowDown() {
 }
 
 void Player::nextFrame() {
-  setCurrentFrame(++frame_index_);
-  emit processedImage(getOneFrame());//, frame_index_);
+  setCurrentFrame(frame_index_);
+  emit processedImageFromThread(getOneFrame());//, frame_index_);
 }
 
 void Player::prevFrame() {
-  setCurrentFrame(--frame_index_);
-  emit processedImage(getOneFrame());//, frame_index_);
+  setCurrentFrame(frame_index_ - 2);
+  emit processedImageFromThread(getOneFrame());//, frame_index_);
 }
 
 void Player::setCurrentFrame(uint64_t frame_num) {
