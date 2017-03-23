@@ -26,6 +26,9 @@ public:
 
     /// @brief Destructor.
     ~Player();
+
+    /// @brief Processes a single frame.
+    inline QImage getOneFrame();
 protected:
     /// @brief Plays the video.
     void run() override final;
@@ -62,13 +65,13 @@ signals:
     //
     /// @param image Captured image.
     /// @param frame Frame number that corresponds to this image.
-    void processedImageFromThread(QImage image, uint64_t frame);
+    void processedImageFromThread(QImage image);//, uint64_t frame);
 
     /// @brief Emitted when a frame is ready to display.
     //
     /// @param image Captured image.
     /// @param frame Frame number that corresponds to this image.
-    void processedImage(QImage image, uint64_t frame);
+    void processedImage(QImage image);//, uint64_t frame);
 
     /// @brief Emitted when duration changes.
     ///
@@ -115,6 +118,9 @@ private:
     /// @brief Stores most recent RGB frame.
     cv::Mat rgb_frame_mat_;
 
+    /// @brief Stores most recent image.
+    QImage image_;
+
     /// @brief Current playback rate.
     double current_speed_;
 
@@ -135,9 +141,6 @@ private:
 
     /// @brief Sets the current frame.
     void setCurrentFrame(uint64_t frame_num);
-
-    /// @brief Processes a single frame and emits it.
-    inline QImage getOneFrame();
 
     /// @brief Waits for specified time while allowing events to process.
     void processWait(uint64_t usec);

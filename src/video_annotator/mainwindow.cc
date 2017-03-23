@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
   , pixmap_item_(nullptr)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls)
-  , player_()
+  , player_(new Player)
   , video_path_()
   , last_frame_(nullptr)
   , last_position_(0)
@@ -44,38 +44,38 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
-  QObject::connect(&player_, &Player::processedImageFromThread, 
+  QObject::connect(player_.get(), &Player::processedImageFromThread, 
       this, &MainWindow::showFrame);
-  QObject::connect(&player_, &Player::processedImage, 
-      this, &MainWindow::showFrame);
-  QObject::connect(&player_, &Player::durationChanged, 
+  //QObject::connect(player_.get(), &Player::processedImage, 
+  //    this, &MainWindow::showFrame);
+  QObject::connect(player_.get(), &Player::durationChanged, 
       this, &MainWindow::handlePlayerDurationChanged);
-  QObject::connect(&player_, &Player::positionChanged,
+  QObject::connect(player_.get(), &Player::positionChanged,
       this, &MainWindow::handlePlayerPositionChanged);
-  QObject::connect(&player_, &Player::playbackRateChanged,
+  QObject::connect(player_.get(), &Player::playbackRateChanged,
       this, &MainWindow::handlePlayerPlaybackRateChanged);
-  QObject::connect(&player_, &Player::stateChanged,
+  QObject::connect(player_.get(), &Player::stateChanged,
       this, &MainWindow::handlePlayerStateChanged);
-  QObject::connect(&player_, &Player::mediaLoaded,
+  QObject::connect(player_.get(), &Player::mediaLoaded,
       this, &MainWindow::handlePlayerMediaLoaded);
-  QObject::connect(&player_, &Player::error,
+  QObject::connect(player_.get(), &Player::error,
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadVideo, 
-      &player_, &Player::loadVideo);
+      player_.get(), &Player::loadVideo);
   QObject::connect(this, &MainWindow::requestPlay, 
-      &player_, &Player::play);
+      player_.get(), &Player::play);
   QObject::connect(this, &MainWindow::requestStop, 
-      &player_, &Player::stop);
+      player_.get(), &Player::stop);
   QObject::connect(this, &MainWindow::requestSpeedUp, 
-      &player_, &Player::speedUp);
+      player_.get(), &Player::speedUp);
   QObject::connect(this, &MainWindow::requestSlowDown, 
-      &player_, &Player::slowDown);
+      player_.get(), &Player::slowDown);
   QObject::connect(this, &MainWindow::requestSetFrame,
-      &player_, &Player::setFrame);
+      player_.get(), &Player::setFrame);
   QObject::connect(this, &MainWindow::requestNextFrame,
-      &player_, &Player::nextFrame);
+      player_.get(), &Player::nextFrame);
   QObject::connect(this, &MainWindow::requestPrevFrame,
-      &player_, &Player::prevFrame);
+      player_.get(), &Player::prevFrame);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -240,22 +240,17 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
-void MainWindow::showFrame(QImage image, uint64_t frame) {
-  out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
-  last_frame_ = image;
+void MainWindow::showFrame(QImage image) {//, uint64_t frame) {
+  //out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
+  //last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
-  if(pixmap_item_ == nullptr) {
-    pixmap_item_ = scene_->addPixmap(pixmap);
-    scene_->setSceneRect(0, 0, image.width(), image.height());
-    ui_->videoWindow->setScene(scene_.get());
-    ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
-    ui_->videoWindow->show();
-  }
-  else {
-    pixmap_item_->setPixmap(pixmap);
-  }
-  last_position_ = frame;
-  drawAnnotations();
+  //if(pixmap_item_ == nullptr) {
+  //}
+  //else {
+  pixmap_item_->setPixmap(pixmap);
+  //}
+  //last_position_ = frame;
+  //drawAnnotations();
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -315,7 +310,13 @@ void MainWindow::handlePlayerMediaLoaded(std::string video_path) {
   this->setWindowTitle(video_path_.c_str());
   annotation_->clear();
   scene_->clear();
-  pixmap_item_ = nullptr;
+  last_frame_ = player_->getOneFrame();
+  auto pixmap = QPixmap::fromImage(last_frame_);
+  pixmap_item_ = scene_->addPixmap(pixmap);
+  scene_->setSceneRect(0, 0, last_frame_.width(), last_frame_.height());
+  ui_->videoWindow->setScene(scene_.get());
+  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  ui_->videoWindow->show();
 }
 
 void MainWindow::handlePlayerError(std::string err) {

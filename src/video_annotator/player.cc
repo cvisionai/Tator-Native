@@ -17,6 +17,7 @@ Player::Player()
   , stopped_(true)
   , frame_mat_()
   , rgb_frame_mat_()
+  , image_()
   , current_speed_(0.0)
   , capture_(nullptr)
   , delay_(0.0)
@@ -37,7 +38,7 @@ void Player::run() {
   std::ofstream threadout("BLAHTHREAD.txt");
   while(stopped_ == false) {
     auto time = QTime::currentTime();
-    emit processedImageFromThread(getOneFrame(), frame_index_);
+    emit processedImageFromThread(getOneFrame());//, frame_index_);
     double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
     processWait(std::round(delay_ - usec));
   }
@@ -86,23 +87,22 @@ QImage Player::getOneFrame() {
     stopped_ = true;
   }
   frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES);
-  QImage img;
   if (frame_mat_.channels() == 3) {
     cv::cvtColor(frame_mat_, rgb_frame_mat_, CV_BGR2RGB);
-    img = QImage(
+    image_ = QImage(
       (const unsigned char*)(rgb_frame_mat_.data),
       frame_mat_.cols,
       frame_mat_.rows,
       QImage::Format_RGB888);
   }
   else {
-    img = QImage(
+    image_ = QImage(
       (const unsigned char*)(frame_mat_.data),
       frame_mat_.cols,
       frame_mat_.rows,
       QImage::Format_Indexed8);
   }
-  return img;
+  return image_;
 }
 
 void Player::speedUp() {
@@ -118,12 +118,12 @@ void Player::slowDown() {
 
 void Player::nextFrame() {
   setCurrentFrame(++frame_index_);
-  emit processedImage(getOneFrame(), frame_index_);
+  emit processedImage(getOneFrame());//, frame_index_);
 }
 
 void Player::prevFrame() {
   setCurrentFrame(--frame_index_);
-  emit processedImage(getOneFrame(), frame_index_);
+  emit processedImage(getOneFrame());//, frame_index_);
 }
 
 void Player::setCurrentFrame(uint64_t frame_num) {
@@ -139,7 +139,7 @@ void Player::setCurrentFrame(uint64_t frame_num) {
 
 void Player::setFrame(uint64_t frame) {
   setCurrentFrame(frame);
-  emit processedImage(getOneFrame(), frame_index_);
+  emit processedImage(getOneFrame());//, frame_index_);
 }
 
 void Player::processWait(uint64_t usec) {

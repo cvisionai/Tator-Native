@@ -46,7 +46,7 @@ public slots:
   ///
   /// @param image Video frame to display.
   /// @param frame Frame of the image.
-  void showFrame(QImage image, uint64_t frame);
+  void showFrame(QImage image);//, uint64_t frame);
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
@@ -190,7 +190,7 @@ private:
   std::unique_ptr<SpeciesControls> species_controls_;
 
   /// @brief Video player.
-  Player player_;
+  std::unique_ptr<Player> player_;
 
   /// @brief Path to loaded video.
   std::string video_path_;
