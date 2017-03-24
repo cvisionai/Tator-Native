@@ -69,6 +69,7 @@ void Player::loadVideo(std::string filename) {
 }
 
 void Player::play() {
+  QMutexLocker locker(&mutex_);
   fout << "PLAY WAS PRESSED!" << std::endl;
   if(!isRunning()) {
     if(stopped_ == true) {
@@ -80,11 +81,13 @@ void Player::play() {
 }
 
 void Player::stop() {
+  QMutexLocker locker(&mutex_);
   stopped_ = true;
   emit stateChanged(stopped_);
 }
 
 QImage Player::getOneFrame() {
+  QMutexLocker locker(&mutex_);
   if (capture_->read(frame_mat_) == false) {
     stopped_ = true;
   }
@@ -131,6 +134,7 @@ void Player::prevFrame() {
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
+  QMutexLocker locker(&mutex_);
   capture_->set(CV_CAP_PROP_POS_MSEC, 
       1000.0 * static_cast<double>(frame_num) / frame_rate_);
   if (frame_num > 0) {
