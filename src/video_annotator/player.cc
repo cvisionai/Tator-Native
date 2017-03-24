@@ -40,7 +40,6 @@ void Player::run() {
     threadout << "GETTING FRAME " << frame_index_ << std::endl;
     auto time = QTime::currentTime();
     emit processedImage(getOneFrame(), frame_index_);
-    //emit positionChanged(frame_index_);
     double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
     processWait(std::round(delay_ - usec));
   }
@@ -56,7 +55,7 @@ void Player::loadVideo(std::string filename) {
     delay_ = (1000000.0 / frame_rate_);
     fout << "ABOUT TO EMIT MEDIA LOADED SIGNAL!!" << std::endl;
     emit mediaLoaded(filename);
-    emit playbackRateChanged(frame_rate_);
+    emit playbackRateChanged(current_speed_);
     emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
   }
   else {
@@ -114,23 +113,23 @@ void Player::speedUp() {
   delay_ /= 2.0;
   if(delay_ < 1.0) delay_ = 1.0;
   current_speed_ *= 2.0;
+  emit playbackRateChanged(current_speed_);
 }
 
 void Player::slowDown() {
   delay_ *= 2.0;
   current_speed_ /= 2.0;
+  emit playbackRateChanged(current_speed_);
 }
 
 void Player::nextFrame() {
   setCurrentFrame(frame_index_);
   emit processedImage(getOneFrame(), frame_index_);
-  //emit positionChanged(frame_index_);
 }
 
 void Player::prevFrame() {
   setCurrentFrame(frame_index_ - 2);
   emit processedImage(getOneFrame(), frame_index_);
-  //emit positionChanged(frame_index_);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
@@ -148,7 +147,6 @@ void Player::setCurrentFrame(qint64 frame_num) {
 void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
   emit processedImage(getOneFrame(), frame_index_);
-  //emit positionChanged(frame_index_);
 }
 
 void Player::processWait(qint64 usec) {

@@ -72,11 +72,6 @@ signals:
     /// @param New video duration.
     void durationChanged(qint64 duration);
 
-    /// @brief Emitted when position changes.
-    ///
-    /// @param position New video position.
-    void positionChanged(qint64 position);
-
     /// @brief Emitted when playback rate changes.
     ///
     /// @param rate Playback rate (fps).

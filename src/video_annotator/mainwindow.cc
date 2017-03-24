@@ -49,8 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::showFrame);
   QObject::connect(player_.get(), &Player::durationChanged, 
       this, &MainWindow::handlePlayerDurationChanged);
-  QObject::connect(player_.get(), &Player::positionChanged,
-      this, &MainWindow::handlePlayerPositionChanged);
   QObject::connect(player_.get(), &Player::playbackRateChanged,
       this, &MainWindow::handlePlayerPlaybackRateChanged);
   QObject::connect(player_.get(), &Player::stateChanged,
@@ -265,11 +263,6 @@ void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
   ui_->videoSlider->setPageStep(duration / 20);
-}
-
-void MainWindow::handlePlayerPositionChanged(qint64 position) {
-  out << "RECEIVED POSITION CHANGED SIGNAL!" << position << std::endl;
-  out << "HANDLED POSITION CHANGE SIGNAL. " << std::endl;
 }
 
 void MainWindow::handlePlayerPlaybackRateChanged(double rate) {

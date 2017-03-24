@@ -54,9 +54,6 @@ public slots:
   /// @brief Handles player duration change.
   void handlePlayerDurationChanged(qint64 duration);
 
-  /// @brief Handles player position change.
-  void handlePlayerPositionChanged(qint64 position);
-
   /// @brief Handles player playback rate change.
   void handlePlayerPlaybackRateChanged(double rate);
 
