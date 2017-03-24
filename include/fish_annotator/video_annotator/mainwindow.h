@@ -57,16 +57,19 @@ public slots:
   /// @brief Handles player playback rate change.
   void handlePlayerPlaybackRateChanged(double rate);
 
+  /// @brief Handles player resolution change.
+  void handlePlayerResolutionChanged(qint64 width, qint64 height);
+
   /// @brief Handles player state change.
   ///
   /// @param stopped True if player stopped, false otherwise.
   void handlePlayerStateChanged(bool stopped);
 
   /// @brief Handles new media loaded.
-  void handlePlayerMediaLoaded(std::string video_path);
+  void handlePlayerMediaLoaded(QString video_path);
 
   /// @brief Handles media player errors.
-  void handlePlayerError(std::string err);
+  void handlePlayerError(QString err);
 signals:
   /// @brief Requests play.
   void requestPlay();
@@ -75,7 +78,7 @@ signals:
   void requestStop();
 
   /// @brief Requests load video.
-  void requestLoadVideo(std::string file);
+  void requestLoadVideo(QString file);
 
   /// @brief Requests speed up.
   void requestSpeedUp();
@@ -190,7 +193,13 @@ private:
   std::unique_ptr<Player> player_;
 
   /// @brief Path to loaded video.
-  std::string video_path_;
+  QString video_path_;
+
+  /// @brief Video width.
+  qint64 width_;
+
+  /// @brief Video height.
+  qint64 height_;
 
   /// @brief Last frame displayed by player.
   QImage last_frame_;

@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
   , species_controls_(new SpeciesControls)
   , player_(new Player)
   , video_path_()
+  , width_(0)
+  , height_(0)
   , last_frame_(nullptr)
   , last_position_(0)
   , stopped_(true) 
@@ -44,34 +46,44 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
-  QObject::connect(player_.get(), &Player::processedImage, 
+  Player *player = new Player();
+  QThread *thread = new QThread();
+  QObject::connect(player, &Player::processedImage, 
       this, &MainWindow::showFrame);
-  QObject::connect(player_.get(), &Player::durationChanged, 
+  QObject::connect(player, &Player::durationChanged, 
       this, &MainWindow::handlePlayerDurationChanged);
-  QObject::connect(player_.get(), &Player::playbackRateChanged,
+  QObject::connect(player, &Player::playbackRateChanged,
       this, &MainWindow::handlePlayerPlaybackRateChanged);
-  QObject::connect(player_.get(), &Player::stateChanged,
+  QObject::connect(player, &Player::resolutionChanged,
+      this, &MainWindow::handlePlayerResolutionChanged);
+  QObject::connect(player, &Player::stateChanged,
       this, &MainWindow::handlePlayerStateChanged);
-  QObject::connect(player_.get(), &Player::mediaLoaded,
+  QObject::connect(player, &Player::mediaLoaded,
       this, &MainWindow::handlePlayerMediaLoaded);
-  QObject::connect(player_.get(), &Player::error,
+  QObject::connect(player, &Player::error,
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadVideo, 
-      player_.get(), &Player::loadVideo);
+      player, &Player::loadVideo);
   QObject::connect(this, &MainWindow::requestPlay, 
-      player_.get(), &Player::play);
+      player, &Player::play);
   QObject::connect(this, &MainWindow::requestStop, 
-      player_.get(), &Player::stop);
+      player, &Player::stop);
   QObject::connect(this, &MainWindow::requestSpeedUp, 
-      player_.get(), &Player::speedUp);
+      player, &Player::speedUp);
   QObject::connect(this, &MainWindow::requestSlowDown, 
-      player_.get(), &Player::slowDown);
+      player, &Player::slowDown);
   QObject::connect(this, &MainWindow::requestSetFrame,
-      player_.get(), &Player::setFrame);
+      player, &Player::setFrame);
   QObject::connect(this, &MainWindow::requestNextFrame,
-      player_.get(), &Player::nextFrame);
+      player, &Player::nextFrame);
   QObject::connect(this, &MainWindow::requestPrevFrame,
-      player_.get(), &Player::prevFrame);
+      player, &Player::prevFrame);
+  QObject::connect(thread, &QThread::finished,
+      player, &Player::deleteLater);
+  QObject::connect(thread, &QThread::finished,
+      thread, &QThread::deleteLater);
+  player->moveToThread(thread);
+  thread->start();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -118,7 +130,7 @@ void MainWindow::on_loadVideo_clicked() {
       tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    emit requestLoadVideo(file_str.toStdString());
+    emit requestLoadVideo(file_str);
   }
 }
 
@@ -135,7 +147,7 @@ void MainWindow::on_loadAnnotationFile_clicked() {
 }
 
 void MainWindow::on_saveAnnotationFile_clicked() {
-  fs::path vid_path(video_path_);
+  fs::path vid_path(video_path_.toStdString());
   annotation_->write(
       vid_path.replace_extension(".csv"),
       ui_->tripIDValue->text().toStdString(),
@@ -266,11 +278,16 @@ void MainWindow::handlePlayerPlaybackRateChanged(double rate) {
   ui_->currentSpeed->setText(QString("Current Speed: %1 FPS").arg(rate));
 }
 
+void MainWindow::handlePlayerResolutionChanged(qint64 width, qint64 height) {
+  width_ = width;
+  height_ = height;
+}
+
 void MainWindow::handlePlayerStateChanged(bool stopped) {
   stopped_ = stopped;
 }
 
-void MainWindow::handlePlayerMediaLoaded(std::string video_path) {
+void MainWindow::handlePlayerMediaLoaded(QString video_path) {
   video_path_ = video_path;
   ui_->videoSlider->setEnabled(true);
   ui_->play->setEnabled(true);
@@ -296,21 +313,21 @@ void MainWindow::handlePlayerMediaLoaded(std::string video_path) {
   ui_->removeRegion->setEnabled(true);
   ui_->nextAndCopy->setEnabled(true);
   ui_->currentSpeed->setText("Current Speed: 100%");
-  this->setWindowTitle(video_path_.c_str());
+  this->setWindowTitle(video_path_);
   annotation_->clear();
   scene_->clear();
-  last_frame_ = player_->getOneFrame();
-  auto pixmap = QPixmap::fromImage(last_frame_);
+  QPixmap pixmap(width_, height_);
   pixmap_item_ = scene_->addPixmap(pixmap);
-  scene_->setSceneRect(0, 0, last_frame_.width(), last_frame_.height());
+  scene_->setSceneRect(0, 0, width_, height_);
   ui_->videoWindow->setScene(scene_.get());
   ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
   ui_->videoWindow->show();
+  emit requestNextFrame();
 }
 
-void MainWindow::handlePlayerError(std::string err) {
+void MainWindow::handlePlayerError(QString err) {
   QMessageBox msgBox;
-  msgBox.setText(err.c_str());
+  msgBox.setText(err);
   msgBox.exec();
 }
 

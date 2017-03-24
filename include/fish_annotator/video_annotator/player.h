@@ -18,7 +18,7 @@
 
 namespace fish_annotator { namespace video_annotator {
 
-class Player : public QThread {	
+class Player : public QObject {	
     Q_OBJECT
 public:
     /// @brief Constructor.
@@ -29,9 +29,6 @@ public:
 
     /// @brief Processes a single frame.
     inline QImage getOneFrame();
-protected:
-    /// @brief Plays the video.
-    void run() override final;
 public slots:
     /// @brief Plays the video.
     void play();
@@ -42,7 +39,7 @@ public slots:
     /// @brief Loads the video.
     ///
     /// @param filename Path to video.
-    void loadVideo(std::string filename);
+    void loadVideo(QString filename);
 
     /// @brief Increases the speed of the video by a factor of two.
     void speedUp();
@@ -77,6 +74,12 @@ signals:
     /// @param rate Playback rate (fps).
     void playbackRateChanged(double rate);
 
+    /// @brief Emitted when video resolution changes.
+    ///
+    /// @param width Video width.
+    /// @param height Video height.
+    void resolutionChanged(qint64 width, qint64 height);
+
     /// @brief Emitted when play/pause state changed.
     ///
     /// @param stopped True if stopped, false otherwise.
@@ -85,15 +88,15 @@ signals:
     /// @brief Emitted when new media is loaded.
     ///
     /// @param video_path Path to loaded video file.
-    void mediaLoaded(std::string video_path);
+    void mediaLoaded(QString video_path);
 
     /// @brief Emitted on error.
     ///
     /// @param err Error message.
-    void error(std::string err);
+    void error(QString err);
 private:
     /// @brief Path to loaded video.
-    std::string video_path_;
+    QString video_path_;
 
     /// @brief Native frame rate of loaded video.
     double frame_rate_;

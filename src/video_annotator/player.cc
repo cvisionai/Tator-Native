@@ -8,7 +8,7 @@
 namespace fish_annotator { namespace video_annotator {
 
 Player::Player()
-  : QThread()
+  : QObject()
   , video_path_()
   , frame_rate_(0.0)
   , stopped_(true)
@@ -27,10 +27,36 @@ Player::~Player() {
   QMutexLocker locker(&mutex_);
   stopped_ = true;
   condition_.wakeOne();
-  wait();
 }
 
-void Player::run() {
+void Player::loadVideo(QString filename) {
+  video_path_ = filename;
+  capture_.reset(new cv::VideoCapture(filename.toStdString()));
+  if (capture_->isOpened()) {
+    frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
+    current_speed_ = frame_rate_;
+    delay_ = (1000000.0 / frame_rate_);
+    emit mediaLoaded(filename);
+    emit playbackRateChanged(current_speed_);
+    emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
+    emit resolutionChanged(
+        capture_->get(static_cast<qint64>(CV_CAP_PROP_FRAME_WIDTH)),
+        capture_->get(static_cast<qint64>(CV_CAP_PROP_FRAME_HEIGHT)));
+  }
+  else {
+    std::string msg(
+        std::string("Failed to load media at ") + 
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+  }
+}
+
+void Player::play() {
+  if(stopped_ == true) {
+    stopped_ = false;
+  }
+  emit stateChanged(stopped_);
   while(stopped_ == false) {
     auto time = QTime::currentTime();
     emit processedImage(getOneFrame(), frame_index_);
@@ -39,39 +65,7 @@ void Player::run() {
   }
 }
 
-void Player::loadVideo(std::string filename) {
-  video_path_ = filename;
-  capture_.reset(new cv::VideoCapture(filename));
-  if (capture_->isOpened()) {
-    frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
-    current_speed_ = frame_rate_;
-    delay_ = (1000000.0 / frame_rate_);
-    emit mediaLoaded(filename);
-    emit playbackRateChanged(current_speed_);
-    emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
-  }
-  else {
-    std::string msg(
-        std::string("Failed to load media at ") + 
-        filename +
-        std::string("!"));
-    emit error(msg);
-  }
-}
-
-void Player::play() {
-  QMutexLocker locker(&mutex_);
-  if(!isRunning()) {
-    if(stopped_ == true) {
-      stopped_ = false;
-    }
-    start(LowPriority);
-  }
-  emit stateChanged(stopped_);
-}
-
 void Player::stop() {
-  QMutexLocker locker(&mutex_);
   stopped_ = true;
   emit stateChanged(stopped_);
 }
