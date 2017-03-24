@@ -8,10 +8,9 @@
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
-#include <fstream>
+
 namespace fish_annotator { namespace video_annotator {
 
-std::ofstream out("BLAHBLAH.txt");
 namespace fs = boost::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -120,7 +119,6 @@ void MainWindow::on_loadVideo_clicked() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     emit requestLoadVideo(file_str.toStdString());
-    out << "MAIN IS ON THREAD AT: " << QThread::currentThreadId() << std::endl;
   }
 }
 
@@ -240,7 +238,6 @@ void MainWindow::on_nextAndCopy_clicked() {
 }
 
 void MainWindow::showFrame(QImage image, qint64 frame) {
-  out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
   pixmap_item_->setPixmap(pixmap);
@@ -259,7 +256,6 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
 }
 
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
-  out << "RECEIVED DURATION CHANGED SIGNAL!" << duration << std::endl;
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
   ui_->videoSlider->setPageStep(duration / 20);

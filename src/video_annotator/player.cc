@@ -5,11 +5,8 @@
 #include <QEventLoop>
 #include <QMutexLocker>
 
-#include <fstream>
-
 namespace fish_annotator { namespace video_annotator {
 
-std::ofstream fout("BLAHPLAYER.txt");
 Player::Player()
   : QThread()
   , video_path_()
@@ -31,13 +28,10 @@ Player::~Player() {
   stopped_ = true;
   condition_.wakeOne();
   wait();
-  fout << "DELETING THE PLAYER!!" << std::endl;
 }
 
 void Player::run() {
-  std::ofstream threadout("BLAHTHREAD.txt");
   while(stopped_ == false) {
-    threadout << "GETTING FRAME " << frame_index_ << std::endl;
     auto time = QTime::currentTime();
     emit processedImage(getOneFrame(), frame_index_);
     double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
@@ -46,14 +40,12 @@ void Player::run() {
 }
 
 void Player::loadVideo(std::string filename) {
-  fout << "PLAYER IS ON THREAD LOAD VID AT: " << currentThreadId() << std::endl;
   video_path_ = filename;
   capture_.reset(new cv::VideoCapture(filename));
   if (capture_->isOpened()) {
     frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
     current_speed_ = frame_rate_;
     delay_ = (1000000.0 / frame_rate_);
-    fout << "ABOUT TO EMIT MEDIA LOADED SIGNAL!!" << std::endl;
     emit mediaLoaded(filename);
     emit playbackRateChanged(current_speed_);
     emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
@@ -69,7 +61,6 @@ void Player::loadVideo(std::string filename) {
 
 void Player::play() {
   QMutexLocker locker(&mutex_);
-  fout << "PLAY WAS PRESSED!" << std::endl;
   if(!isRunning()) {
     if(stopped_ == true) {
       stopped_ = false;
