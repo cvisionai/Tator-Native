@@ -126,7 +126,8 @@ void MainWindow::on_minusOneFrame_clicked() {
 void MainWindow::on_loadVideo_clicked() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
-      tr("Open Video"), ".",
+      tr("Open Video"), 
+      QFileInfo(video_path_).dir().canonicalPath(),
       tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
@@ -137,7 +138,8 @@ void MainWindow::on_loadVideo_clicked() {
 void MainWindow::on_loadAnnotationFile_clicked() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
-      tr("Open Annotation File"), ".",
+      tr("Open Annotation File"),
+      QFileInfo(video_path_).dir().canonicalPath(),
       tr("Annotation Files (*.csv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
