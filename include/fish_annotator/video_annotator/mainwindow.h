@@ -46,7 +46,7 @@ public slots:
   ///
   /// @param image Video frame to display.
   /// @param frame Frame of the image.
-  void showFrame(QImage image);//, qint64 frame);
+  void showFrame(QImage image, qint64 frame);
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);

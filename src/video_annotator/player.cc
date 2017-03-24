@@ -39,8 +39,8 @@ void Player::run() {
   while(stopped_ == false) {
     threadout << "GETTING FRAME " << frame_index_ << std::endl;
     auto time = QTime::currentTime();
-    emit processedImage(getOneFrame());
-    emit positionChanged(frame_index_);
+    emit processedImage(getOneFrame(), frame_index_);
+    //emit positionChanged(frame_index_);
     double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
     processWait(std::round(delay_ - usec));
   }
@@ -123,14 +123,14 @@ void Player::slowDown() {
 
 void Player::nextFrame() {
   setCurrentFrame(frame_index_);
-  emit processedImage(getOneFrame());
-  emit positionChanged(frame_index_);
+  emit processedImage(getOneFrame(), frame_index_);
+  //emit positionChanged(frame_index_);
 }
 
 void Player::prevFrame() {
   setCurrentFrame(frame_index_ - 2);
-  emit processedImage(getOneFrame());
-  emit positionChanged(frame_index_);
+  emit processedImage(getOneFrame(), frame_index_);
+  //emit positionChanged(frame_index_);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
@@ -147,8 +147,8 @@ void Player::setCurrentFrame(qint64 frame_num) {
 
 void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
-  emit processedImage(getOneFrame());
-  emit positionChanged(frame_index_);
+  emit processedImage(getOneFrame(), frame_index_);
+  //emit positionChanged(frame_index_);
 }
 
 void Player::processWait(qint64 usec) {

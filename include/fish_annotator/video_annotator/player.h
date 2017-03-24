@@ -65,7 +65,7 @@ signals:
     //
     /// @param image Captured image.
     /// @param frame Frame number that corresponds to this image.
-    void processedImage(QImage image);
+    void processedImage(QImage image, qint64 frame);
 
     /// @brief Emitted when duration changes.
     ///

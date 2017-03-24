@@ -241,13 +241,14 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
-void MainWindow::showFrame(QImage image) {//, qint64 frame) {
-  //out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
+void MainWindow::showFrame(QImage image, qint64 frame) {
+  out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
   pixmap_item_->setPixmap(pixmap);
-  //last_position_ = frame;
+  last_position_ = frame;
   drawAnnotations();
+  ui_->videoSlider->setValue(static_cast<int>(frame));
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -268,7 +269,6 @@ void MainWindow::handlePlayerDurationChanged(qint64 duration) {
 
 void MainWindow::handlePlayerPositionChanged(qint64 position) {
   out << "RECEIVED POSITION CHANGED SIGNAL!" << position << std::endl;
-  ui_->videoSlider->setValue(static_cast<int>(position));
   out << "HANDLED POSITION CHANGE SIGNAL. " << std::endl;
 }
 
