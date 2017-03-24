@@ -46,16 +46,16 @@ public slots:
   ///
   /// @param image Video frame to display.
   /// @param frame Frame of the image.
-  void showFrame(QImage image);//, uint64_t frame);
+  void showFrame(QImage image);//, qint64 frame);
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
   /// @brief Handles player duration change.
-  void handlePlayerDurationChanged(uint64_t duration);
+  void handlePlayerDurationChanged(qint64 duration);
 
   /// @brief Handles player position change.
-  void handlePlayerPositionChanged(uint64_t position);
+  void handlePlayerPositionChanged(qint64 position);
 
   /// @brief Handles player playback rate change.
   void handlePlayerPlaybackRateChanged(double rate);
@@ -89,7 +89,7 @@ signals:
   /// @brief Requests set frame.
   ///
   /// @param value Frame to go to.
-  void requestSetFrame(uint64_t value);
+  void requestSetFrame(qint64 value);
 
   /// @brief Requests next frame.
   void requestNextFrame();
@@ -132,8 +132,8 @@ private slots:
 
   /// @brief Sets the current frame to a new position.
   ///
-  /// @param value New value of the 
-  void on_videoSlider_valueChanged(int value);
+  /// @param action Action that was done.
+  void on_videoSlider_actionTriggered(int action);
 
   /// @brief Updates the current fish with a new species and updates the
   ///        subtype options.
@@ -199,7 +199,7 @@ private:
   QImage last_frame_;
 
   /// @brief Last video position (frames).
-  uint64_t last_position_;
+  qint64 last_position_;
 
   /// @brief Whether player is stopped.
   bool stopped_;
@@ -208,7 +208,7 @@ private:
   double rate_;
 
   /// @brief Currently selected fish ID.
-  uint64_t fish_id_;
+  qint64 fish_id_;
 
   /// @brief Current annotations.
   std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;

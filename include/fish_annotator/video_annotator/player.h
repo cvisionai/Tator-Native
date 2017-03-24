@@ -53,7 +53,7 @@ public slots:
     /// @brief Sets position to specified frame.
     ///
     /// @param frame Frame to emit.
-    void setFrame(uint64_t frame);
+    void setFrame(qint64 frame);
 
     /// @brief Sets position to next frame.
     void nextFrame();
@@ -65,23 +65,17 @@ signals:
     //
     /// @param image Captured image.
     /// @param frame Frame number that corresponds to this image.
-    void processedImageFromThread(QImage image);//, uint64_t frame);
-
-    /// @brief Emitted when a frame is ready to display.
-    //
-    /// @param image Captured image.
-    /// @param frame Frame number that corresponds to this image.
-    void processedImage(QImage image);//, uint64_t frame);
+    void processedImage(QImage image);
 
     /// @brief Emitted when duration changes.
     ///
     /// @param New video duration.
-    void durationChanged(uint64_t duration);
+    void durationChanged(qint64 duration);
 
     /// @brief Emitted when position changes.
     ///
     /// @param position New video position.
-    void positionChanged(uint64_t position);
+    void positionChanged(qint64 position);
 
     /// @brief Emitted when playback rate changes.
     ///
@@ -131,7 +125,7 @@ private:
     double delay_;
 
     /// @brief Current frame index.
-    uint64_t frame_index_;
+    qint64 frame_index_;
 
     /// @brief Mutex for deletion.
     QMutex mutex_;
@@ -140,10 +134,10 @@ private:
     QWaitCondition condition_;
 
     /// @brief Sets the current frame.
-    void setCurrentFrame(uint64_t frame_num);
+    void setCurrentFrame(qint64 frame_num);
 
     /// @brief Waits for specified time while allowing events to process.
-    void processWait(uint64_t usec);
+    void processWait(qint64 usec);
 };
 
 }} // namespace fish_annotator::video_annotator

@@ -44,10 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
-  QObject::connect(player_.get(), &Player::processedImageFromThread, 
+  QObject::connect(player_.get(), &Player::processedImage, 
       this, &MainWindow::showFrame);
-  //QObject::connect(player_.get(), &Player::processedImage, 
-  //    this, &MainWindow::showFrame);
   QObject::connect(player_.get(), &Player::durationChanged, 
       this, &MainWindow::handlePlayerDurationChanged);
   QObject::connect(player_.get(), &Player::positionChanged,
@@ -161,8 +159,8 @@ void MainWindow::on_videoSlider_sliderReleased() {
   if(stopped_ == false) emit requestPlay();
 }
 
-void MainWindow::on_videoSlider_valueChanged(int value) {
-  emit requestSetFrame(value);
+void MainWindow::on_videoSlider_actionTriggered(int action) {
+  //emit requestSetFrame(value);
 }
 
 void MainWindow::on_typeMenu_currentTextChanged(const QString &text) {
@@ -201,7 +199,7 @@ void MainWindow::on_removeFish_clicked() {
 }
 
 void MainWindow::on_goToFrame_clicked() {
-  uint64_t frame = annotation_->trackFirstFrame(fish_id_);
+  qint64 frame = annotation_->trackFirstFrame(fish_id_);
   emit requestSetFrame(frame);
 }
 
@@ -240,7 +238,7 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
-void MainWindow::showFrame(QImage image) {//, uint64_t frame) {
+void MainWindow::showFrame(QImage image) {//, qint64 frame) {
   //out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
   //last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
@@ -262,19 +260,22 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
   drawAnnotations();
 }
 
-void MainWindow::handlePlayerDurationChanged(uint64_t duration) {
+void MainWindow::handlePlayerDurationChanged(qint64 duration) {
+  out << "RECEIVED DURATION CHANGED SIGNAL!" << duration << std::endl;
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1000.0);
   ui_->videoSlider->setPageStep(10000.0);
 }
 
-void MainWindow::handlePlayerPositionChanged(uint64_t position) {
-  ui_->videoSlider->setValue(position);
+void MainWindow::handlePlayerPositionChanged(qint64 position) {
+  out << "RECEIVED POSITION CHANGED SIGNAL!" << position << std::endl;
+  ui_->videoSlider->setValue(static_cast<int>(position));
+  out << "HANDLED POSITION CHANGE SIGNAL. " << std::endl;
 }
 
 void MainWindow::handlePlayerPlaybackRateChanged(double rate) {
   rate_ = rate;
-  ui_->currentSpeed->setText(QString("Current Speed: %1%").arg(rate * 100));
+  ui_->currentSpeed->setText(QString("Current Speed: %1 FPS").arg(rate));
 }
 
 void MainWindow::handlePlayerStateChanged(bool stopped) {
