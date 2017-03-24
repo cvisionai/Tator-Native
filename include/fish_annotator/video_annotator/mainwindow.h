@@ -204,6 +204,9 @@ private:
   /// @brief Whether player is stopped.
   bool stopped_;
 
+  /// @brief Whether player was stopped before slider press.
+  bool was_stopped_;
+
   /// @brief Current playback rate.
   double rate_;
 

@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
   , last_frame_(nullptr)
   , last_position_(0)
   , stopped_(true) 
+  , was_stopped_(true)
   , rate_(0.0)
   , fish_id_(0) 
   , current_annotations_() {
@@ -152,15 +153,17 @@ void MainWindow::on_writeImage_clicked() {
 }
 
 void MainWindow::on_videoSlider_sliderPressed() {
+  was_stopped_ = stopped_;
   emit requestStop();
 }
 
 void MainWindow::on_videoSlider_sliderReleased() {
-  if(stopped_ == false) emit requestPlay();
+  emit requestSetFrame(ui_->videoSlider->sliderPosition());
+  if(was_stopped_ == false) emit requestPlay();
 }
 
 void MainWindow::on_videoSlider_actionTriggered(int action) {
-  //emit requestSetFrame(value);
+  emit requestSetFrame(ui_->videoSlider->sliderPosition());
 }
 
 void MainWindow::on_typeMenu_currentTextChanged(const QString &text) {
@@ -263,8 +266,8 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   out << "RECEIVED DURATION CHANGED SIGNAL!" << duration << std::endl;
   ui_->videoSlider->setRange(0, duration);
-  ui_->videoSlider->setSingleStep(1000.0);
-  ui_->videoSlider->setPageStep(10000.0);
+  ui_->videoSlider->setSingleStep(1);
+  ui_->videoSlider->setPageStep(duration / 20);
 }
 
 void MainWindow::handlePlayerPositionChanged(qint64 position) {
