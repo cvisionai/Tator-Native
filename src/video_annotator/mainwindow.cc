@@ -243,15 +243,11 @@ void MainWindow::on_nextAndCopy_clicked() {
 
 void MainWindow::showFrame(QImage image) {//, qint64 frame) {
   //out << "RECEIVED IMAGE AT FRAME " << frame << std::endl;
-  //last_frame_ = image;
+  last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
-  //if(pixmap_item_ == nullptr) {
-  //}
-  //else {
   pixmap_item_->setPixmap(pixmap);
-  //}
   //last_position_ = frame;
-  //drawAnnotations();
+  drawAnnotations();
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
