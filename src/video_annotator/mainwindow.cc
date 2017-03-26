@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
   ui_->sideBarLayout->addWidget(species_controls_.get());
+  ui_->videoWindow->setScene(scene_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   Player *player = new Player();
@@ -255,6 +256,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
   pixmap_item_->setPixmap(pixmap);
+  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
   last_position_ = frame;
   drawAnnotations();
   ui_->videoSlider->setValue(static_cast<int>(frame));
@@ -321,8 +323,6 @@ void MainWindow::handlePlayerMediaLoaded(QString video_path) {
   QPixmap pixmap(width_, height_);
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
-  ui_->videoWindow->setScene(scene_.get());
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
   ui_->videoWindow->show();
   emit requestNextFrame();
 }
