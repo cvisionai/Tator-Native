@@ -189,9 +189,6 @@ private:
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
 
-  /// @brief Video player.
-  std::unique_ptr<Player> player_;
-
   /// @brief Path to loaded video.
   QString video_path_;
 
