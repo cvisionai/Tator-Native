@@ -222,11 +222,16 @@ void MainWindow::on_goToFishVal_returnPressed() {
 }
 
 void MainWindow::on_addRegion_clicked() {
-  annotation_->insert(std::make_shared<DetectionAnnotation>(
-        last_position_,
-        fish_id_,
-        Rect(0, 0, 100, 100)));
-  drawAnnotations();
+  if(annotation_->getTotal() < 1) {
+    handlePlayerError("Please add a fish before adding a region!");
+  }
+  else {
+    annotation_->insert(std::make_shared<DetectionAnnotation>(
+          last_position_,
+          fish_id_,
+          Rect(0, 0, 100, 100)));
+    drawAnnotations();
+  }
 }
 
 void MainWindow::on_removeRegion_clicked() {
