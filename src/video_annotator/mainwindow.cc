@@ -242,12 +242,11 @@ void MainWindow::on_removeRegion_clicked() {
 void MainWindow::on_nextAndCopy_clicked() {
   auto det = annotation_->findDetection(last_position_, fish_id_);
   if(det != nullptr) {
-    on_plusOneFrame_clicked();
     annotation_->insert(std::make_shared<DetectionAnnotation>(
-          last_position_,
+          last_position_ + 1,
           fish_id_,
           det->area_));
-    drawAnnotations();
+    on_plusOneFrame_clicked();
   }
   else {
     QMessageBox msgBox;
