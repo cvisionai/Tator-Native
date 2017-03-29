@@ -170,7 +170,25 @@ void MainWindow::on_loadAnnotationFile_clicked() {
 }
 
 void MainWindow::on_saveAnnotationFile_clicked() {
-  fs::path vid_path(video_path_.toStdString());
+  std::string filename = ui_->fileNameValue->text().toStdString();
+  std::string reviewer = ui_->reviewerNameValue->text().toStdString();
+  if(filename.empty() == true && reviewer.empty() == true) {
+    filename = video_path_.toStdString();
+  }
+  else if(filename.empty() == true && reviewer.empty() == false) {
+    fs::path vid_path(video_path_.toStdString());
+    fs::path out_path = 
+      vid_path.parent_path() / 
+      fs::path(vid_path.stem().string() + 
+      std::string("_") + 
+      reviewer + 
+      std::string(".csv"));
+    filename = out_path.string();
+  }
+  else {
+    filename = filename + std::string("_") + reviewer + std::string(".csv");
+  }
+  fs::path vid_path(filename);
   annotation_->write(
       vid_path.replace_extension(".csv"),
       ui_->tripIDValue->text().toStdString(),
