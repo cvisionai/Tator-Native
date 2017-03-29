@@ -377,10 +377,26 @@ void MainWindow::updateSpeciesCounts() {
 }
 
 void MainWindow::updateStats() {
+  auto trk = annotation_->findTrack(fish_id_);
   ui_->fishNumVal->setText(QString::number(fish_id_));
   ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
-  ui_->frameCountedVal->setText(QString::number(
-        (annotation_->findTrack(fish_id_))->frame_added_));
+  ui_->frameCountedVal->setText(QString::number(trk->frame_added_));
+  ui_->typeMenu->clear();
+  ui_->subTypeMenu->clear();
+  auto species = annotation_->getAllSpecies();
+  for(auto &s : species) {
+    ui_->typeMenu->addItem(s.getName().c_str());
+  }
+  ui_->typeMenu->setCurrentText(trk->species_.c_str());
+  for(auto &s : species) {
+    if(s.getName() == trk->species_) {
+      auto subspecies = s.getSubspecies();
+      for(auto &sub : subspecies) {
+        ui_->subTypeMenu->addItem(sub.c_str());
+      }
+      ui_->subTypeMenu->setCurrentText(trk->subspecies_.c_str());
+    }
+  }
 }
 
 void MainWindow::drawAnnotations() {
