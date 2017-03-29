@@ -149,7 +149,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Trip ID</string>
+            <string>Trip ID:</string>
            </property>
           </widget>
          </item>

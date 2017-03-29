@@ -334,6 +334,8 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->play->setEnabled(true);
   ui_->faster->setEnabled(true);
   ui_->slower->setEnabled(true);
+  ui_->minusOneSecond->setEnabled(true);
+  ui_->minusThreeSecond->setEnabled(true);
   ui_->minusOneFrame->setEnabled(true);
   ui_->plusOneFrame->setEnabled(true);
   ui_->loadVideo->setEnabled(true);
