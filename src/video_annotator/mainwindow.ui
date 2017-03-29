@@ -951,22 +951,6 @@ padding: 6px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="reverse">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Reverse</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QPushButton" name="faster">
                   <property name="enabled">
                    <bool>false</bool>
@@ -1019,6 +1003,26 @@ padding: 6px;</string>
                   </property>
                   <property name="text">
                    <string>Slower</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="minusOneSecond">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>-1 Second</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="minusThreeSecond">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>-3 Second</string>
                   </property>
                  </widget>
                 </item>

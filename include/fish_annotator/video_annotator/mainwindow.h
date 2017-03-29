@@ -106,6 +106,12 @@ private slots:
   /// @brief Decreases the playback speed of the video by a factor of two.
   void on_slower_clicked();
 
+  /// @brief Rewinds the video by one second.
+  void on_minusOneSecond_clicked();
+
+  /// @brief Rewinds the video by three seconds.
+  void on_minusThreeSecond_clicked();
+
   /// @brief Increments the video by one frame.
   void on_plusOneFrame_clicked();
 

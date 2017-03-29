@@ -94,14 +94,16 @@ void MainWindow::on_play_clicked() {
   if(stopped_ == true) {
     emit requestPlay();
     ui_->play->setText("Pause");
-    ui_->reverse->setEnabled(true);
+    ui_->minusOneSecond->setEnabled(false);
+    ui_->minusThreeSecond->setEnabled(false);
     ui_->plusOneFrame->setEnabled(false);
     ui_->minusOneFrame->setEnabled(false);
   }
   else {
     emit requestStop();
     ui_->play->setText("Play");
-    ui_->reverse->setEnabled(false);
+    ui_->minusOneSecond->setEnabled(true);
+    ui_->minusThreeSecond->setEnabled(true);
     ui_->plusOneFrame->setEnabled(true);
     ui_->minusOneFrame->setEnabled(true);
   }
@@ -113,6 +115,18 @@ void MainWindow::on_faster_clicked() {
 
 void MainWindow::on_slower_clicked() {
   emit requestSlowDown();
+}
+
+void MainWindow::on_minusOneSecond_clicked() {
+  qint64 frame = last_position_;
+  frame -= static_cast<qint64>(std::round(rate_));
+  emit requestSetFrame(frame);
+}
+
+void MainWindow::on_minusThreeSecond_clicked() {
+  qint64 frame = last_position_;
+  frame -= static_cast<qint64>(std::round(rate_ * 3.0));
+  emit requestSetFrame(frame);
 }
 
 void MainWindow::on_plusOneFrame_clicked() {
