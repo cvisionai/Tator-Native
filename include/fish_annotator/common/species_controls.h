@@ -33,6 +33,9 @@ public:
   void resetCounts();
 
   /// @brief Sets count for a given species.
+  ///
+  /// @param count Number of individuals of this species.
+  /// @param species Name of the species.
   void setCount(uint64_t count, const std::string &species);
 
   /// @brief Loads species from an external source.
@@ -66,6 +69,9 @@ private slots:
 
 signals:
   /// @brief Propagates add individual signal from species widgets.
+  ///
+  /// @param species Species name.
+  /// @param subspecies Subspecies name.
   void individualAdded(std::string species, std::string subspecies);
 
 private:

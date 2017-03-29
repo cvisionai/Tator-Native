@@ -177,22 +177,31 @@ public:
   /// @param id ID of the individual associated with the track.
   void remove(uint64_t id);
 
-  /// @brief Gets next ID for a video.
+  /// @brief Gets next assignable ID for a video.
+  ///
+  /// @return Next assignable ID.
   uint64_t nextId();
 
   /// @brief Gets annotations for a given frame.
   ///
   /// @param frame Frame in the video.
+  /// @return Annotations for the given frame.
   std::vector<std::shared_ptr<DetectionAnnotation>>
     getDetectionAnnotations(uint64_t frame);
 
   /// @brief Gets counts for each species in a video.
+  ///
+  /// @return Counts for each species in the annotations.
   std::map<std::string, uint64_t> getCounts();
 
   /// @brief Gets all species in the annotations.
+  ///
+  /// @return All species in annotations.
   std::vector<Species> getAllSpecies();
 
   /// @brief Gets total tracks in the video.
+  ///
+  /// @return Total tracks in entire video.
   uint64_t getTotal();
 
   /// @brief Clears all annotations.
@@ -259,7 +268,7 @@ public:
   /// @param tow_number Tow number.
   /// @param reviewer Name of reviewer.
   /// @param tow_type Tow type.
-  /// @param fps Frames per second of the video.
+  /// @param fps Native frames per second of the video.
   void write(const boost::filesystem::path &csv_path,
     const std::string &trip_id,
     const std::string &tow_number,
