@@ -230,6 +230,11 @@ public:
   /// @return Frame of first occurrence, zero if not found or no detections.
   uint64_t trackFirstFrame(uint64_t id);
 
+  /// @brief Gets ID of earliest track.
+  ///
+  /// @return ID of earliest track.
+  uint64_t earliestTrackID();
+
   /// @brief Equality operator.
   ///
   /// @param rhs Right hand side argument.

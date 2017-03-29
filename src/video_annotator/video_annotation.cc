@@ -306,6 +306,15 @@ uint64_t VideoAnnotation::trackFirstFrame(uint64_t id) {
   return 0;
 }
 
+uint64_t VideoAnnotation::earliestTrackID() {
+  if(tracks_by_id_.left.size() == 0) {
+    return 0;
+  }
+  else {
+    return (*(tracks_by_id_.left.begin()->second))->id_;
+  }
+}
+
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();

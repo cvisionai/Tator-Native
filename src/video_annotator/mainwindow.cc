@@ -159,7 +159,13 @@ void MainWindow::on_loadAnnotationFile_clicked() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     annotation_->read(file_str.toStdString());
-    drawAnnotations();
+    species_controls_->loadFromVector(annotation_->getAllSpecies());
+    fish_id_ = annotation_->earliestTrackID();
+    if(fish_id_ != 0) {
+      updateSpeciesCounts();
+      updateStats();
+      drawAnnotations();
+    }
   }
 }
 
@@ -233,8 +239,14 @@ void MainWindow::on_goToFrame_clicked() {
 }
 
 void MainWindow::on_goToFishVal_returnPressed() {
-  fish_id_ = ui_->goToFishVal->text().toInt();
-  updateStats();
+  auto trk = annotation_->findTrack(ui_->goToFishVal->text().toInt());
+  if(trk != nullptr) {
+    fish_id_ = ui_->goToFishVal->text().toInt();
+    updateStats();
+  }
+  else {
+    handlePlayerError("Fish with that ID does not exist!");
+  }
 }
 
 void MainWindow::on_addRegion_clicked() {
@@ -368,7 +380,7 @@ void MainWindow::updateStats() {
   ui_->fishNumVal->setText(QString::number(fish_id_));
   ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
   ui_->frameCountedVal->setText(QString::number(
-        annotation_->trackFirstFrame(fish_id_)));
+        (annotation_->findTrack(fish_id_))->frame_added_));
 }
 
 void MainWindow::drawAnnotations() {

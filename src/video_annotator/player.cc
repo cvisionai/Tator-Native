@@ -108,19 +108,19 @@ void Player::slowDown() {
 }
 
 void Player::nextFrame() {
-  setCurrentFrame(frame_index_);
+  setCurrentFrame(frame_index_ + 1);
   emit processedImage(getOneFrame(), frame_index_);
 }
 
 void Player::prevFrame() {
-  setCurrentFrame(frame_index_ - 2);
+  setCurrentFrame(frame_index_ - 1);
   emit processedImage(getOneFrame(), frame_index_);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
   QMutexLocker locker(&mutex_);
   capture_->set(CV_CAP_PROP_POS_MSEC, 
-      1000.0 * static_cast<double>(frame_num) / frame_rate_);
+      1000.0 * static_cast<double>(frame_num - 1) / frame_rate_);
   if (frame_num > 0) {
 		frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES);
   }
