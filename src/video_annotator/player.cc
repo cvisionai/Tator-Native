@@ -36,7 +36,7 @@ void Player::loadVideo(QString filename) {
     frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
     current_speed_ = frame_rate_;
     delay_ = (1000000.0 / frame_rate_);
-    emit mediaLoaded(filename);
+    emit mediaLoaded(filename, frame_rate_);
     emit playbackRateChanged(current_speed_);
     emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
     emit resolutionChanged(

@@ -88,7 +88,8 @@ signals:
     /// @brief Emitted when new media is loaded.
     ///
     /// @param video_path Path to loaded video file.
-    void mediaLoaded(QString video_path);
+    /// @param native_rate Native playback rate of the video.
+    void mediaLoaded(QString video_path, qreal native_rate);
 
     /// @brief Emitted on error.
     ///

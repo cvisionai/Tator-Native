@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
   , stopped_(true) 
   , was_stopped_(true)
   , rate_(0.0)
+  , native_rate_(0.0)
   , fish_id_(0) 
   , current_annotations_() {
   ui_->setupUi(this);
@@ -170,7 +171,7 @@ void MainWindow::on_saveAnnotationFile_clicked() {
       ui_->towIDValue->text().toStdString(),
       ui_->reviewerNameValue->text().toStdString(),
       ui_->towStatus->isChecked() ? "Open" : "Closed",
-      rate_);
+      native_rate_);
 }
 
 void MainWindow::on_writeImage_clicked() {
@@ -298,7 +299,8 @@ void MainWindow::handlePlayerDurationChanged(qint64 duration) {
 
 void MainWindow::handlePlayerPlaybackRateChanged(double rate) {
   rate_ = rate;
-  ui_->currentSpeed->setText(QString("Current Speed: %1 FPS").arg(rate));
+  qint64 rate_percent = std::round(100.0 * rate_ / native_rate_);
+  ui_->currentSpeed->setText(QString("Current Speed: %1%").arg(rate_percent));
 }
 
 void MainWindow::handlePlayerResolutionChanged(qint64 width, qint64 height) {
@@ -310,8 +312,11 @@ void MainWindow::handlePlayerStateChanged(bool stopped) {
   stopped_ = stopped;
 }
 
-void MainWindow::handlePlayerMediaLoaded(QString video_path) {
+void MainWindow::handlePlayerMediaLoaded(
+  QString video_path, 
+  qreal native_rate) {
   video_path_ = video_path;
+  native_rate_ = native_rate;
   ui_->videoSlider->setEnabled(true);
   ui_->play->setEnabled(true);
   ui_->faster->setEnabled(true);

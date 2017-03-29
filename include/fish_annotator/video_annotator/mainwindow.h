@@ -66,7 +66,10 @@ public slots:
   void handlePlayerStateChanged(bool stopped);
 
   /// @brief Handles new media loaded.
-  void handlePlayerMediaLoaded(QString video_path);
+  ///
+  /// @param video_path Path to loaded video.
+  /// @param native_rate Native playback rate of the video.
+  void handlePlayerMediaLoaded(QString video_path, qreal native_rate);
 
   /// @brief Handles media player errors.
   void handlePlayerError(QString err);
@@ -218,6 +221,9 @@ private:
 
   /// @brief Current playback rate.
   double rate_;
+
+  /// @brief Native playback rate.
+  double native_rate_;
 
   /// @brief Currently selected fish ID.
   qint64 fish_id_;
