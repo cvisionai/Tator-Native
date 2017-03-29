@@ -148,12 +148,12 @@ private slots:
   ///        subtype options.
   ///
   /// @param text Selected species.
-  void on_typeMenu_currentTextChanged(const QString &text);
+  void on_typeMenu_activated(const QString &text);
 
   /// @brief Updates the current fish with a new subspecies.
   ///
   /// @param text Selected subspecies.
-  void on_subTypeMenu_currentTextChanged(const QString &text);
+  void on_subTypeMenu_activated(const QString &text);
 
   /// @brief Sets current fish to next lowest ID.
   void on_prevFish_clicked();
