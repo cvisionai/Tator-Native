@@ -119,6 +119,12 @@ AnnotatedRegion<Info>::AnnotatedRegion(
       annotation_->area_.h = annotation_->area_.h + annotation_->area_.y;
       annotation_->area_.y = 0;
     }
+    if(annotation_->area_.x + annotation_->area_.w > bounding_rect_.width()) {
+      annotation_->area_.w = bounding_rect_.width() - annotation_->area_.x;
+    }
+    if(annotation_->area_.y + annotation_->area_.h > bounding_rect_.height()) {
+      annotation_->area_.h = bounding_rect_.height() - annotation_->area_.y;
+    }
     setRect(QRectF(
           annotation_->area_.x, 
           annotation_->area_.y,
