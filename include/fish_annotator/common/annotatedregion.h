@@ -31,33 +31,46 @@ template<typename Info>
 class AnnotatedRegion: public QGraphicsRectItem {
 public:
   /// @brief Constructor.
+  ///
+  /// @param uid Unique ID associated with this region.
+  /// @param annotation Annotation associated with this region.
+  /// @param bounding_rect Bounding rect for this region.
   AnnotatedRegion(uint64_t uid, 
                   std::shared_ptr<Info> annotation,
                   const QRectF &bounding_rect);
 
   /// @brief Reimplemented from QGraphicsItem.
+  ///
+  /// @param event Qt event pointer.
   void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
   /// @brief Reimplemented from QGraphicsItem.
+  ///
+  /// @param event Qt event pointer.
   void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
   /// @brief Reimplemented from QGraphicsItem.
+  ///
+  /// @param event Qt event pointer.
   void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
   /// @brief Reimplemented from QGraphicsItem.
+  ///
+  /// @param painter Qt painter pointer.
+  /// @param option Qt option pointer.
+  /// @param widget Qt widget pointer.
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget);
 
   /// @brief Gets the ID associated with this region.
-  uint64_t getUID() {return uid_;}
+  ///
+  /// @return Unique ID associated with this region.
+  uint64_t getUID();
 
   /// @brief Gets the bounding box associated with this region.
-  QRectF getAnnBox() { return QRectF(
-    annotation_->area_.x,
-    annotation_->area_.y,
-    annotation_->area_.w,
-    annotation_->area_.h);
-  }
+  ///
+  /// @return Bounding box associated with this region.
+  QRectF getAnnBox();
 private:
   /// @brief Pointer to the annotation location.
   std::shared_ptr<Info> annotation_;
@@ -309,7 +322,7 @@ void AnnotatedRegion<Info>::paint(QPainter *painter,
   // draw main rectangle
   painter->drawRect(rect());
   // draw UID
-  QString text("0000");
+  QString text("000000");
   QFontMetrics fm = painter->fontMetrics();
   int width = fm.width(text);
   QBrush brush;
@@ -321,7 +334,24 @@ void AnnotatedRegion<Info>::paint(QPainter *painter,
     fm.height()
     );
   painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
-  painter->drawText(text_area, QString::number(uid_));
+  painter->drawText(
+      text_area, 
+      QString::number(uid_), 
+      QTextOption(Qt::AlignRight));
+}
+
+template<typename Info>
+uint64_t AnnotatedRegion<Info>::getUID() {
+  return uid_;
+}
+
+template<typename Info>
+QRectF AnnotatedRegion<Info>::getAnnBox() {
+  return QRectF(
+    annotation_->area_.x,
+    annotation_->area_.y,
+    annotation_->area_.w,
+    annotation_->area_.h);
 }
 
 template<typename Info>
