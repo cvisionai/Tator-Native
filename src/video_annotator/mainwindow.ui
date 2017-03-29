@@ -61,6 +61,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -79,6 +81,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
@@ -97,6 +101,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -121,6 +127,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -136,6 +144,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -154,6 +164,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -169,6 +181,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -187,6 +201,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -223,7 +239,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="layoutDirection">
@@ -294,7 +312,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="layoutDirection">
@@ -327,7 +347,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>6</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
@@ -354,7 +376,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -375,7 +399,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>6</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
@@ -421,7 +447,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -440,6 +468,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -460,7 +490,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -479,6 +511,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -499,7 +533,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -518,6 +554,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -536,6 +574,46 @@
           <string/>
          </property>
          <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="0">
+           <widget class="QPushButton" name="nextFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+            </property>
+            <property name="text">
+             <string>Next Fish</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QPushButton" name="prevFish">
             <property name="enabled">
@@ -555,7 +633,9 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>7</pointsize>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="focusPolicy">
@@ -574,7 +654,7 @@ padding: 6px;</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="3" column="0">
            <widget class="QPushButton" name="removeFish">
             <property name="enabled">
              <bool>false</bool>
@@ -593,7 +673,7 @@ padding: 6px;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>7</pointsize>
+              <pointsize>10</pointsize>
               <weight>50</weight>
               <bold>false</bold>
              </font>
@@ -614,7 +694,7 @@ padding: 6px;</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="goToFishLabel">
             <property name="enabled">
              <bool>false</bool>
@@ -633,7 +713,9 @@ padding: 6px;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>6</pointsize>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="styleSheet">
@@ -642,80 +724,11 @@ border-style: outset;
 border-radius: 2px;</string>
             </property>
             <property name="text">
-             <string>     Go To Fish   </string>
+             <string>     Go To Fish:</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="nextFish">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>7</pointsize>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>Next Fish</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="goToFishVal">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>6</pointsize>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border-style: outset;
-border-radius: 3px;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
+          <item row="2" column="0">
            <widget class="QPushButton" name="goToFrame">
             <property name="enabled">
              <bool>false</bool>
@@ -734,7 +747,7 @@ border-radius: 3px;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>7</pointsize>
+              <pointsize>10</pointsize>
               <weight>50</weight>
               <bold>false</bold>
              </font>
@@ -764,6 +777,39 @@ padding: 6px;</string>
             </property>
            </widget>
           </item>
+          <item row="5" column="0">
+           <widget class="QLineEdit" name="goToFishVal">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::ClickFocus</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-style: outset;
+border-radius: 3px;</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -780,6 +826,13 @@ padding: 6px;</string>
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Add Region</string>
            </property>
@@ -790,6 +843,13 @@ padding: 6px;</string>
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Remove Region</string>
            </property>
@@ -799,6 +859,13 @@ padding: 6px;</string>
           <widget class="QPushButton" name="nextAndCopy">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
            </property>
            <property name="text">
             <string>Next + Copy</string>
@@ -852,6 +919,9 @@ padding: 6px;</string>
         <widget class="QDockWidget" name="dockWidget">
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="features">
+          <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
          </property>
          <widget class="QWidget" name="videoControlsDockWidget">
           <property name="layoutDirection">
@@ -945,6 +1015,13 @@ padding: 6px;</string>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Play</string>
                   </property>
@@ -973,6 +1050,13 @@ padding: 6px;</string>
                     <height>0</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
                   </property>
@@ -998,6 +1082,13 @@ padding: 6px;</string>
                     <height>0</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
                   </property>
@@ -1011,6 +1102,13 @@ padding: 6px;</string>
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>-1 Second</string>
                   </property>
@@ -1021,6 +1119,13 @@ padding: 6px;</string>
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>-3 Second</string>
                   </property>
@@ -1030,6 +1135,13 @@ padding: 6px;</string>
                  <widget class="QPushButton" name="minusOneFrame">
                   <property name="enabled">
                    <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
                   </property>
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
@@ -1043,6 +1155,13 @@ padding: 6px;</string>
                  <widget class="QPushButton" name="plusOneFrame">
                   <property name="enabled">
                    <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
                   </property>
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
@@ -1075,6 +1194,13 @@ padding: 6px;</string>
                     <height>16777215</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Load Video</string>
                   </property>
@@ -1084,6 +1210,13 @@ padding: 6px;</string>
                  <widget class="QPushButton" name="loadAnnotationFile">
                   <property name="enabled">
                    <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
                   </property>
                   <property name="text">
                    <string>Load Annotation File</string>
@@ -1095,6 +1228,13 @@ padding: 6px;</string>
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Save Annotation File</string>
                   </property>
@@ -1104,6 +1244,13 @@ padding: 6px;</string>
                  <widget class="QPushButton" name="writeImage">
                   <property name="enabled">
                    <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
                   </property>
                   <property name="text">
                    <string>Write Image</string>
