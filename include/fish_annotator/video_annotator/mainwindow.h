@@ -219,6 +219,9 @@ private:
   /// @brief Current annotations.
   std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
 
+  /// @brief Updates counts of each species in species controls.
+  void updateSpeciesCounts();
+
   /// @brief Updates displayed fish statistics.
   void updateStats();
 

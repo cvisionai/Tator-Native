@@ -208,6 +208,7 @@ void MainWindow::on_nextFish_clicked() {
 
 void MainWindow::on_removeFish_clicked() {
   annotation_->remove(fish_id_);
+  updateSpeciesCounts();
   drawAnnotations();
 }
 
@@ -270,6 +271,7 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
   annotation_->insert(std::make_shared<TrackAnnotation>(
         fish_id_, species, subspecies));
   on_addRegion_clicked();
+  updateSpeciesCounts();
   updateStats();
   drawAnnotations();
 }
@@ -334,6 +336,13 @@ void MainWindow::handlePlayerError(QString err) {
   QMessageBox msgBox;
   msgBox.setText(err);
   msgBox.exec();
+}
+
+void MainWindow::updateSpeciesCounts() {
+  auto counts = annotation_->getCounts();
+  for(auto it = counts.begin(); it != counts.end(); it++) {
+    species_controls_->setCount(it->second, it->first);
+  }
 }
 
 void MainWindow::updateStats() {

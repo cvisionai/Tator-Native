@@ -252,7 +252,9 @@ std::shared_ptr<TrackAnnotation> VideoAnnotation::findTrack(uint64_t id) {
 std::shared_ptr<TrackAnnotation> VideoAnnotation::nextTrack(uint64_t id) {
   auto it = tracks_by_id_.left.find(id);
   if(it != tracks_by_id_.left.end()) {
-    return *(std::next(it)->second);
+    if(std::next(it) != tracks_by_id_.left.end()) {
+      return *(std::next(it)->second);
+    }
   }
   return std::shared_ptr<TrackAnnotation>(nullptr);
 }
@@ -260,7 +262,9 @@ std::shared_ptr<TrackAnnotation> VideoAnnotation::nextTrack(uint64_t id) {
 std::shared_ptr<TrackAnnotation> VideoAnnotation::prevTrack(uint64_t id) {
   auto it = tracks_by_id_.left.find(id);
   if(it != tracks_by_id_.left.end()) {
-    return *(std::prev(it)->second);
+    if(std::prev(it) != tracks_by_id_.left.end()) {
+      return *(std::prev(it)->second);
+    }
   }
   return std::shared_ptr<TrackAnnotation>(nullptr);
 }
