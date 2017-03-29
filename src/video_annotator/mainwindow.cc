@@ -283,7 +283,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   fish_id_ = annotation_->nextId();
   annotation_->insert(std::make_shared<TrackAnnotation>(
-        fish_id_, species, subspecies));
+        fish_id_, species, subspecies, last_position_));
   on_addRegion_clicked();
   updateSpeciesCounts();
   updateStats();

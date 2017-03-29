@@ -62,22 +62,26 @@ void DetectionAnnotation::read(const pt::ptree &tree) {
 TrackAnnotation::TrackAnnotation(
   uint64_t id,
   const std::string &species,
-  const std::string &subspecies)
+  const std::string &subspecies,
+  uint64_t frame_added)
   : id_(id)
   , species_(species)
-  , subspecies_(subspecies) {
+  , subspecies_(subspecies)
+  , frame_added_(frame_added) {
 }
 
 TrackAnnotation::TrackAnnotation()
   : id_(0)
   , species_()
-  , subspecies_() {
+  , subspecies_() 
+  , frame_added_(0) {
 }
 
 bool TrackAnnotation::operator==(const TrackAnnotation &rhs) const {
   if(id_ != rhs.id_) return false;
   if(species_ != rhs.species_) return false;
   if(subspecies_ != rhs.subspecies_) return false;
+  if(frame_added_ != rhs.frame_added_) return false;
   return true;
 }
 
@@ -85,11 +89,14 @@ bool TrackAnnotation::operator!=(const TrackAnnotation &rhs) const {
   return !operator==(rhs);
 }
 
-std::string TrackAnnotation::write() const {
+std::string TrackAnnotation::write(double fps) const {
   std::string csv_row;
+  double time_added = static_cast<double>(frame_added_) / fps;
   csv_row += ","; csv_row += std::to_string(id_);
   csv_row += ","; csv_row += species_;
   csv_row += ","; csv_row += subspecies_;
+  csv_row += ","; csv_row += std::to_string(frame_added_);
+  csv_row += ","; csv_row += std::to_string(time_added);
   return csv_row;
 }
 
@@ -99,6 +106,7 @@ void TrackAnnotation::read(const std::string &csv_row) {
   id_ = std::stoull(vals[4]);
   species_ = vals[5];
   subspecies_ = vals[6];
+  frame_added_ = std::stoull(vals[7]);
 }
 
 VideoAnnotation::VideoAnnotation() 
@@ -107,7 +115,8 @@ VideoAnnotation::VideoAnnotation()
   , detections_by_frame_()
   , detections_by_id_()
   , tracks_by_id_()
-  , tracks_by_species_() {
+  , tracks_by_species_()
+  , tracks_by_frame_added_() {
 }
 
 void VideoAnnotation::insert(std::shared_ptr<DetectionAnnotation> annotation) {
@@ -122,6 +131,8 @@ void VideoAnnotation::insert(std::shared_ptr<TrackAnnotation> annotation) {
   tracks_by_id_.insert({annotation->id_, track_list_.begin()});
   tracks_by_species_.insert({
     {annotation->species_, annotation->subspecies_}, track_list_.begin()});
+  tracks_by_frame_added_.insert(
+    {annotation->frame_added_, track_list_.begin()});
 }
 
 void VideoAnnotation::remove(uint64_t frame, uint64_t id) {
@@ -228,6 +239,7 @@ void VideoAnnotation::clear() {
   detections_by_id_.clear();
   tracks_by_id_.clear();
   tracks_by_species_.clear();
+  tracks_by_frame_added_.clear();
 }
 
 std::shared_ptr<DetectionAnnotation> 
@@ -250,20 +262,28 @@ std::shared_ptr<TrackAnnotation> VideoAnnotation::findTrack(uint64_t id) {
 }
 
 std::shared_ptr<TrackAnnotation> VideoAnnotation::nextTrack(uint64_t id) {
-  auto it = tracks_by_id_.left.find(id);
-  if(it != tracks_by_id_.left.end()) {
-    if(std::next(it) != tracks_by_id_.left.end()) {
-      return *(std::next(it)->second);
+  auto id_it = tracks_by_id_.left.find(id);
+  if(id_it != tracks_by_id_.left.end()) {
+    auto frame_it_right = tracks_by_frame_added_.right.find(id_it->second);
+    if(frame_it_right != tracks_by_frame_added_.right.end()) {
+      auto frame_it_left = tracks_by_frame_added_.project_left(frame_it_right);
+      if(std::next(frame_it_left) != tracks_by_frame_added_.left.end()) {
+        return *(std::next(frame_it_left)->second);
+      }
     }
   }
   return std::shared_ptr<TrackAnnotation>(nullptr);
 }
 
 std::shared_ptr<TrackAnnotation> VideoAnnotation::prevTrack(uint64_t id) {
-  auto it = tracks_by_id_.left.find(id);
-  if(it != tracks_by_id_.left.end()) {
-    if(std::prev(it) != tracks_by_id_.left.end()) {
-      return *(std::prev(it)->second);
+  auto id_it = tracks_by_id_.left.find(id);
+  if(id_it != tracks_by_id_.left.end()) {
+    auto frame_it_right = tracks_by_frame_added_.right.find(id_it->second);
+    if(frame_it_right != tracks_by_frame_added_.right.end()) {
+      auto frame_it_left = tracks_by_frame_added_.project_left(frame_it_right);
+      if(std::prev(frame_it_left) != tracks_by_frame_added_.left.end()) {
+        return *(std::prev(frame_it_left)->second);
+      }
     }
   }
   return std::shared_ptr<TrackAnnotation>(nullptr);
@@ -334,23 +354,8 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
   csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
   csv << std::endl;
   for(const auto &t : tracks_by_id_.left) {
-    auto first_det = std::find_if(
-      detections_by_frame_.left.begin(), 
-      detections_by_frame_.left.end(),
-      [&t](const DetectionsByInteger::left_value_type &d) {
-        return t.first == (*(d.second))->id_;
-      });
     csv << meta;
-    csv << (*(t.second))->write();
-    csv << ",";
-    if(first_det == detections_by_frame_.left.end()) {
-      csv << 0 << ",";
-      csv << 0.0;
-    }
-    else {
-      csv << first_det->first << ",";
-      csv << static_cast<double>(first_det->first) / fps;
-    }
+    csv << (*(t.second))->write(fps);
     csv << std::endl;
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
@@ -390,7 +395,7 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
     std::vector<std::string> tokens;
     boost::split(tokens, line, boost::is_any_of(","));
     insert(std::make_shared<TrackAnnotation>(
-      std::stoull(tokens[4]), tokens[5], tokens[6]));
+      std::stoull(tokens[4]), tokens[5], tokens[6], std::stoull(tokens[7])));
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }

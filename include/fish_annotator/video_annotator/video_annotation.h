@@ -91,10 +91,12 @@ struct TrackAnnotation {
   /// @param ID of the individual.
   /// @param species Species of the individual.
   /// @param subspecies Subspecies of the individual.
+  /// @param frame_added Frame that individual was added.
   TrackAnnotation(
     uint64_t id,
     const std::string &species,
-    const std::string &subspecies);
+    const std::string &subspecies,
+    uint64_t frame_added);
 
   /// @brief Default constructor.
   TrackAnnotation();
@@ -113,8 +115,9 @@ struct TrackAnnotation {
 
   /// @brief Writes to a string containing comma separated values.
   ///
+  /// @param fps Frames per second of the video.
   /// @return String containing comma separated values.
-  std::string write() const;
+  std::string write(double fps) const;
 
   /// @brief Reads from a string containing comma separated values.
   ///
@@ -124,6 +127,7 @@ struct TrackAnnotation {
   uint64_t id_; ///< ID of the individual.
   std::string species_; ///< Species of the individual.
   std::string subspecies_; ///< Subspecies of the individual.
+  uint64_t frame_added_; ///< Frame that individual was added.
 };
 
 /// @brief List of track annotations.
@@ -276,6 +280,11 @@ private:
     uint64_t,
     boost::bimaps::multiset_of<TrackList::iterator>> TracksByUniqueInteger;
 
+  /// @brief For mapping integers to track annotations.
+  typedef boost::bimap<
+    boost::bimaps::multiset_of<uint64_t>,
+    boost::bimaps::multiset_of<TrackList::iterator>> TracksByInteger;
+
   /// @brief For mapping pair of strings to track annotations.
   typedef boost::bimap<
     boost::bimaps::multiset_of<std::pair<std::string, std::string>>,
@@ -298,6 +307,9 @@ private:
 
   /// @brief Map between species/subspecies and iterator to track annotations. 
   TracksByStringPair tracks_by_species_;
+
+  /// @brief Map between frame added and iterator to track annotations.
+  TracksByInteger tracks_by_frame_added_;
 };
 
 }} // namespace fish_annotator::video_annotator
