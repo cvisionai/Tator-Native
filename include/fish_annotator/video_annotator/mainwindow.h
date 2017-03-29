@@ -40,6 +40,8 @@ public:
   explicit MainWindow(QWidget *parent = 0);
 protected:
   /// @brief Resizes the video and scene.
+  ///
+  /// @param event Qt resize event pointer.
   void resizeEvent(QResizeEvent *event) override final;
 public slots:
   /// @brief Displays a video frame.
@@ -49,15 +51,25 @@ public slots:
   void showFrame(QImage image, qint64 frame);
 
   /// @brief Adds an individual and enables bounding box drawing.
+  ///
+  /// @param species Species name of the new individual.
+  /// @param subspecies Subspecies name of the new individual.
   void addIndividual(std::string species, std::string subspecies);
 
   /// @brief Handles player duration change.
+  ///
+  /// @param duration New video duration in total frames.
   void handlePlayerDurationChanged(qint64 duration);
 
   /// @brief Handles player playback rate change.
+  ///
+  /// @param rate New playback rate in fps.
   void handlePlayerPlaybackRateChanged(double rate);
 
   /// @brief Handles player resolution change.
+  ///
+  /// @param width Width of new video resolution.
+  /// @param height Height of new video resolution.
   void handlePlayerResolutionChanged(qint64 width, qint64 height);
 
   /// @brief Handles player state change.
@@ -72,6 +84,8 @@ public slots:
   void handlePlayerMediaLoaded(QString video_path, qreal native_rate);
 
   /// @brief Handles media player errors.
+  ///
+  /// @param err Error message.
   void handlePlayerError(QString err);
 signals:
   /// @brief Requests play.
@@ -81,6 +95,8 @@ signals:
   void requestStop();
 
   /// @brief Requests load video.
+  ///
+  /// @param file Full path to file to be loaded.
   void requestLoadVideo(QString file);
 
   /// @brief Requests speed up.
