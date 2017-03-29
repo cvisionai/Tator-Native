@@ -86,7 +86,7 @@
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::ClickFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
           </widget>
          </item>
@@ -599,7 +599,7 @@
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(230, 230, 230);
@@ -639,7 +639,7 @@ padding: 6px;</string>
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(230, 230, 230);
@@ -679,7 +679,7 @@ padding: 6px;</string>
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(230, 230, 230);
@@ -756,7 +756,7 @@ border-radius: 2px;</string>
              <cursorShape>ArrowCursor</cursorShape>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(230, 230, 230);
@@ -802,7 +802,7 @@ padding: 6px;</string>
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">border-style: outset;
@@ -1058,7 +1058,7 @@ border-radius: 3px;</string>
                    </font>
                   </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>Faster</string>
@@ -1090,7 +1090,7 @@ border-radius: 3px;</string>
                    </font>
                   </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>Slower</string>
@@ -1144,7 +1144,7 @@ border-radius: 3px;</string>
                    </font>
                   </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>-1 Frame</string>
@@ -1164,7 +1164,7 @@ border-radius: 3px;</string>
                    </font>
                   </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>+1 Frame</string>
@@ -1285,6 +1285,34 @@ border-radius: 3px;</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fileNameValue</tabstop>
+  <tabstop>reviewerNameValue</tabstop>
+  <tabstop>tripIDValue</tabstop>
+  <tabstop>towIDValue</tabstop>
+  <tabstop>towStatus</tabstop>
+  <tabstop>prevFish</tabstop>
+  <tabstop>nextFish</tabstop>
+  <tabstop>goToFrame</tabstop>
+  <tabstop>removeFish</tabstop>
+  <tabstop>goToFishVal</tabstop>
+  <tabstop>addRegion</tabstop>
+  <tabstop>removeRegion</tabstop>
+  <tabstop>nextAndCopy</tabstop>
+  <tabstop>videoSlider</tabstop>
+  <tabstop>play</tabstop>
+  <tabstop>faster</tabstop>
+  <tabstop>slower</tabstop>
+  <tabstop>minusOneSecond</tabstop>
+  <tabstop>minusThreeSecond</tabstop>
+  <tabstop>minusOneFrame</tabstop>
+  <tabstop>plusOneFrame</tabstop>
+  <tabstop>loadVideo</tabstop>
+  <tabstop>loadAnnotationFile</tabstop>
+  <tabstop>saveAnnotationFile</tabstop>
+  <tabstop>writeImage</tabstop>
+  <tabstop>videoWindow</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
