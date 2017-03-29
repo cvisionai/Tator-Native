@@ -49,7 +49,7 @@ public slots:
 
     /// @brief Sets position to specified frame.
     ///
-    /// @param frame Frame to emit.
+    /// @param frame Frame to seek to.
     void setFrame(qint64 frame);
 
     /// @brief Sets position to next frame.
