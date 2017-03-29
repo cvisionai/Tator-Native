@@ -40,6 +40,11 @@ public:
   /// @param vec Vector of species used to insert widgets.
   void loadFromVector(const std::vector<Species> &vec);
 
+  /// @brief Gets species for every species widget.
+  ///
+  /// @return Species for every species widget.
+  std::vector<Species> getSpecies();
+
 private slots:
   /// @brief Brings up a dialog box to add a species.
   void on_addSpecies_clicked();

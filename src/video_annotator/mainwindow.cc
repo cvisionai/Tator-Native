@@ -9,9 +9,6 @@
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <fstream>
-std::ofstream out("BLAHBLAH.txt");
-
 namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
@@ -204,6 +201,7 @@ void MainWindow::on_typeMenu_activated(const QString &text) {
   auto trk = annotation_->findTrack(fish_id_);
   if(trk != nullptr) {
     trk->species_ = text.toStdString();
+    updateStats();
   }
 }
 
@@ -298,9 +296,6 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   fish_id_ = annotation_->nextId();
-  out << "ADDING ID: " << fish_id_ << std::endl;
-  out << "  SPECIES: " << species << std::endl;
-  out << "  SUBSPECIES: " << subspecies << std::endl;
   annotation_->insert(std::make_shared<TrackAnnotation>(
         fish_id_, species, subspecies, last_position_));
   on_addRegion_clicked();
@@ -383,37 +378,25 @@ void MainWindow::updateSpeciesCounts() {
 }
 
 void MainWindow::updateStats() {
-  out << "--------------" << std::endl;
-  out << "FISH ID IS: " << fish_id_ << std::endl;
   auto trk = annotation_->findTrack(fish_id_);
-  out << "TRACK ID: " << trk->id_ << std::endl;
-  out << "TRACK SPECIES: " << trk->species_ << std::endl;
-  out << "TRACK SUBSPECIES: " << trk->subspecies_ << std::endl;
   ui_->fishNumVal->setText(QString::number(fish_id_));
   ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
   ui_->frameCountedVal->setText(QString::number(trk->frame_added_));
   ui_->typeMenu->clear();
   ui_->subTypeMenu->clear();
-  auto species = annotation_->getAllSpecies();
-  qint64 species_index = 0;
+  auto species = species_controls_->getSpecies();
   for(auto &s : species) {
     ui_->typeMenu->addItem(s.getName().c_str());
-    out << "SPECIES FROM GETALLSPECIES: " << s.getName() << std::endl;
-    out << "SPECIES FROM TRACK: " << trk->species_ << std::endl;
     if(s.getName() == trk->species_) {
-      ui_->typeMenu->setCurrentIndex(species_index);
+      ui_->typeMenu->setCurrentText(s.getName().c_str());
       auto subspecies = s.getSubspecies();
-      qint64 subspecies_index = 0;
       for(auto &sub : subspecies) {
         ui_->subTypeMenu->addItem(sub.c_str());
         if(sub == trk->subspecies_) {
-          ui_->subTypeMenu->setCurrentIndex(subspecies_index);
-          out << "FOUND SUBSPECIES INDEX AT: " << subspecies_index << std::endl;
+          ui_->subTypeMenu->setCurrentText(sub.c_str());
         }
-        subspecies_index++;
       }
     }
-    species_index++;
   }
 }
 
