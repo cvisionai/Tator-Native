@@ -23,7 +23,7 @@
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="sideBarLayout" stretch="0,0,0,0,0,0">
        <property name="spacing">
         <number>6</number>
        </property>
@@ -61,6 +61,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -79,10 +81,12 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::ClickFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
           </widget>
          </item>
@@ -97,6 +101,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -121,6 +127,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -136,10 +144,12 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
-            <string>Trip ID</string>
+            <string>Trip ID:</string>
            </property>
           </widget>
          </item>
@@ -154,6 +164,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -169,6 +181,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -187,6 +201,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
           </widget>
@@ -194,141 +210,87 @@
         </layout>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>GroupBox</string>
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+         <property name="spacing">
+          <number>19</number>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,3">
-            <property name="spacing">
-             <number>19</number>
-            </property>
-            <property name="leftMargin">
-             <number>1</number>
-            </property>
-            <property name="topMargin">
-             <number>1</number>
-            </property>
-            <property name="rightMargin">
-             <number>1</number>
-            </property>
-            <item>
-             <widget class="QCheckBox" name="towStatus">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>8</pointsize>
-               </font>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::RightToLeft</enum>
-              </property>
-              <property name="text">
-               <string>Tow Open     </string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>5</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,3">
-            <property name="spacing">
-             <number>19</number>
-            </property>
-            <property name="leftMargin">
-             <number>1</number>
-            </property>
-            <property name="topMargin">
-             <number>1</number>
-            </property>
-            <property name="rightMargin">
-             <number>1</number>
-            </property>
-            <item>
-             <widget class="QCheckBox" name="degraded">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>8</pointsize>
-               </font>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::RightToLeft</enum>
-              </property>
-              <property name="text">
-               <string>Degraded      </string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_6">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>5</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-         </layout>
-         <zorder></zorder>
-        </widget>
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QCheckBox" name="towStatus">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Tow Open      </string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="degradedStatus">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Degraded       </string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Minimum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QFormLayout" name="formLayout_3">
@@ -358,6 +320,9 @@
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="typeLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -366,7 +331,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="layoutDirection">
@@ -382,6 +349,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QComboBox" name="typeMenu">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -396,7 +366,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>6</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
@@ -412,6 +384,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="subTypeLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -420,7 +395,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -430,6 +407,9 @@
          </item>
          <item row="1" column="1">
           <widget class="QComboBox" name="subTypeMenu">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -438,7 +418,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>6</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
@@ -484,7 +466,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -503,6 +487,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -523,7 +509,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -542,6 +530,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -562,7 +552,9 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>8</pointsize>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -581,6 +573,8 @@
            <property name="font">
             <font>
              <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
@@ -599,43 +593,11 @@
           <string/>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="prevFish">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>7</pointsize>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>   Prev Fish  </string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="removeFish">
+           <widget class="QPushButton" name="nextFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -650,77 +612,13 @@ padding: 6px;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>7</pointsize>
+              <pointsize>10</pointsize>
               <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>Remove Fish</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="goToFishLabel">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>6</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(221, 221, 221);
-border-style: outset;
-border-radius: 2px;</string>
-            </property>
-            <property name="text">
-             <string>     Go To Fish   </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="nextFish">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>7</pointsize>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(230, 230, 230);
@@ -735,8 +633,11 @@ padding: 6px;</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="goToFishVal">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="prevFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -751,20 +652,32 @@ padding: 6px;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>6</pointsize>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-style: outset;
-border-radius: 3px;</string>
+             <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+            </property>
+            <property name="text">
+             <string>   Prev Fish  </string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="goToFrame">
+          <item row="3" column="0">
+           <widget class="QPushButton" name="removeFish">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -779,7 +692,81 @@ border-radius: 3px;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>7</pointsize>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::StrongFocus</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+            </property>
+            <property name="text">
+             <string>Remove Fish</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="goToFishLabel">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(221, 221, 221);
+border-style: outset;
+border-radius: 2px;</string>
+            </property>
+            <property name="text">
+             <string>     Go To Fish:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="goToFrame">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
               <weight>50</weight>
               <bold>false</bold>
              </font>
@@ -788,7 +775,7 @@ border-radius: 3px;</string>
              <cursorShape>ArrowCursor</cursorShape>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(230, 230, 230);
@@ -809,133 +796,18 @@ padding: 6px;</string>
             </property>
            </widget>
           </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string/>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <widget class="QPushButton" name="addFlat">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addFlat {
-background-color: rgb(210, 240, 215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addFlat:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Flat</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addSkate">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addSkate {
-background-color: rgb(210,240,215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addSkate:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Skate</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addRound">
+          <item row="5" column="0">
+           <widget class="QLineEdit" name="goToFishVal">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="baseSize">
              <size>
               <width>0</width>
               <height>0</height>
@@ -943,93 +815,17 @@ QPushButton#addSkate:pressed {
             </property>
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="styleSheet">
-             <string notr="true">QPushButton#addRound {
-background-color: rgb(210,240,215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addRound:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Round</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addOther">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>146</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton#addOther {
-background-color: rgb(210,240,215);
-border-style: outset;
-border-width: 2px;
-border-radius: 7px;
-border-color: beige;
-min-width: 10em;
-padding: 6px;
-}
-
-QPushButton#addOther:pressed {
-    background-color: rgb(224, 0, 0);
-	border-style: inset;
-	border-width: 2px;
-	border-radius: 7px;
-	border-color: beige;
-	min-width: 10em;
-	padding: 6px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Other</string>
+             <string notr="true">border-style: outset;
+border-radius: 3px;</string>
             </property>
            </widget>
           </item>
@@ -1044,6 +840,57 @@ QPushButton#addOther:pressed {
          <property name="topMargin">
           <number>0</number>
          </property>
+         <item>
+          <widget class="QPushButton" name="addRegion">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Add Region</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeRegion">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Remove Region</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="nextAndCopy">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Next + Copy</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -1091,6 +938,9 @@ QPushButton#addOther:pressed {
         <widget class="QDockWidget" name="dockWidget">
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="features">
+          <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
          </property>
          <widget class="QWidget" name="videoControlsDockWidget">
           <property name="layoutDirection">
@@ -1144,6 +994,9 @@ QPushButton#addOther:pressed {
                </item>
                <item>
                 <widget class="QSlider" name="videoSlider">
+                 <property name="tracking">
+                  <bool>false</bool>
+                 </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1171,12 +1024,22 @@ QPushButton#addOther:pressed {
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
                 <item>
-                 <widget class="QPushButton" name="Play">
+                 <widget class="QPushButton" name="play">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
                   </property>
                   <property name="text">
                    <string>Play</string>
@@ -1184,9 +1047,9 @@ QPushButton#addOther:pressed {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="SpeedUp">
+                 <widget class="QPushButton" name="faster">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1206,8 +1069,15 @@ QPushButton#addOther:pressed {
                     <height>0</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>Faster</string>
@@ -1215,7 +1085,10 @@ QPushButton#addOther:pressed {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="SlowDown">
+                 <widget class="QPushButton" name="slower">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -1228,8 +1101,15 @@ QPushButton#addOther:pressed {
                     <height>0</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>Slower</string>
@@ -1238,6 +1118,16 @@ QPushButton#addOther:pressed {
                 </item>
                 <item>
                  <widget class="QPushButton" name="minusOneSecond">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>-1 Second</string>
                   </property>
@@ -1245,6 +1135,16 @@ QPushButton#addOther:pressed {
                 </item>
                 <item>
                  <widget class="QPushButton" name="minusThreeSecond">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>-3 Second</string>
                   </property>
@@ -1252,8 +1152,18 @@ QPushButton#addOther:pressed {
                 </item>
                 <item>
                  <widget class="QPushButton" name="minusOneFrame">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>-1 Frame</string>
@@ -1262,8 +1172,18 @@ QPushButton#addOther:pressed {
                 </item>
                 <item>
                  <widget class="QPushButton" name="plusOneFrame">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                   <enum>Qt::StrongFocus</enum>
                   </property>
                   <property name="text">
                    <string>+1 Frame</string>
@@ -1280,7 +1200,7 @@ QPushButton#addOther:pressed {
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-                 <widget class="QPushButton" name="LoadVideo">
+                 <widget class="QPushButton" name="loadVideo">
                   <property name="minimumSize">
                    <size>
                     <width>80</width>
@@ -1293,20 +1213,47 @@ QPushButton#addOther:pressed {
                     <height>16777215</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Load Video</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="loadAnnotate">
+                 <widget class="QPushButton" name="loadAnnotationFile">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Load Annotation File</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="saveAnnotate">
+                 <widget class="QPushButton" name="saveAnnotationFile">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Save Annotation File</string>
                   </property>
@@ -1314,6 +1261,16 @@ QPushButton#addOther:pressed {
                 </item>
                 <item>
                  <widget class="QPushButton" name="writeImage">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Write Image</string>
                   </property>
@@ -1347,6 +1304,33 @@ QPushButton#addOther:pressed {
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fileNameValue</tabstop>
+  <tabstop>reviewerNameValue</tabstop>
+  <tabstop>tripIDValue</tabstop>
+  <tabstop>towIDValue</tabstop>
+  <tabstop>prevFish</tabstop>
+  <tabstop>nextFish</tabstop>
+  <tabstop>goToFrame</tabstop>
+  <tabstop>removeFish</tabstop>
+  <tabstop>goToFishVal</tabstop>
+  <tabstop>addRegion</tabstop>
+  <tabstop>removeRegion</tabstop>
+  <tabstop>nextAndCopy</tabstop>
+  <tabstop>videoSlider</tabstop>
+  <tabstop>play</tabstop>
+  <tabstop>faster</tabstop>
+  <tabstop>slower</tabstop>
+  <tabstop>minusOneSecond</tabstop>
+  <tabstop>minusThreeSecond</tabstop>
+  <tabstop>minusOneFrame</tabstop>
+  <tabstop>plusOneFrame</tabstop>
+  <tabstop>loadVideo</tabstop>
+  <tabstop>loadAnnotationFile</tabstop>
+  <tabstop>saveAnnotationFile</tabstop>
+  <tabstop>writeImage</tabstop>
+  <tabstop>videoWindow</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

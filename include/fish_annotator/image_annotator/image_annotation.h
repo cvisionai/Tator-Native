@@ -1,8 +1,8 @@
 /// @file
 /// @brief Defines classes that store annotation information for images.
 
-#ifndef IMAGE_ANNOTATIONS_H
-#define IMAGE_ANNOTATIONS_H
+#ifndef IMAGE_ANNOTATION_H
+#define IMAGE_ANNOTATION_H
 
 #include <string>
 #include <vector>
@@ -27,7 +27,7 @@ namespace fish_annotator { namespace image_annotator {
 
 namespace pt = boost::property_tree;
 
-/// @brief Defines annotation information for one image.
+/// @brief Defines annotation information for one detection in an image.
 struct ImageAnnotation : public Serialization {
   /// @brief Constructor.
   ///
@@ -173,4 +173,4 @@ private:
 
 }} // namespace fish_annotator::image_annotator
 
-#endif // IMAGE_ANNOTATIONS_H
+#endif // IMAGE_ANNOTATION_H

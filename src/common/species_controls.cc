@@ -86,6 +86,14 @@ void SpeciesControls::loadFromVector(const std::vector<Species> &vec) {
   }
 }
 
+std::vector<Species> SpeciesControls::getSpecies() {
+  std::vector<Species> species;
+  for(const auto &w : species_widgets_) {
+    species.push_back(w->getSpecies());
+  }
+  return species;
+}
+
 void SpeciesControls::on_saveSpecies_clicked() {
   QString out_file = QFileDialog::getSaveFileName(this, 
       "Specify output species file", QString(), "JSON (*.json)");

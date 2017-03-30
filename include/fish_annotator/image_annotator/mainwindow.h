@@ -81,6 +81,8 @@ private:
   std::vector<boost::filesystem::path> image_files_;
 
   /// @brief Runs when image directory loaded successfully.
+  ///
+  /// Defined as separate function for testing purposes.
   void onLoadDirectorySuccess(const QString &image_dir);
 };
 

@@ -1,170 +1,147 @@
 #include "fish_annotator/video_annotator/player.h"
 
+#include <QTime>
+#include <QCoreApplication>
+#include <QEventLoop>
+#include <QMutexLocker>
+
 namespace fish_annotator { namespace video_annotator {
 
-Player::Player(QObject *parent)
-  : QThread(parent)
-{
-  frameIndex = 0;
-  stop = true;
+Player::Player()
+  : QObject()
+  , video_path_()
+  , frame_rate_(0.0)
+  , stopped_(true)
+  , frame_mat_()
+  , rgb_frame_mat_()
+  , image_()
+  , current_speed_(0.0)
+  , capture_(nullptr)
+  , delay_(0.0)
+  , frame_index_(0) 
+  , mutex_()
+  , condition_() {
 }
 
-bool Player::loadVideo(const std::string &filename) {
-  capture.reset(new cv::VideoCapture(filename));
-  if (capture->isOpened()) {
-    frameRate = capture->get(CV_CAP_PROP_FPS);
-    currentSpeed = 100;
-    delay = (1000/frameRate);
-    return true;
+Player::~Player() {
+  QMutexLocker locker(&mutex_);
+  stopped_ = true;
+  condition_.wakeOne();
+}
+
+void Player::loadVideo(QString filename) {
+  video_path_ = filename;
+  capture_.reset(new cv::VideoCapture(filename.toStdString()));
+  if (capture_->isOpened()) {
+    frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
+    current_speed_ = frame_rate_;
+    delay_ = (1000000.0 / frame_rate_);
+    emit mediaLoaded(filename, frame_rate_);
+    emit playbackRateChanged(current_speed_);
+    emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
+    emit resolutionChanged(
+        capture_->get(static_cast<qint64>(CV_CAP_PROP_FRAME_WIDTH)),
+        capture_->get(static_cast<qint64>(CV_CAP_PROP_FRAME_HEIGHT)));
   }
-  return false;
-}
-
-void Player::Play()
-{
-  if (!isRunning())
-  {
-    if (isStopped())
-    {
-      stop = false;
-    }
-    start(LowPriority);
-  }
-}
-
-void Player::run()
-{
-  while(!stop) {
-    if (!capture->read(frame))
-    {
-      stop = true;
-    }
-    frameIndex = capture->get(CV_CAP_PROP_POS_FRAMES);
-    if (frame.channels() == 3)
-    {
-      cv::cvtColor(frame, RGBframe, CV_BGR2RGB);
-      img = QImage((const unsigned char*)(RGBframe.data),
-        RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
-    }
-    else
-    {
-      img = QImage((const unsigned char*)(frame.data),
-        frame.cols, frame.rows, QImage::Format_Indexed8);
-    }
-    emit processedImage(img);
-    this->msleep(delay);
+  else {
+    std::string msg(
+        std::string("Failed to load media at ") + 
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
   }
 }
 
-QImage Player::getOneFrame()
-{
-  capture->read(frame);
-  if (frame.channels() == 3)
-  {
-    cv::cvtColor(frame, RGBframe, CV_BGR2RGB);
-    img = QImage((const unsigned char*)(RGBframe.data),
-      RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
+void Player::play() {
+  if(stopped_ == true) {
+    stopped_ = false;
   }
-  else
-  {
-    img = QImage((const unsigned char*)(frame.data),
-      frame.cols, frame.rows, QImage::Format_Indexed8);
-  }
-  return img;
-}
-
-Player::~Player()
-{
-  if (1)
-  {
-    QMutexLocker locker(&mutex);
-    stop = true;
-    //capture->release();
-    condition.wakeOne();
-    wait();
+  emit stateChanged(stopped_);
+  while(stopped_ == false) {
+    auto time = QTime::currentTime();
+    emit processedImage(getOneFrame(), frame_index_);
+    double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
+    processWait(std::round(delay_ - usec));
   }
 }
-void Player::Stop()
-{
-  stop = true;
+
+void Player::stop() {
+  stopped_ = true;
+  emit stateChanged(stopped_);
 }
 
-void Player::msleep(int ms)
-{
-  std::this_thread::sleep_for(std::chrono::microseconds(ms*1000));
+QImage Player::getOneFrame() {
+  QMutexLocker locker(&mutex_);
+  if (capture_->read(frame_mat_) == false) {
+    stopped_ = true;
+  }
+  frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES);
+  if (frame_mat_.channels() == 3) {
+    cv::cvtColor(frame_mat_, rgb_frame_mat_, CV_BGR2RGB);
+    image_ = QImage(
+      (const unsigned char*)(rgb_frame_mat_.data),
+      frame_mat_.cols,
+      frame_mat_.rows,
+      QImage::Format_RGB888);
+  }
+  else {
+    image_ = QImage(
+      (const unsigned char*)(frame_mat_.data),
+      frame_mat_.cols,
+      frame_mat_.rows,
+      QImage::Format_Indexed8);
+  }
+  return image_;
 }
 
-bool Player::isStopped() const{
-  return this->stop;
+void Player::speedUp() {
+  delay_ /= 2.0;
+  if(delay_ < 1.0) delay_ = 1.0;
+  current_speed_ *= 2.0;
+  emit playbackRateChanged(current_speed_);
 }
 
-void Player::speedUp()
-{
-  delay = delay/2;
-  if (delay<1)
-    delay = 1;
-  currentSpeed = currentSpeed * 2;
+void Player::slowDown() {
+  delay_ *= 2.0;
+  current_speed_ /= 2.0;
+  emit playbackRateChanged(current_speed_);
 }
 
-void Player::slowDown()
-{
-  delay = delay*2;
-  currentSpeed = currentSpeed / 2;
+void Player::nextFrame() {
+  setCurrentFrame(frame_index_ + 1);
+  emit processedImage(getOneFrame(), frame_index_);
 }
 
-QImage Player::nextFrame() {
-  setCurrentFrame(++frameIndex);
-  return getOneFrame();
+void Player::prevFrame() {
+  setCurrentFrame(frame_index_ - 1);
+  emit processedImage(getOneFrame(), frame_index_);
 }
 
-QImage Player::prevFrame() {
-  setCurrentFrame(--frameIndex);
-  return getOneFrame();
+void Player::setCurrentFrame(qint64 frame_num) {
+  QMutexLocker locker(&mutex_);
+  capture_->set(CV_CAP_PROP_POS_MSEC, 
+      1000.0 * static_cast<double>(frame_num - 1) / frame_rate_);
+  if (frame_num > 0) {
+		frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES);
+  }
+	else {
+		frame_index_ = 0;
+  }
 }
 
-std::int64_t Player::getCurrentFrame()
-{
-  return frameIndex;
-}
-
-double Player::getNumberOfFrames()
-{
-  return capture->get(CV_CAP_PROP_FRAME_COUNT);
-}
-
-double Player::getFrameRate()
-{
-  return frameRate;
-}
-
-void Player::setCurrentFrame(std::int64_t frameNumber)
-{
-  capture->set(CV_CAP_PROP_POS_MSEC, (double(frameNumber)/double(frameRate)*1000));
-  //capture->set(CV_CAP_PROP_POS_FRAMES, frameNumber);
-  if (frameNumber > 0)
-		frameIndex = capture->get(CV_CAP_PROP_POS_FRAMES);
-	else
-		frameIndex = 0;
-  //frameIndex = frameNumber;
-}
-
-QImage Player::setFrame(std::int64_t frame)
-{
+void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
-  return getOneFrame();
+  emit processedImage(getOneFrame(), frame_index_);
 }
 
-
-double Player::getCurrentSpeed()
-{
-  return currentSpeed;
-}
-
-void Player::write_image(QString filename) {
-	cv::Mat matTemp = frame;
-	cv::imwrite(filename.toStdString(), matTemp);
+void Player::processWait(qint64 usec) {
+  QTime die_time = QTime::currentTime().addMSecs(usec / 1000);
+  while(QTime::currentTime() < die_time) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
+  }
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_player.cpp"
 
 }} // namespace fish_annotator::gui
+

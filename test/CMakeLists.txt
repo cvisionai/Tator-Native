@@ -1,5 +1,5 @@
-add_subdirectory(document)
 add_subdirectory(image_annotation)
 add_subdirectory(image_annotator)
 add_subdirectory(species)
+add_subdirectory(video_annotation)
 add_subdirectory(video_annotator)

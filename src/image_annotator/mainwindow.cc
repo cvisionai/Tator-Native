@@ -4,7 +4,6 @@
 #include <QMessageBox>
 
 #include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/image_annotator/image_annotation.h"
 #include "fish_annotator/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -79,11 +78,11 @@ void MainWindow::on_imageSlider_valueChanged() {
   ui_->idSelection->clear();
   ui_->speciesValue->setText("");
   ui_->subspeciesValue->setText("");
-  #ifdef _WIN32
-    QString filename(image_files_[ui_->imageSlider->value()].string().c_str());
-  #else
-    QString filename(image_files_[ui_->imageSlider->value()].c_str());
-  #endif
+#ifdef _WIN32
+  QString filename(image_files_[ui_->imageSlider->value()].string().c_str());
+#else
+  QString filename(image_files_[ui_->imageSlider->value()].c_str());
+#endif
   QImage current(filename);
   if(!current.isNull()) {
     scene_->addPixmap(QPixmap::fromImage(current));
