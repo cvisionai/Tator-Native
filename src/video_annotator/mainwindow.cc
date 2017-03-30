@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
   , annotation_(new VideoAnnotation)
   , scene_(new QGraphicsScene)
   , pixmap_item_(nullptr)
+  , visibility_box_(nullptr)
   , ui_(new Ui::MainWidget)
   , species_controls_(new SpeciesControls)
   , video_path_()
@@ -305,9 +306,11 @@ void MainWindow::on_nextAndCopy_clicked() {
 void MainWindow::on_degradedStatus_stateChanged(int state) {
   if(state == Qt::Checked) {
     annotation_->setDegraded(last_position_, true);
+    drawAnnotations();
   }
   else if(state == Qt::Unchecked) {
     annotation_->setDegraded(last_position_, false);
+    drawAnnotations();
   }
 }
 
@@ -439,6 +442,25 @@ void MainWindow::drawAnnotations() {
         ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
     scene_->addItem(region);
     current_annotations_.push_back(region);
+  }
+  if(visibility_box_ != nullptr) {
+    scene_->removeItem(visibility_box_);
+    visibility_box_ = nullptr;
+  }
+  if(annotation_->isDegraded(last_position_) == true) {
+    auto pen_width = 0.03 * std::min(
+        scene_->sceneRect().width(),
+        scene_->sceneRect().height());
+    QPen pen;
+    pen.setWidth(pen_width);
+		pen.setColor(QColor(255, 92, 33));
+    visibility_box_ = scene_->addRect(
+        0.5 * pen_width, 0.5 * pen_width, 
+        width_ - pen_width, height_ - pen_width, pen);
+    ui_->degradedStatus->setChecked(true);
+  }
+  else {
+    ui_->degradedStatus->setChecked(false);
   }
 }
 

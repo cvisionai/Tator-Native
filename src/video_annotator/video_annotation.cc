@@ -317,7 +317,7 @@ uint64_t VideoAnnotation::earliestTrackID() {
 }
 
 void VideoAnnotation::setDegraded(uint64_t frame, bool degraded) {
-  degraded_by_frame_.insert({frame, degraded});
+  degraded_by_frame_[frame] = degraded;
 }
 
 bool VideoAnnotation::isDegraded(uint64_t frame) {
@@ -409,7 +409,7 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
   csv1 << "Frame,Degraded_State" << std::endl;
   for(const auto &d : degraded_by_frame_) {
     csv1 << std::to_string(d.first) << ",";
-    csv1 << d.second ? "degraded" : "visible";
+    csv1 << (d.second ? "degraded" : "visible");
     csv1 << std::endl;
   }
 }

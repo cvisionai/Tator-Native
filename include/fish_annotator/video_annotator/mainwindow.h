@@ -211,6 +211,9 @@ private:
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
 
+  /// @brief Border rect for indicating degraded state.
+  QGraphicsRectItem *visibility_box_;
+
   /// @brief Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWidget> ui_;
 
