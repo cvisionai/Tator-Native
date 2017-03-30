@@ -302,6 +302,15 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
+void MainWindow::on_degradedStatus_stateChanged(int state) {
+  if(state == Qt::Checked) {
+    annotation_->setDegraded(last_position_, true);
+  }
+  else if(state == Qt::Unchecked) {
+    annotation_->setDegraded(last_position_, false);
+  }
+}
+
 void MainWindow::showFrame(QImage image, qint64 frame) {
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);

@@ -198,6 +198,9 @@ private slots:
   /// @brief Goes to next frame and copies the region corresponding to
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
+
+  /// @brief Sets the degraded state for the current frame.
+  void on_degradedStatus_stateChanged(int state);
 private:
   /// @brief Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
