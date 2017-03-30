@@ -116,7 +116,8 @@ VideoAnnotation::VideoAnnotation()
   , detections_by_id_()
   , tracks_by_id_()
   , tracks_by_species_()
-  , tracks_by_frame_added_() {
+  , tracks_by_frame_added_() 
+  , degraded_by_frame_() {
 }
 
 void VideoAnnotation::insert(std::shared_ptr<DetectionAnnotation> annotation) {
@@ -315,6 +316,22 @@ uint64_t VideoAnnotation::earliestTrackID() {
   }
 }
 
+void VideoAnnotation::setDegraded(uint64_t frame, bool degraded) {
+  degraded_by_frame_.insert({frame, degraded});
+}
+
+bool VideoAnnotation::isDegraded(uint64_t frame) {
+  if(degraded_by_frame_.size() == 0) return false;
+  auto it = degraded_by_frame_.upper_bound(frame);
+  if(it != degraded_by_frame_.begin()) {
+    --it;
+    return it->second;
+  }
+  else {
+    return false;
+  }
+}
+
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();
@@ -352,6 +369,7 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
     static_cast<int>(track_list_.size() + detection_list_.size())));
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
+  // Track file
   int iter = 0;
   std::string meta;
   meta += trip_id; meta += ",";
@@ -369,6 +387,7 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
+  // Detection file
   pt::ptree tree;
   pt::ptree ann_array;
   for(const auto &d : detections_by_frame_.left) {
@@ -383,6 +402,16 @@ void VideoAnnotation::write(const boost::filesystem::path &csv_path,
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");
   pt::write_json(json_path.string(), tree);
+  // Degraded state file
+  fs::path csv1_path(csv_path);
+  csv1_path.replace_extension(".csv1");
+  std::ofstream csv1(csv1_path.string());
+  csv1 << "Frame,Degraded_State" << std::endl;
+  for(const auto &d : degraded_by_frame_) {
+    csv1 << std::to_string(d.first) << ",";
+    csv1 << d.second ? "degraded" : "visible";
+    csv1 << std::endl;
+  }
 }
 
 void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
@@ -396,6 +425,7 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
     "Loading annotations...", "Abort", 0, 2 * num_lines));
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
+  // Track file
   int iter = 0;
   std::ifstream csv(csv_path.string());
   std::string line;
@@ -408,6 +438,7 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
+  // Detection file
   fs::path json_path(csv_path);
   json_path.replace_extension(".json");
   if(fs::exists(json_path)) {
@@ -422,6 +453,24 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
         if(dlg->wasCanceled()) break;
       }
       dlg->setValue(2 * num_lines);
+    }
+  }
+  // Degraded state file
+  fs::path csv1_path(csv_path);
+  csv1_path.replace_extension(".csv1");
+  if(fs::exists(csv1_path)) {
+    std::ifstream csv1(csv1_path.string());
+    std::string line1;
+    std::getline(csv1, line1);
+    for(; std::getline(csv1, line1);) {
+      std::vector<std::string> tokens;
+      boost::split(tokens, line1, boost::is_any_of(","));
+      if(tokens[1] == "degraded") {
+        setDegraded(std::stoull(tokens[0]), true);
+      }
+      else if(tokens[1] == "visible") {
+        setDegraded(std::stoull(tokens[0]), false);
+      }
     }
   }
 }

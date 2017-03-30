@@ -244,6 +244,21 @@ public:
   /// @return ID of earliest track.
   uint64_t earliestTrackID();
 
+  /// @brief Sets degraded state for a particular frame.
+  ///
+  /// Subsequent frames have the same degraded state until another 
+  /// degraded state is inserted.
+  ///
+  /// @param frame Frame for which the degraded state is specified.
+  /// @param degraded True if degraded, false otherwise.
+  void setDegraded(uint64_t frame, bool degraded);
+
+  /// @brief Gets recent degraded state.
+  ///
+  /// @param frame Current frame.
+  /// @return Most recent degraded state.
+  bool isDegraded(uint64_t frame);
+
   /// @brief Equality operator.
   ///
   /// @param rhs Right hand side argument.
@@ -324,6 +339,9 @@ private:
 
   /// @brief Map between frame added and iterator to track annotations.
   TracksByInteger tracks_by_frame_added_;
+
+  /// @brief Degraded state by frame.
+  std::map<uint64_t, bool> degraded_by_frame_;
 };
 
 }} // namespace fish_annotator::video_annotator
