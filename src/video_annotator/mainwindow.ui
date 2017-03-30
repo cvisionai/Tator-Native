@@ -210,7 +210,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3">
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
          <property name="spacing">
           <number>19</number>
          </property>
@@ -224,36 +224,55 @@
           <number>5</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="towStatus">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="layoutDirection">
-            <enum>Qt::RightToLeft</enum>
-           </property>
-           <property name="text">
-            <string>Tow Open      </string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QCheckBox" name="towStatus">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Tow Open      </string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="degradedStatus">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Degraded       </string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <spacer name="horizontalSpacer_4">
@@ -265,7 +284,7 @@
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>5</width>
+             <width>13</width>
              <height>20</height>
             </size>
            </property>
@@ -1290,7 +1309,6 @@ border-radius: 3px;</string>
   <tabstop>reviewerNameValue</tabstop>
   <tabstop>tripIDValue</tabstop>
   <tabstop>towIDValue</tabstop>
-  <tabstop>towStatus</tabstop>
   <tabstop>prevFish</tabstop>
   <tabstop>nextFish</tabstop>
   <tabstop>goToFrame</tabstop>
