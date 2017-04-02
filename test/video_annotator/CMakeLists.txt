@@ -16,9 +16,6 @@ if( WIN32 )
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
     Qt5::OpenGL
-    Qt5::Network
-    Qt5::Multimedia
-    Qt5::MultimediaWidgets
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
@@ -52,9 +49,6 @@ elseif( APPLE )
     ${APPLE_LIBRARIES}
     Qt5::Widgets
     Qt5::OpenGL
-    Qt5::Multimedia
-    Qt5::MultimediaWidgets
-    Qt5::Network
     Qt5::PrintSupport
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
@@ -88,9 +82,6 @@ elseif( UNIX )
     Qt5::Core
     Qt5::Gui
     Qt5::OpenGL
-    Qt5::Multimedia
-    Qt5::MultimediaWidgets
-    Qt5::Network
     Qt5::PrintSupport
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
@@ -113,7 +104,4 @@ endif()
 target_include_directories( test_video_annotator PUBLIC
   "../../include/fish_annotator/video_annotator"
   "../../include/fish_annotator/common"
-  ${Qt5Multimedia_INCLUDE_DIRS}
-  ${Qt5MultimediaWidgets_INCLUDE_DIRS}
-  ${Qt5Network_INCLUDE_DIRS}
   )

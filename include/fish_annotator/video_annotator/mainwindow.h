@@ -9,7 +9,6 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
-#include <QGraphicsVideoItem>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QOpenGLWidget>
