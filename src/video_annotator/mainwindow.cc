@@ -33,8 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
   , fish_id_(0) 
   , current_annotations_() {
   ui_->setupUi(this);
-  ui_->videoWindow->setViewport(new QOpenGLWidget);
-  ui_->videoWindow->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
 #endif
