@@ -250,10 +250,22 @@ void MainWindow::on_removeFish_clicked() {
   auto prev = annotation_->prevTrack(fish_id_);
   auto next = annotation_->nextTrack(fish_id_);
   if(prev != nullptr) {
-    fish_id_ = prev->id_;
+    if(fish_id_ == prev->id_) {
+      annotation_->remove(remove_id);
+      fish_id_ = annotation_->earliestTrackID();
+    }
+    else {
+      fish_id_ = prev->id_;
+    }
   }
   else if(next != nullptr) {
-    fish_id_ = next->id_;
+    if(fish_id_ == next->id_) {
+      annotation_->remove(remove_id);
+      fish_id_ = annotation_->earliestTrackID();
+    }
+    else {
+      fish_id_ = next->id_;
+    }
   }
   else {
     fish_id_ = 0;
