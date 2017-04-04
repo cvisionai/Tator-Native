@@ -155,6 +155,8 @@ void VideoAnnotation::remove(uint64_t id) {
     track_list_.erase(it->second);
     tracks_by_species_.right.erase(tracks_by_species_.right.find(it->second));
     tracks_by_id_.left.erase(it);
+    tracks_by_frame_added_.right.erase(tracks_by_frame_added_.right.find(
+          it->second));
     break;
   }
   auto drange = detections_by_id_.left.equal_range(id);

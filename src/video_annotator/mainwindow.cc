@@ -246,7 +246,20 @@ void MainWindow::on_nextFish_clicked() {
 }
 
 void MainWindow::on_removeFish_clicked() {
-  annotation_->remove(fish_id_);
+  auto remove_id = fish_id_;
+  auto prev = annotation_->prevTrack(fish_id_);
+  auto next = annotation_->nextTrack(fish_id_);
+  if(prev != nullptr) {
+    fish_id_ = prev->id_;
+  }
+  else if(next != nullptr) {
+    fish_id_ = next->id_;
+  }
+  else {
+    fish_id_ = 0;
+  }
+  annotation_->remove(remove_id);
+  updateStats();
   updateSpeciesCounts();
   drawAnnotations();
 }
@@ -402,28 +415,42 @@ void MainWindow::handlePlayerError(QString err) {
 
 void MainWindow::updateSpeciesCounts() {
   auto counts = annotation_->getCounts();
-  for(auto it = counts.begin(); it != counts.end(); it++) {
-    species_controls_->setCount(it->second, it->first);
+  for(const auto &species : species_controls_->getSpecies()) {
+    auto it = counts.find(species.getName());
+    if(it != counts.end()) {
+      species_controls_->setCount(it->second, it->first);
+    }
+    else {
+      species_controls_->setCount(0, species.getName());
+    }
   }
 }
 
 void MainWindow::updateStats() {
-  auto trk = annotation_->findTrack(fish_id_);
-  ui_->fishNumVal->setText(QString::number(fish_id_));
-  ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
-  ui_->frameCountedVal->setText(QString::number(trk->frame_added_));
   ui_->typeMenu->clear();
   ui_->subTypeMenu->clear();
-  auto species = species_controls_->getSpecies();
-  for(auto &s : species) {
-    ui_->typeMenu->addItem(s.getName().c_str());
-    if(s.getName() == trk->species_) {
-      ui_->typeMenu->setCurrentText(s.getName().c_str());
-      auto subspecies = s.getSubspecies();
-      for(auto &sub : subspecies) {
-        ui_->subTypeMenu->addItem(sub.c_str());
-        if(sub == trk->subspecies_) {
-          ui_->subTypeMenu->setCurrentText(sub.c_str());
+  auto trk = annotation_->findTrack(fish_id_);
+  if(trk == nullptr) {
+    ui_->fishNumVal->setText("-");
+    ui_->totalFishVal->setText("-");
+    ui_->frameCountedVal->setText("-");
+    return;
+  }
+  else {
+    ui_->fishNumVal->setText(QString::number(fish_id_));
+    ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
+    ui_->frameCountedVal->setText(QString::number(trk->frame_added_));
+    auto species = species_controls_->getSpecies();
+    for(auto &s : species) {
+      ui_->typeMenu->addItem(s.getName().c_str());
+      if(s.getName() == trk->species_) {
+        ui_->typeMenu->setCurrentText(s.getName().c_str());
+        auto subspecies = s.getSubspecies();
+        for(auto &sub : subspecies) {
+          ui_->subTypeMenu->addItem(sub.c_str());
+          if(sub == trk->subspecies_) {
+            ui_->subTypeMenu->setCurrentText(sub.c_str());
+          }
         }
       }
     }
