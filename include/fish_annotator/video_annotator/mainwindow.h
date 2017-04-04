@@ -11,7 +11,6 @@
 #include <QGraphicsScene>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QOpenGLWidget>
 #include <QThread>
 
 #include "fish_annotator/common/species_controls.h"
