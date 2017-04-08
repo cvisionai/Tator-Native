@@ -213,7 +213,7 @@ private:
   QGraphicsRectItem *visibility_box_;
 
   /// @brief Widget loaded from the ui file.
-  std::unique_ptr<Ui::MainWidget> ui_;
+  std::unique_ptr<Ui::MainWindow> ui_;
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
