@@ -1155,7 +1155,7 @@ padding: 6px;</string>
     <addaction name="loadAnnotationFile"/>
     <addaction name="saveAnnotationFile"/>
     <addaction name="writeImage"/>
-    <addaction name="actionSet_Metadata"/>
+    <addaction name="setMetadata"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -1197,7 +1197,7 @@ padding: 6px;</string>
     <string>Write Image...</string>
    </property>
   </action>
-  <action name="actionSet_Metadata">
+  <action name="setMetadata">
    <property name="enabled">
     <bool>false</bool>
    </property>
