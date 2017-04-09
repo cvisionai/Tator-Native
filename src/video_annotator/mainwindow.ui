@@ -1,232 +1,483 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWidget</class>
- <widget class="QWidget" name="MainWidget">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1012</width>
-    <height>874</height>
+    <width>771</width>
+    <height>766</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Video Annotator</string>
+   <string>MainWindow</string>
   </property>
-  <property name="autoFillBackground">
-   <bool>true</bool>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,5">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <item>
-      <layout class="QVBoxLayout" name="sideBarLayout" stretch="0,0,0,0,0,0">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>10</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
-         <property name="leftMargin">
-          <number>5</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-         <property name="bottomMargin">
-          <number>5</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="fileNameLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>File Name:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="fileNameValue">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="reviwerNameLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Reviewer Name:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="reviewerNameValue">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="tripIDLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Trip ID:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="tripIDValue">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="towIDLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Tow Number:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="towIDValue">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
-         <property name="spacing">
-          <number>19</number>
-         </property>
-         <property name="leftMargin">
-          <number>5</number>
-         </property>
-         <property name="topMargin">
-          <number>5</number>
-         </property>
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,5">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="sideBarLayout" stretch="0,0,0,0,0,0">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>60</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="degradedStatus">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Degraded</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
             <widget class="QCheckBox" name="towStatus">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Tow Open</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Minimum</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>13</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>75</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>75</height>
+           </size>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="typeLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Type       </string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="typeMenu">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="subTypeLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>SubType</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="subTypeMenu">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+          <zorder>subTypeMenu</zorder>
+          <zorder>subTypeLabel</zorder>
+          <zorder>typeLabel</zorder>
+          <zorder>typeMenu</zorder>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>75</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>75</height>
+           </size>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <widget class="QLabel" name="frameCountedLabel">
+           <property name="geometry">
+            <rect>
+             <x>30</x>
+             <y>50</y>
+             <width>88</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Frame Counted</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="totalFishVal">
+           <property name="geometry">
+            <rect>
+             <x>128</x>
+             <y>28</y>
+             <width>5</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QLabel" name="fishNumLabel">
+           <property name="geometry">
+            <rect>
+             <x>79</x>
+             <y>6</y>
+             <width>39</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Fish ID</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="fishNumVal">
+           <property name="geometry">
+            <rect>
+             <x>128</x>
+             <y>6</y>
+             <width>5</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QLabel" name="totalFishLabel">
+           <property name="geometry">
+            <rect>
+             <x>62</x>
+             <y>28</y>
+             <width>56</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Total Fish</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="frameCountedVal">
+           <property name="geometry">
+            <rect>
+             <x>128</x>
+             <y>50</y>
+             <width>5</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="prevFish">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -246,1091 +497,716 @@
                <bold>false</bold>
               </font>
              </property>
-             <property name="layoutDirection">
-              <enum>Qt::RightToLeft</enum>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
              </property>
              <property name="text">
-              <string>Tow Open      </string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>   Prev Fish  </string>
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QCheckBox" name="degradedStatus">
+           <item row="1" column="0">
+            <widget class="QPushButton" name="nextFish">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
-             <property name="layoutDirection">
-              <enum>Qt::RightToLeft</enum>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
              </property>
              <property name="text">
-              <string>Degraded       </string>
+              <string>Next Fish</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="goToFishLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(221, 221, 221);
+border-style: outset;
+border-radius: 2px;</string>
+             </property>
+             <property name="text">
+              <string>     Go To Fish:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="goToFrame">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+             </property>
+             <property name="text">
+              <string>Go To Frame</string>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="removeFish">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+             </property>
+             <property name="text">
+              <string>Remove Fish</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLineEdit" name="goToFishVal">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border-style: outset;
+border-radius: 3px;</string>
              </property>
             </widget>
            </item>
           </layout>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Minimum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="formLayout_3">
-         <property name="labelAlignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-         <property name="formAlignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-         <property name="horizontalSpacing">
-          <number>20</number>
-         </property>
-         <property name="verticalSpacing">
-          <number>5</number>
-         </property>
-         <property name="leftMargin">
-          <number>5</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="typeLabel">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="navigatorLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="addRegion">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+            </property>
+            <property name="text">
+             <string>Add Region</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="removeRegion">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+            </property>
+            <property name="text">
+             <string>Remove Region</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="nextAndCopy">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(230, 230, 230);
+border-style: outset;
+border-radius: 5px;
+border-width: 2px;
+border-color: grey;
+padding: 6px;</string>
+            </property>
+            <property name="text">
+             <string>Next + Copy</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="VideoLayout" stretch="0,10,3">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="videoTitleLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="videoWindowLayout">
+          <item>
+           <widget class="QGraphicsView" name="videoWindow">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QDockWidget" name="dockWidget">
+          <property name="minimumSize">
+           <size>
+            <width>583</width>
+            <height>125</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>524287</width>
+            <height>125</height>
+           </size>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="features">
+           <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+          </property>
+          <widget class="QWidget" name="videoControlsDockWidget">
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
-           <property name="text">
-            <string>Type       </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QComboBox" name="typeMenu">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="subTypeLabel">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>SubType</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QComboBox" name="subTypeMenu">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="formLayout_4">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::ExpandingFieldsGrow</enum>
-         </property>
-         <property name="labelAlignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="formAlignment">
-          <set>Qt::AlignHCenter|Qt::AlignTop</set>
-         </property>
-         <property name="horizontalSpacing">
-          <number>10</number>
-         </property>
-         <property name="leftMargin">
-          <number>5</number>
-         </property>
-         <property name="topMargin">
-          <number>5</number>
-         </property>
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-         <property name="bottomMargin">
-          <number>5</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="fishNumLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Fish ID</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="fishNumVal">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="totalFishLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Total Fish</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="totalFishVal">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="frameCountedLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Frame Counted</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="frameCountedVal">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="title">
-          <string/>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
-           <widget class="QPushButton" name="nextFish">
-            <property name="enabled">
-             <bool>false</bool>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="focusPolicy">
-             <enum>Qt::StrongFocus</enum>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>Next Fish</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="prevFish">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::StrongFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>   Prev Fish  </string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QPushButton" name="removeFish">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::StrongFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>Remove Fish</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="goToFishLabel">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(221, 221, 221);
-border-style: outset;
-border-radius: 2px;</string>
-            </property>
-            <property name="text">
-             <string>     Go To Fish:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="goToFrame">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="cursor">
-             <cursorShape>ArrowCursor</cursorShape>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::StrongFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
-            </property>
-            <property name="text">
-             <string>Go To Frame</string>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLineEdit" name="goToFishVal">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::StrongFocus</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border-style: outset;
-border-radius: 3px;</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="navigatorLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QPushButton" name="addRegion">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Add Region</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="removeRegion">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Remove Region</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="nextAndCopy">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Next + Copy</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="VideoLayout" stretch="0,10,3">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="sizeConstraint">
-        <enum>QLayout::SetNoConstraint</enum>
-       </property>
-       <item>
-        <layout class="QHBoxLayout" name="videoTitleLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="videoWindowLayout">
-         <item>
-          <widget class="QGraphicsView" name="videoWindow">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QDockWidget" name="dockWidget">
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="features">
-          <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
-         </property>
-         <widget class="QWidget" name="videoControlsDockWidget">
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <layout class="QVBoxLayout" name="videoControlLayout" stretch="0,0,0,0,0">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="currentSpeed">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="videoSliderLayout">
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="currentTime">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QSlider" name="videoSlider">
-                 <property name="tracking">
-                  <bool>false</bool>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="totalTime">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="video_controls">
-               <property name="title">
-                <string>Video Controls</string>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-               <property name="checkable">
-                <bool>false</bool>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <layout class="QVBoxLayout" name="videoControlLayout" stretch="0,0,0">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="currentSpeed">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="videoSliderLayout">
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
                 <item>
-                 <widget class="QPushButton" name="play">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
+                 <widget class="QLabel" name="currentTime">
                   <property name="text">
-                   <string>Play</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="faster">
-                  <property name="enabled">
+                 <widget class="QSlider" name="videoSlider">
+                  <property name="tracking">
                    <bool>false</bool>
                   </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="sizeIncrement">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="focusPolicy">
-                   <enum>Qt::StrongFocus</enum>
-                  </property>
-                  <property name="text">
-                   <string>Faster</string>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="slower">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
+                 <widget class="QLabel" name="totalTime">
                   <property name="font">
                    <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="focusPolicy">
-                   <enum>Qt::StrongFocus</enum>
-                  </property>
-                  <property name="text">
-                   <string>Slower</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="minusOneSecond">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
+                    <family>MS Shell Dlg 2</family>
                    </font>
                   </property>
                   <property name="text">
-                   <string>-1 Second</string>
+                   <string/>
                   </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="minusThreeSecond">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>-3 Second</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="minusOneFrame">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="focusPolicy">
-                   <enum>Qt::StrongFocus</enum>
-                  </property>
-                  <property name="text">
-                   <string>-1 Frame</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="plusOneFrame">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="focusPolicy">
-                   <enum>Qt::StrongFocus</enum>
-                  </property>
-                  <property name="text">
-                   <string>+1 Frame</string>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
                </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="load_save_controls">
-               <property name="title">
-                <string/>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <item>
-                 <widget class="QPushButton" name="loadVideo">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Load Video</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="loadAnnotationFile">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Load Annotation File</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="saveAnnotationFile">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Save Annotation File</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="writeImage">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Write Image</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer_11">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-          </layout>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="video_controls">
+                <property name="title">
+                 <string>Video Controls</string>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QPushButton" name="play">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Play</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="faster">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="sizeIncrement">
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::StrongFocus</enum>
+                   </property>
+                   <property name="text">
+                    <string>Faster</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="slower">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::StrongFocus</enum>
+                   </property>
+                   <property name="text">
+                    <string>Slower</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="minusOneSecond">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>-1 Second</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="minusThreeSecond">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>-3 Second</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="minusOneFrame">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::StrongFocus</enum>
+                   </property>
+                   <property name="text">
+                    <string>-1 Frame</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="plusOneFrame">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::StrongFocus</enum>
+                   </property>
+                   <property name="text">
+                    <string>+1 Frame</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
          </widget>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-  </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>771</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="loadVideo"/>
+    <addaction name="loadAnnotationFile"/>
+    <addaction name="saveAnnotationFile"/>
+    <addaction name="writeImage"/>
+    <addaction name="actionSet_Metadata"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="loadVideo">
+   <property name="text">
+    <string>Load Video...</string>
+   </property>
+  </action>
+  <action name="loadAnnotationFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Load Annotation File...</string>
+   </property>
+  </action>
+  <action name="saveAnnotationFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save Annotation File...</string>
+   </property>
+  </action>
+  <action name="writeImage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Write Image...</string>
+   </property>
+  </action>
+  <action name="actionSet_Metadata">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Set Metadata...</string>
+   </property>
+  </action>
  </widget>
- <tabstops>
-  <tabstop>fileNameValue</tabstop>
-  <tabstop>reviewerNameValue</tabstop>
-  <tabstop>tripIDValue</tabstop>
-  <tabstop>towIDValue</tabstop>
-  <tabstop>prevFish</tabstop>
-  <tabstop>nextFish</tabstop>
-  <tabstop>goToFrame</tabstop>
-  <tabstop>removeFish</tabstop>
-  <tabstop>goToFishVal</tabstop>
-  <tabstop>addRegion</tabstop>
-  <tabstop>removeRegion</tabstop>
-  <tabstop>nextAndCopy</tabstop>
-  <tabstop>videoSlider</tabstop>
-  <tabstop>play</tabstop>
-  <tabstop>faster</tabstop>
-  <tabstop>slower</tabstop>
-  <tabstop>minusOneSecond</tabstop>
-  <tabstop>minusThreeSecond</tabstop>
-  <tabstop>minusOneFrame</tabstop>
-  <tabstop>plusOneFrame</tabstop>
-  <tabstop>loadVideo</tabstop>
-  <tabstop>loadAnnotationFile</tabstop>
-  <tabstop>saveAnnotationFile</tabstop>
-  <tabstop>writeImage</tabstop>
-  <tabstop>videoWindow</tabstop>
- </tabstops>
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>

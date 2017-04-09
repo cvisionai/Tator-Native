@@ -16,7 +16,7 @@ void TestVideoAnnotator::testSaveAnnotationsNoFish() {
   fish_annotator::video_annotator::MainWindow mainwin;
   QString name = "slow_motion_drop.mp4";
   mainwin.requestLoadVideo(name);
-  mainwin.on_saveAnnotationFile_clicked();
+  mainwin.on_saveAnnotationFile_triggered();
 }
 
 void TestVideoAnnotator::testAddRegionNoFish() {
@@ -49,7 +49,7 @@ void TestVideoAnnotator::testSaveAnnotations() {
     mainwin.on_nextFish_clicked();
   }
   for(int n=0;n<3;n++) mainwin.on_nextAndCopy_clicked();
-  mainwin.on_saveAnnotationFile_clicked();
+  mainwin.on_saveAnnotationFile_triggered();
 }
 
 QTEST_MAIN(TestVideoAnnotator)

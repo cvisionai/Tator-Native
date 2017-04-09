@@ -14,12 +14,12 @@ namespace fish_annotator { namespace video_annotator {
 namespace fs = boost::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
-  : QWidget(parent)
+  : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
   , scene_(new QGraphicsScene)
   , pixmap_item_(nullptr)
   , visibility_box_(nullptr)
-  , ui_(new Ui::MainWidget)
+  , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , video_path_()
   , width_(0)
@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
   , rate_(0.0)
   , native_rate_(0.0)
   , fish_id_(0) 
-  , current_annotations_() {
+  , current_annotations_()
+  , metadata_() {
   ui_->setupUi(this);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -137,7 +138,7 @@ void MainWindow::on_minusOneFrame_clicked() {
   emit requestPrevFrame();
 }
 
-void MainWindow::on_loadVideo_clicked() {
+void MainWindow::on_loadVideo_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Video"), 
@@ -149,7 +150,7 @@ void MainWindow::on_loadVideo_clicked() {
   }
 }
 
-void MainWindow::on_loadAnnotationFile_clicked() {
+void MainWindow::on_loadAnnotationFile_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Annotation File"),
@@ -168,9 +169,9 @@ void MainWindow::on_loadAnnotationFile_clicked() {
   }
 }
 
-void MainWindow::on_saveAnnotationFile_clicked() {
-  std::string filename = ui_->fileNameValue->text().toStdString();
-  std::string reviewer = ui_->reviewerNameValue->text().toStdString();
+void MainWindow::on_saveAnnotationFile_triggered() {
+  std::string filename = metadata_.file_name_;
+  std::string reviewer = metadata_.reviewer_name_;
   if(filename.empty() == true && reviewer.empty() == true) {
     filename = video_path_.toStdString();
   }
@@ -190,14 +191,14 @@ void MainWindow::on_saveAnnotationFile_clicked() {
   fs::path vid_path(filename);
   annotation_->write(
       vid_path.replace_extension(".csv"),
-      ui_->tripIDValue->text().toStdString(),
-      ui_->towIDValue->text().toStdString(),
-      ui_->reviewerNameValue->text().toStdString(),
+      std::to_string(metadata_.trip_id_),
+      std::to_string(metadata_.tow_number_),
+      metadata_.reviewer_name_,
       ui_->towStatus->isChecked() ? "Open" : "Closed",
       native_rate_);
 }
 
-void MainWindow::on_writeImage_clicked() {
+void MainWindow::on_writeImage_triggered() {
 }
 
 void MainWindow::on_videoSlider_sliderPressed() {
@@ -343,6 +344,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
   pixmap_item_->setPixmap(pixmap);
   ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
   last_position_ = frame;
+  ui_->currentTime->setText(frameToTime(frame));
   drawAnnotations();
   ui_->videoSlider->setValue(static_cast<int>(frame));
 }
@@ -361,6 +363,7 @@ void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
   ui_->videoSlider->setPageStep(duration / 20);
+  ui_->totalTime->setText(frameToTime(duration));
 }
 
 void MainWindow::handlePlayerPlaybackRateChanged(double rate) {
@@ -499,6 +502,15 @@ void MainWindow::drawAnnotations() {
   else {
     ui_->degradedStatus->setChecked(false);
   }
+}
+
+QString MainWindow::frameToTime(qint64 frame_number) {
+  qint64 seconds = frame_number / native_rate_;
+  qint64 mm = seconds / 60;
+  qint64 ss = seconds % 60;
+  return QString("%1:%2")
+      .arg(mm, 2, 10, QChar('0'))
+      .arg(ss, 2, 10, QChar('0'));
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"

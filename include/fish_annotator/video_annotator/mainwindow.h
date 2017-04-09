@@ -7,6 +7,7 @@
 #include <memory>
 #include <atomic>
 
+#include <QMainWindow>
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QFileDialog>
@@ -17,6 +18,7 @@
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
 #include "fish_annotator/video_annotator/player.h"
+#include "fish_annotator/video_annotator/metadata.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING
@@ -26,7 +28,7 @@ class TestVideoAnnotator;
 namespace fish_annotator { namespace video_annotator {
 
 /// @brief Video annotation GUI.
-class MainWindow : public QWidget {
+class MainWindow : public QMainWindow {
   Q_OBJECT
 #ifndef NO_TESTING
   friend class ::TestVideoAnnotator;
@@ -136,16 +138,16 @@ private slots:
   void on_minusOneFrame_clicked();
 
   /// @brief Loads a video file.
-  void on_loadVideo_clicked();
+  void on_loadVideo_triggered();
 
   /// @brief Loads an annotation file.
-  void on_loadAnnotationFile_clicked();
+  void on_loadAnnotationFile_triggered();
 
   /// @brief Saves an annotation file.
-  void on_saveAnnotationFile_clicked();
+  void on_saveAnnotationFile_triggered();
 
   /// @brief Writes the current frame to file.
-  void on_writeImage_clicked();
+  void on_writeImage_triggered();
 
   /// @brief Pauses the video and stores the play/pause state.
   void on_videoSlider_sliderPressed();
@@ -213,7 +215,7 @@ private:
   QGraphicsRectItem *visibility_box_;
 
   /// @brief Widget loaded from the ui file.
-  std::unique_ptr<Ui::MainWidget> ui_;
+  std::unique_ptr<Ui::MainWindow> ui_;
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
@@ -251,6 +253,9 @@ private:
   /// @brief Current annotations.
   std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
 
+  /// @brief Annotation metadata.
+  Metadata metadata_;
+
   /// @brief Updates counts of each species in species controls.
   void updateSpeciesCounts();
 
@@ -259,6 +264,9 @@ private:
 
   /// @brief Draws annotations for the last displayed frame.
   void drawAnnotations();
+
+  /// @brief Converts a frame number to a formatted time string.
+  QString frameToTime(qint64 frame_number);
 };
 
 }} // namespace fish_annotator::video_annotator
