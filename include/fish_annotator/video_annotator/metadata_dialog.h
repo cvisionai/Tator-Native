@@ -10,7 +10,7 @@
 #include <QDialog>
 
 #include "fish_annotator/video_annotator/metadata.h"
-#include "../../src/video_annotator/ui_metadata_dialog.h"
+#include "ui_metadata_dialog.h"
 
 namespace fish_annotator { namespace video_annotator {
 
