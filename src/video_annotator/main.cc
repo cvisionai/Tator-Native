@@ -7,6 +7,7 @@
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 Q_IMPORT_PLUGIN(QICOPlugin)
+Q_IMPORT_PLUGIN(QSvgPlugin)
 #endif
 
 int main(int argc, char* argv[]) {
