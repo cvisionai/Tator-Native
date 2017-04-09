@@ -149,6 +149,9 @@ private slots:
   /// @brief Writes the current frame to file.
   void on_writeImage_triggered();
 
+  /// @brief Sets metadata for the annotation.
+  void on_setMetadata_triggered();
+
   /// @brief Pauses the video and stores the play/pause state.
   void on_videoSlider_sliderPressed();
 

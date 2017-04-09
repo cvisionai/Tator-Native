@@ -6,6 +6,7 @@
 #include <QTime>
 
 #include "fish_annotator/common/species_dialog.h"
+#include "fish_annotator/video_annotator/metadata_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -199,6 +200,14 @@ void MainWindow::on_saveAnnotationFile_triggered() {
 }
 
 void MainWindow::on_writeImage_triggered() {
+}
+
+void MainWindow::on_setMetadata_triggered() {
+  MetadataDialog *dlg = new MetadataDialog(this);
+  dlg->setMetadata(metadata_);
+  if(dlg->exec()) {
+    metadata_ = dlg->getMetadata();
+  }
 }
 
 void MainWindow::on_videoSlider_sliderPressed() {
@@ -398,6 +407,7 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->loadAnnotationFile->setEnabled(true);
   ui_->saveAnnotationFile->setEnabled(true);
   ui_->writeImage->setEnabled(true);
+  ui_->setMetadata->setEnabled(true);
   ui_->typeLabel->setEnabled(true);
   ui_->typeMenu->setEnabled(true);
   ui_->subTypeLabel->setEnabled(true);
