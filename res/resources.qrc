@@ -4,5 +4,13 @@
   <file>icons/FishAnnotator.bmp</file>
   <file>icons/FishAnnotator.icns</file>
   <file>icons/FishAnnotator.ico</file>
+  <file>icons/video_controls/faster.svg</file>
+  <file>icons/video_controls/minus_one_frame.svg</file>
+  <file>icons/video_controls/minus_one_second.svg</file>
+  <file>icons/video_controls/minus_three_seconds.svg</file>
+  <file>icons/video_controls/pause.svg</file>
+  <file>icons/video_controls/play.svg</file>
+  <file>icons/video_controls/plus_one_frame.svg</file>
+  <file>icons/video_controls/slower.svg</file>
 </qresource>
 </RCC>
