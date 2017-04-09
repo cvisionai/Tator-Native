@@ -1174,21 +1174,33 @@ padding: 6px;</string>
    </property>
   </action>
   <action name="loadAnnotationFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Load Annotation File...</string>
    </property>
   </action>
   <action name="saveAnnotationFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save Annotation File...</string>
    </property>
   </action>
   <action name="writeImage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Write Image...</string>
    </property>
   </action>
   <action name="actionSet_Metadata">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Set Metadata...</string>
    </property>
