@@ -4,5 +4,21 @@
   <file>icons/FishAnnotator.bmp</file>
   <file>icons/FishAnnotator.icns</file>
   <file>icons/FishAnnotator.ico</file>
+  <!-- Created by Ruben Semedo thenounproject.com -->
+  <file>icons/video_controls/faster.svg</file>
+  <!-- Created by Aybige thenounproject.com -->
+  <file>icons/video_controls/minus_one_frame.svg</file>
+  <!-- Created by Ruben Semedo thenounproject.com -->
+  <file>icons/video_controls/minus_one_second.svg</file>
+  <!-- Created by Ruben Semedo thenounproject.com -->
+  <file>icons/video_controls/minus_three_seconds.svg</file>
+  <!-- Created by Ruben Semedo thenounproject.com -->
+  <file>icons/video_controls/pause.svg</file>
+  <!-- Created by Ruben Semedo thenounproject.com -->
+  <file>icons/video_controls/play.svg</file>
+  <!-- Created by Aybige thenounproject.com -->
+  <file>icons/video_controls/plus_one_frame.svg</file>
+  <!-- Created by Ruben Semedo thenounproject.com -->
+  <file>icons/video_controls/slower.svg</file>
 </qresource>
 </RCC>
