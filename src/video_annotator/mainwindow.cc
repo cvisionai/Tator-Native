@@ -14,7 +14,7 @@ namespace fish_annotator { namespace video_annotator {
 namespace fs = boost::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
-  : QWidget(parent)
+  : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
   , scene_(new QGraphicsScene)
   , pixmap_item_(nullptr)
@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
   , rate_(0.0)
   , native_rate_(0.0)
   , fish_id_(0) 
-  , current_annotations_() {
+  , current_annotations_()
+  , metadata_() {
   ui_->setupUi(this);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -137,7 +138,7 @@ void MainWindow::on_minusOneFrame_clicked() {
   emit requestPrevFrame();
 }
 
-void MainWindow::on_loadVideo_clicked() {
+void MainWindow::on_loadVideo_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Video"), 
@@ -149,7 +150,7 @@ void MainWindow::on_loadVideo_clicked() {
   }
 }
 
-void MainWindow::on_loadAnnotationFile_clicked() {
+void MainWindow::on_loadAnnotationFile_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Annotation File"),
@@ -168,9 +169,9 @@ void MainWindow::on_loadAnnotationFile_clicked() {
   }
 }
 
-void MainWindow::on_saveAnnotationFile_clicked() {
-  std::string filename = ui_->fileNameValue->text().toStdString();
-  std::string reviewer = ui_->reviewerNameValue->text().toStdString();
+void MainWindow::on_saveAnnotationFile_triggered() {
+  std::string filename = metadata_.file_name_;
+  std::string reviewer = metadata_.reviewer_name_;
   if(filename.empty() == true && reviewer.empty() == true) {
     filename = video_path_.toStdString();
   }
@@ -190,14 +191,14 @@ void MainWindow::on_saveAnnotationFile_clicked() {
   fs::path vid_path(filename);
   annotation_->write(
       vid_path.replace_extension(".csv"),
-      ui_->tripIDValue->text().toStdString(),
-      ui_->towIDValue->text().toStdString(),
-      ui_->reviewerNameValue->text().toStdString(),
+      std::to_string(metadata_.trip_id_),
+      std::to_string(metadata_.tow_number_),
+      metadata_.reviewer_name_,
       ui_->towStatus->isChecked() ? "Open" : "Closed",
       native_rate_);
 }
 
-void MainWindow::on_writeImage_clicked() {
+void MainWindow::on_writeImage_triggered() {
 }
 
 void MainWindow::on_videoSlider_sliderPressed() {
