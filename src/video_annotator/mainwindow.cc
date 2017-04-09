@@ -344,6 +344,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
   pixmap_item_->setPixmap(pixmap);
   ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
   last_position_ = frame;
+  ui_->currentTime->setText(frameToTime(frame));
   drawAnnotations();
   ui_->videoSlider->setValue(static_cast<int>(frame));
 }
@@ -362,6 +363,7 @@ void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
   ui_->videoSlider->setPageStep(duration / 20);
+  ui_->totalTime->setText(frameToTime(duration));
 }
 
 void MainWindow::handlePlayerPlaybackRateChanged(double rate) {
@@ -500,6 +502,15 @@ void MainWindow::drawAnnotations() {
   else {
     ui_->degradedStatus->setChecked(false);
   }
+}
+
+QString MainWindow::frameToTime(qint64 frame_number) {
+  qint64 seconds = frame_number / native_rate_;
+  qint64 mm = seconds / 60;
+  qint64 ss = seconds % 60;
+  return QString("%1:%2")
+      .arg(mm, 2, 10, QChar('0'))
+      .arg(ss, 2, 10, QChar('0'));
 }
 
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"

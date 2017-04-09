@@ -264,6 +264,9 @@ private:
 
   /// @brief Draws annotations for the last displayed frame.
   void drawAnnotations();
+
+  /// @brief Converts a frame number to a formatted time string.
+  QString frameToTime(qint64 frame_number);
 };
 
 }} // namespace fish_annotator::video_annotator
