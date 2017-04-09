@@ -38,12 +38,20 @@ MainWindow::MainWindow(QWidget *parent)
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
 #endif
-  setStyleSheet("QPushButton { background-color: rgb(230, 230, 230);"
-	  "border-style: outset; border-radius: 5px; border-width: 2px; "
-    "border-color: grey; padding: 6px;}"
-	  "QPushButton:pressed{background-color: rgb(190, 190, 190); "
-    "border-style: outset; border-radius: 5px;"
-	  "border-width: 2px; border-color: grey; padding: 6px;}");
+  ui_->play->setIcon(
+      QIcon(":/icons/video_controls/play.svg"));
+  ui_->faster->setIcon(
+      QIcon(":/icons/video_controls/faster.svg"));
+  ui_->slower->setIcon(
+      QIcon(":/icons/video_controls/slower.svg"));
+  ui_->minusOneSecond->setIcon(
+      QIcon(":/icons/video_controls/minus_one_second.svg"));
+  ui_->minusThreeSecond->setIcon(
+      QIcon(":/icons/video_controls/minus_three_seconds.svg"));
+  ui_->plusOneFrame->setIcon(
+      QIcon(":/icons/video_controls/plus_one_frame.svg"));
+  ui_->minusOneFrame->setIcon(
+      QIcon(":/icons/video_controls/minus_one_frame.svg"));
   ui_->sideBarLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
@@ -95,7 +103,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 void MainWindow::on_play_clicked() {
   if(stopped_ == true) {
     emit requestPlay();
-    ui_->play->setText("Pause");
+    ui_->play->setIcon(QIcon(":/icons/video_controls/pause.svg"));
     ui_->minusOneSecond->setEnabled(false);
     ui_->minusThreeSecond->setEnabled(false);
     ui_->plusOneFrame->setEnabled(false);
@@ -103,7 +111,7 @@ void MainWindow::on_play_clicked() {
   }
   else {
     emit requestStop();
-    ui_->play->setText("Play");
+    ui_->play->setIcon(QIcon(":/icons/video_controls/play.svg"));
     ui_->minusOneSecond->setEnabled(true);
     ui_->minusThreeSecond->setEnabled(true);
     ui_->plusOneFrame->setEnabled(true);
