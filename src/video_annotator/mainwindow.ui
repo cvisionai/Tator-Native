@@ -303,7 +303,7 @@
           <widget class="QLabel" name="frameCountedLabel">
            <property name="geometry">
             <rect>
-             <x>30</x>
+             <x>10</x>
              <y>50</y>
              <width>88</width>
              <height>16</height>
@@ -329,9 +329,9 @@
           <widget class="QLabel" name="totalFishVal">
            <property name="geometry">
             <rect>
-             <x>128</x>
+             <x>110</x>
              <y>28</y>
-             <width>5</width>
+             <width>39</width>
              <height>16</height>
             </rect>
            </property>
@@ -340,6 +340,12 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>39</width>
+             <height>16</height>
+            </size>
            </property>
            <property name="font">
             <font>
@@ -358,7 +364,7 @@
           <widget class="QLabel" name="fishNumLabel">
            <property name="geometry">
             <rect>
-             <x>79</x>
+             <x>60</x>
              <y>6</y>
              <width>39</width>
              <height>16</height>
@@ -384,9 +390,9 @@
           <widget class="QLabel" name="fishNumVal">
            <property name="geometry">
             <rect>
-             <x>128</x>
+             <x>110</x>
              <y>6</y>
-             <width>5</width>
+             <width>39</width>
              <height>16</height>
             </rect>
            </property>
@@ -395,6 +401,12 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>39</width>
+             <height>16</height>
+            </size>
            </property>
            <property name="font">
             <font>
@@ -413,7 +425,7 @@
           <widget class="QLabel" name="totalFishLabel">
            <property name="geometry">
             <rect>
-             <x>62</x>
+             <x>43</x>
              <y>28</y>
              <width>56</width>
              <height>16</height>
@@ -439,9 +451,9 @@
           <widget class="QLabel" name="frameCountedVal">
            <property name="geometry">
             <rect>
-             <x>128</x>
+             <x>110</x>
              <y>50</y>
-             <width>5</width>
+             <width>39</width>
              <height>16</height>
             </rect>
            </property>
@@ -450,6 +462,12 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>39</width>
+             <height>16</height>
+            </size>
            </property>
            <property name="font">
             <font>
@@ -1003,7 +1021,12 @@ padding: 6px;</string>
                    <string>Faster</string>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                   <string notr="true">QPushButton#faster{
+background-color: rgba(255, 255, 255, 0);
+}
+
+QPushButton#faster:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -1053,7 +1076,12 @@ padding: 6px;</string>
                    <string>Slower</string>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                   <string notr="true">QPushButton#slower{
+background-color: rgba(255, 255, 255, 0);
+}
+
+QPushButton#slower:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -1100,7 +1128,12 @@ padding: 6px;</string>
                    <string>Minus one second</string>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                   <string notr="true">QPushButton#minusOneSecond{
+background-color: rgba(255, 255, 255, 0);
+}
+
+QPushButton#minusOneSecond:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -1141,7 +1174,12 @@ padding: 6px;</string>
                    <string>Minus three seconds</string>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                   <string notr="true">QPushButton#minusThreeSecond{
+background-color: rgba(255, 255, 255, 0);
+}
+
+QPushButton#minusThreeSecond:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -1185,7 +1223,12 @@ padding: 6px;</string>
                    <string>Minus one frame</string>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                   <string notr="true">QPushButton#minusOneFrame{
+background-color: rgba(255, 255, 255, 0);
+}
+
+QPushButton#minusOneFrame:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -1229,7 +1272,12 @@ padding: 6px;</string>
                    <string>Plus one frame</string>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                   <string notr="true">QPushButton#plusOneFrame{
+background-color: rgba(255, 255, 255, 0);
+}
+
+QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-style: outset; border-radius: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string/>
