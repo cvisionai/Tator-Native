@@ -58,9 +58,10 @@ void Player::play() {
   }
   emit stateChanged(stopped_);
   while(stopped_ == false) {
-    auto time = QTime::currentTime();
+    QTime t;
+    t.start();
     emit processedImage(getOneFrame(), frame_index_);
-    double usec = 1000.0 * (QTime::currentTime().msec() - time.msec());
+    double usec = 1000.0 * t.restart();
     processWait(std::round(delay_ - usec));
   }
 }
