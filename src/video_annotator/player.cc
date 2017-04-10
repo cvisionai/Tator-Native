@@ -62,7 +62,9 @@ void Player::play() {
     t.start();
     emit processedImage(getOneFrame(), frame_index_);
     double usec = 1000.0 * t.restart();
-    processWait(std::round(delay_ - usec));
+    if (usec < delay_) {
+      processWait(std::round(delay_ - usec));
+    }
   }
 }
 
