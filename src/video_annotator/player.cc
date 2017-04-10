@@ -62,9 +62,7 @@ void Player::play() {
     t.start();
     emit processedImage(getOneFrame(), frame_index_);
     double usec = 1000.0 * t.restart();
-    if (usec < delay_) {
-      processWait(std::round(delay_ - usec));
-    }
+    processWait(std::round(delay_ - usec));
   }
 }
 
@@ -139,6 +137,7 @@ void Player::setFrame(qint64 frame) {
 
 void Player::processWait(qint64 usec) {
   QTime die_time = QTime::currentTime().addMSecs(usec / 1000);
+  QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
   while(QTime::currentTime() < die_time) {
     QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
   }
