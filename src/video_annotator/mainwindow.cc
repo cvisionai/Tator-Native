@@ -247,6 +247,21 @@ void MainWindow::on_subTypeMenu_activated(const QString &text) {
   }
 }
 
+void MainWindow::on_countLabelMenu_activated(const QString &text) {
+  auto trk = annotation_->findTrack(fish_id_);
+  if(trk != nullptr) {
+    if(text.contains("Ignore") == true) {
+      trk->count_label_ = kIgnore;
+    }
+    else if(text.contains("Entering") == true) {
+      trk->count_label_ = kEntering;
+    }
+    else if(text.contains("Exiting") == true) {
+      trk->count_label_ = kExiting;
+    }
+  }
+}
+
 void MainWindow::on_prevFish_clicked() {
   auto trk = annotation_->prevTrack(fish_id_);
   if(trk != nullptr) {
@@ -369,7 +384,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   fish_id_ = annotation_->nextId();
   annotation_->insert(std::make_shared<TrackAnnotation>(
-        fish_id_, species, subspecies, last_position_));
+        fish_id_, species, subspecies, last_position_, kIgnore));
   on_addRegion_clicked();
   updateSpeciesCounts();
   updateStats();
@@ -418,8 +433,10 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->setMetadata->setEnabled(true);
   ui_->typeLabel->setEnabled(true);
   ui_->typeMenu->setEnabled(true);
+  ui_->countLabelLabel->setEnabled(true);
   ui_->subTypeLabel->setEnabled(true);
   ui_->subTypeMenu->setEnabled(true);
+  ui_->countLabelMenu->setEnabled(true);
   ui_->prevFish->setEnabled(true);
   ui_->nextFish->setEnabled(true);
   ui_->removeFish->setEnabled(true);
@@ -486,6 +503,15 @@ void MainWindow::updateStats() {
           }
         }
       }
+    }
+    if(trk->count_label_ == kIgnore) {
+      ui_->countLabelMenu->setCurrentText("Ignore");
+    }
+    else if(trk->count_label_ == kEntering) {
+      ui_->countLabelMenu->setCurrentText("Entering");
+    }
+    else if(trk->count_label_ == kExiting) {
+      ui_->countLabelMenu->setCurrentText("Exiting");
     }
   }
 }
