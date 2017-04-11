@@ -2,6 +2,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <QProgressDialog>
+#include <QMessageBox>
 
 #include "fish_annotator/video_annotator/video_annotation.h"
 
@@ -63,18 +64,21 @@ TrackAnnotation::TrackAnnotation(
   uint64_t id,
   const std::string &species,
   const std::string &subspecies,
-  uint64_t frame_added)
+  uint64_t frame_added,
+  CountLabel count_label)
   : id_(id)
   , species_(species)
   , subspecies_(subspecies)
-  , frame_added_(frame_added) {
+  , frame_added_(frame_added)
+  , count_label_(count_label) {
 }
 
 TrackAnnotation::TrackAnnotation()
   : id_(0)
   , species_()
   , subspecies_() 
-  , frame_added_(0) {
+  , frame_added_(0)
+  , count_label_(kIgnore) {
 }
 
 bool TrackAnnotation::operator==(const TrackAnnotation &rhs) const {
@@ -82,6 +86,7 @@ bool TrackAnnotation::operator==(const TrackAnnotation &rhs) const {
   if(species_ != rhs.species_) return false;
   if(subspecies_ != rhs.subspecies_) return false;
   if(frame_added_ != rhs.frame_added_) return false;
+  if(count_label_ != rhs.count_label_) return false;
   return true;
 }
 
@@ -97,16 +102,38 @@ std::string TrackAnnotation::write(double fps) const {
   csv_row += ","; csv_row += subspecies_;
   csv_row += ","; csv_row += std::to_string(frame_added_);
   csv_row += ","; csv_row += std::to_string(time_added);
+  switch(count_label_) {
+    case kIgnore: csv_row += ",Ignore"; break;
+    case kEntering: csv_row += ",Entering"; break;
+    case kExiting: csv_row += ",Exiting"; break;
+  }
   return csv_row;
 }
 
 void TrackAnnotation::read(const std::string &csv_row) {
   std::vector<std::string> vals;
   boost::split(vals, csv_row, boost::is_any_of(","));
+  if(vals.size() < 8) {
+    QMessageBox err;
+    err.setText("Invalid number of columns in track annotation file (csv)!");
+    err.exec();
+    return;
+  }
   id_ = std::stoull(vals[4]);
   species_ = vals[5];
   subspecies_ = vals[6];
   frame_added_ = std::stoull(vals[7]);
+  if(vals.size() > 8) {
+    if(vals[8] == "Ignore") {
+      count_label_ = kIgnore;
+    }
+    else if(vals[8] == "Entering") {
+      count_label_ = kEntering;
+    }
+    else if(vals[8] == "Exiting") {
+      count_label_ = kExiting;
+    }
+  }
 }
 
 VideoAnnotation::VideoAnnotation() 
@@ -433,10 +460,9 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
   std::string line;
   std::getline(csv, line);
   for(; std::getline(csv, line);) {
-    std::vector<std::string> tokens;
-    boost::split(tokens, line, boost::is_any_of(","));
-    insert(std::make_shared<TrackAnnotation>(
-      std::stoull(tokens[4]), tokens[5], tokens[6], std::stoull(tokens[7])));
+    auto trk = std::make_shared<TrackAnnotation>();
+    trk->read(line);
+    insert(trk);
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }

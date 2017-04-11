@@ -99,12 +99,13 @@ struct TrackAnnotation {
   /// @param species Species of the individual.
   /// @param subspecies Subspecies of the individual.
   /// @param frame_added Frame that individual was added.
+  /// @param count_label How this track contributes to overall count.
   TrackAnnotation(
     uint64_t id,
     const std::string &species,
     const std::string &subspecies,
     uint64_t frame_added,
-    CountLabel label);
+    CountLabel count_label);
 
   /// @brief Default constructor.
   TrackAnnotation();
