@@ -498,8 +498,10 @@ void MainWindow::drawAnnotations() {
   for(auto ann : annotation_->getDetectionAnnotations(last_position_)) {
     auto region = new AnnotatedRegion<DetectionAnnotation>(
         ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
-    scene_->addItem(region);
-    current_annotations_.push_back(region);
+    if (region->valid_annotation_) {
+      scene_->addItem(region);
+      current_annotations_.push_back(region);
+    }
   }
   if(visibility_box_ != nullptr) {
     scene_->removeItem(visibility_box_);

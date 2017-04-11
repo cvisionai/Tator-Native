@@ -71,6 +71,10 @@ public:
   ///
   /// @return Bounding box associated with this region.
   QRectF getAnnBox();
+
+  ///@brief Flag to determine whether to draw this annotation or not
+  bool valid_annotation_;
+
 private:
   /// @brief Pointer to the annotation location.
   std::shared_ptr<Info> annotation_;
@@ -109,7 +113,8 @@ AnnotatedRegion<Info>::AnnotatedRegion(
   uint64_t uid,
   std::shared_ptr<Info> annotation,
   const QRectF &bounding_rect)
-  : annotation_(annotation)
+  : valid_annotation_(true)
+  , annotation_(annotation)
   , uid_(uid)
   , bounding_rect_(bounding_rect)
   , drag_() 
@@ -131,6 +136,12 @@ AnnotatedRegion<Info>::AnnotatedRegion(
     if (annotation_->area_.y < 0) {
       annotation_->area_.h = annotation_->area_.h + annotation_->area_.y;
       annotation_->area_.y = 0;
+    }
+    if (annotation_->area_.x > bounding_rect_.width()) {
+      valid_annotation_ = false;
+    }
+    if (annotation_->area_.y > bounding_rect_.height()) {
+      valid_annotation_ = false;
     }
     if(annotation_->area_.x + annotation_->area_.w > bounding_rect_.width()) {
       annotation_->area_.w = bounding_rect_.width() - annotation_->area_.x;
