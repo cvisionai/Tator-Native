@@ -123,14 +123,14 @@ void TrackAnnotation::read(const std::string &csv_row) {
   species_ = vals[5];
   subspecies_ = vals[6];
   frame_added_ = std::stoull(vals[7]);
-  if(vals.size() > 8) {
-    if(vals[8] == "Ignore") {
+  if(vals.size() > 9) {
+    if(vals[9].find("Ignore") != std::string::npos) {
       count_label_ = kIgnore;
     }
-    else if(vals[8] == "Entering") {
+    else if(vals[9].find("Entering") != std::string::npos) {
       count_label_ = kEntering;
     }
-    else if(vals[8] == "Exiting") {
+    else if(vals[9].find("Exiting") != std::string::npos) {
       count_label_ = kExiting;
     }
   }
