@@ -13,11 +13,11 @@ namespace va = fish_annotator::video_annotator;
 void TestVideoAnnotation::testSerialize() {
   va::VideoAnnotation ann;
   ann.insert(std::make_shared<va::TrackAnnotation>(
-    ann.nextId(), "ahasdjk", "ahashdjkl", 4));
+    ann.nextId(), "ahasdjk", "ahashdjkl", 4, va::kEntering));
   ann.insert(std::make_shared<va::TrackAnnotation>(
-    ann.nextId(), "iopjdfg", "ghjasdf aga", 2));
+    ann.nextId(), "iopjdfg", "ghjasdf aga", 2, va::kIgnore));
   ann.insert(std::make_shared<va::TrackAnnotation>(
-    ann.nextId(), "abghj", "iuohysdfg", 3));
+    ann.nextId(), "abghj", "iuohysdfg", 3, va::kExiting));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
     1231, 1, fish_annotator::Rect(1, 2, 3, 4)));
   ann.insert(std::make_shared<va::DetectionAnnotation>(

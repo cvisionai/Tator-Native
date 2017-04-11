@@ -84,6 +84,13 @@ inline bool operator<(
   return &(*lhs) < &(*rhs);
 }
 
+/// @brief Specifies how a track should contribute to overall fish count.
+enum CountLabel {
+  kIgnore,
+  kEntering,
+  kExiting
+};
+
 /// @brief Defines annotation information for a track.
 struct TrackAnnotation {
   /// @brief Constructor.
@@ -92,11 +99,13 @@ struct TrackAnnotation {
   /// @param species Species of the individual.
   /// @param subspecies Subspecies of the individual.
   /// @param frame_added Frame that individual was added.
+  /// @param count_label How this track contributes to overall count.
   TrackAnnotation(
     uint64_t id,
     const std::string &species,
     const std::string &subspecies,
-    uint64_t frame_added);
+    uint64_t frame_added,
+    CountLabel count_label);
 
   /// @brief Default constructor.
   TrackAnnotation();
@@ -128,6 +137,7 @@ struct TrackAnnotation {
   std::string species_; ///< Species of the individual.
   std::string subspecies_; ///< Subspecies of the individual.
   uint64_t frame_added_; ///< Frame that individual was added.
+  CountLabel count_label_; ///< How this track contributes to overall count.
 };
 
 /// @brief List of track annotations.
