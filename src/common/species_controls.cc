@@ -58,7 +58,7 @@ void SpeciesControls::on_addSpecies_clicked() {
 
 void SpeciesControls::on_loadSpecies_clicked() {
   QString in_file = QFileDialog::getOpenFileName(this,
-      "Specify input species file", QString(), "JSON (*.json)");
+      "Specify input species file", QString(), "Species File (*.species)");
   if(!in_file.isEmpty()) {
     loadSpeciesFile(in_file);
   }
@@ -96,7 +96,7 @@ std::vector<Species> SpeciesControls::getSpecies() {
 
 void SpeciesControls::on_saveSpecies_clicked() {
   QString out_file = QFileDialog::getSaveFileName(this, 
-      "Specify output species file", QString(), "JSON (*.json)");
+      "Specify output species file", QString(), "Species File (*.species)");
   if(!out_file.isEmpty()) {
     SpeciesList list;
     for(auto &widget : species_widgets_) {

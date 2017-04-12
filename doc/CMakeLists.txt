@@ -17,3 +17,5 @@ if( ${DOXYGEN_FOUND} STREQUAL "YES" )
   endif()
 endif()
 
+install(FILES default.species DESTINATION .)
+

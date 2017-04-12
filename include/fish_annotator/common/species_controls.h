@@ -48,6 +48,11 @@ public:
   /// @return Species for every species widget.
   std::vector<Species> getSpecies();
 
+  /// @brief Loads species file.
+  ///
+  /// @param in_file Path to input species file.
+  void loadSpeciesFile(const QString &in_file);
+
 private slots:
   /// @brief Brings up a dialog box to add a species.
   void on_addSpecies_clicked();
@@ -94,11 +99,6 @@ private:
   ///
   /// @param species Species object used to construct the widget.
   void insertSpeciesWidget(const Species &species);
-
-  /// @brief Loads species file.
-  ///
-  /// @param in_file Path to input species file.
-  void loadSpeciesFile(const QString &in_file);
 };
 
 } // namespace fish_annotator
