@@ -208,6 +208,16 @@ void MainWindow::on_saveAnnotationFile_triggered() {
 }
 
 void MainWindow::on_writeImage_triggered() {
+    // filename needs to be procedurally generated. 
+    if (images_save_path_.isEmpty())
+      images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
+
+    QImage img(scene_->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
+    QPainter p(&img);
+    scene_->render(&p);
+    p.end();
+    img.save(images_save_path_ + QStringLiteral("/") + QStringLiteral("/Fish_%1.png").arg(fish_id_));
+
 }
 
 void MainWindow::on_setMetadata_triggered() {
