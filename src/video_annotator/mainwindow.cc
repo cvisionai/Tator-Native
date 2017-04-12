@@ -198,7 +198,14 @@ void MainWindow::on_saveAnnotationFile_triggered() {
     filename = out_path.string();
   }
   else {
-    filename = filename + std::string("_") + reviewer + std::string(".csv");
+    fs::path vid_path(video_path_.toStdString());
+    fs::path out_path = 
+      vid_path.parent_path() / 
+      fs::path(filename +
+      std::string("_") +
+      reviewer +
+      std::string(".csv"));
+    filename = out_path.string();
   }
   QString fname = QFileDialog::getSaveFileName(
       this, 
