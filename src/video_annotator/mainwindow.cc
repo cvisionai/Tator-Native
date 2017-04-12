@@ -183,6 +183,9 @@ void MainWindow::on_saveAnnotationFile_triggered() {
   std::string reviewer = metadata_.reviewer_name_;
   if(filename.empty() == true && reviewer.empty() == true) {
     filename = video_path_.toStdString();
+    fs::path replace(filename);
+    replace.replace_extension(".csv");
+    filename = replace.string();
   }
   else if(filename.empty() == true && reviewer.empty() == false) {
     fs::path vid_path(video_path_.toStdString());
@@ -195,16 +198,30 @@ void MainWindow::on_saveAnnotationFile_triggered() {
     filename = out_path.string();
   }
   else {
-    filename = filename + std::string("_") + reviewer + std::string(".csv");
+    fs::path vid_path(video_path_.toStdString());
+    fs::path out_path = 
+      vid_path.parent_path() / 
+      fs::path(filename +
+      std::string("_") +
+      reviewer +
+      std::string(".csv"));
+    filename = out_path.string();
   }
-  fs::path vid_path(filename);
-  annotation_->write(
-      vid_path.replace_extension(".csv"),
-      std::to_string(metadata_.trip_id_),
-      std::to_string(metadata_.tow_number_),
-      metadata_.reviewer_name_,
-      ui_->towStatus->isChecked() ? "Open" : "Closed",
-      native_rate_);
+  QString fname = QFileDialog::getSaveFileName(
+      this, 
+      "Save annotation file",
+      filename.c_str(), 
+      "*.csv");
+  if(fname.isNull() == false) {
+    fs::path vid_path(fname.toStdString());
+    annotation_->write(
+        vid_path,
+        std::to_string(metadata_.trip_id_),
+        std::to_string(metadata_.tow_number_),
+        metadata_.reviewer_name_,
+        ui_->towStatus->isChecked() ? "Open" : "Closed",
+        native_rate_);
+  }
 }
 
 void MainWindow::on_writeImage_triggered() {
