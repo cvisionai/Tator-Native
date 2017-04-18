@@ -52,6 +52,14 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/video_controls/plus_one_frame.svg"));
   ui_->minusOneFrame->setIcon(
       QIcon(":/icons/video_controls/minus_one_frame.svg"));
+  ui_->goToFrame->setIcon(
+      QIcon(":/icons/fish_navigation/go_to_frame.svg"));
+  ui_->removeFish->setIcon(
+      QIcon(":/icons/fish_navigation/remove_fish.svg"));
+  ui_->nextFish->setIcon(
+      QIcon(":/icons/fish_navigation/next_fish.svg"));
+  ui_->prevFish->setIcon(
+      QIcon(":/icons/fish_navigation/prev_fish.svg"));
   ui_->sideBarLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
