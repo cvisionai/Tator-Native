@@ -20,5 +20,14 @@
   <file>icons/video_controls/plus_one_frame.svg</file>
   <!-- Created by Ruben Semedo thenounproject.com -->
   <file>icons/video_controls/slower.svg</file>
+  <file>icons/fish_navigation/go_to_frame.svg</file>
+  <file>icons/fish_navigation/next_fish.svg</file>
+  <file>icons/fish_navigation/prev_fish.svg</file>
+  <file>icons/fish_navigation/remove_fish.svg</file>
+  <file>icons/species_controls/add_species.svg</file>
+  <file>icons/species_controls/clear_species.svg</file>
+  <file>icons/species_controls/edit_species.svg</file>
+  <file>icons/species_controls/load_species.svg</file>
+  <file>icons/species_controls/save_species.svg</file>
 </qresource>
 </RCC>
