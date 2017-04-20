@@ -4,7 +4,7 @@
  Contact: bgwoodward@gmail.com
 
  You may use, distribute and copy the FishAnnotator under the terms of
- GNU Lesser General Public License version 3. That license references
+ GNU General Public License version 3. That license references
  the General Public License version 3, that is displayed below. Other
  portions of the FishAnnotator may be licensed directly under this license.
  
