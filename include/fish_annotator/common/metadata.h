@@ -6,7 +6,7 @@
 
 #include <string>
 
-namespace fish_annotator { namespace video_annotator {
+namespace fish_annotator {
 
 /// @brief Stores video annotation metadata.
 struct Metadata {
@@ -25,7 +25,7 @@ struct Metadata {
 
 };
 
-}} // namespace fish_annotator::video_annotator
+} // namespace fish_annotator
 
 #endif // METADATA_H
 

@@ -6,7 +6,7 @@
 #include <QTime>
 
 #include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/video_annotator/metadata_dialog.h"
+#include "fish_annotator/common/metadata_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 

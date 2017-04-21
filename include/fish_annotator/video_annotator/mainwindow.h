@@ -16,9 +16,9 @@
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/metadata.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
 #include "fish_annotator/video_annotator/player.h"
-#include "fish_annotator/video_annotator/metadata.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING

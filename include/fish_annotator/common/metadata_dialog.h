@@ -9,10 +9,10 @@
 #include <QWidget>
 #include <QDialog>
 
-#include "fish_annotator/video_annotator/metadata.h"
-#include "ui_metadata_dialog.h"
+#include "fish_annotator/common/metadata.h"
+#include "../../src/common/ui_metadata_dialog.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace fish_annotator {
 
 class MetadataDialog : public QDialog {
   Q_OBJECT
@@ -44,7 +44,7 @@ private:
   std::unique_ptr<Ui::MetadataDialog> ui_;
 };
 
-}} // namespace fish_annotator::video_annotator
+} // namespace fish_annotator
 
 #endif // METADATA_DIALOG_H
 

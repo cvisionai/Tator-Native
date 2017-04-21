@@ -1,7 +1,7 @@
 set( TEST_VIDEO_ANNOTATOR_SOURCES test_video_annotator.cc )
 set( VIDEO_ANNOTATOR_SOURCES
+  "../../src/common/metadata_dialog.cc"
   "../../src/video_annotator/mainwindow.cc"
-  "../../src/video_annotator/metadata_dialog.cc"
   "../../src/video_annotator/video_annotation.cc"
   "../../src/video_annotator/player.cc"
   )
