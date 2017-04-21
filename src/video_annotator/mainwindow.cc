@@ -105,7 +105,8 @@ MainWindow::MainWindow(QWidget *parent)
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_species = current_path / fs::path("default.species");
   if(fs::exists(default_species)) {
-    species_controls_->loadSpeciesFile(QString(default_species.string().c_str()));
+    species_controls_->loadSpeciesFile(
+        QString(default_species.string().c_str()));
   }
 }
 
