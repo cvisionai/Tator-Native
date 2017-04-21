@@ -29,5 +29,9 @@
   <file>icons/species_controls/edit_species.svg</file>
   <file>icons/species_controls/load_species.svg</file>
   <file>icons/species_controls/save_species.svg</file>
+  <!-- Created by Aleksandr Vector thenounproject.com -->
+  <file>icons/image_controls/next.svg</file>
+  <!-- Created by Aleksandr Vector thenounproject.com -->
+  <file>icons/image_controls/prev.svg</file>
 </qresource>
 </RCC>
