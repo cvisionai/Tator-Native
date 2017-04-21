@@ -6,7 +6,7 @@
 #include <QTime>
 
 #include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/video_annotator/metadata_dialog.h"
+#include "fish_annotator/common/metadata_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -105,7 +105,8 @@ MainWindow::MainWindow(QWidget *parent)
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_species = current_path / fs::path("default.species");
   if(fs::exists(default_species)) {
-    species_controls_->loadSpeciesFile(QString(default_species.string().c_str()));
+    species_controls_->loadSpeciesFile(
+        QString(default_species.string().c_str()));
   }
 }
 

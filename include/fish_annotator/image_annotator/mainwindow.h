@@ -16,6 +16,7 @@
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/metadata.h"
 #include "fish_annotator/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
 
@@ -25,7 +26,7 @@ class TestImageAnnotator;
 
 namespace fish_annotator { namespace image_annotator {
 
-class MainWindow : public QWidget {
+class MainWindow : public QMainWindow {
   Q_OBJECT
 #ifndef NO_TESTING
   friend class ::TestImageAnnotator;
@@ -44,10 +45,13 @@ private slots:
   void on_prev_clicked();
 
   /// @brief Brings up a dialog to open a directory containing images.
-  void on_loadImageDir_clicked();
+  void on_loadImageDir_triggered();
 
   /// @brief Saves annotations.
-  void on_saveAnnotations_clicked();
+  void on_saveAnnotations_triggered();
+
+  /// @brief Sets metadata for the annotations.
+  void on_setMetadata_triggered();
 
   /// @brief Moves to the image indicated by image slider.
   void on_imageSlider_valueChanged();
@@ -58,11 +62,27 @@ private slots:
   /// @brief Updates species and subspecies for selected ID.
   void on_idSelection_currentIndexChanged(const QString &id);
 
+  /// @brief Updates the current annotation with a new species.
+  ///
+  /// @param text Selected species.
+  void on_typeMenu_activated(const QString &text);
+
+  /// @brief Updates the current annotation with a new subspecies.
+  ///
+  /// @param text Selected subspecies.
+  void on_subTypeMenu_activated(const QString &text);
+
   /// @brief Removes currently selected annotation.
   void on_removeAnnotation_clicked();
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
+
+  /// @brief Updates type menus with available species/subspecies.
+  void updateTypeMenus();
+
+  /// @brief Gets the current annotation according to image and ID.
+  std::shared_ptr<ImageAnnotation> currentAnnotation();
 
 private:
   /// @brief Annotations associated with this directory.
@@ -72,13 +92,16 @@ private:
   std::unique_ptr<QGraphicsScene> scene_;
 
   /// @brief Widget loaded from ui file.
-  std::unique_ptr<Ui::MainWidget> ui_;
+  std::unique_ptr<Ui::MainWindow> ui_;
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
 
   /// @brief Vector of image files in a directory.
   std::vector<boost::filesystem::path> image_files_;
+
+  /// @brief Annotation metadata.
+  Metadata metadata_;
 
   /// @brief Runs when image directory loaded successfully.
   ///

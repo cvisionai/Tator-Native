@@ -1,9 +1,9 @@
 #include <QMessageBox>
 
-#include "fish_annotator/video_annotator/metadata_dialog.h"
+#include "fish_annotator/common/metadata_dialog.h"
 #include "ui_metadata_dialog.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace fish_annotator {
 
 MetadataDialog::MetadataDialog(QWidget *parent)
   : QDialog(parent)
@@ -50,7 +50,7 @@ void MetadataDialog::setMetadata(const Metadata &metadata) {
   ui_->towNumber->setText(std::to_string(metadata.tow_number_).c_str());
 }
 
-#include "../../include/fish_annotator/video_annotator/moc_metadata_dialog.cpp"
+#include "../../include/fish_annotator/common/moc_metadata_dialog.cpp"
 
-}} // namespace fish_annotator::video_annotator
+} // namespace fish_annotator
 
