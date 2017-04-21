@@ -16,6 +16,7 @@
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/metadata.h"
 #include "fish_annotator/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
 
@@ -48,6 +49,9 @@ private slots:
 
   /// @brief Saves annotations.
   void on_saveAnnotations_triggered();
+
+  /// @brief Sets metadata for the annotations.
+  void on_setMetadata_triggered();
 
   /// @brief Moves to the image indicated by image slider.
   void on_imageSlider_valueChanged();
@@ -95,6 +99,9 @@ private:
 
   /// @brief Vector of image files in a directory.
   std::vector<boost::filesystem::path> image_files_;
+
+  /// @brief Annotation metadata.
+  Metadata metadata_;
 
   /// @brief Runs when image directory loaded successfully.
   ///

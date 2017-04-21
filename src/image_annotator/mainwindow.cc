@@ -4,6 +4,7 @@
 #include <QMessageBox>
 
 #include "fish_annotator/common/species_dialog.h"
+#include "fish_annotator/common/metadata_dialog.h"
 #include "fish_annotator/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -24,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls(this))
-  , image_files_() {
+  , image_files_()
+  , metadata_() {
   ui_->setupUi(this);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -41,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
-  
 }
 
 void MainWindow::on_next_clicked() {
@@ -69,6 +70,14 @@ void MainWindow::on_loadImageDir_triggered() {
 void MainWindow::on_saveAnnotations_triggered() {
   if(image_files_.size() > 0) {
     annotations_->write(image_files_);
+  }
+}
+
+void MainWindow::on_setMetadata_triggered() {
+  MetadataDialog *dlg = new MetadataDialog(this);
+  dlg->setMetadata(metadata_);
+  if(dlg->exec()) {
+    metadata_ = dlg->getMetadata();
   }
 }
 
