@@ -44,10 +44,10 @@ private slots:
   void on_prev_clicked();
 
   /// @brief Brings up a dialog to open a directory containing images.
-  void on_loadImageDir_clicked();
+  void on_loadImageDir_triggered();
 
   /// @brief Saves annotations.
-  void on_saveAnnotations_clicked();
+  void on_saveAnnotations_triggered();
 
   /// @brief Moves to the image indicated by image slider.
   void on_imageSlider_valueChanged();
@@ -57,6 +57,21 @@ private slots:
 
   /// @brief Updates species and subspecies for selected ID.
   void on_idSelection_currentIndexChanged(const QString &id);
+
+  /// @brief Updates the current annotation with a new species.
+  ///
+  /// @param text Selected species.
+  void on_typeMenu_activated(const QString &text);
+
+  /// @brief Updates the subspecies menu.
+  //
+  /// @param text Selected species.
+  void on_typeMenu_currentIndexChanged(const QString &text);
+
+  /// @brief Updates the current annotation with a new subspecies.
+  ///
+  /// @param text Selected subspecies.
+  void on_subTypeMenu_activated(const QString &text);
 
   /// @brief Removes currently selected annotation.
   void on_removeAnnotation_clicked();
