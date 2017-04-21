@@ -35,10 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
 	  "QPushButton:pressed{background-color: rgb(190, 190, 190); "
     "border-style: outset; border-radius: 5px;"
 	  "border-width: 2px; border-color: grey; padding: 6px;}");
-  ui_->next->setEnabled(false);
-  ui_->prev->setEnabled(false);
-  ui_->saveAnnotations->setEnabled(false);
-  ui_->imageSlider->setEnabled(false);
+  ui_->next->setIcon(":/icons/image_controls/next.svg");
+  ui_->prev->setIcon(":/icons/image_controls/prev.svg");
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), 
       SIGNAL(individualAdded(std::string, std::string)), 
@@ -59,7 +57,7 @@ void MainWindow::on_prev_clicked() {
   }
 }
 
-void MainWindow::on_loadImageDir_clicked() {
+void MainWindow::on_loadImageDir_triggered() {
   QString image_dir = QFileDialog::getExistingDirectory(this, 
     "Select an image directory.");
   if(!image_dir.isEmpty()) {
@@ -67,7 +65,7 @@ void MainWindow::on_loadImageDir_clicked() {
   }
 }
 
-void MainWindow::on_saveAnnotations_clicked() {
+void MainWindow::on_saveAnnotations_triggered() {
   if(image_files_.size() > 0) {
     annotations_->write(image_files_);
   }
@@ -76,8 +74,6 @@ void MainWindow::on_saveAnnotations_clicked() {
 void MainWindow::on_imageSlider_valueChanged() {
   scene_->clear();
   ui_->idSelection->clear();
-  ui_->speciesValue->setText("");
-  ui_->subspeciesValue->setText("");
 #ifdef _WIN32
   QString filename(image_files_[ui_->imageSlider->value()].string().c_str());
 #else
@@ -128,8 +124,50 @@ void MainWindow::on_idSelection_currentIndexChanged(const QString &id) {
       annotations_->getImageAnnotations(current_image);
     for(auto annotation : annotations) {
       if(annotation->id_ == id.toInt()) {
-        ui_->speciesValue->setText(annotation->species_.c_str());
-        ui_->subspeciesValue->setText(annotation->subspecies_.c_str());
+        ui_->typeMenu->clear();
+        ui_->subTypeMenu->clear();
+        auto species = species_controls_->getSpecies();
+        for(auto &s : species) {
+          ui_->typeMenu->addItem(s.getName().c_str());
+          if(s.getName() == annotation->species_) {
+            ui_->typeMenu->setCurrentText(s.getName().c_str());
+            auto subspecies = s.getSubspecies();
+            for(auto &sub : subspecies) {
+              ui_->subTypeMenu->addItem(sub.c_str());
+              if(sub == annotation->subspecies_) {
+                ui_->subTypeMenu->setCurrentText(sub.c_str());
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+void on_typeMenu_activated(const QString &text) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    auto current_image = image_files_[ui_->imageSlider->value()];
+    auto annotations = 
+      annotations_->getImageAnnotations(current_image);
+    for(auto annotation : annotations) {
+      if(annotation->id_ == id.toInt()) {
+        ui_->subTypeMenu->clear();
+        auto species = species_controls_->getSpecies();
+        annotation->species_ = ui_->typeMenu->text().toStdString();
+      }
+    }
+  }
+}
+
+void on_subTypeMenu_activated(const QString &text) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    auto current_image = image_files_[ui_->imageSlider->value()];
+    auto annotations = 
+      annotations_->getImageAnnotations(current_image);
+    for(auto annotation : annotations) {
+      if(annotation->id_ == id.toInt()) {
+        annotation->subspecies_ = ui_->subTypeMenu->text().toStdString();
       }
     }
   }
@@ -170,6 +208,15 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   }
   std::sort(image_files_.begin(), image_files_.end());
   if(image_files_.size() > 0) {
+    ui_->idLabel->setEnabled(true);
+    ui_->speciesLabel->setEnabled(true);
+    ui_->subspeciesLabel->setEnabled(true);
+    ui_->idSelection->setEnabled(true);
+    ui_->typeMenu->setEnabled(true);
+    ui_->subTypeMenu->setEnabled(true);
+    ui_->removeAnnotation->setEnabled(true);
+    ui_->showAnnotations->setEnabled(true);
+    ui_->setMetadata->setEnabled(true);
     ui_->next->setEnabled(true);
     ui_->prev->setEnabled(true);
     ui_->saveAnnotations->setEnabled(true);
