@@ -75,20 +75,16 @@ void MainWindow::on_saveAnnotations_triggered() {
 void MainWindow::on_imageSlider_valueChanged() {
   scene_->clear();
   ui_->idSelection->clear();
-#ifdef _WIN32
-  QString filename(image_files_[ui_->imageSlider->value()].string().c_str());
-#else
-  QString filename(image_files_[ui_->imageSlider->value()].c_str());
-#endif
-  QImage current(filename);
+  std::string filename = image_files_[ui_->imageSlider->value()].string();
+  QImage current(filename.c_str());
   if(!current.isNull()) {
     scene_->addPixmap(QPixmap::fromImage(current));
     scene_->setSceneRect(current.rect());
     ui_->imageWindow->setScene(scene_.get());
     ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
     ui_->imageWindow->show();
-    ui_->fileNameValue->setText(filename);
-    fs::path img_path(filename.toStdString());
+    ui_->fileNameValue->setText(filename.c_str());
+    fs::path img_path(filename);
     auto annotations = 
       annotations_->getImageAnnotations(img_path.filename());
     for(auto annotation : annotations) {
@@ -100,9 +96,15 @@ void MainWindow::on_imageSlider_valueChanged() {
       ui_->idSelection->addItem(QString::number(annotation->id_));
     }
     species_controls_->resetCounts();
-    auto counts = annotations_->getCounts(filename.toStdString());
-    for(auto it = counts.begin(); it != counts.end(); it++) {
-      species_controls_->setCount(it->second, it->first);
+    auto counts = annotations_->getCounts(img_path.filename().string());
+    for(const auto &species : species_controls_->getSpecies()) {
+      auto it = counts.find(species.getName());
+      if(it != counts.end()) {
+        species_controls_->setCount(it->second, it->first);
+      }
+      else {
+        species_controls_->setCount(0, species.getName());
+      }
     }
     updateTypeMenus();
   }
@@ -110,7 +112,7 @@ void MainWindow::on_imageSlider_valueChanged() {
     QMessageBox err;
     err.critical(0, "Error", std::string(
         std::string("Error loading image ")
-      + filename.toStdString()
+      + filename
       + std::string(".")).c_str());
   }
 }
@@ -157,6 +159,7 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
       Rect(0, 0, 0, 0));
     annotations_->insert(annotation);
     on_imageSlider_valueChanged();
+    ui_->idSelection->setCurrentText(QString::number(id));
   }
 }
 
