@@ -25,7 +25,7 @@ class TestImageAnnotator;
 
 namespace fish_annotator { namespace image_annotator {
 
-class MainWindow : public QWidget {
+class MainWindow : public QMainWindow {
   Q_OBJECT
 #ifndef NO_TESTING
   friend class ::TestImageAnnotator;
@@ -63,11 +63,6 @@ private slots:
   /// @param text Selected species.
   void on_typeMenu_activated(const QString &text);
 
-  /// @brief Updates the subspecies menu.
-  //
-  /// @param text Selected species.
-  void on_typeMenu_currentIndexChanged(const QString &text);
-
   /// @brief Updates the current annotation with a new subspecies.
   ///
   /// @param text Selected subspecies.
@@ -79,6 +74,12 @@ private slots:
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
+  /// @brief Updates type menus with available species/subspecies.
+  void updateTypeMenus();
+
+  /// @brief Gets the current annotation according to image and ID.
+  std::shared_ptr<ImageAnnotation> currentAnnotation();
+
 private:
   /// @brief Annotations associated with this directory.
   std::unique_ptr<ImageAnnotationList> annotations_;
@@ -87,7 +88,7 @@ private:
   std::unique_ptr<QGraphicsScene> scene_;
 
   /// @brief Widget loaded from ui file.
-  std::unique_ptr<Ui::MainWidget> ui_;
+  std::unique_ptr<Ui::MainWindow> ui_;
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
