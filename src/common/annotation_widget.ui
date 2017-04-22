@@ -45,6 +45,12 @@
          <height>30</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
        <property name="sizeIncrement">
         <size>
          <width>0</width>
@@ -55,7 +61,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Add species</string>
+        <string>Box annotation</string>
        </property>
        <property name="text">
         <string/>
@@ -66,10 +72,16 @@
          <height>30</height>
         </size>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="loadSpecies">
+      <widget class="QPushButton" name="makeLine">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -85,6 +97,12 @@
          <height>30</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
        <property name="sizeIncrement">
         <size>
          <width>0</width>
@@ -95,7 +113,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Load species</string>
+        <string>Line annotation</string>
        </property>
        <property name="text">
         <string/>
@@ -106,10 +124,13 @@
          <height>30</height>
         </size>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="saveSpecies">
+      <widget class="QPushButton" name="makeDot">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -125,6 +146,12 @@
          <height>30</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
        <property name="sizeIncrement">
         <size>
          <width>0</width>
@@ -135,7 +162,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Save species</string>
+        <string>Dot annotation</string>
        </property>
        <property name="text">
         <string/>
@@ -145,6 +172,9 @@
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
