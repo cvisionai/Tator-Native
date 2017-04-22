@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SpeciesControls</class>
- <widget class="QWidget" name="SpeciesControls">
+ <class>AnnotationWidget</class>
+ <widget class="QWidget" name="AnnotationWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
