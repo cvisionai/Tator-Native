@@ -27,17 +27,23 @@ public:
 
 private slots:
   /// @brief Emits signal to make a box annotation.
-  void on_makeBox_clicked();
+  ///
+  /// @param Whether the button is toggled on or off.
+  void on_makeBox_toggled(bool checked);
 
   /// @brief Emits signal to make a line annotation.
-  void on_makeLine_clicked();
+  ///
+  /// @param Whether the button is toggled on or off.
+  void on_makeLine_toggled(bool checked);
 
   /// @brief Emits signal to make a dot annotation.
-  void on_makeDot_clicked();
+  ///
+  /// @param Whether the button is toggled on or off.
+  void on_makeDot_toggled(bool checked);
 
 signals:
   /// @brief Requests enabling a particular annotation tool.
-  void makeAnnotation(AnnotationType type);
+  void setAnnotation(AnnotationType type);
 
 private:
   /// @brief Widget loaded from ui file.
