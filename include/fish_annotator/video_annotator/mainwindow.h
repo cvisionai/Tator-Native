@@ -15,6 +15,7 @@
 #include <QThread>
 
 #include "fish_annotator/common/species_controls.h"
+#include "fish_annotator/common/annotation_widget.h"
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
@@ -227,6 +228,9 @@ private:
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
+
+  /// @brief Annotation widget.
+  std::unique_ptr<AnnotationWidget> annotation_widget_;
 
   /// @brief Path to loaded video.
   QString video_path_;

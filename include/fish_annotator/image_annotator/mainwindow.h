@@ -15,6 +15,7 @@
 #include <QGraphicsPixmapItem>
 
 #include "fish_annotator/common/species_controls.h"
+#include "fish_annotator/common/annotation_widget.h"
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/image_annotator/image_annotation.h"
@@ -36,7 +37,11 @@ public:
   ///
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
-
+protected:
+  /// @brief Resizes the video and scene.
+  ///
+  /// @param event Qt resize event pointer.
+  void resizeEvent(QResizeEvent *event) override final;
 private slots:
   /// @brief Moves to next image.
   void on_next_clicked();
@@ -78,9 +83,6 @@ private slots:
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
-  /// @brief Updates type menus with available species/subspecies.
-  void updateTypeMenus();
-
   /// @brief Gets the current annotation according to image and ID.
   std::shared_ptr<ImageAnnotation> currentAnnotation();
 
@@ -96,6 +98,9 @@ private:
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
+
+  /// @brief Annotation widget.
+  std::unique_ptr<AnnotationWidget> annotation_widget_;
 
   /// @brief Vector of image files in a directory.
   std::vector<boost::filesystem::path> image_files_;

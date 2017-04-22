@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
   , visibility_box_(nullptr)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
+  , annotation_widget_(new AnnotationWidget)
   , video_path_()
   , width_(0)
   , height_(0)
@@ -60,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/next_fish.svg"));
   ui_->prevFish->setIcon(
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
+  ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,

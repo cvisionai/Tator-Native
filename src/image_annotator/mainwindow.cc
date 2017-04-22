@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new QGraphicsScene)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls(this))
+  , annotation_widget_(new AnnotationWidget(this))
   , image_files_()
   , metadata_() {
   ui_->setupUi(this);
@@ -33,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
   ui_->next->setIcon(QIcon(":/icons/image_controls/next.svg"));
   ui_->prev->setIcon(QIcon(":/icons/image_controls/prev.svg"));
+  ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), 
       SIGNAL(individualAdded(std::string, std::string)), 
@@ -43,6 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+  ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::on_next_clicked() {
@@ -115,7 +121,25 @@ void MainWindow::on_imageSlider_valueChanged() {
         species_controls_->setCount(0, species.getName());
       }
     }
-    updateTypeMenus();
+    auto ann = currentAnnotation();
+    if(ann != nullptr) {
+      ui_->typeMenu->clear();
+      ui_->subTypeMenu->clear();
+      auto species = species_controls_->getSpecies();
+      for(auto &s : species) {
+        ui_->typeMenu->addItem(s.getName().c_str());
+        if(s.getName() == ann->species_) {
+          ui_->typeMenu->setCurrentText(s.getName().c_str());
+          auto subspecies = s.getSubspecies();
+          for(auto &sub : subspecies) {
+            ui_->subTypeMenu->addItem(sub.c_str());
+            if(sub == ann->subspecies_) {
+              ui_->subTypeMenu->setCurrentText(sub.c_str());
+            }
+          }
+        }
+      }
+    }
   }
   else {
     QMessageBox err;
@@ -131,14 +155,14 @@ void MainWindow::on_showAnnotations_stateChanged() {
 }
 
 void MainWindow::on_idSelection_currentIndexChanged(const QString &id) {
-  updateTypeMenus();
+  on_imageSlider_valueChanged();
 }
 
 void MainWindow::on_typeMenu_activated(const QString &text) {
   auto ann = currentAnnotation();
   if(ann != nullptr) {
     ann->species_ = text.toStdString();
-    updateTypeMenus();
+    on_imageSlider_valueChanged();
   }
 }
 
@@ -146,7 +170,7 @@ void MainWindow::on_subTypeMenu_activated(const QString &text) {
   auto ann = currentAnnotation();
   if(ann != nullptr) {
     ann->subspecies_ = text.toStdString();
-    updateTypeMenus();
+    on_imageSlider_valueChanged();
   }
 }
 
@@ -210,28 +234,6 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   else {
     QMessageBox err;
     err.critical(0, "Error", "No images found in this directory.");
-  }
-}
-
-void MainWindow::updateTypeMenus() {
-  auto ann = currentAnnotation();
-  if(ann != nullptr) {
-    ui_->typeMenu->clear();
-    ui_->subTypeMenu->clear();
-    auto species = species_controls_->getSpecies();
-    for(auto &s : species) {
-      ui_->typeMenu->addItem(s.getName().c_str());
-      if(s.getName() == ann->species_) {
-        ui_->typeMenu->setCurrentText(s.getName().c_str());
-        auto subspecies = s.getSubspecies();
-        for(auto &sub : subspecies) {
-          ui_->subTypeMenu->addItem(sub.c_str());
-          if(sub == ann->subspecies_) {
-            ui_->subTypeMenu->setCurrentText(sub.c_str());
-          }
-        }
-      }
-    }
   }
 }
 
