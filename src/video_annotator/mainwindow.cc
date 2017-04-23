@@ -13,8 +13,6 @@
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <fstream>
-std::ofstream out("BLAHBLAH.txt");
 namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
@@ -516,7 +514,6 @@ void MainWindow::handlePlayerError(QString err) {
 }
 
 void MainWindow::addBoxAnnotation(const QRectF &rect) {
-  out << "ADDING BOX ANNOTATION!" << std::endl;
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
@@ -526,7 +523,6 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
 }
 
 void MainWindow::addLineAnnotation(const QLineF &line) {
-  out << "ADDING LINE ANNOTATION!" << std::endl;
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
@@ -536,7 +532,6 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
 }
 
 void MainWindow::addDotAnnotation(const QPointF &dot) {
-  out << "ADDING DOT ANNOTATION!" << std::endl;
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
@@ -607,10 +602,8 @@ void MainWindow::drawAnnotations() {
     AnnotatedRegion<DetectionAnnotation> *box = nullptr;
     AnnotatedLine<DetectionAnnotation> *line = nullptr;
     AnnotatedDot<DetectionAnnotation> *dot = nullptr;
-    out << "TYPE IS " << ann->type_ << std::endl;
     switch(ann->type_) {
       case kBox:
-        out << "DRAWING BOX ANNOTATION!" << std::endl;
         box = new AnnotatedRegion<DetectionAnnotation>(
             ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
         if (box->isValid() == true) {
@@ -619,7 +612,6 @@ void MainWindow::drawAnnotations() {
         }
         break;
       case kLine:
-        out << "DRAWING LINE ANNOTATION!" << std::endl;
         line = new AnnotatedLine<DetectionAnnotation>(
             ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
         if(line->isValid() == true) {
