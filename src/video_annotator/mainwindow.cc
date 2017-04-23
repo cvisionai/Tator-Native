@@ -9,6 +9,7 @@
 #include "fish_annotator/common/metadata_dialog.h"
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/common/annotated_line.h"
+#include "fish_annotator/common/annotated_dot.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -605,7 +606,7 @@ void MainWindow::drawAnnotations() {
   for(auto ann : annotation_->getDetectionAnnotations(last_position_)) {
     AnnotatedRegion<DetectionAnnotation> *box = nullptr;
     AnnotatedLine<DetectionAnnotation> *line = nullptr;
-    //AnnotatedDot<DetectionAnnotation> *dot = nullptr;
+    AnnotatedDot<DetectionAnnotation> *dot = nullptr;
     out << "TYPE IS " << ann->type_ << std::endl;
     switch(ann->type_) {
       case kBox:
@@ -627,14 +628,12 @@ void MainWindow::drawAnnotations() {
         }
         break;
       case kDot:
-        /*
         dot = new AnnotatedDot<DetectionAnnotation>(
             ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
         if(dot->isValid() == true) {
           scene_->addItem(dot);
           current_annotations_.push_back(dot);
         }
-        */
         break;
     }
   }
@@ -657,6 +656,8 @@ void MainWindow::drawAnnotations() {
   else {
     ui_->degradedStatus->setChecked(false);
   }
+  // This is needed to prevent clipping of text
+  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
 }
 
 QString MainWindow::frameToTime(qint64 frame_number) {
