@@ -294,6 +294,7 @@ private:
 
   /// @brief Converts a frame number to a formatted time string.
   QString frameToTime(qint64 frame_number);
+
   /// @brief Path to save images using Write Image
   QString images_save_path_;
 };
