@@ -36,7 +36,7 @@ public:
   ///
   /// @param widget AnnotationWidget object.
   void setToolWidget(AnnotationWidget *widget);
-private slots:
+public slots:
   /// @brief Sets the current drawing mode.
   ///
   /// @param mode New mode.
@@ -47,18 +47,18 @@ private slots:
 signals:
   /// @brief Notifies that a box annotation has been drawn.
   ///
-  /// @param Item that was completed.
+  /// @param Bounding rect of completed annotation.
   void boxFinished(const QRectF &rect);
 
   /// @brief Notifies that a line annotation has been drawn.
   ///
-  /// @param Item that was completed.
-  void lineFinished(const QLineF &rect);
+  /// @param Bounding rect of completed annotation.
+  void lineFinished(const QLineF &line);
 
   /// @brief Notifies that a dot annotation has been drawn.
   ///
-  /// @param Item that was completed.
-  void dotFinished(const QPointF &rect);
+  /// @param Bounding rect of completed annotation.
+  void dotFinished(const QPointF &dot);
 protected:
   /// @brief Initiates drawing of an annotation if mode is kDraw.
   ///
