@@ -524,6 +524,11 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
   auto top = qMin(line.y1(), line.y2());
   auto width = qAbs(line.x1() - line.x2());
   auto height = qAbs(line.y1() - line.y2());
+  auto slope = (line.y2() - line.y1()) / (line.x2() - line.x1());
+  if(slope < 0) {
+    width *= -1.0;
+    height *= -1.0;
+  }
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
