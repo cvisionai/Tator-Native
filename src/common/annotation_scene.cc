@@ -108,20 +108,30 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
       case kBox:
         if(rect_item_ != nullptr) {
           emit boxFinished(rect_item_->rect());
+          removeItem(rect_item_);
+          rect_item_ = nullptr;
         }
         break;
       case kLine:
         if(line_item_ != nullptr) {
           emit lineFinished(line_item_->line());
+          removeItem(line_item_);
+          line_item_ = nullptr;
         }
         break;
       case kDot:
         if(dot_item_ != nullptr) {
-          emit dotFinished(dot_item_->rect().topLeft());
+          emit dotFinished(QPointF(
+              dot_item_->rect().topLeft().x() + pen_width,
+              dot_item_->rect().topLeft().y() + pen_width));
+          removeItem(dot_item_);
+          dot_item_ = nullptr;
         }
         break;
     }
+    mode_ = kSelect;
   }
+  QGraphicsScene::mouseReleaseEvent(event);
 }
 
 void AnnotationScene::makeItemsControllable(bool controllable) {
@@ -132,4 +142,5 @@ void AnnotationScene::makeItemsControllable(bool controllable) {
 }
 
 #include "../../include/fish_annotator/common/moc_annotation_scene.cpp"
+
 } // namespace fish_annotator
