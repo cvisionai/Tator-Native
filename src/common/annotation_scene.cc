@@ -114,4 +114,11 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   }
 }
 
+void AnnotationScene::makeItemsControllable(bool controllable) {
+  foreach(QGraphicsItem *item, items()) {
+    item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
+    item->setFlag(QGraphicsItem::ItemIsMovable, controllable);
+  }
+}
+
 } // namespace fish_annotator
