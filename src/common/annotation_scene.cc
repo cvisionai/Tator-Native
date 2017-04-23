@@ -38,6 +38,11 @@ void AnnotationScene::setAnnotationType(AnnotationType type) {
   type_ = type;
 }
 
+namespace {
+// Define pen width in anonymous namespace.
+static const int pen_width = 7;
+}
+
 void AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   if(mode_ == kDraw) {
     start_pos_ = event->scenePos();
@@ -45,19 +50,21 @@ void AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       case kBox:
         rect_item_ = new QGraphicsRectItem(
               start_pos_.x(), start_pos_.y(), 0, 0);
-        rect_item_->setPen(QPen(Qt::black, 7, Qt::SolidLine));
+        rect_item_->setPen(QPen(Qt::black, pen_width, Qt::SolidLine));
         addItem(rect_item_);
         break;
       case kLine:
         line_item_ = new QGraphicsLineItem(QLineF(
               start_pos_, start_pos_));
-        line_item_->setPen(QPen(Qt::black, 7, Qt::SolidLine));
+        line_item_->setPen(QPen(Qt::black, pen_width, Qt::SolidLine));
         addItem(line_item_);
         break;
       case kDot:
         dot_item_ = new QGraphicsEllipseItem(
-              start_pos_.x(), start_pos_.y(), 0, 0);
-        dot_item_->setPen(QPen(Qt::black, 7, Qt::SolidLine));
+              start_pos_.x() - pen_width, 
+              start_pos_.y() - pen_width, 
+              2 * pen_width, 2 * pen_width);
+        dot_item_->setPen(QPen(Qt::black, pen_width, Qt::SolidLine));
         addItem(dot_item_);
         break;
     }
@@ -85,7 +92,10 @@ void AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         break;
       case kDot:
         if(dot_item_ != nullptr) {
-          dot_item_->setRect(QRectF(update_pos, update_pos));
+          dot_item_->setRect(QRectF(
+                update_pos.x() - pen_width,
+                update_pos.y() - pen_width,
+                2 * pen_width, 2 * pen_width));
         }
         break;
     }
