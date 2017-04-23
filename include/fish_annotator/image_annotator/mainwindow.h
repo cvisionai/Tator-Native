@@ -16,7 +16,7 @@
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotation_widget.h"
-#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/annotation_scene.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
@@ -86,12 +86,26 @@ private slots:
   /// @brief Gets the current annotation according to image and ID.
   std::shared_ptr<ImageAnnotation> currentAnnotation();
 
+  /// @brief Adds a box annotation.
+  ///
+  /// @param rect Definition of the box.
+  void addBoxAnnotation(const QRectF &rect);
+
+  /// @brief Adds a line annotation.
+  ///
+  /// @param line Definition of the line.
+  void addLineAnnotation(const QLineF &line);
+
+  /// @brief Adds a dot annotation.
+  ///
+  /// @param dot Definition of the dot.
+  void addDotAnnotation(const QPointF &dot);
 private:
   /// @brief Annotations associated with this directory.
   std::unique_ptr<ImageAnnotationList> annotations_;
 
   /// @brief Scene for displaying images.
-  std::unique_ptr<QGraphicsScene> scene_;
+  std::unique_ptr<AnnotationScene> scene_;
 
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
@@ -107,6 +121,12 @@ private:
 
   /// @brief Annotation metadata.
   Metadata metadata_;
+
+  /// @brief Records species of recently added individual.
+  std::string species_;
+
+  /// @brief Records subspecies of recently added individual.
+  std::string subspecies_;
 
   /// @brief Runs when image directory loaded successfully.
   ///

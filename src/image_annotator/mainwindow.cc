@@ -5,6 +5,9 @@
 
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/common/metadata_dialog.h"
+#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/annotated_line.h"
+#include "fish_annotator/common/annotated_dot.h"
 #include "fish_annotator/image_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -22,12 +25,14 @@ static const std::vector<std::string> kDirExtensions = {
 
 MainWindow::MainWindow(QWidget *parent)
   : annotations_(new ImageAnnotationList)
-  , scene_(new QGraphicsScene)
+  , scene_(new AnnotationScene)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls(this))
   , annotation_widget_(new AnnotationWidget(this))
   , image_files_()
-  , metadata_() {
+  , metadata_()
+  , species_()
+  , subspecies_() {
   ui_->setupUi(this);
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
@@ -39,6 +44,13 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(species_controls_.get(), 
       SIGNAL(individualAdded(std::string, std::string)), 
       this, SLOT(addIndividual(std::string, std::string)));
+  scene_->setToolWidget(annotation_widget_.get());
+  QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
+      this, &MainWindow::addBoxAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::lineFinished,
+      this, &MainWindow::addLineAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::dotFinished,
+      this, &MainWindow::addDotAnnotation);
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_species = current_path / fs::path("default.species");
   if(fs::exists(default_species)) {
@@ -104,9 +116,26 @@ void MainWindow::on_imageSlider_valueChanged() {
       annotations_->getImageAnnotations(img_path.filename());
     for(auto annotation : annotations) {
       if(ui_->showAnnotations->isChecked()) {
-          auto region = new AnnotatedRegion<ImageAnnotation>(
+        AnnotatedRegion<ImageAnnotation> *box = nullptr;
+        AnnotatedLine<ImageAnnotation> *line = nullptr;
+        AnnotatedDot<ImageAnnotation> *dot = nullptr;
+        switch(annotation->type_) {
+          case kBox:
+            box = new AnnotatedRegion<ImageAnnotation>(
+                  annotation->id_, annotation, current.rect());
+            scene_->addItem(box);
+            break;
+          case kLine:
+            line = new AnnotatedLine<ImageAnnotation>(
                 annotation->id_, annotation, current.rect());
-          scene_->addItem(region);
+            scene_->addItem(line);
+            break;
+          case kDot:
+            dot = new AnnotatedDot<ImageAnnotation>(
+                annotation->id_, annotation, current.rect());
+            scene_->addItem(dot);
+            break;
+        }
       }
       ui_->idSelection->addItem(QString::number(annotation->id_));
     }
@@ -184,16 +213,9 @@ void MainWindow::on_removeAnnotation_clicked() {
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
-  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
-    auto current_image = image_files_[ui_->imageSlider->value()];
-    uint64_t id = annotations_->nextId(current_image);
-    auto annotation = std::make_shared<ImageAnnotation>(
-      current_image.filename().string(), species, subspecies, id, 
-      Rect(0, 0, 0, 0));
-    annotations_->insert(annotation);
-    on_imageSlider_valueChanged();
-    ui_->idSelection->setCurrentText(QString::number(id));
-  }
+  species_ = species;
+  subspecies_ = subspecies;
+  scene_->setMode(kDraw);
 }
 
 void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
@@ -250,6 +272,45 @@ std::shared_ptr<ImageAnnotation> MainWindow::currentAnnotation() {
     }
   }
   return nullptr;
+}
+
+void MainWindow::addBoxAnnotation(const QRectF &rect) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    auto current_image = image_files_[ui_->imageSlider->value()];
+    uint64_t id = annotations_->nextId(current_image);
+    auto annotation = std::make_shared<ImageAnnotation>(
+      current_image.filename().string(), species_, subspecies_, id,
+      Rect(rect.x(), rect.y(), rect.width(), rect.height()), kBox);
+    annotations_->insert(annotation);
+    on_imageSlider_valueChanged();
+    ui_->idSelection->setCurrentText(QString::number(id));
+  }
+}
+
+void MainWindow::addLineAnnotation(const QLineF &line) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    auto current_image = image_files_[ui_->imageSlider->value()];
+    uint64_t id = annotations_->nextId(current_image);
+    auto annotation = std::make_shared<ImageAnnotation>(
+      current_image.filename().string(), species_, subspecies_, id,
+      Rect(line.x1(), line.y1(), line.x2(), line.y2()), kLine);
+    annotations_->insert(annotation);
+    on_imageSlider_valueChanged();
+    ui_->idSelection->setCurrentText(QString::number(id));
+  }
+}
+
+void MainWindow::addDotAnnotation(const QPointF &dot) {
+  if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
+    auto current_image = image_files_[ui_->imageSlider->value()];
+    uint64_t id = annotations_->nextId(current_image);
+    auto annotation = std::make_shared<ImageAnnotation>(
+      current_image.filename().string(), species_, subspecies_, id,
+      Rect(dot.x(), dot.y(), 0, 0), kDot);
+    annotations_->insert(annotation);
+    on_imageSlider_valueChanged();
+    ui_->idSelection->setCurrentText(QString::number(id));
+  }
 }
 
 #include "../../include/fish_annotator/image_annotator/moc_mainwindow.cpp"
