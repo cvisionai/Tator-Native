@@ -24,7 +24,7 @@ enum Drag {
 };
 
 
-/// @brief Displays bounding boxes drawn by user.
+/// @brief Displays box annotations.
 ///
 /// @tparam Info Contains data associated with a bounding box.
 template<typename Info>
@@ -42,17 +42,17 @@ public:
   /// @brief Reimplemented from QGraphicsItem.
   ///
   /// @param event Qt event pointer.
-  void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+  void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override final;
 
   /// @brief Reimplemented from QGraphicsItem.
   ///
   /// @param event Qt event pointer.
-  void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+  void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override final;
 
   /// @brief Reimplemented from QGraphicsItem.
   ///
   /// @param event Qt event pointer.
-  void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+  void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override final;
 
   /// @brief Reimplemented from QGraphicsItem.
   ///
@@ -60,7 +60,7 @@ public:
   /// @param option Qt option pointer.
   /// @param widget Qt widget pointer.
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-             QWidget *widget);
+             QWidget *widget) override final;
 
   /// @brief Gets the ID associated with this region.
   ///
@@ -72,8 +72,8 @@ public:
   /// @return Bounding box associated with this region.
   QRectF getAnnBox();
 
-  ///@brief Flag to determine whether to draw this annotation or not
-  bool valid_annotation_;
+  ///@brief Whether to draw this annotation or not
+  bool isValid();
 
 private:
   /// @brief Pointer to the annotation location.
@@ -100,6 +100,9 @@ private:
   /// @brief Pen.
   QPen pen_;
 
+  /// @brief Whether to draw this annotation.
+  bool valid_;
+
   /// @brief Updates annotation with this object's current rect.
   void updateAnnotation();
 };
@@ -113,15 +116,15 @@ AnnotatedRegion<Info>::AnnotatedRegion(
   uint64_t uid,
   std::shared_ptr<Info> annotation,
   const QRectF &bounding_rect)
-  : valid_annotation_(true)
-  , annotation_(annotation)
+  : annotation_(annotation)
   , uid_(uid)
   , bounding_rect_(bounding_rect)
   , drag_() 
   , min_dim_(std::min(bounding_rect_.width(), bounding_rect_.height()))
   , margin_(min_dim_ * 0.02)
   , font_("Helvetica", min_dim_ * 0.02) 
-  , pen_(QColor(255, 0, 0)) {
+  , pen_(QColor(255, 0, 0))
+  , valid_(true) {
   if(annotation_->area_.w == 0 && annotation_->area_.h == 0) {
     // Default rectangle.
     setRect(QRectF(bounding_rect_.x() * 0.5, bounding_rect_.y() * 0.5, 
@@ -138,10 +141,10 @@ AnnotatedRegion<Info>::AnnotatedRegion(
       annotation_->area_.y = 0;
     }
     if (annotation_->area_.x > bounding_rect_.width()) {
-      valid_annotation_ = false;
+      valid_ = false;
     }
     if (annotation_->area_.y > bounding_rect_.height()) {
-      valid_annotation_ = false;
+      valid_ = false;
     }
     if(annotation_->area_.x + annotation_->area_.w > bounding_rect_.width()) {
       annotation_->area_.w = bounding_rect_.width() - annotation_->area_.x;
@@ -363,6 +366,11 @@ QRectF AnnotatedRegion<Info>::getAnnBox() {
     annotation_->area_.y,
     annotation_->area_.w,
     annotation_->area_.h);
+}
+
+template<typename Info>
+bool AnnotatedRegion<Info>::isValid() {
+  return valid_;
 }
 
 template<typename Info>
