@@ -65,7 +65,7 @@ private slots:
   void on_showAnnotations_stateChanged();
 
   /// @brief Updates species and subspecies for selected ID.
-  void on_idSelection_currentIndexChanged(const QString &id);
+  void on_idSelection_activated(const QString &id);
 
   /// @brief Updates the current annotation with a new species.
   ///
@@ -82,9 +82,6 @@ private slots:
 
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
-
-  /// @brief Gets the current annotation according to image and ID.
-  std::shared_ptr<ImageAnnotation> currentAnnotation();
 
   /// @brief Adds a box annotation.
   ///
@@ -128,10 +125,25 @@ private:
   /// @brief Records subspecies of recently added individual.
   std::string subspecies_;
 
+  /// @brief Current annotations.
+  std::vector<QGraphicsItem*> current_annotations_;
+
   /// @brief Runs when image directory loaded successfully.
   ///
   /// Defined as separate function for testing purposes.
   void onLoadDirectorySuccess(const QString &image_dir);
+
+  /// @brief Gets the current annotation according to image and ID.
+  std::shared_ptr<ImageAnnotation> currentAnnotation();
+
+  /// @brief Updates type menus.
+  void updateTypeMenus();
+
+  /// @brief Draws annotations.
+  void drawAnnotations();
+
+  /// @brief Updates species counts.
+  void updateSpeciesCounts();
 };
 
 }} // namespace fish_annotator::image_annotator
