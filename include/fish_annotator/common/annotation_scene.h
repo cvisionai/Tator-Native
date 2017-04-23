@@ -35,7 +35,7 @@ public:
   /// @brief Sets the widget that specifies the active annotation type.
   ///
   /// @param widget AnnotationWidget object.
-  setToolWidget(AnnotationWidget *widget);
+  void setToolWidget(AnnotationWidget *widget);
 private slots:
   /// @brief Sets the current drawing mode.
   ///

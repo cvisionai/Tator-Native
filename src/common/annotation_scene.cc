@@ -1,3 +1,5 @@
+#include <QGraphicsView>
+
 #include "fish_annotator/common/annotation_scene.h"
 
 namespace fish_annotator {
@@ -12,12 +14,12 @@ AnnotationScene::AnnotationScene(QObject *parent)
   , dot_item_(nullptr) {
 }
 
-AnnotationScene::setToolWidget(AnnotationWidget *widget) {
+void AnnotationScene::setToolWidget(AnnotationWidget *widget) {
   QObject::connect(widget, &AnnotationWidget::setAnnotation,
       this, &AnnotationScene::setAnnotationType);
 }
 
-AnnotationScene::setMode(Mode mode) {
+void AnnotationScene::setMode(Mode mode) {
   mode_ = mode;
   QGraphicsView::DragMode drag;
   if(mode == kDraw) {
@@ -32,17 +34,17 @@ AnnotationScene::setMode(Mode mode) {
   if(view != nullptr) view->setDragMode(drag);
 }
 
-AnnotationScene::setAnnotationType(AnnotationType type) {
+void AnnotationScene::setAnnotationType(AnnotationType type) {
   type_ = type;
 }
 
-AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   if(mode_ == kDraw) {
     start_pos_ = event->scenePos();
     switch(type_) {
       case kBox:
-        rect_item_ = new QGraphicsRectItem(QRectF(
-              start_pos_, start_pos_, 0, 0));
+        rect_item_ = new QGraphicsRectItem(
+              start_pos_.x(), start_pos_.y(), 0, 0);
         rect_item_->setPen(QPen(Qt::black, 7, Qt::SolidLine));
         addItem(rect_item_);
         break;
@@ -53,8 +55,8 @@ AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         addItem(line_item_);
         break;
       case kDot:
-        dot_item_ = new QGraphicsEllipseItem(QRectF(
-              start_pos_, start_pos_, 0, 0));
+        dot_item_ = new QGraphicsEllipseItem(
+              start_pos_.x(), start_pos_.y(), 0, 0);
         dot_item_->setPen(QPen(Qt::black, 7, Qt::SolidLine));
         addItem(dot_item_);
         break;
@@ -63,7 +65,7 @@ AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   QGraphicsScene::mousePressEvent(event);
 }
 
-AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+void AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if(mode_ == kDraw) {
     auto update_pos = event->scenePos();
     switch(type_) {
@@ -83,14 +85,14 @@ AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         break;
       case kDot:
         if(dot_item_ != nullptr) {
-          dot_item_->setRect(update_pos, update_pos);
+          dot_item_->setRect(QRectF(update_pos, update_pos));
         }
         break;
     }
   }
 }
 
-AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   if(mode_ == kDraw) {
     switch(type_) {
       case kBox:
