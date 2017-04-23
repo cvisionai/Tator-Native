@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
   , metadata_() {
   ui_->setupUi(this);
 #ifdef _WIN32
-  setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
+  setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif
   ui_->play->setIcon(
       QIcon(":/icons/video_controls/play.svg"));
