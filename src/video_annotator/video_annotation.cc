@@ -19,7 +19,7 @@ DetectionAnnotation::DetectionAnnotation(
   : frame_(frame)
   , id_(id)
   , area_(rect)
-  , type_(kBox) {
+  , type_(type) {
 }
 
 DetectionAnnotation::DetectionAnnotation() 
