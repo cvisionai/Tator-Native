@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
   , subspecies_() {
   ui_->setupUi(this);
 #ifdef _WIN32
-  setWindowIcon(QIcon(":/icons/FishAnnotator.ico"));
+  setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif
   ui_->next->setIcon(QIcon(":/icons/image_controls/next.svg"));
   ui_->prev->setIcon(QIcon(":/icons/image_controls/prev.svg"));

@@ -1,9 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
   <file>fonts/DejaVuSansCondensed.ttf</file>
-  <file>icons/FishAnnotator.bmp</file>
-  <file>icons/FishAnnotator.icns</file>
-  <file>icons/FishAnnotator.ico</file>
   <!-- Created by Ruben Semedo thenounproject.com -->
   <file>icons/video_controls/faster.svg</file>
   <!-- Created by Aybige thenounproject.com -->
@@ -36,5 +33,6 @@
   <file>icons/annotation_tools/box_tool.svg</file>
   <file>icons/annotation_tools/line_tool.svg</file>
   <file>icons/annotation_tools/dot_tool.svg</file>
+  <file>icons/cvision/cvision_no_text.ico</file>
 </qresource>
 </RCC>

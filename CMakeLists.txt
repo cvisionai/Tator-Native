@@ -62,11 +62,11 @@ include_directories(
 enable_testing()
 
 if( WIN32 )
-  set( FISHDET_ICON "${FISHDET_RES_DIR}/icons\\\\FishAnnotator.ico" )
-  set( FISHDET_BMP "${FISHDET_RES_DIR}/icons\\\\FishAnnotator.bmp" )
+  set( FISHDET_ICON "${FISHDET_RES_DIR}/icons/cvision\\\\cvision_no_text.ico" )
+  set( FISHDET_BMP "${FISHDET_RES_DIR}/icons/cvision\\\\cvision_no_text.bmp" )
 elseif( APPLE )
-  set( FISHDET_ICON "FishAnnotator.icns" )
-  set( FISHDET_ICON_FULL "${FISHDET_RES_DIR}/icons/FishAnnotator.icns" )
+  set( FISHDET_ICON "cvision_no_text.icns" )
+  set( FISHDET_ICON_FULL "${FISHDET_RES_DIR}/icons/cvision/cvision_no_text.icns" )
 endif()
 set( FISHDET_RES_FILE "${FISHDET_RES_DIR}/resources.qrc" )
 
