@@ -18,6 +18,7 @@
 #include "fish_annotator/common/serialization.h"
 #include "fish_annotator/common/rect.h"
 #include "fish_annotator/common/species.h"
+#include "fish_annotator/common/annotation_scene.h"
 
 #ifndef NO_TESTING
 class TestImageAnnotation;
@@ -36,11 +37,13 @@ struct ImageAnnotation : public Serialization {
   /// @param subspecies Subspecies of the individual.
   /// @param id ID of the individual within the image.
   /// @param rect Rectangle defining the annotation.
+  /// @param type Type of annotation.
   ImageAnnotation(const std::string& image_file, 
                   const std::string& species,
                   const std::string& subspecies,
                   uint64_t id, 
-                  const Rect &rect);
+                  const Rect &rect,
+                  enum AnnotationType type);
 
   /// @brief Default constructor.
   ImageAnnotation();
@@ -72,6 +75,7 @@ struct ImageAnnotation : public Serialization {
   std::string subspecies_; ///< Subspecies of the individual.
   uint64_t id_; ///< ID of the individual within the image.
   Rect area_; ///< Rectangle defining the annotation. 
+  enum AnnotationType type_; ///< Type of annotation.
 };
 
 /// @brief List of image annotations.
