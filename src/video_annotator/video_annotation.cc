@@ -14,16 +14,19 @@ namespace pt = boost::property_tree;
 DetectionAnnotation::DetectionAnnotation(
   uint64_t frame,
   uint64_t id,
-  const Rect &rect)
+  const Rect &rect,
+  enum AnnotationType type)
   : frame_(frame)
   , id_(id)
-  , area_(rect) {
+  , area_(rect)
+  , type_(kBox) {
 }
 
 DetectionAnnotation::DetectionAnnotation() 
   : frame_(0)
   , id_(0)
-  , area_(0, 0, 0, 0) {
+  , area_(0, 0, 0, 0)
+  , type_(kBox) {
 }
 
 bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
@@ -33,6 +36,7 @@ bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
   if(area_.y != rhs.area_.y) return false;
   if(area_.w != rhs.area_.w) return false;
   if(area_.h != rhs.area_.h) return false;
+  if(type_ != rhs.type_) return false;
   return true;
 }
 
@@ -48,6 +52,17 @@ pt::ptree DetectionAnnotation::write() const {
   tree.put("y", area_.y);
   tree.put("w", area_.w);
   tree.put("h", area_.h);
+  switch(type_) {
+    case kBox:
+      tree.put("type", "box");
+      break;
+    case kLine:
+      tree.put("type", "line");
+      break;
+    case kDot:
+      tree.put("type", "dot");
+      break;
+  }
   return tree;
 }
 
@@ -58,6 +73,20 @@ void DetectionAnnotation::read(const pt::ptree &tree) {
   area_.y = tree.get<uint64_t>("y");
   area_.w = tree.get<uint64_t>("w");
   area_.h = tree.get<uint64_t>("h");
+  type_ = kBox; // default
+  auto opt_type_str = tree.get_optional<std::string>("type");
+  if(opt_type_str != boost::none) {
+    auto type_str = opt_type_str.get();
+    if(type_str == "box") {
+      type_ = kBox;
+    }
+    else if(type_str == "line") {
+      type_ = kLine;
+    }
+    else if(type_str == "dot") {
+      type_ = kDot;
+    }
+  }
 }
 
 TrackAnnotation::TrackAnnotation(

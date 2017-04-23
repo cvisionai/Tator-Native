@@ -395,7 +395,8 @@ void MainWindow::on_nextAndCopy_clicked() {
     annotation_->insert(std::make_shared<DetectionAnnotation>(
           last_position_ + 1,
           fish_id_,
-          det->area_));
+          det->area_,
+          det->type_));
     on_plusOneFrame_clicked();
   }
   else {
@@ -513,7 +514,8 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(rect.x(), rect.y(), rect.width(), rect.height())));
+    Rect(rect.x(), rect.y(), rect.width(), rect.height()),
+    kBox));
   drawAnnotations();
 }
 
@@ -525,7 +527,8 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(left, top, width, height)));
+    Rect(left, top, width, height),
+    kLine));
   drawAnnotations();
 }
 
@@ -533,7 +536,8 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(dot.x()-7, dot.y()-7, 14, 14)));
+    Rect(dot.x()-7, dot.y()-7, 14, 14),
+    kDot));
   drawAnnotations();
 }
 
