@@ -7,9 +7,13 @@
 
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/common/metadata_dialog.h"
+#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/annotated_line.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <fstream>
+std::ofstream out("BLAHBLAH.txt");
 namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
@@ -511,6 +515,7 @@ void MainWindow::handlePlayerError(QString err) {
 }
 
 void MainWindow::addBoxAnnotation(const QRectF &rect) {
+  out << "ADDING BOX ANNOTATION!" << std::endl;
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
@@ -520,28 +525,21 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
 }
 
 void MainWindow::addLineAnnotation(const QLineF &line) {
-  auto left = qMin(line.x1(), line.x2());
-  auto top = qMin(line.y1(), line.y2());
-  auto width = qAbs(line.x1() - line.x2());
-  auto height = qAbs(line.y1() - line.y2());
-  auto slope = (line.y2() - line.y1()) / (line.x2() - line.x1());
-  if(slope < 0) {
-    width *= -1.0;
-    height *= -1.0;
-  }
+  out << "ADDING LINE ANNOTATION!" << std::endl;
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(left, top, width, height),
+    Rect(line.x1(), line.y1(), line.x2(), line.y2()),
     kLine));
   drawAnnotations();
 }
 
 void MainWindow::addDotAnnotation(const QPointF &dot) {
+  out << "ADDING DOT ANNOTATION!" << std::endl;
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(dot.x()-7, dot.y()-7, 14, 14),
+    Rect(dot.x(), dot.y(), 0, 0),
     kDot));
   drawAnnotations();
 }
@@ -605,11 +603,39 @@ void MainWindow::drawAnnotations() {
   }
   current_annotations_.clear();
   for(auto ann : annotation_->getDetectionAnnotations(last_position_)) {
-    auto region = new AnnotatedRegion<DetectionAnnotation>(
-        ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
-    if (region->valid_annotation_) {
-      scene_->addItem(region);
-      current_annotations_.push_back(region);
+    AnnotatedRegion<DetectionAnnotation> *box = nullptr;
+    AnnotatedLine<DetectionAnnotation> *line = nullptr;
+    //AnnotatedDot<DetectionAnnotation> *dot = nullptr;
+    out << "TYPE IS " << ann->type_ << std::endl;
+    switch(ann->type_) {
+      case kBox:
+        out << "DRAWING BOX ANNOTATION!" << std::endl;
+        box = new AnnotatedRegion<DetectionAnnotation>(
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+        if (box->isValid() == true) {
+          scene_->addItem(box);
+          current_annotations_.push_back(box);
+        }
+        break;
+      case kLine:
+        out << "DRAWING LINE ANNOTATION!" << std::endl;
+        line = new AnnotatedLine<DetectionAnnotation>(
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+        if(line->isValid() == true) {
+          scene_->addItem(line);
+          current_annotations_.push_back(line);
+        }
+        break;
+      case kDot:
+        /*
+        dot = new AnnotatedDot<DetectionAnnotation>(
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+        if(dot->isValid() == true) {
+          scene_->addItem(dot);
+          current_annotations_.push_back(dot);
+        }
+        */
+        break;
     }
   }
   if(visibility_box_ != nullptr) {
