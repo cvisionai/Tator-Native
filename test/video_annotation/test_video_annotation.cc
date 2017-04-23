@@ -1,6 +1,7 @@
 #include <boost/filesystem.hpp>
 
 #include "fish_annotator/common/rect.h"
+#include "fish_annotator/common/annotation_widget.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
 #include "test_video_annotation.h"
 
@@ -8,6 +9,7 @@
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 #endif
 
+namespace fa = fish_annotator;
 namespace va = fish_annotator::video_annotator;
 
 void TestVideoAnnotation::testSerialize() {
@@ -19,19 +21,19 @@ void TestVideoAnnotation::testSerialize() {
   ann.insert(std::make_shared<va::TrackAnnotation>(
     ann.nextId(), "abghj", "iuohysdfg", 3, va::kExiting));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    1231, 1, fish_annotator::Rect(1, 2, 3, 4)));
+    1231, 1, fish_annotator::Rect(1, 2, 3, 4), fa::kBox));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    918, 1, fish_annotator::Rect(1, 2, 3, 4)));
+    918, 1, fish_annotator::Rect(1, 2, 3, 4), fa::kBox));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    1031, 1, fish_annotator::Rect(1, 2, 3, 4)));
+    1031, 1, fish_annotator::Rect(1, 2, 3, 4), fa::kBox));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    1151, 1, fish_annotator::Rect(5, 2, 34, 2)));
+    1151, 1, fish_annotator::Rect(5, 2, 34, 2), fa::kBox));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    1151, 1, fish_annotator::Rect(15, 12, 3, 5)));
+    1151, 1, fish_annotator::Rect(15, 12, 3, 5), fa::kBox));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    1151, 3, fish_annotator::Rect(5, 2, 34, 2)));
+    1151, 3, fish_annotator::Rect(5, 2, 34, 2), fa::kBox));
   ann.insert(std::make_shared<va::DetectionAnnotation>(
-    718, 1, fish_annotator::Rect(1, 2, 3, 4)));
+    718, 1, fish_annotator::Rect(1, 2, 3, 4), fa::kBox));
   QVERIFY(ann.getAllSpecies().size() == 3);
   QVERIFY(ann.detections_by_id_.left.count(1) == 5);
   QVERIFY(ann.detections_by_id_.left.count(2) == 0);

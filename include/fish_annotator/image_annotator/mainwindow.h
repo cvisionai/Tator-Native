@@ -15,7 +15,8 @@
 #include <QGraphicsPixmapItem>
 
 #include "fish_annotator/common/species_controls.h"
-#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/annotation_widget.h"
+#include "fish_annotator/common/annotation_scene.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/image_annotator/image_annotation.h"
 #include "ui_mainwindow.h"
@@ -36,7 +37,11 @@ public:
   ///
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
-
+protected:
+  /// @brief Resizes the video and scene.
+  ///
+  /// @param event Qt resize event pointer.
+  void resizeEvent(QResizeEvent *event) override final;
 private slots:
   /// @brief Moves to next image.
   void on_next_clicked();
@@ -60,7 +65,7 @@ private slots:
   void on_showAnnotations_stateChanged();
 
   /// @brief Updates species and subspecies for selected ID.
-  void on_idSelection_currentIndexChanged(const QString &id);
+  void on_idSelection_activated(const QString &id);
 
   /// @brief Updates the current annotation with a new species.
   ///
@@ -78,18 +83,26 @@ private slots:
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
 
-  /// @brief Updates type menus with available species/subspecies.
-  void updateTypeMenus();
+  /// @brief Adds a box annotation.
+  ///
+  /// @param rect Definition of the box.
+  void addBoxAnnotation(const QRectF &rect);
 
-  /// @brief Gets the current annotation according to image and ID.
-  std::shared_ptr<ImageAnnotation> currentAnnotation();
+  /// @brief Adds a line annotation.
+  ///
+  /// @param line Definition of the line.
+  void addLineAnnotation(const QLineF &line);
 
+  /// @brief Adds a dot annotation.
+  ///
+  /// @param dot Definition of the dot.
+  void addDotAnnotation(const QPointF &dot);
 private:
   /// @brief Annotations associated with this directory.
   std::unique_ptr<ImageAnnotationList> annotations_;
 
   /// @brief Scene for displaying images.
-  std::unique_ptr<QGraphicsScene> scene_;
+  std::unique_ptr<AnnotationScene> scene_;
 
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
@@ -97,16 +110,40 @@ private:
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
 
+  /// @brief Annotation widget.
+  std::unique_ptr<AnnotationWidget> annotation_widget_;
+
   /// @brief Vector of image files in a directory.
   std::vector<boost::filesystem::path> image_files_;
 
   /// @brief Annotation metadata.
   Metadata metadata_;
 
+  /// @brief Records species of recently added individual.
+  std::string species_;
+
+  /// @brief Records subspecies of recently added individual.
+  std::string subspecies_;
+
+  /// @brief Current annotations.
+  std::vector<QGraphicsItem*> current_annotations_;
+
   /// @brief Runs when image directory loaded successfully.
   ///
   /// Defined as separate function for testing purposes.
   void onLoadDirectorySuccess(const QString &image_dir);
+
+  /// @brief Gets the current annotation according to image and ID.
+  std::shared_ptr<ImageAnnotation> currentAnnotation();
+
+  /// @brief Updates type menus.
+  void updateTypeMenus();
+
+  /// @brief Draws annotations.
+  void drawAnnotations();
+
+  /// @brief Updates species counts.
+  void updateSpeciesCounts();
 };
 
 }} // namespace fish_annotator::image_annotator

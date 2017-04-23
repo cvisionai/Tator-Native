@@ -7,6 +7,9 @@
 
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/common/metadata_dialog.h"
+#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/annotated_line.h"
+#include "fish_annotator/common/annotated_dot.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -17,11 +20,12 @@ namespace fs = boost::filesystem;
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
-  , scene_(new QGraphicsScene)
+  , scene_(new AnnotationScene)
   , pixmap_item_(nullptr)
   , visibility_box_(nullptr)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
+  , annotation_widget_(new AnnotationWidget)
   , video_path_()
   , width_(0)
   , height_(0)
@@ -60,10 +64,18 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/next_fish.svg"));
   ui_->prevFish->setIcon(
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
+  ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
+  scene_->setToolWidget(annotation_widget_.get());
+  QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
+      this, &MainWindow::addBoxAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::lineFinished,
+      this, &MainWindow::addLineAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::dotFinished,
+      this, &MainWindow::addDotAnnotation);
   Player *player = new Player();
   QThread *thread = new QThread();
   QObject::connect(player, &Player::processedImage, 
@@ -371,11 +383,7 @@ void MainWindow::on_addRegion_clicked() {
     handlePlayerError("Please add a fish before adding a region!");
   }
   else {
-    annotation_->insert(std::make_shared<DetectionAnnotation>(
-          last_position_,
-          fish_id_,
-          Rect(0, 0, 100, 100)));
-    drawAnnotations();
+    scene_->setMode(kDraw);
   }
 }
 
@@ -390,7 +398,8 @@ void MainWindow::on_nextAndCopy_clicked() {
     annotation_->insert(std::make_shared<DetectionAnnotation>(
           last_position_ + 1,
           fish_id_,
-          det->area_));
+          det->area_,
+          det->type_));
     on_plusOneFrame_clicked();
   }
   else {
@@ -504,6 +513,33 @@ void MainWindow::handlePlayerError(QString err) {
   msgBox.exec();
 }
 
+void MainWindow::addBoxAnnotation(const QRectF &rect) {
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+    last_position_,
+    fish_id_,
+    Rect(rect.x(), rect.y(), rect.width(), rect.height()),
+    kBox));
+  drawAnnotations();
+}
+
+void MainWindow::addLineAnnotation(const QLineF &line) {
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+    last_position_,
+    fish_id_,
+    Rect(line.x1(), line.y1(), line.x2(), line.y2()),
+    kLine));
+  drawAnnotations();
+}
+
+void MainWindow::addDotAnnotation(const QPointF &dot) {
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+    last_position_,
+    fish_id_,
+    Rect(dot.x(), dot.y(), 0, 0),
+    kDot));
+  drawAnnotations();
+}
+
 void MainWindow::updateSpeciesCounts() {
   auto counts = annotation_->getCounts();
   for(const auto &species : species_controls_->getSpecies()) {
@@ -563,11 +599,34 @@ void MainWindow::drawAnnotations() {
   }
   current_annotations_.clear();
   for(auto ann : annotation_->getDetectionAnnotations(last_position_)) {
-    auto region = new AnnotatedRegion<DetectionAnnotation>(
-        ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
-    if (region->valid_annotation_) {
-      scene_->addItem(region);
-      current_annotations_.push_back(region);
+    AnnotatedRegion<DetectionAnnotation> *box = nullptr;
+    AnnotatedLine<DetectionAnnotation> *line = nullptr;
+    AnnotatedDot<DetectionAnnotation> *dot = nullptr;
+    switch(ann->type_) {
+      case kBox:
+        box = new AnnotatedRegion<DetectionAnnotation>(
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+        if (box->isValid() == true) {
+          scene_->addItem(box);
+          current_annotations_.push_back(box);
+        }
+        break;
+      case kLine:
+        line = new AnnotatedLine<DetectionAnnotation>(
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+        if(line->isValid() == true) {
+          scene_->addItem(line);
+          current_annotations_.push_back(line);
+        }
+        break;
+      case kDot:
+        dot = new AnnotatedDot<DetectionAnnotation>(
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+        if(dot->isValid() == true) {
+          scene_->addItem(dot);
+          current_annotations_.push_back(dot);
+        }
+        break;
     }
   }
   if(visibility_box_ != nullptr) {
@@ -589,6 +648,8 @@ void MainWindow::drawAnnotations() {
   else {
     ui_->degradedStatus->setChecked(false);
   }
+  // This is needed to prevent clipping of text
+  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
 }
 
 QString MainWindow::frameToTime(qint64 frame_number) {

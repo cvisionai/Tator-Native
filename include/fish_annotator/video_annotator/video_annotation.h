@@ -18,6 +18,7 @@
 #include "fish_annotator/common/serialization.h"
 #include "fish_annotator/common/rect.h"
 #include "fish_annotator/common/species.h"
+#include "fish_annotator/common/annotation_scene.h"
 
 #ifndef NO_TESTING
 class TestVideoAnnotation;
@@ -37,7 +38,8 @@ struct DetectionAnnotation : public Serialization {
   DetectionAnnotation(
     uint64_t frame,
     uint64_t id,
-    const Rect &rect);
+    const Rect &rect,
+    enum AnnotationType type);
 
   /// @brief Default constructor.
   DetectionAnnotation();
@@ -67,6 +69,7 @@ struct DetectionAnnotation : public Serialization {
   uint64_t frame_; ///< Frame of this annotation.
   uint64_t id_; ///< ID of the individual.
   Rect area_; ///< Rectangle defining the annotation.
+  enum AnnotationType type_; ///< Annotation type.
 };
 
 /// @brief List of detection annotations.

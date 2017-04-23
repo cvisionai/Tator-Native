@@ -8,16 +8,19 @@ namespace fish_annotator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
 
-ImageAnnotation::ImageAnnotation(const std::string& image_file, 
-                                 const std::string& species,
-                                 const std::string& subspecies,
-                                 uint64_t id, 
-                                 const Rect &rect)
+ImageAnnotation::ImageAnnotation(
+  const std::string& image_file, 
+  const std::string& species,
+  const std::string& subspecies,
+  uint64_t id, 
+  const Rect &rect,
+  enum AnnotationType type)
   : image_file_(image_file)
   , species_(species)
   , subspecies_(subspecies)
   , id_(id)
-  , area_(rect) {
+  , area_(rect)
+  , type_(type) {
 }
 
 ImageAnnotation::ImageAnnotation()
@@ -25,7 +28,8 @@ ImageAnnotation::ImageAnnotation()
   , species_()
   , subspecies_()
   , id_(0)
-  , area_(0, 0, 0, 0) {
+  , area_(0, 0, 0, 0)
+  , type_(kBox) {
 }
 
 bool ImageAnnotation::operator==(const ImageAnnotation &rhs) const {
@@ -37,6 +41,7 @@ bool ImageAnnotation::operator==(const ImageAnnotation &rhs) const {
   if(area_.y != rhs.area_.y) return false;
   if(area_.w != rhs.area_.w) return false;
   if(area_.h != rhs.area_.h) return false;
+  if(type_ != rhs.type_) return false;
   return true;
 }
 
@@ -54,6 +59,17 @@ pt::ptree ImageAnnotation::write() const {
   tree.put("y", area_.y);
   tree.put("w", area_.w);
   tree.put("h", area_.h);
+  switch(type_) {
+    case kBox:
+      tree.put("type", "box");
+      break;
+    case kLine:
+      tree.put("type", "line");
+      break;
+    case kDot:
+      tree.put("type", "dot");
+      break;
+  }
   return tree;
 }
 
@@ -67,6 +83,20 @@ void ImageAnnotation::read(const pt::ptree &tree) {
   uint64_t w = tree.get<uint64_t>("w");
   uint64_t h = tree.get<uint64_t>("h");
   area_ = Rect(x, y, w, h);
+  type_ = kBox; // default
+  auto opt_type_str = tree.get_optional<std::string>("type");
+  if(opt_type_str != boost::none) {
+    auto type_str = opt_type_str.get();
+    if(type_str == "box") {
+      type_ = kBox;
+    }
+    else if(type_str == "line") {
+      type_ = kLine;
+    }
+    else if(type_str == "dot") {
+      type_ = kDot;
+    }
+  }
 }
 
 ImageAnnotationList::ImageAnnotationList()

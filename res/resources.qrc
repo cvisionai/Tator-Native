@@ -33,5 +33,8 @@
   <file>icons/image_controls/next.svg</file>
   <!-- Created by Aleksandr Vector thenounproject.com -->
   <file>icons/image_controls/prev.svg</file>
+  <file>icons/annotation_tools/box_tool.svg</file>
+  <file>icons/annotation_tools/line_tool.svg</file>
+  <file>icons/annotation_tools/dot_tool.svg</file>
 </qresource>
 </RCC>

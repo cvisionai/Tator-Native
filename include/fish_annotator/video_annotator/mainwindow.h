@@ -15,7 +15,8 @@
 #include <QThread>
 
 #include "fish_annotator/common/species_controls.h"
-#include "fish_annotator/common/annotatedregion.h"
+#include "fish_annotator/common/annotation_widget.h"
+#include "fish_annotator/common/annotation_scene.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
 #include "fish_annotator/video_annotator/player.h"
@@ -87,6 +88,21 @@ public slots:
   ///
   /// @param err Error message.
   void handlePlayerError(QString err);
+
+  /// @brief Adds a box annotation.
+  ///
+  /// @param rect Definition of the box.
+  void addBoxAnnotation(const QRectF &rect);
+
+  /// @brief Adds a line annotation.
+  ///
+  /// @param line Definition of the line.
+  void addLineAnnotation(const QLineF &line);
+
+  /// @brief Adds a dot annotation.
+  ///
+  /// @param dot Definition of the dot.
+  void addDotAnnotation(const QPointF &dot);
 signals:
   /// @brief Requests play.
   void requestPlay();
@@ -214,7 +230,7 @@ private:
   std::unique_ptr<VideoAnnotation> annotation_;
 
   /// @brief Scene for displaying video.
-  std::unique_ptr<QGraphicsScene> scene_;
+  std::unique_ptr<AnnotationScene> scene_;
 
   /// @brief Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
@@ -227,6 +243,9 @@ private:
 
   /// @brief Species controls widget.
   std::unique_ptr<SpeciesControls> species_controls_;
+
+  /// @brief Annotation widget.
+  std::unique_ptr<AnnotationWidget> annotation_widget_;
 
   /// @brief Path to loaded video.
   QString video_path_;
@@ -259,7 +278,7 @@ private:
   qint64 fish_id_;
 
   /// @brief Current annotations.
-  std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
+  std::list<QGraphicsItem*> current_annotations_;
 
   /// @brief Annotation metadata.
   Metadata metadata_;
@@ -275,6 +294,7 @@ private:
 
   /// @brief Converts a frame number to a formatted time string.
   QString frameToTime(qint64 frame_number);
+
   /// @brief Path to save images using Write Image
   QString images_save_path_;
 };
