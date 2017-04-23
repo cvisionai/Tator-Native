@@ -17,7 +17,7 @@ namespace fs = boost::filesystem;
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
-  , scene_(new QGraphicsScene)
+  , scene_(new AnnotationScene)
   , pixmap_item_(nullptr)
   , visibility_box_(nullptr)
   , ui_(new Ui::MainWindow)
@@ -66,6 +66,13 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->videoWindow->setScene(scene_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
+  scene_->setToolWidget(annotation_widget_.get());
+  QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
+      this, &MainWindow::addBoxAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::lineFinished,
+      this, &MainWindow::addLineAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::dotFinished,
+      this, &MainWindow::addDotAnnotation);
   Player *player = new Player();
   QThread *thread = new QThread();
   QObject::connect(player, &Player::processedImage, 
@@ -373,11 +380,7 @@ void MainWindow::on_addRegion_clicked() {
     handlePlayerError("Please add a fish before adding a region!");
   }
   else {
-    annotation_->insert(std::make_shared<DetectionAnnotation>(
-          last_position_,
-          fish_id_,
-          Rect(0, 0, 100, 100)));
-    drawAnnotations();
+    scene_->setMode(kDraw);
   }
 }
 
@@ -504,6 +507,34 @@ void MainWindow::handlePlayerError(QString err) {
   QMessageBox msgBox;
   msgBox.setText(err);
   msgBox.exec();
+}
+
+void MainWindow::addBoxAnnotation(const QRectF &rect) {
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+    last_position_,
+    fish_id_,
+    Rect(rect.x(), rect.y(), rect.width(), rect.height())));
+  drawAnnotations();
+}
+
+void MainWindow::addLineAnnotation(const QLineF &line) {
+  auto left = qMin(line.x1(), line.x2());
+  auto top = qMin(line.y1(), line.y2());
+  auto width = qAbs(line.x1() - line.x2());
+  auto height = qAbs(line.y1() - line.y2());
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+    last_position_,
+    fish_id_,
+    Rect(left, top, width, height)));
+  drawAnnotations();
+}
+
+void MainWindow::addDotAnnotation(const QPointF &dot) {
+  annotation_->insert(std::make_shared<DetectionAnnotation>(
+    last_position_,
+    fish_id_,
+    Rect(dot.x()-7, dot.y()-7, 14, 14)));
+  drawAnnotations();
 }
 
 void MainWindow::updateSpeciesCounts() {
