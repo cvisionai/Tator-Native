@@ -17,7 +17,6 @@
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotation_widget.h"
 #include "fish_annotator/common/annotation_scene.h"
-#include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/video_annotator/video_annotation.h"
 #include "fish_annotator/video_annotator/player.h"
@@ -279,7 +278,7 @@ private:
   qint64 fish_id_;
 
   /// @brief Current annotations.
-  std::list<AnnotatedRegion<DetectionAnnotation>*> current_annotations_;
+  std::list<QGraphicsItem*> current_annotations_;
 
   /// @brief Annotation metadata.
   Metadata metadata_;
