@@ -131,4 +131,5 @@ void AnnotationScene::makeItemsControllable(bool controllable) {
   }
 }
 
+#include "../../include/fish_annotator/common/moc_annotation_scene.cpp"
 } // namespace fish_annotator
