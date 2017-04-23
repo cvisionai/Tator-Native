@@ -35,7 +35,7 @@ public:
 
   /// @brief Gets the line associated with this annotation.
   ///
-  /// @return Bounding box associated with this annotation.
+  /// @return Line associated with this annotation.
   QLineF getAnnLine();
 
   ///@brief Whether to draw this annotation or not
