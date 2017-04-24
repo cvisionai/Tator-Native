@@ -100,6 +100,7 @@ void AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         break;
     }
   }
+  QGraphicsScene::mouseMoveEvent(event);
 }
 
 void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
