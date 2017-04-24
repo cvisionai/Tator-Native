@@ -6,7 +6,6 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneHoverEvent>
 #include <QGraphicsRectItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
