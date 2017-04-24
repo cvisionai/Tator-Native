@@ -75,6 +75,9 @@
                  <bold>false</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(230, 230, 230);</string>
+               </property>
                <property name="text">
                 <string>Remove Annotation</string>
                </property>

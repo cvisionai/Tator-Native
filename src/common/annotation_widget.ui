@@ -63,6 +63,9 @@
        <property name="toolTip">
         <string>Box annotation</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 230, 230);</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -115,6 +118,9 @@
        <property name="toolTip">
         <string>Line annotation</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 230, 230);</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -163,6 +169,9 @@
        </property>
        <property name="toolTip">
         <string>Dot annotation</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 230, 230);</string>
        </property>
        <property name="text">
         <string/>

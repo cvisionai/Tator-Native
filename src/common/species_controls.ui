@@ -98,6 +98,9 @@
               <property name="toolTip">
                <string>Add species</string>
               </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(230, 230, 230);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -138,6 +141,9 @@
               <property name="toolTip">
                <string>Load species</string>
               </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(230, 230, 230);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -177,6 +183,9 @@
               </property>
               <property name="toolTip">
                <string>Save species</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(230, 230, 230);</string>
               </property>
               <property name="text">
                <string/>
@@ -222,6 +231,9 @@
               <property name="toolTip">
                <string>Edit species</string>
               </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(230, 230, 230);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -261,6 +273,9 @@
               </property>
               <property name="toolTip">
                <string>Clear species</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(230, 230, 230);</string>
               </property>
               <property name="text">
                <string/>

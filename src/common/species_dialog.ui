@@ -51,6 +51,9 @@
    </item>
    <item row="4" column="2">
     <widget class="QPushButton" name="removeSubspecies">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(230, 230, 230);</string>
+     </property>
      <property name="text">
       <string>Remove</string>
      </property>
@@ -58,6 +61,9 @@
    </item>
    <item row="4" column="0" colspan="2">
     <widget class="QPushButton" name="addSubspecies">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(230, 230, 230);</string>
+     </property>
      <property name="text">
       <string>Add</string>
      </property>
@@ -65,6 +71,9 @@
    </item>
    <item row="4" column="4">
     <widget class="QPushButton" name="cancel">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(230, 230, 230);</string>
+     </property>
      <property name="text">
       <string>Cancel</string>
      </property>
@@ -88,6 +97,9 @@
    </item>
    <item row="4" column="5">
     <widget class="QPushButton" name="ok">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(230, 230, 230);</string>
+     </property>
      <property name="text">
       <string>OK</string>
      </property>
