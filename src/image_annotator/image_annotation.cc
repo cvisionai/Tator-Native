@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include <boost/property_tree/json_parser.hpp>
 
 #include <QProgressDialog>
@@ -210,9 +212,41 @@ void ImageAnnotationList::write(
   dlg->show();
   int iter = 0;
   for(const auto &image_file : filenames) {
+    fs::path csv_file(image_file);
+    csv_file.replace_extension(".csv");
+    std::ofstream csv(csv_file.string());
+    csv << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
+    csv << std::endl;
     pt::ptree tree;
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
+      csv << image_file.filename().string() << ",";
+      csv << (*(it->second))->species_ << ",";
+      csv << (*(it->second))->subspecies_ << ",";
+      csv << (*(it->second))->id_ << ",";
+      csv << (*(it->second))->area_.x << ",";
+      csv << (*(it->second))->area_.y << ",";
+      csv << (*(it->second))->area_.w << ",";
+      csv << (*(it->second))->area_.h << ",";
+      switch((*(it->second))->type_) {
+        case kBox:
+          csv << "Box,0.0";
+          break;
+        case kLine: {
+          double xdiff = static_cast<double>(
+              (*(it->second))->area_.x - (*(it->second))->area_.w);
+          double ydiff = static_cast<double>(
+              (*(it->second))->area_.y - (*(it->second))->area_.h);
+          double length = std::sqrt(xdiff * xdiff + ydiff * ydiff);
+          csv << "Line,";
+          csv << length;
+          break;
+        }
+        case kDot:
+          csv << "Dot,0.0";
+          break;
+      }
+      csv << std::endl;
       tree.add_child("annotation_list.annotation", (*(it->second))->write());
     }
     fs::path json_file(image_file);
