@@ -23,6 +23,7 @@ void AnnotationScene::setMode(Mode mode) {
   mode_ = mode;
   QGraphicsView::DragMode drag;
   if(mode == kDraw) {
+    QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
     makeItemsControllable(false);
     drag = QGraphicsView::NoDrag;
   }
@@ -44,7 +45,7 @@ static const int pen_width = 7;
 }
 
 void AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  if(mode_ == kDraw) {
+  if(mode_ == kDraw && sceneRect().contains(event->scenePos()) == true) {
     start_pos_ = event->scenePos();
     switch(type_) {
       case kBox:
@@ -75,6 +76,22 @@ void AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 void AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if(mode_ == kDraw) {
     auto update_pos = event->scenePos();
+    qreal margin;
+    switch(type_) {
+      case kBox: 
+        margin = pen_width / 2.0; 
+        break;
+      case kLine:
+        margin = pen_width; 
+        break;
+      case kDot:
+        margin = 2.0 * pen_width; 
+        break;
+    }
+    update_pos.setX(qMin(update_pos.x(), sceneRect().right() - margin));
+    update_pos.setX(qMax(update_pos.x(), sceneRect().left() + margin));
+    update_pos.setY(qMin(update_pos.y(), sceneRect().bottom() - margin));
+    update_pos.setY(qMax(update_pos.y(), sceneRect().top() + margin));
     switch(type_) {
       case kBox:
         if(rect_item_ != nullptr) {
@@ -100,6 +117,7 @@ void AnnotationScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         break;
     }
   }
+  QGraphicsScene::mouseMoveEvent(event);
 }
 
 void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
@@ -130,6 +148,7 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         break;
     }
     mode_ = kSelect;
+    QApplication::restoreOverrideCursor();
   }
   QGraphicsScene::mouseReleaseEvent(event);
 }

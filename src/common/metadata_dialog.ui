@@ -165,6 +165,9 @@
          <height>0</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 230, 230);</string>
+       </property>
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -177,6 +180,9 @@
          <width>80</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 230, 230);</string>
        </property>
        <property name="text">
         <string>OK</string>

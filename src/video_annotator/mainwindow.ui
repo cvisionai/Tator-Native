@@ -666,7 +666,7 @@ border-radius: 2px;</string>
                 <string>Prev fish</string>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">background-color: rgb(230, 230, 230);</string>
                </property>
                <property name="text">
                 <string/>
@@ -716,7 +716,7 @@ border-radius: 2px;</string>
                 <string>Next fish</string>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">background-color: rgb(230, 230, 230);</string>
                </property>
                <property name="text">
                 <string/>
@@ -769,7 +769,7 @@ border-radius: 2px;</string>
                 <string>Go to frame</string>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">background-color: rgb(230, 230, 230);</string>
                </property>
                <property name="text">
                 <string/>
@@ -828,7 +828,7 @@ border-radius: 2px;</string>
                 <bool>false</bool>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">background-color: rgb(230, 230, 230);</string>
                </property>
                <property name="text">
                 <string/>
@@ -880,12 +880,7 @@ border-radius: 2px;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
+             <string notr="true">background-color: rgb(230, 230, 230);</string>
             </property>
             <property name="text">
              <string>Add Region</string>
@@ -905,12 +900,7 @@ padding: 6px;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
+             <string notr="true">background-color: rgb(230, 230, 230);</string>
             </property>
             <property name="text">
              <string>Remove Region</string>
@@ -930,12 +920,7 @@ padding: 6px;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(230, 230, 230);
-border-style: outset;
-border-radius: 5px;
-border-width: 2px;
-border-color: grey;
-padding: 6px;</string>
+             <string notr="true">background-color: rgb(230, 230, 230);</string>
             </property>
             <property name="text">
              <string>Next + Copy</string>
