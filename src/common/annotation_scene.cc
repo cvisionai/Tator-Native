@@ -23,6 +23,7 @@ void AnnotationScene::setMode(Mode mode) {
   mode_ = mode;
   QGraphicsView::DragMode drag;
   if(mode == kDraw) {
+    QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
     makeItemsControllable(false);
     drag = QGraphicsView::NoDrag;
   }
@@ -147,6 +148,7 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         break;
     }
     mode_ = kSelect;
+    QApplication::restoreOverrideCursor();
   }
   QGraphicsScene::mouseReleaseEvent(event);
 }
