@@ -36,7 +36,7 @@ public:
   /// @brief Gets the point associated with this annotation.
   ///
   /// @return Point associated with this annotation.
-  QLineF getAnnPoint();
+  QPointF getAnnPoint();
 
   ///@brief Whether to draw this annotation or not
   bool isValid();
@@ -150,7 +150,7 @@ uint64_t AnnotatedDot<Info>::getUID() {
 }
 
 template<typename Info>
-QLineF AnnotatedDot<Info>::getAnnPoint() {
+QPointF AnnotatedDot<Info>::getAnnPoint() {
   return QPointF(
       annotation_->area_.x,
       annotation_->area_.y);
