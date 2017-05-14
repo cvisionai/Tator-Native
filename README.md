@@ -8,6 +8,8 @@ Introduction
 and images of fish.  Eventually it will be expanded to automatically create
 annotations using computer vision algorithms.
 
+**05/13/2017 - Mac build is currently not working correctly. We are aware of the performance issues and hope to have a fix soon.**
+
 Building and testing
 ====================
 
@@ -21,6 +23,8 @@ FishAnnotator uses the following 3rd party libraries:
 * [OpenCV][OpenCV]
 
 [CMake][CMake] is also required to build.
+
+**Please find the appropriate install section for your OS. Static builds are only required on Windows.**
 
 To simplify distribution, Boost, Qt and OpenCV must be built as static 
 libraries.  It is recommended to download compiled Boost binaries for your
