@@ -16,6 +16,7 @@
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotation_widget.h"
+#include "fish_annotator/common/annotation_view.h"
 #include "fish_annotator/common/annotation_scene.h"
 #include "fish_annotator/common/metadata.h"
 #include "fish_annotator/image_annotator/image_annotation.h"
@@ -100,6 +101,9 @@ private slots:
 private:
   /// @brief Annotations associated with this directory.
   std::unique_ptr<ImageAnnotationList> annotations_;
+
+  /// @brief Image window.
+  std::unique_ptr<AnnotationView> view_;
 
   /// @brief Scene for displaying images.
   std::unique_ptr<AnnotationScene> scene_;

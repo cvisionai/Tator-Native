@@ -205,11 +205,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="videoWindowLayout">
-          <item>
-           <widget class="QGraphicsView" name="imageWindow"/>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="videoWindowLayout"/>
         </item>
         <item>
          <widget class="QDockWidget" name="dockWidget">
