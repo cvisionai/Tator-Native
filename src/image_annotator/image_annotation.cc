@@ -237,6 +237,12 @@ void ImageAnnotationList::write(
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
   int iter = 0;
+  fs::path sum_file(filenames[0]);
+  sum_file = sum_file.parent_path();
+  sum_file /= "_summary.csv";
+  std::ofstream sum(sum_file.string());
+  sum << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
+  sum << std::endl;
   for(const auto &image_file : filenames) {
     fs::path csv_file(image_file);
     csv_file.replace_extension(".csv");
@@ -247,6 +253,7 @@ void ImageAnnotationList::write(
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
       (*(it->second))->write_csv(csv);
+      (*(it->second))->write_csv(sum);
       tree.add_child("annotation_list.annotation", (*(it->second))->write());
     }
     fs::path json_file(image_file);
