@@ -1,5 +1,3 @@
-#include <fstream>
-
 #include <boost/property_tree/json_parser.hpp>
 
 #include <QProgressDialog>
@@ -73,6 +71,34 @@ pt::ptree ImageAnnotation::write() const {
       break;
   }
   return tree;
+}
+
+void ImageAnnotation::write_csv(std::ofstream &csv) const {
+  csv << image_file_ << ",";
+  csv << species_ << ",";
+  csv << subspecies_ << ",";
+  csv << id_ << ",";
+  csv << area_.x << ",";
+  csv << area_.y << ",";
+  csv << area_.w << ",";
+  csv << area_.h << ",";
+  switch(type_) {
+    case kBox:
+      csv << "Box,0.0";
+      break;
+    case kLine: {
+      double xdiff = static_cast<double>(area_.x - area_.w);
+      double ydiff = static_cast<double>(area_.y - area_.h);
+      double length = std::sqrt(xdiff * xdiff + ydiff * ydiff);
+      csv << "Line,";
+      csv << length;
+      break;
+    }
+    case kDot:
+      csv << "Dot,0.0";
+      break;
+  }
+  csv << std::endl;
 }
 
 void ImageAnnotation::read(const pt::ptree &tree) {
@@ -220,33 +246,7 @@ void ImageAnnotationList::write(
     pt::ptree tree;
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
-      csv << image_file.filename().string() << ",";
-      csv << (*(it->second))->species_ << ",";
-      csv << (*(it->second))->subspecies_ << ",";
-      csv << (*(it->second))->id_ << ",";
-      csv << (*(it->second))->area_.x << ",";
-      csv << (*(it->second))->area_.y << ",";
-      csv << (*(it->second))->area_.w << ",";
-      csv << (*(it->second))->area_.h << ",";
-      switch((*(it->second))->type_) {
-        case kBox:
-          csv << "Box,0.0";
-          break;
-        case kLine: {
-          double xdiff = static_cast<double>(
-              (*(it->second))->area_.x - (*(it->second))->area_.w);
-          double ydiff = static_cast<double>(
-              (*(it->second))->area_.y - (*(it->second))->area_.h);
-          double length = std::sqrt(xdiff * xdiff + ydiff * ydiff);
-          csv << "Line,";
-          csv << length;
-          break;
-        }
-        case kDot:
-          csv << "Dot,0.0";
-          break;
-      }
-      csv << std::endl;
+      (*(it->second))->write_csv(csv);
       tree.add_child("annotation_list.annotation", (*(it->second))->write());
     }
     fs::path json_file(image_file);

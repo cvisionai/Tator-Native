@@ -9,6 +9,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <fstream>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/bimap.hpp>
@@ -52,6 +53,11 @@ struct ImageAnnotation : public Serialization {
   ///
   /// @return Property tree constructed from the object.
   pt::ptree write() const;
+
+  /// @brief Writes to a csv.  Does not include header.
+  ///
+  /// @param csv Output file stream.
+  void write_csv(std::ofstream &csv_file) const;
 
   /// @brief Equality operator.
   ///
