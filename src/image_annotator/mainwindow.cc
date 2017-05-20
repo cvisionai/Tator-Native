@@ -25,6 +25,7 @@ static const std::vector<std::string> kDirExtensions = {
 
 MainWindow::MainWindow(QWidget *parent)
   : annotations_(new ImageAnnotationList)
+  , view_(new AnnotationView)
   , scene_(new AnnotationScene)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls(this))
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
   ui_->next->setIcon(QIcon(":/icons/image_controls/next.svg"));
   ui_->prev->setIcon(QIcon(":/icons/image_controls/prev.svg"));
+  ui_->videoWindowLayout->addWidget(view_.get());
   ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
   QObject::connect(species_controls_.get(), 
@@ -60,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
-  ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  view_->fitInView();
 }
 
 void MainWindow::on_next_clicked() {
@@ -107,9 +109,9 @@ void MainWindow::on_imageSlider_valueChanged() {
   if(!current.isNull()) {
     scene_->addPixmap(QPixmap::fromImage(current));
     scene_->setSceneRect(current.rect());
-    ui_->imageWindow->setScene(scene_.get());
-    ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
-    ui_->imageWindow->show();
+    view_->setScene(scene_.get());
+    view_->fitInView();
+    view_->show();
     ui_->fileNameValue->setText(filename.c_str());
     fs::path img_path(filename);
     auto annotations = 
@@ -332,7 +334,8 @@ void MainWindow::drawAnnotations() {
       ui_->idSelection->addItem(QString::number(annotation->id_));
     }
   }
-  ui_->imageWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  view_->setBoundingRect(scene_->sceneRect());
+  view_->fitInView();
 }
 
 void MainWindow::updateSpeciesCounts() {
