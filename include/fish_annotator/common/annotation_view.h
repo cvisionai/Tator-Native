@@ -32,7 +32,7 @@ private:
   QRectF bounding_rect_;
 
   /// @brief Current zoom level.
-  uint32_t zoom_;
+  int32_t zoom_;
 };
 
 } // namespace fish_annotator
