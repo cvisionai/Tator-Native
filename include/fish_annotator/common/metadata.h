@@ -23,6 +23,8 @@ struct Metadata {
   /// @brief Tow number.
   uint32_t tow_number_;
 
+  bool tow_status_;
+
 };
 
 } // namespace fish_annotator

@@ -158,6 +158,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="towStatus">
+       <property name="text">
+        <string>Tow Open</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="cancel">
        <property name="minimumSize">
         <size>

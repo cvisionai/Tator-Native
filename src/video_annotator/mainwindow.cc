@@ -245,7 +245,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
         std::to_string(metadata_.trip_id_),
         std::to_string(metadata_.tow_number_),
         metadata_.reviewer_name_,
-        ui_->towStatus->isChecked() ? "Open" : "Closed",
+        metadata_.tow_status_ ? "Open" : "Closed",
         native_rate_);
   }
 }

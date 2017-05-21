@@ -40,6 +40,7 @@ Metadata MetadataDialog::getMetadata() {
   metadata.reviewer_name_ = ui_->reviewerName->text().toStdString();
   metadata.trip_id_ = ui_->tripId->text().toInt();
   metadata.tow_number_ = ui_->towNumber->text().toInt();
+  metadata.tow_status_ = ui_->towStatus->isChecked();
   return metadata;
 }
 
@@ -48,6 +49,7 @@ void MetadataDialog::setMetadata(const Metadata &metadata) {
   ui_->reviewerName->setText(metadata.reviewer_name_.c_str());
   ui_->tripId->setText(std::to_string(metadata.trip_id_).c_str());
   ui_->towNumber->setText(std::to_string(metadata.tow_number_).c_str());
+  ui_->towStatus->setChecked(metadata.tow_status_);
 }
 
 #include "../../include/fish_annotator/common/moc_metadata_dialog.cpp"
