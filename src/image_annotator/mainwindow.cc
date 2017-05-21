@@ -110,7 +110,6 @@ void MainWindow::on_imageSlider_valueChanged() {
     scene_->addPixmap(QPixmap::fromImage(current));
     scene_->setSceneRect(current.rect());
     view_->setScene(scene_.get());
-    view_->fitInView();
     view_->show();
     ui_->fileNameValue->setText(filename.c_str());
     fs::path img_path(filename);
@@ -249,6 +248,8 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     annotations_->read(image_files_);
     species_controls_->loadFromVector(annotations_->getAllSpecies());
     on_imageSlider_valueChanged();
+    view_->setBoundingRect(scene_->sceneRect());
+    view_->fitInView();
   }
   else {
     QMessageBox err;
@@ -334,8 +335,6 @@ void MainWindow::drawAnnotations() {
       ui_->idSelection->addItem(QString::number(annotation->id_));
     }
   }
-  view_->setBoundingRect(scene_->sceneRect());
-  view_->fitInView();
 }
 
 void MainWindow::updateSpeciesCounts() {
