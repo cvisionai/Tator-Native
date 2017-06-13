@@ -31,7 +31,7 @@ Player::~Player() {
 
 void Player::loadVideo(QString filename) {
   video_path_ = filename;
-  capture_.reset(new cv::VideoCapture(filename.toStdString()));
+  capture_.reset(new cv::VideoCapture(filename.toStdString(),cv::CAP_FFMPEG));
   if (capture_->isOpened()) {
     frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
     current_speed_ = frame_rate_;
@@ -60,7 +60,9 @@ void Player::play() {
   while(stopped_ == false) {
     QTime t;
     t.start();
-    emit processedImage(getOneFrame(), frame_index_);
+    auto tmp_frame = getOneFrame();
+    auto tmp_frame_index = frame_index_;
+    emit processedImage(tmp_frame, tmp_frame_index);
     double usec = 1000.0 * t.restart();
     processWait(std::round(delay_ - usec));
   }
@@ -110,12 +112,16 @@ void Player::slowDown() {
 
 void Player::nextFrame() {
   //setCurrentFrame(frame_index_ + 1);
-  emit processedImage(getOneFrame(), frame_index_);
+  auto tmp_frame = getOneFrame();
+  auto tmp_frame_index = frame_index_;
+  emit processedImage(tmp_frame, tmp_frame_index);
 }
 
 void Player::prevFrame() {
   setCurrentFrame(frame_index_ - 1);
-  emit processedImage(getOneFrame(), frame_index_);
+  auto tmp_frame = getOneFrame();
+  auto tmp_frame_index = frame_index_;
+  emit processedImage(tmp_frame, tmp_frame_index);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
@@ -132,7 +138,9 @@ void Player::setCurrentFrame(qint64 frame_num) {
 
 void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
-  emit processedImage(getOneFrame(), frame_index_);
+  auto tmp_frame = getOneFrame();
+  auto tmp_frame_index = frame_index_;
+  emit processedImage(tmp_frame, tmp_frame_index);
 }
 
 void Player::processWait(qint64 usec) {
