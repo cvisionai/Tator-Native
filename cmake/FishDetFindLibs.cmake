@@ -1,6 +1,6 @@
 # --- Qt5 ---
 find_package( Qt5 REQUIRED COMPONENTS 
-  Core Gui Widgets PrintSupport OpenGL )
+  Core Gui Widgets PrintSupport OpenGL Sql )
 if( NOT APPLE )
   find_package( Qt5DBus REQUIRED )
 endif()
@@ -28,6 +28,7 @@ if( WIN32 )
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwbmp.lib"
     "${_qt5Widgets_install_prefix}/plugins/imageformats/qwebp.lib"
     "${_qt5Widgets_install_prefix}/lib/Qt5Svg.lib"
+    "${_qt5Widgets_install_prefix}/plugins/sqldrivers/qsqlodbc.lib"
     )
 elseif( APPLE )
 elseif( UNIX )
