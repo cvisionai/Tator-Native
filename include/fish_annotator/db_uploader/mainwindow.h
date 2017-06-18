@@ -4,6 +4,8 @@
 #include <memory>
 
 #include <QMainWindow>
+#include <QtSql>
+#include <QSqlDatabase>
 
 #include "ui_mainwindow.h"
 
@@ -34,6 +36,12 @@ private slots:
 private:
   /// @brief Widget loaded from ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
+
+  /// @brief Input database.
+  QSqlDatabase input_db_;
+
+  /// @brief Output database.
+  QSqlDatabase output_db_;
 };
 
 }} // namespace fish_annotator::db_uploader
