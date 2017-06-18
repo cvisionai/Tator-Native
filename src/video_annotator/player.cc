@@ -31,7 +31,7 @@ Player::~Player() {
 
 void Player::loadVideo(QString filename) {
   video_path_ = filename;
-  capture_.reset(new cv::VideoCapture(filename.toStdString(),cv::CAP_FFMPEG));
+  capture_.reset(new cv::VideoCapture(filename.toStdString()));
   if (capture_->isOpened()) {
     frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
     current_speed_ = frame_rate_;
