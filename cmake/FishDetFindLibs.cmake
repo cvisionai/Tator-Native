@@ -80,6 +80,7 @@ if( MSVC )
     dmoguids
     strmiids
     wmcodecdspuuid
+    odbc32
     )
 
 # --- Mac ---

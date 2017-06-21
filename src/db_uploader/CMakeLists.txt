@@ -16,8 +16,8 @@ if( WIN32 )
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
     Qt5::Gui
-    Qt5::Sql
     ${QT_THIRD_PARTY_LIBS}
+    Qt5::Sql
     )
   set_target_properties( 
     db_uploader

@@ -6,6 +6,7 @@
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+Q_IMPORT_PLUGIN(QODBCDriverPlugin)
 Q_IMPORT_PLUGIN(QICOPlugin)
 #endif
 
