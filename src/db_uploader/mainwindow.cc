@@ -121,6 +121,19 @@ void MainWindow::on_cancel_clicked() {
 }
 
 void MainWindow::on_upload_clicked() {
+  QString image_dir = ui_->imageDirectory->text();
+  std::vector<boost::filesystem::path> image_files;
+  fs::directory_iterator dir_it(image_dir.toStdString());
+  fs::directory_iterator dir_end;
+  for(; dir_it != dir_end; ++dir_it) {
+    fs::path ext(dir_it->path().extension());
+    for(auto &ok_ext : kDirExtensions) {
+      if(ext == ok_ext) {
+        image_files.push_back(dir_it->path());
+      }
+    }
+  }
+  std::sort(image_files.begin(), image_files.end());
 }
 
 #include "../../include/fish_annotator/db_uploader/moc_mainwindow.cpp"
