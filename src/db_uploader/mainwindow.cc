@@ -1,11 +1,25 @@
-#include "fish_annotator/db_uploader/mainwindow.h"
+#include <algorithm>
+
+#include <boost/filesystem.hpp>
 
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include "fish_annotator/db_uploader/database_info.h"
+#include "fish_annotator/db_uploader/mainwindow.h"
 #include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace db_uploader {
+
+namespace fs = boost::filesystem;
+
+namespace { //anonymous
+
+static const std::vector<std::string> kDirExtensions = {
+  ".jpg", ".png", ".bmp", ".tif", ".jpeg",
+  ".JPG", ".PNG", ".BMP", ".TIF", ".JPEG"};
+
+} // anonymous namespace
 
 MainWindow::MainWindow(QWidget *parent)
   : ui_(new Ui::MainWindow) 
@@ -16,6 +30,23 @@ MainWindow::MainWindow(QWidget *parent)
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif
+  fs::path current_path(QDir::currentPath().toStdString());
+  fs::path default_input = current_path / fs::path("default.input_database");
+  fs::path default_output = current_path / fs::path("default.output_database");
+  if(fs::exists(default_input)) {
+    DatabaseInfo input;
+    deserialize(input, default_input.string());
+    ui_->inputServer->setText(input.getServer().c_str());
+    ui_->inputDatabase->setText(input.getDatabase().c_str());
+    ui_->inputUsername->setText(input.getUsername().c_str());
+  }
+  if(fs::exists(default_output)) {
+    DatabaseInfo output;
+    deserialize(output, default_output.string());
+    ui_->outputServer->setText(output.getServer().c_str());
+    ui_->outputDatabase->setText(output.getDatabase().c_str());
+    ui_->outputUsername->setText(output.getUsername().c_str());
+  }
 }
 
 void MainWindow::on_connectInputDb_clicked() {
