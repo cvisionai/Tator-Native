@@ -17,20 +17,23 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::on_connectInputDb_clicked() {
-  input_db_ = QSqlDatabase::addDatabase("QODBC");
+  input_db_ = QSqlDatabase::addDatabase("QODBC3");
   if(input_db_.isDriverAvailable("QODBC") == false) {
     QMessageBox err;
     err.critical(0, "Error", "ODBC driver is not available!");
   }
-  input_db_.setDatabaseName("DRIVER={SQL Server};SERVER=127.0.0.1;DATABASE=scallop");
-  input_db_.setUserName("Jonathan Takahashi");
+  input_db_.setDatabaseName("DRIVER={SQL Server};SERVER={JON-PC2};DATABASE=scallop;Trusted_Connection=no;user_id=Jonathan Takahashi;password=;WSID=.");
   if(input_db_.isValid() == false) {
     QMessageBox err;
     err.critical(0, "Error", "Not a valid database!");
   }
   if(input_db_.open() == false) {
     QMessageBox err;
-    err.critical(0, "Error", "Could not open database connection!");
+    err.critical(0, "Error", input_db_.lastError().text());
+  }
+  else {
+    QMessageBox success;
+    success.information(0, "SUCCESS", "SUCCESS");
   }
 }
 
