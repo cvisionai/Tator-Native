@@ -286,6 +286,22 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>inputServer</tabstop>
+  <tabstop>inputDatabase</tabstop>
+  <tabstop>inputUsername</tabstop>
+  <tabstop>inputPassword</tabstop>
+  <tabstop>connectInputDb</tabstop>
+  <tabstop>outputServer</tabstop>
+  <tabstop>outputDatabase</tabstop>
+  <tabstop>outputUsername</tabstop>
+  <tabstop>outputPassword</tabstop>
+  <tabstop>connectOutputDb</tabstop>
+  <tabstop>imageDirectory</tabstop>
+  <tabstop>browseImageDir</tabstop>
+  <tabstop>upload</tabstop>
+  <tabstop>cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
