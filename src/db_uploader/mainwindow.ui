@@ -48,7 +48,11 @@
         <widget class="QLineEdit" name="inputUsername"/>
        </item>
        <item row="3" column="1" colspan="2">
-        <widget class="QLineEdit" name="inputPassword"/>
+        <widget class="QLineEdit" name="inputPassword">
+         <property name="echoMode">
+          <enum>QLineEdit::PasswordEchoOnEdit</enum>
+         </property>
+        </widget>
        </item>
        <item row="4" column="1">
         <widget class="QLabel" name="inputDbStatus">
@@ -214,7 +218,11 @@
         </widget>
        </item>
        <item row="3" column="1" colspan="2">
-        <widget class="QLineEdit" name="outputPassword"/>
+        <widget class="QLineEdit" name="outputPassword">
+         <property name="echoMode">
+          <enum>QLineEdit::PasswordEchoOnEdit</enum>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0" colspan="2">
         <widget class="QLabel" name="outputDbStatus">
