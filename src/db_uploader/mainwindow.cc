@@ -77,6 +77,7 @@ void MainWindow::on_browseImageDir_clicked() {
 }
 
 void MainWindow::on_cancel_clicked() {
+  QApplication::quit();
 }
 
 void MainWindow::on_upload_clicked() {
