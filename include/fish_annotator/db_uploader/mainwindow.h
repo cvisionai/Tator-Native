@@ -38,10 +38,10 @@ private:
   std::unique_ptr<Ui::MainWindow> ui_;
 
   /// @brief Input database.
-  QSqlDatabase input_db_;
+  std::unique_ptr<QSqlDatabase> input_db_;
 
   /// @brief Output database.
-  QSqlDatabase output_db_;
+  std::unique_ptr<QSqlDatabase> output_db_;
 };
 
 }} // namespace fish_annotator::db_uploader

@@ -1,6 +1,7 @@
 #include "fish_annotator/db_uploader/mainwindow.h"
 
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "ui_mainwindow.h"
 
@@ -8,8 +9,8 @@ namespace fish_annotator { namespace db_uploader {
 
 MainWindow::MainWindow(QWidget *parent)
   : ui_(new Ui::MainWindow) 
-  , input_db_()
-  , output_db_() {
+  , input_db_(new QSqlDatabase())
+  , output_db_(new QSqlDatabase()) {
   ui_->setupUi(this);
   setWindowTitle("Database Uploader");
 #ifdef _WIN32
@@ -20,60 +21,68 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::on_connectInputDb_clicked() {
   ui_->inputDbStatus->setText("Attempting to connect...");
   ui_->inputDbStatus->repaint();
-  input_db_ = QSqlDatabase::addDatabase("QODBC3");
-  if(input_db_.isDriverAvailable("QODBC") == false) {
+  *input_db_ = QSqlDatabase::addDatabase("QODBC3", "input");
+  if(input_db_->isDriverAvailable("QODBC") == false) {
     QMessageBox err;
     err.critical(0, "Error", "ODBC driver is not available!");
   }
-  input_db_.setDatabaseName(
+  input_db_->setDatabaseName(
       "DRIVER={SQL Server};SERVER={" + ui_->inputServer->text() + 
       "};DATABASE=" + ui_->inputDatabase->text() + 
       ";Trusted_Connection=no;user_id=" + ui_->inputUsername->text() + 
       ";password=" + ui_->inputPassword->text() + ";WSID=.");
-  if(input_db_.isValid() == false) {
+  if(input_db_->isValid() == false) {
     ui_->inputDbStatus->setText("Not connected");
     QMessageBox err;
     err.critical(0, "Error", "Not a valid database!");
   }
-  if(input_db_.open() == false) {
+  if(input_db_->open() == false) {
     ui_->inputDbStatus->setText("Not connected");
     QMessageBox err;
-    err.critical(0, "Error", input_db_.lastError().text());
+    err.critical(0, "Error", input_db_->lastError().text());
   }
   else {
     ui_->inputDbStatus->setText("Connected");
+  }
+  if(output_db_->isOpen() == true && input_db_->isOpen() == true) {
+    ui_->upload->setEnabled(true);
   }
 }
 
 void MainWindow::on_connectOutputDb_clicked() {
   ui_->outputDbStatus->setText("Attempting to connect...");
   ui_->outputDbStatus->repaint();
-  output_db_ = QSqlDatabase::addDatabase("QODBC3");
-  if(output_db_.isDriverAvailable("QODBC") == false) {
+  *output_db_ = QSqlDatabase::addDatabase("QODBC3", "output");
+  if(output_db_->isDriverAvailable("QODBC") == false) {
     QMessageBox err;
     err.critical(0, "Error", "ODBC driver is not available!");
   }
-  output_db_.setDatabaseName(
+  output_db_->setDatabaseName(
       "DRIVER={SQL Server};SERVER={" + ui_->outputServer->text() + 
       "};DATABASE=" + ui_->outputDatabase->text() + 
       ";Trusted_Connection=no;user_id=" + ui_->outputUsername->text() + 
       ";password=" + ui_->outputPassword->text() + ";WSID=.");
-  if(output_db_.isValid() == false) {
+  if(output_db_->isValid() == false) {
     ui_->outputDbStatus->setText("Not connected");
     QMessageBox err;
     err.critical(0, "Error", "Not a valid database!");
   }
-  if(output_db_.open() == false) {
+  if(output_db_->open() == false) {
     ui_->outputDbStatus->setText("Not connected");
     QMessageBox err;
-    err.critical(0, "Error", output_db_.lastError().text());
+    err.critical(0, "Error", output_db_->lastError().text());
   }
   else {
     ui_->outputDbStatus->setText("Connected");
   }
+  if(output_db_->isOpen() == true && input_db_->isOpen() == true) {
+    ui_->upload->setEnabled(true);
+  }
 }
 
 void MainWindow::on_browseImageDir_clicked() {
+  ui_->imageDirectory->setText(QFileDialog::getExistingDirectory(
+    this, "Select annotated image directory"));
 }
 
 void MainWindow::on_cancel_clicked() {
