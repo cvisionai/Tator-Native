@@ -4,7 +4,10 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QSqlTableModel>
+#include <QProgressDialog>
 
+#include "fish_annotator/image_annotator/image_annotation.h"
 #include "fish_annotator/db_uploader/database_info.h"
 #include "fish_annotator/db_uploader/mainwindow.h"
 #include "ui_mainwindow.h"
@@ -134,6 +137,74 @@ void MainWindow::on_upload_clicked() {
     }
   }
   std::sort(image_files.begin(), image_files.end());
+  image_annotator::ImageAnnotationList annotations;
+  annotations.read(image_files);
+  int num_img = static_cast<int>(image_files.size());
+  QSqlTableModel input_model(this, *input_db_);
+  QSqlTableModel output_model(this, *output_db_);
+  /// @TODO Parse metadata from input database.
+  output_model.setTable("dbo.measurements_data");
+  output_model.setEditStrategy(QSqlTableModel::OnManualSubmit);
+  output_model.select();
+  QProgressDialog progress(
+      "Uploading annotations...",
+      "Abort",
+      0,
+      num_img,
+      this);
+  for(int img_index = 0; img_index < num_img; ++img_index) {
+    progress.setValue(img_index);
+    if(progress.wasCanceled()) {
+      break;
+    }
+    auto ann = annotations.getImageAnnotations(image_files[img_index]);
+    int num_ann = static_cast<int>(ann.size());
+    for(int ai = 0; ai < num_ann; ++ai) {
+      auto row_count = output_model.rowCount();
+      if(output_model.insertRows(row_count, 1) == false) {
+        progress.close();
+        QMessageBox err;
+        err.critical(0, "Error", "Unable to insert row into table.");
+        break;
+      }
+      // surveyyear
+      output_model.setData(output_model.index(row_count, 0), "");
+      // areashortname
+      output_model.setData(output_model.index(row_count, 1), "");
+      // areacontrolpk
+      output_model.setData(output_model.index(row_count, 2), "");
+      // cameraControlIPK
+      output_model.setData(output_model.index(row_count, 3), "");
+      // station
+      output_model.setData(output_model.index(row_count, 4), "");
+      // quadrat
+      output_model.setData(output_model.index(row_count, 5), "");
+      // measurement
+      double meas = 0.0;
+      if(ann[ai]->type_ == kLine) {
+        double xdiff = ann[ai]->area_.x - ann[ai]->area_.w;
+        double ydiff = ann[ai]->area_.y - ann[ai]->area_.h;
+        meas = std::sqrt(xdiff * xdiff + ydiff * ydiff);
+      }
+      output_model.setData(output_model.index(row_count, 6), 
+          std::to_string(meas).c_str());
+      // latitude
+      output_model.setData(output_model.index(row_count, 7), "");
+      // longitude
+      output_model.setData(output_model.index(row_count, 8), "");
+    }
+    if(output_model.submitAll() == true) {
+      output_model.database().commit();
+    }
+    else {
+      output_model.database().rollback();
+      progress.close();
+      QMessageBox err;
+      err.critical(0, "Error", output_model.lastError().text());
+      break;
+    }
+  }
+  progress.setValue(num_img);
 }
 
 #include "../../include/fish_annotator/db_uploader/moc_mainwindow.cpp"
