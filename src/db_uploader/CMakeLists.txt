@@ -1,13 +1,12 @@
-# Find the sources for image annotator
-file( GLOB DB_UPLOADER_SOURCES "*.cc" )
-
 # Add db_uploader executable
 if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )
-  file( GLOB DB_UPLOADER_RESOURCES "*.rc" )
   add_executable( db_uploader WIN32 
-    ${DB_UPLOADER_SOURCES} 
-    ${DB_UPLOADER_RESOURCES} 
+    database_info.cc
+    mainwindow.cc
+    main.cc
+    ../image_annotator/image_annotation.cc
+    db_uploader.rc
     ${FISHDET_RES_FILE} 
     )
   target_link_libraries(
