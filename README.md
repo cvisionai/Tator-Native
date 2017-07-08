@@ -79,7 +79,7 @@ corresponding to your current branch.
 configure.bat -static -release -prefix "your\working\dir\qtbase"
 -platform win32-msvc2015 -qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype
 -opengl desktop -no-openssl -opensource -confirm-license -make libs -nomake
-tools -nomake examples -nomake tests
+tools -nomake examples -nomake tests -sql-odbc -plugin-sql-odbc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 8\. Type:

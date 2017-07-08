@@ -18,4 +18,8 @@ if( ${DOXYGEN_FOUND} STREQUAL "YES" )
 endif()
 
 install(FILES default.species DESTINATION .)
+if(WIN32)
+  install(FILES default.input_database DESTINATION .)
+  install(FILES default.output_database DESTINATION .)
+endif()
 
