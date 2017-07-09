@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+  setWindowTitle("Video Slicer");
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif

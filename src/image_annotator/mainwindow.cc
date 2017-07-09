@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
   , species_()
   , subspecies_() {
   ui_->setupUi(this);
+  setWindowTitle("Image Annotator");
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif

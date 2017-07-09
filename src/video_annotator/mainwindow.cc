@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
   , current_annotations_()
   , metadata_() {
   ui_->setupUi(this);
+  setWindowTitle("Video Annotator");
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif
