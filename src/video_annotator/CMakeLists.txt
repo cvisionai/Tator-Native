@@ -26,6 +26,9 @@ if( WIN32 )
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
     )
+  target_include_directories( video_annotator PUBLIC
+    ${FFMPEG_INCLUDE_DIR}
+    )
 elseif( APPLE )
   add_executable( video_annotator MACOSX_BUNDLE
     ${VIDEO_ANNOTATOR_SOURCES} 

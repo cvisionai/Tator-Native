@@ -20,6 +20,11 @@ if( WIN32 )
     ${QT_THIRD_PARTY_LIBS}
     ${Boost_LIBRARIES}
     )
+  target_include_directories(
+    test_video_annotator
+    PUBLIC
+    ${FFMPEG_INCLUDE_DIR}
+    )
   set_target_properties(
     test_video_annotator
     PROPERTIES
