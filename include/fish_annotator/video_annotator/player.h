@@ -16,6 +16,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavutil/frame.h>
+
 namespace fish_annotator { namespace video_annotator {
 
 class Player : public QObject {	
@@ -116,6 +120,24 @@ private:
 
     /// @brief Current playback rate.
     double current_speed_;
+
+    /// @brief Codec.
+    AVCodec *codec_;
+
+    /// @brief Codec context.
+    AVCodecContext *codec_context_;
+
+    /// @brief Format context.
+    AVFormatContext *format_context_;
+
+    /// @brief File pointer.
+    FILE *file_;
+
+    /// @brief Most recent frame.
+    AVFrame *frame_;
+
+    /// @brief Input buffer.
+    uint8_t *in_buf_;
 
     /// @brief Video capture object.
     std::unique_ptr<cv::VideoCapture> capture_;
