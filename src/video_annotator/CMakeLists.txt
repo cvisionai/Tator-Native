@@ -20,6 +20,7 @@ if( WIN32 )
     ${QT_THIRD_PARTY_LIBS}
     ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
+    ${FFMPEG_LIBRARY_DIR}/avformat.lib
     )
   set_target_properties( 
     video_annotator 

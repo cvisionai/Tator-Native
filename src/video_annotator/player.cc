@@ -16,11 +16,18 @@ Player::Player()
   , rgb_frame_mat_()
   , image_()
   , current_speed_(0.0)
+  , codec_(nullptr)
+  , codec_context_(nullptr)
+  , format_context_(nullptr)
+  , file_(nullptr)
+  , frame_(nullptr)
+  , in_buf_(nullptr)
   , capture_(nullptr)
   , delay_(0.0)
   , frame_index_(0) 
   , mutex_()
   , condition_() {
+  av_register_all();
 }
 
 Player::~Player() {

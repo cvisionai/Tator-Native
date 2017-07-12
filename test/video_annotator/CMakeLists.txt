@@ -19,6 +19,7 @@ if( WIN32 )
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${Boost_LIBRARIES}
+    ${FFMPEG_LIBRARY_DIR}/avformat.lib
     )
   target_include_directories(
     test_video_annotator
