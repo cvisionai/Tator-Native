@@ -132,9 +132,6 @@ private:
     /// @brief Format context.
     AVFormatContext *format_context_;
 
-    /// @brief File pointer.
-    FILE *file_;
-
     /// @brief Most recent frame.
     AVFrame *frame_;
 

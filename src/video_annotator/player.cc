@@ -19,7 +19,6 @@ Player::Player()
   , codec_(nullptr)
   , codec_context_(nullptr)
   , format_context_(nullptr)
-  , file_(nullptr)
   , frame_(nullptr)
   , in_buf_(nullptr)
   , capture_(nullptr)
@@ -28,34 +27,95 @@ Player::Player()
   , mutex_()
   , condition_() {
   av_register_all();
+  format_context_ = avformat_alloc_context();
 }
 
 Player::~Player() {
   QMutexLocker locker(&mutex_);
+  if(codec_context_ != nullptr) {
+    avcodec_close(codec_context_);
+    codec_context_ = nullptr;
+  }
+  if(format_context_ != nullptr) {
+    avformat_close_input(&format_context_);
+    format_context_ = nullptr;
+  }
   stopped_ = true;
   condition_.wakeOne();
 }
 
 void Player::loadVideo(QString filename) {
   video_path_ = filename;
-  capture_.reset(new cv::VideoCapture(filename.toStdString()));
-  if (capture_->isOpened()) {
-    frame_rate_ = capture_->get(CV_CAP_PROP_FPS);
-    current_speed_ = frame_rate_;
-    delay_ = (1000000.0 / frame_rate_);
-    emit mediaLoaded(filename, frame_rate_);
-    emit playbackRateChanged(current_speed_);
-    emit durationChanged(capture_->get(CV_CAP_PROP_FRAME_COUNT));
-    emit resolutionChanged(
-        capture_->get(static_cast<qint64>(CV_CAP_PROP_FRAME_WIDTH)),
-        capture_->get(static_cast<qint64>(CV_CAP_PROP_FRAME_HEIGHT)));
-  }
-  else {
+  int status = avformat_open_input(
+    &format_context_, 
+    filename.toStdString().c_str(),
+    nullptr,
+    nullptr);
+  if(status != 0) {
     std::string msg(
-        std::string("Failed to load media at ") + 
+        std::string("Failed to load media at ") +
         filename.toStdString() +
         std::string("!"));
     emit error(QString(msg.c_str()));
+    return;
+  }
+  status = avformat_find_stream_info(format_context_, nullptr);
+  if(status < 0) {
+    std::string msg(
+        std::string("Couldn't find stream information for video ") +
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+    return;
+  }
+  int video_stream_index = -1;
+  status = av_find_best_stream(
+      format_context_, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
+  if(status < 0) {
+    std::string msg(
+        std::string("File does not contain a video stream ") +
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+    return;
+  }
+  video_stream_index = status;
+  AVStream *stream = format_context_->streams[video_stream_index];
+  codec_ = avcodec_find_decoder(stream->codecpar->codec_id);
+  if(codec_ == nullptr) {
+    std::string msg(
+        std::string("Unsupported codec in file ") +
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+    return;
+  }
+  codec_context_ = avcodec_alloc_context3(codec_);
+  if(codec_context_ == nullptr) {
+    std::string msg(
+        std::string("Failed to allocate codec context for file ") +
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+    return;
+  }
+  status = avcodec_parameters_to_context(codec_context_, stream->codecpar);
+  if(status < 0) {
+    std::string msg(
+        std::string("Failed to copy codec parameters to codec context for ") +
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+    return;
+  }
+  status = avcodec_open2(codec_context_, codec_, nullptr);
+  if(status < 0) {
+    std::string msg(
+        std::string("Could not open codec for file ") +
+        filename.toStdString() +
+        std::string("!"));
+    emit error(QString(msg.c_str()));
+    return;
   }
 }
 
