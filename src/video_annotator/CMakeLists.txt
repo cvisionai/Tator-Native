@@ -21,6 +21,7 @@ if( WIN32 )
     ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
     ${FFMPEG_LIBRARY_DIR}/avformat.lib
+    ${FFMPEG_LIBRARY_DIR}/avcodec.lib
     )
   set_target_properties( 
     video_annotator 

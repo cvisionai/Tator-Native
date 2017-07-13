@@ -20,6 +20,7 @@ if( WIN32 )
     ${QT_THIRD_PARTY_LIBS}
     ${Boost_LIBRARIES}
     ${FFMPEG_LIBRARY_DIR}/avformat.lib
+    ${FFMPEG_LIBRARY_DIR}/avcodec.lib
     )
   target_include_directories(
     test_video_annotator
