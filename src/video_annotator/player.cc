@@ -151,6 +151,11 @@ void Player::loadVideo(QString filename) {
       ++frame_index;
     }
   }
+  av_seek_frame(
+      format_context_, 
+      stream_index_, 
+      seek_map_.right.begin()->first,
+      AVSEEK_FLAG_BACKWARD);
   frame_rate_ = 
     static_cast<double>(stream->avg_frame_rate.num) / 
     static_cast<double>(stream->avg_frame_rate.den);
@@ -159,6 +164,13 @@ void Player::loadVideo(QString filename) {
       codec_context_->width,
       codec_context_->height,
       QImage::Format_RGB32);
+  av_image_alloc(
+      frame_rgb_->data,
+      frame_rgb_->linesize,
+      codec_context_->width,
+      codec_context_->height,
+      AV_PIX_FMT_RGB24,
+      1);
   emit mediaLoaded(filename, frame_rate_);
   emit playbackRateChanged(current_speed_);
   emit durationChanged(seek_map_.size());
@@ -208,21 +220,27 @@ void Player::getOneFrame() {
       }
       while(status >= 0) {
         status = avcodec_receive_frame(codec_context_, frame_);
-        if(status == AVERROR(EAGAIN) || status == AVERROR_EOF) {
+        if(status == AVERROR_EOF) {
           stopped_ = true;
+          break;
+        }
+        else if(status == AVERROR(EAGAIN)) {
           break;
         }
         else if(status < 0) {
           emit error("Error while receiving a frame from the decoder!");
           return;
         }
-        if(status >= 0) {
+        else {
           frame_->pts = av_frame_get_best_effort_timestamp(frame_);
-          int num_bytes = avpicture_get_size(AV_PIX_FMT_RGB24, 
-              codec_context_->width, codec_context_->height);
-          buffer_ = (uint8_t*)malloc(num_bytes);
-          avpicture_fill((AVPicture*)frame_rgb_, buffer_, AV_PIX_FMT_RGB24,
-              codec_context_->width, codec_context_->height);
+          sws_scale(
+              sws_context_, 
+              frame_->data, 
+              frame_->linesize, 
+              0, 
+              codec_context_->height, 
+              frame_rgb_->data, 
+              frame_rgb_->linesize);
           uint8_t *src = (uint8_t*)(frame_rgb_->data[0]);
           for(int y = 0; y < codec_context_->height; ++y) {
             QRgb *scan_line = (QRgb*)image_.scanLine(y);
@@ -231,11 +249,11 @@ void Player::getOneFrame() {
             }
             src += frame_rgb_->linesize[0];
           }
+          return;
         }
       }
     }
   }
-  return;
 }
 
 void Player::speedUp() {
