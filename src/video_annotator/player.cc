@@ -19,8 +19,10 @@ Player::Player()
   , codec_(nullptr)
   , codec_context_(nullptr)
   , format_context_(nullptr)
-  , frame_(nullptr)
-  , in_buf_(nullptr)
+  , packet_()
+  , stream_index_(-1)
+  , frame_(av_frame_alloc())
+  , buffer_(nullptr)
   , capture_(nullptr)
   , delay_(0.0)
   , frame_index_(0) 
@@ -28,6 +30,9 @@ Player::Player()
   , condition_() {
   av_register_all();
   format_context_ = avformat_alloc_context();
+  av_init_packet(&packet_);
+  frame_ = av_frame_alloc();
+  frame_rgb_ = av_frame_alloc();
 }
 
 Player::~Player() {
@@ -68,7 +73,7 @@ void Player::loadVideo(QString filename) {
     emit error(QString(msg.c_str()));
     return;
   }
-  int video_stream_index = -1;
+  stream_index_ = -1;
   status = av_find_best_stream(
       format_context_, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
   if(status < 0) {
@@ -79,8 +84,8 @@ void Player::loadVideo(QString filename) {
     emit error(QString(msg.c_str()));
     return;
   }
-  video_stream_index = status;
-  AVStream *stream = format_context_->streams[video_stream_index];
+  stream_index_ = status;
+  AVStream *stream = format_context_->streams[stream_index_];
   codec_ = avcodec_find_decoder(stream->codecpar->codec_id);
   if(codec_ == nullptr) {
     std::string msg(
@@ -89,6 +94,9 @@ void Player::loadVideo(QString filename) {
         std::string("!"));
     emit error(QString(msg.c_str()));
     return;
+  }
+  if(codec_context_ != nullptr) {
+    avcodec_free_context(&codec_context_);
   }
   codec_context_ = avcodec_alloc_context3(codec_);
   if(codec_context_ == nullptr) {
@@ -117,6 +125,15 @@ void Player::loadVideo(QString filename) {
     emit error(QString(msg.c_str()));
     return;
   }
+  sws_context_ = sws_getContext(
+    codec_context_->width, 
+    codec_context_->height,
+    codec_context_->pix_fmt,
+    codec_context_->width, 
+    codec_context_->height,
+    AV_PIX_FMT_RGB24,
+    SWS_BICUBIC,
+    nullptr, nullptr, nullptr);
 }
 
 void Player::play() {
@@ -127,9 +144,7 @@ void Player::play() {
   while(stopped_ == false) {
     QTime t;
     t.start();
-    auto tmp_frame = getOneFrame();
-    auto tmp_frame_index = frame_index_;
-    emit processedImage(tmp_frame, tmp_frame_index);
+    emit processedImage(getOneFrame(), frame_index_);
     double usec = 1000.0 * t.restart();
     processWait(std::round(delay_ - usec));
   }
@@ -142,24 +157,49 @@ void Player::stop() {
 
 QImage Player::getOneFrame() {
   QMutexLocker locker(&mutex_);
-  if (capture_->read(frame_mat_) == false) {
-    stopped_ = true;
-  }
-  frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES)-1;
-  if (frame_mat_.channels() == 3) {
-    cv::cvtColor(frame_mat_, rgb_frame_mat_, CV_BGR2RGB);
-    image_ = QImage(
-      (const unsigned char*)(rgb_frame_mat_.data),
-      frame_mat_.cols,
-      frame_mat_.rows,
-      QImage::Format_RGB888);
-  }
-  else {
-    image_ = QImage(
-      (const unsigned char*)(frame_mat_.data),
-      frame_mat_.cols,
-      frame_mat_.rows,
-      QImage::Format_Indexed8);
+  while(true) {
+    int status = av_read_frame(format_context_, &packet_);
+    if(status < 0) {
+      break;
+    }
+    if(packet_.stream_index == stream_index_) {
+      status = avcodec_send_packet(codec_context_, &packet_);
+      if(status < 0) {
+        emit error("Error while sending packet to the decoder!");
+        return image_;
+      }
+      while(status >= 0) {
+        status = avcodec_receive_frame(codec_context_, frame_);
+        if(status == AVERROR(EAGAIN) || status == AVERROR_EOF) {
+          stopped_ = true;
+          break;
+        }
+        else if(status < 0) {
+          emit error("Error while receiving a frame from the decoder!");
+          return image_;
+        }
+        if(status >= 0) {
+          frame_->pts = av_frame_get_best_effort_timestamp(frame_);
+          int num_bytes = avpicture_get_size(AV_PIX_FMT_RGB24, 
+              codec_context_->width, codec_context_->height);
+          buffer_ = (uint8_t*)malloc(num_bytes);
+          avpicture_fill((AVPicture*)frame_rgb_, buffer_, AV_PIX_FMT_RGB24,
+              codec_context_->width, codec_context_->height);
+          uint8_t *src = (uint8_t*)(frame_rgb_->data[0]);
+          image_ = QImage(
+              codec_context_->width,
+              codec_context_->height,
+              QImage::Format_RGB32);
+          for(int y = 0; y < codec_context_->height; ++y) {
+            QRgb *scan_line = (QRgb*)image_.scanLine(y);
+            for(int x = 0; x < codec_context_->width; ++x) {
+              scan_line[x] = qRgb(src[3*x], src[3*x+1], src[3*x+2]);
+            }
+            src += frame_rgb_->linesize[0];
+          }
+        }
+      }
+    }
   }
   return image_;
 }

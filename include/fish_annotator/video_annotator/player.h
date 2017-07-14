@@ -20,6 +20,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/frame.h>
+#include <libswscale/swscale.h>
 }
 
 namespace fish_annotator { namespace video_annotator {
@@ -132,11 +133,23 @@ private:
     /// @brief Format context.
     AVFormatContext *format_context_;
 
+    /// @brief Packet.
+    AVPacket packet_;
+
+    /// @brief Index of video stream.
+    int stream_index_;
+
     /// @brief Most recent frame.
     AVFrame *frame_;
 
-    /// @brief Input buffer.
-    uint8_t *in_buf_;
+    /// @brief For converting decoded frame to RGB.
+    AVFrame *frame_rgb_;
+
+    /// @brief Buffer for converting frames.
+    uint8_t *buffer_;
+
+    /// @brief Conversion context.
+    SwsContext *sws_context_;
 
     /// @brief Video capture object.
     std::unique_ptr<cv::VideoCapture> capture_;
