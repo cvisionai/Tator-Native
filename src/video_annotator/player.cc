@@ -298,7 +298,7 @@ void Player::setCurrentFrame(qint64 frame_num) {
     avcodec_flush_buffers(codec_context_);
     while(true) {
       getOneFrame();
-      if(frame_index_ == bounded) {
+      if(frame_index_ >= bounded) {
         break;
       }
     }
