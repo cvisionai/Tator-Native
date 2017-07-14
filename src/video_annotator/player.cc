@@ -5,6 +5,10 @@
 #include <QEventLoop>
 #include <QMutexLocker>
 
+#include <fstream>
+
+std::ofstream blah("blah.txt");
+
 namespace fish_annotator { namespace video_annotator {
 
 Player::Player()
@@ -26,6 +30,7 @@ Player::Player()
   , capture_(nullptr)
   , delay_(0.0)
   , frame_index_(0) 
+  , seek_map_()
   , mutex_()
   , condition_() {
   av_register_all();
@@ -134,6 +139,27 @@ void Player::loadVideo(QString filename) {
     AV_PIX_FMT_RGB24,
     SWS_BICUBIC,
     nullptr, nullptr, nullptr);
+  seek_map_.clear();
+  qint64 frame_index = 0;
+  while(true) {
+    status = av_read_frame(format_context_, &packet_);
+    if(status < 0) {
+      break;
+    }
+    if(packet_.stream_index == stream_index_) {
+      seek_map_.insert({frame_index, packet_.dts});
+      blah << "FRAME: " << frame_index << ", DTS: " << packet_.dts << std::endl;
+      ++frame_index;
+    }
+  }
+  frame_rate_ = 
+    static_cast<double>(stream->avg_frame_rate.num) / 
+    static_cast<double>(stream->avg_frame_rate.den);
+  current_speed_ = frame_rate_;
+  emit mediaLoaded(filename, frame_rate_);
+  emit playbackRateChanged(current_speed_);
+  emit durationChanged(seek_map_.size());
+  emit resolutionChanged(codec_context_->width, codec_context_->height);
 }
 
 void Player::play() {
@@ -144,7 +170,9 @@ void Player::play() {
   while(stopped_ == false) {
     QTime t;
     t.start();
-    emit processedImage(getOneFrame(), frame_index_);
+    auto image = getOneFrame();
+    auto frame_index = frame_index_;
+    emit processedImage(image, frame_index);
     double usec = 1000.0 * t.restart();
     processWait(std::round(delay_ - usec));
   }
@@ -218,21 +246,21 @@ void Player::slowDown() {
 }
 
 void Player::nextFrame() {
-  //setCurrentFrame(frame_index_ + 1);
-  auto tmp_frame = getOneFrame();
-  auto tmp_frame_index = frame_index_;
-  emit processedImage(tmp_frame, tmp_frame_index);
+  auto image = getOneFrame();
+  auto frame_index = frame_index_;
+  emit processedImage(image, frame_index);
 }
 
 void Player::prevFrame() {
   setCurrentFrame(frame_index_ - 1);
-  auto tmp_frame = getOneFrame();
-  auto tmp_frame_index = frame_index_;
-  emit processedImage(tmp_frame, tmp_frame_index);
+  auto image = getOneFrame();
+  auto frame_index = frame_index_;
+  emit processedImage(image, frame_index);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
   QMutexLocker locker(&mutex_);
+  //av_seek_frame(format_context_, stream_index_, 
   capture_->set(CV_CAP_PROP_POS_MSEC, 
       1000.0 * static_cast<double>(frame_num) / frame_rate_);
   if (frame_num > 0) {
@@ -245,9 +273,9 @@ void Player::setCurrentFrame(qint64 frame_num) {
 
 void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
-  auto tmp_frame = getOneFrame();
-  auto tmp_frame_index = frame_index_;
-  emit processedImage(tmp_frame, tmp_frame_index);
+  auto image = getOneFrame();
+  auto frame_index = frame_index_;
+  emit processedImage(image, frame_index);
 }
 
 void Player::processWait(qint64 usec) {

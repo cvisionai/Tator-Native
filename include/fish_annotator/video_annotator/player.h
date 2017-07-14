@@ -6,6 +6,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <map>
 
 #include <QImage>
 #include <QThread>
@@ -159,6 +160,9 @@ private:
 
     /// @brief Current frame index.
     qint64 frame_index_;
+
+    /// @brief Map between frame index and decompression timestamp.
+    std::map<qint64, qint64> seek_map_;
 
     /// @brief Mutex for deletion.
     QMutex mutex_;
