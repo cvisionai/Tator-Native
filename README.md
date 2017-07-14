@@ -232,6 +232,8 @@ Building the application on Ubuntu
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 sudo apt install libopencv-dev qtbase5-dev libboost-dev
+sudo add-apt-repository ppa:jonathonf/ffmpeg-3
+sudo apt update && sudo apt upgrade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 2\. Build the application.
