@@ -92,6 +92,10 @@ elseif( UNIX )
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
     ${Boost_LIBRARIES}
+    avformat
+    avcodec
+    avutil
+    swscale
     )
   add_test( 
     NAME test_video_annotator 
