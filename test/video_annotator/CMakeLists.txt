@@ -21,6 +21,8 @@ if( WIN32 )
     ${Boost_LIBRARIES}
     ${FFMPEG_LIBRARY_DIR}/avformat.lib
     ${FFMPEG_LIBRARY_DIR}/avcodec.lib
+    ${FFMPEG_LIBRARY_DIR}/avutil.lib
+    ${FFMPEG_LIBRARY_DIR}/swscale.lib
     )
   target_include_directories(
     test_video_annotator
