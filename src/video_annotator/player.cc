@@ -41,7 +41,9 @@ Player::~Player() {
     format_context_ = nullptr;
   }
   if(frame_rgb_ != nullptr) {
-    av_freep(&frame_rgb_->data[0]);
+    if(frame_rgb_->data[0] != nullptr) {
+      av_freep(&frame_rgb_->data[0]);
+    }
     av_frame_free(&frame_rgb_);
     frame_rgb_ = nullptr;
   }
@@ -55,6 +57,10 @@ Player::~Player() {
 
 void Player::loadVideo(QString filename) {
   video_path_ = filename;
+  if(format_context_ != nullptr) {
+    avformat_close_input(&format_context_);
+    format_context_ = nullptr;
+  }
   int status = avformat_open_input(
     &format_context_, 
     filename.toStdString().c_str(),
@@ -163,6 +169,11 @@ void Player::loadVideo(QString filename) {
       codec_context_->width,
       codec_context_->height,
       QImage::Format_RGB32);
+  if(frame_rgb_ != nullptr) {
+    if(frame_rgb_->data[0] != nullptr) {
+      av_freep(&frame_rgb_->data[0]);
+    }
+  }
   av_image_alloc(
       frame_rgb_->data,
       frame_rgb_->linesize,
