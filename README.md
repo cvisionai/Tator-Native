@@ -21,6 +21,7 @@ FishAnnotator uses the following 3rd party libraries:
 * [Qt5][Qt5]
 * [Boost][Boost]
 * [OpenCV][OpenCV]
+* [FFMPEG][FFMPEG]
 
 [CMake][CMake] is also required to build.
 
@@ -119,6 +120,21 @@ cmake --build . --target INSTALL --config Release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The OpenCV static libraries should now be built.
 
+Boost Binaries on Windows
+------------------------------------
+1\. Download the prebuilt binaries for [Boost 1.62][BoostBinaries].
+
+2\. Run the installer.
+
+FFMPEG Binaries on Windows
+--------------------------
+1\. Download the prebuilt binaries for [FFMPEG 3.3.2][FFMPEGBinaries], 
+    both the developer and shared versions.
+
+2\. Extract both.  Copy the contents of the lib directory in the shared
+    version into the lib directory of the developer version.  Discard 
+    the shared version and use the developer version.
+
 Building the application on Windows
 -----------------------------------
 
@@ -146,7 +162,9 @@ For example,
     set( BOOST_ROOT "D:/Projects/boost_1_62_0"  )
     set( BOOST_LIBRARYDIR "D:/Projects/boost_1_62_0/lib64-msvc-14.0" )
     set( CMAKE_CL_64 TRUE)
-    set( OpenCV_DIR "D:/Projects/opencv/build/install")  
+    set( OpenCV_DIR "D:/Projects/opencv/build/install")
+    set( FFMPEG_LIBRARY_DIR "D:/Projects/ffmpeg/lib")
+    set( FFMPEG_INCLUDE_DIR "D:/Projects/ffmpeg/include")
 
 After the file is generated it will
   not be overwritten next FishAnnotator is built, so this manual modification
@@ -298,6 +316,7 @@ coding practices and naming conventions.
 [Qt5]: https://www.qt.io/developers/
 [Boost]: http://www.boost.org
 [OpenCV]: http://opencv.org/
+[FFMPEG]: http://ffmpeg.org/
 [CMake]: https://cmake.org/
 [QtRepo]: https://github.com/qt/qt5
 [Perl]: https://www.perl.org/
@@ -307,6 +326,8 @@ coding practices and naming conventions.
 [libjpeg]: https://github.com/LuaDist/libjpeg
 [libpng]: https://github.com/glennrp/libpng
 [OpenCVRepo]: https://github.com/opencv/opencv
+[BoostBinaries]: https://sourceforge.net/projects/boost/files/boost-binaries/1.62.0/
+[FFMPEGBinaries]: https://ffmpeg.zeranoe.com/builds/
 [doxysite]: https://sourceforge.net/projects/doxygen/
 [latexsite]: https://miktex.org/
 [nsissite]: http://nsis.sourceforge.net/Main_Page
