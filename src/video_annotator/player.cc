@@ -147,8 +147,7 @@ void Player::loadVideo(QString filename) {
       break;
     }
     if(packet_.stream_index == stream_index_) {
-      seek_map_.insert({frame_index, packet_.dts});
-      blah << "FRAME: " << frame_index << ", DTS: " << packet_.dts << std::endl;
+      seek_map_.left.insert({frame_index, packet_.dts});
       ++frame_index;
     }
   }
@@ -156,6 +155,10 @@ void Player::loadVideo(QString filename) {
     static_cast<double>(stream->avg_frame_rate.num) / 
     static_cast<double>(stream->avg_frame_rate.den);
   current_speed_ = frame_rate_;
+  image_ = QImage(
+      codec_context_->width,
+      codec_context_->height,
+      QImage::Format_RGB32);
   emit mediaLoaded(filename, frame_rate_);
   emit playbackRateChanged(current_speed_);
   emit durationChanged(seek_map_.size());
@@ -170,9 +173,8 @@ void Player::play() {
   while(stopped_ == false) {
     QTime t;
     t.start();
-    auto image = getOneFrame();
-    auto frame_index = frame_index_;
-    emit processedImage(image, frame_index);
+    getOneFrame();
+    emit processedImage(image_, frame_index_);
     double usec = 1000.0 * t.restart();
     processWait(std::round(delay_ - usec));
   }
@@ -183,7 +185,7 @@ void Player::stop() {
   emit stateChanged(stopped_);
 }
 
-QImage Player::getOneFrame() {
+void Player::getOneFrame() {
   QMutexLocker locker(&mutex_);
   while(true) {
     int status = av_read_frame(format_context_, &packet_);
@@ -191,10 +193,18 @@ QImage Player::getOneFrame() {
       break;
     }
     if(packet_.stream_index == stream_index_) {
+      auto it = seek_map_.right.find(packet_.dts);
+      if(it == seek_map_.right.end()) {
+        emit error("Could not find decompression timestamp!");
+        return;
+      }
+      else {
+        frame_index_ = it->second;
+      }
       status = avcodec_send_packet(codec_context_, &packet_);
       if(status < 0) {
         emit error("Error while sending packet to the decoder!");
-        return image_;
+        return;
       }
       while(status >= 0) {
         status = avcodec_receive_frame(codec_context_, frame_);
@@ -204,7 +214,7 @@ QImage Player::getOneFrame() {
         }
         else if(status < 0) {
           emit error("Error while receiving a frame from the decoder!");
-          return image_;
+          return;
         }
         if(status >= 0) {
           frame_->pts = av_frame_get_best_effort_timestamp(frame_);
@@ -214,10 +224,6 @@ QImage Player::getOneFrame() {
           avpicture_fill((AVPicture*)frame_rgb_, buffer_, AV_PIX_FMT_RGB24,
               codec_context_->width, codec_context_->height);
           uint8_t *src = (uint8_t*)(frame_rgb_->data[0]);
-          image_ = QImage(
-              codec_context_->width,
-              codec_context_->height,
-              QImage::Format_RGB32);
           for(int y = 0; y < codec_context_->height; ++y) {
             QRgb *scan_line = (QRgb*)image_.scanLine(y);
             for(int x = 0; x < codec_context_->width; ++x) {
@@ -229,7 +235,7 @@ QImage Player::getOneFrame() {
       }
     }
   }
-  return image_;
+  return;
 }
 
 void Player::speedUp() {
@@ -246,36 +252,43 @@ void Player::slowDown() {
 }
 
 void Player::nextFrame() {
-  auto image = getOneFrame();
-  auto frame_index = frame_index_;
-  emit processedImage(image, frame_index);
+  getOneFrame();
+  emit processedImage(image_, frame_index_);
 }
 
 void Player::prevFrame() {
   setCurrentFrame(frame_index_ - 1);
-  auto image = getOneFrame();
-  auto frame_index = frame_index_;
-  emit processedImage(image, frame_index);
+  emit processedImage(image_, frame_index_);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
   QMutexLocker locker(&mutex_);
-  //av_seek_frame(format_context_, stream_index_, 
-  capture_->set(CV_CAP_PROP_POS_MSEC, 
-      1000.0 * static_cast<double>(frame_num) / frame_rate_);
-  if (frame_num > 0) {
-		frame_index_ = capture_->get(CV_CAP_PROP_POS_FRAMES)-1;
-  }
-	else {
-		frame_index_ = 0;
+  qint64 bounded = frame_num < 0 ? 0 : frame_num;
+  const qint64 max_frame = seek_map_.left.rbegin()->first;
+  bounded = bounded > max_frame ? max_frame : bounded;
+  auto it = seek_map_.left.find(bounded);
+  if(it != seek_map_.left.end()) {
+    int status = av_seek_frame(
+        format_context_, 
+        stream_index_, 
+        it->second, 
+        AVSEEK_FLAG_BACKWARD);
+    if(status < 0) {
+      emit error("Error seeking to frame!");
+      return;
+    }
+    while(true) {
+      getOneFrame();
+      if(frame_index_ == frame_num) {
+        break;
+      }
+    }
   }
 }
 
 void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
-  auto image = getOneFrame();
-  auto frame_index = frame_index_;
-  emit processedImage(image, frame_index);
+  emit processedImage(image_, frame_index_);
 }
 
 void Player::processWait(qint64 usec) {

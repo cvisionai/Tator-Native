@@ -8,6 +8,8 @@
 #include <memory>
 #include <map>
 
+#include <boost/bimap.hpp>
+
 #include <QImage>
 #include <QThread>
 #include <QMutex>
@@ -34,9 +36,6 @@ public:
 
     /// @brief Destructor.
     ~Player();
-
-    /// @brief Processes a single frame.
-    inline QImage getOneFrame();
 public slots:
     /// @brief Plays the video.
     void play();
@@ -162,13 +161,16 @@ private:
     qint64 frame_index_;
 
     /// @brief Map between frame index and decompression timestamp.
-    std::map<qint64, qint64> seek_map_;
+    boost::bimap<qint64, qint64> seek_map_;
 
     /// @brief Mutex for deletion.
     QMutex mutex_;
 
     /// @brief Wait condition for deletion.
     QWaitCondition condition_;
+
+    /// @brief Processes a single frame.
+    void getOneFrame();
 
     /// @brief Sets the current frame.
     void setCurrentFrame(qint64 frame_num);
