@@ -140,11 +140,17 @@ private:
     /// @brief Delay between frames in microseconds.
     double delay_;
 
-    /// @brief Current frame index.
-    qint64 frame_index_;
+    /// @brief Last decoded frame.
+    qint64 dec_frame_;
+
+    /// @brief Last requested frame.
+    qint64 req_frame_;
 
     /// @brief Map between frame index and decompression timestamp.
     boost::bimap<qint64, qint64> seek_map_;
+
+    /// @brief Frame buffer.
+    std::map<qint64, QImage> frame_buffer_;
 
     /// @brief Mutex for deletion.
     QMutex mutex_;

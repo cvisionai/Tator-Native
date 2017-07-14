@@ -22,8 +22,10 @@ Player::Player()
   , frame_rgb_(av_frame_alloc())
   , sws_context_(nullptr)
   , delay_(0.0)
-  , frame_index_(0) 
+  , dec_frame_(0)
+  , req_frame_(0) 
   , seek_map_()
+  , frame_buffer_()
   , mutex_()
   , condition_() {
   av_register_all();
@@ -57,6 +59,7 @@ Player::~Player() {
 
 void Player::loadVideo(QString filename) {
   video_path_ = filename;
+  frame_buffer_.clear();
   if(format_context_ != nullptr) {
     avformat_close_input(&format_context_);
     format_context_ = nullptr;
@@ -196,8 +199,8 @@ void Player::play() {
   while(stopped_ == false) {
     QTime t;
     t.start();
-    getOneFrame();
-    emit processedImage(image_, frame_index_);
+    setCurrentFrame(req_frame_ + 1);
+    emit processedImage(image_, req_frame_);
     double usec = 1000.0 * t.restart();
     processWait(std::round(delay_ - usec));
   }
@@ -210,6 +213,8 @@ void Player::stop() {
 
 void Player::getOneFrame() {
   QMutexLocker locker(&mutex_);
+  static const int kMaxBufferSize = 50;
+  static const int kTrimBound = kMaxBufferSize / 2;
   while(true) {
     int status = av_read_frame(format_context_, &packet_);
     if(status < 0) {
@@ -222,7 +227,7 @@ void Player::getOneFrame() {
         return;
       }
       else {
-        frame_index_ = it->second;
+        dec_frame_ = it->second;
       }
       status = avcodec_send_packet(codec_context_, &packet_);
       if(status < 0) {
@@ -259,6 +264,18 @@ void Player::getOneFrame() {
             }
             src += frame_rgb_->linesize[0];
           }
+          frame_buffer_.insert({dec_frame_, image_});
+          if(frame_buffer_.size() > kMaxBufferSize) {
+            for(auto buf_it = frame_buffer_.cbegin(); 
+                buf_it != frame_buffer_.cend();) {
+              if(qAbs(buf_it->first - req_frame_) > kTrimBound) {
+                buf_it = frame_buffer_.erase(buf_it);
+              }
+              else {
+                ++buf_it;
+              }
+            }
+          }
           return;
         }
       }
@@ -280,37 +297,49 @@ void Player::slowDown() {
 }
 
 void Player::nextFrame() {
-  getOneFrame();
-  emit processedImage(image_, frame_index_);
+  setCurrentFrame(req_frame_ + 1);
+  emit processedImage(image_, req_frame_);
 }
 
 void Player::prevFrame() {
-  setCurrentFrame(frame_index_ - 1);
-  emit processedImage(image_, frame_index_);
+  setCurrentFrame(req_frame_ - 1);
+  emit processedImage(image_, req_frame_);
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
   qint64 bounded = frame_num < 0 ? 0 : frame_num;
   const qint64 max_frame = seek_map_.left.rbegin()->first;
   bounded = bounded > max_frame ? max_frame : bounded;
-  qint64 seek_to = bounded - 3;
-  seek_to = seek_to < 0 ? 0 : seek_to;
-  auto it = seek_map_.left.find(seek_to);
-  if(it != seek_map_.left.end()) {
-    int status = av_seek_frame(
-        format_context_, 
-        stream_index_, 
-        it->second, 
-        AVSEEK_FLAG_BACKWARD);
-    if(status < 0) {
-      emit error("Error seeking to frame!");
-      return;
+  req_frame_ = bounded;
+  if(frame_num - dec_frame_ == 1) {
+    getOneFrame();
+  }
+  else {
+    auto buf_it = frame_buffer_.find(frame_num);
+    if(buf_it != frame_buffer_.end()) {
+      image_ = buf_it->second;
     }
-    avcodec_flush_buffers(codec_context_);
-    while(true) {
-      getOneFrame();
-      if(frame_index_ >= bounded) {
-        break;
+    else {
+      qint64 seek_to = bounded - 3;
+      seek_to = seek_to < 0 ? 0 : seek_to;
+      auto it = seek_map_.left.find(seek_to);
+      if(it != seek_map_.left.end()) {
+        int status = av_seek_frame(
+            format_context_, 
+            stream_index_, 
+            it->second, 
+            AVSEEK_FLAG_BACKWARD);
+        if(status < 0) {
+          emit error("Error seeking to frame!");
+          return;
+        }
+        avcodec_flush_buffers(codec_context_);
+        while(true) {
+          getOneFrame();
+          if(dec_frame_ >= bounded) {
+            break;
+          }
+        }
       }
     }
   }
@@ -318,7 +347,7 @@ void Player::setCurrentFrame(qint64 frame_num) {
 
 void Player::setFrame(qint64 frame) {
   setCurrentFrame(frame);
-  emit processedImage(image_, frame_index_);
+  emit processedImage(image_, req_frame_);
 }
 
 void Player::processWait(qint64 usec) {
