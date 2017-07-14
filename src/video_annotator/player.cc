@@ -5,10 +5,6 @@
 #include <QEventLoop>
 #include <QMutexLocker>
 
-#include <fstream>
-
-std::ofstream blah("blah.txt");
-
 namespace fish_annotator { namespace video_annotator {
 
 Player::Player()
@@ -16,28 +12,22 @@ Player::Player()
   , video_path_()
   , frame_rate_(0.0)
   , stopped_(true)
-  , frame_mat_()
-  , rgb_frame_mat_()
   , image_()
   , current_speed_(0.0)
-  , codec_(nullptr)
   , codec_context_(nullptr)
-  , format_context_(nullptr)
+  , format_context_(avformat_alloc_context())
   , packet_()
   , stream_index_(-1)
   , frame_(av_frame_alloc())
-  , buffer_(nullptr)
-  , capture_(nullptr)
+  , frame_rgb_(av_frame_alloc())
+  , sws_context_(nullptr)
   , delay_(0.0)
   , frame_index_(0) 
   , seek_map_()
   , mutex_()
   , condition_() {
   av_register_all();
-  format_context_ = avformat_alloc_context();
   av_init_packet(&packet_);
-  frame_ = av_frame_alloc();
-  frame_rgb_ = av_frame_alloc();
 }
 
 Player::~Player() {
@@ -49,6 +39,15 @@ Player::~Player() {
   if(format_context_ != nullptr) {
     avformat_close_input(&format_context_);
     format_context_ = nullptr;
+  }
+  if(frame_rgb_ != nullptr) {
+    av_freep(&frame_rgb_->data[0]);
+    av_frame_free(&frame_rgb_);
+    frame_rgb_ = nullptr;
+  }
+  if(frame_ != nullptr) {
+    av_frame_free(&frame_);
+    frame_ = nullptr;
   }
   stopped_ = true;
   condition_.wakeOne();
@@ -91,8 +90,8 @@ void Player::loadVideo(QString filename) {
   }
   stream_index_ = status;
   AVStream *stream = format_context_->streams[stream_index_];
-  codec_ = avcodec_find_decoder(stream->codecpar->codec_id);
-  if(codec_ == nullptr) {
+  AVCodec *codec = avcodec_find_decoder(stream->codecpar->codec_id);
+  if(codec == nullptr) {
     std::string msg(
         std::string("Unsupported codec in file ") +
         filename.toStdString() +
@@ -103,7 +102,7 @@ void Player::loadVideo(QString filename) {
   if(codec_context_ != nullptr) {
     avcodec_free_context(&codec_context_);
   }
-  codec_context_ = avcodec_alloc_context3(codec_);
+  codec_context_ = avcodec_alloc_context3(codec);
   if(codec_context_ == nullptr) {
     std::string msg(
         std::string("Failed to allocate codec context for file ") +
@@ -121,7 +120,7 @@ void Player::loadVideo(QString filename) {
     emit error(QString(msg.c_str()));
     return;
   }
-  status = avcodec_open2(codec_context_, codec_, nullptr);
+  status = avcodec_open2(codec_context_, codec, nullptr);
   if(status < 0) {
     std::string msg(
         std::string("Could not open codec for file ") +

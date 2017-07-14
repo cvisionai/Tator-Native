@@ -15,15 +15,12 @@
 #include <QMutex>
 #include <QWaitCondition>
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/frame.h>
 #include <libavutil/imgutils.h>
+#include <libavutil/mem.h>
 #include <libswscale/swscale.h>
 }
 
@@ -113,20 +110,11 @@ private:
     /// @brief True if player is stopped, false otherwise.
     bool stopped_;
 
-    /// @brief Stores most recent frame.
-    cv::Mat frame_mat_;
-
-    /// @brief Stores most recent RGB frame.
-    cv::Mat rgb_frame_mat_;
-
     /// @brief Stores most recent image.
     QImage image_;
 
     /// @brief Current playback rate.
     double current_speed_;
-
-    /// @brief Codec.
-    AVCodec *codec_;
 
     /// @brief Codec context.
     AVCodecContext *codec_context_;
@@ -146,14 +134,8 @@ private:
     /// @brief For converting decoded frame to RGB.
     AVFrame *frame_rgb_;
 
-    /// @brief Buffer for converting frames.
-    uint8_t *buffer_;
-
     /// @brief Conversion context.
     SwsContext *sws_context_;
-
-    /// @brief Video capture object.
-    std::unique_ptr<cv::VideoCapture> capture_;
 
     /// @brief Delay between frames in microseconds.
     double delay_;
