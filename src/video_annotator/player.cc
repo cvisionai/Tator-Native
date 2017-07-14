@@ -165,6 +165,7 @@ void Player::loadVideo(QString filename) {
     static_cast<double>(stream->avg_frame_rate.num) / 
     static_cast<double>(stream->avg_frame_rate.den);
   current_speed_ = frame_rate_;
+  delay_ = 1000000.0 / frame_rate_;
   image_ = QImage(
       codec_context_->width,
       codec_context_->height,
