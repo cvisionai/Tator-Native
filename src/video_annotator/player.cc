@@ -280,7 +280,6 @@ void Player::prevFrame() {
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
-  QMutexLocker locker(&mutex_);
   qint64 bounded = frame_num < 0 ? 0 : frame_num;
   const qint64 max_frame = seek_map_.left.rbegin()->first;
   bounded = bounded > max_frame ? max_frame : bounded;
@@ -295,9 +294,10 @@ void Player::setCurrentFrame(qint64 frame_num) {
       emit error("Error seeking to frame!");
       return;
     }
+    avcodec_flush_buffers(codec_context_);
     while(true) {
       getOneFrame();
-      if(frame_index_ == frame_num) {
+      if(frame_index_ == bounded) {
         break;
       }
     }
