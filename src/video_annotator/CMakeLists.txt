@@ -13,12 +13,9 @@ if( WIN32 )
   target_link_libraries(
     video_annotator
     common
-    ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
-    Qt5::OpenGL
     ${QT_THIRD_PARTY_LIBS}
-    ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
     ${FFMPEG_LIBRARY_DIR}/avformat.lib
     ${FFMPEG_LIBRARY_DIR}/avcodec.lib
@@ -47,12 +44,9 @@ elseif( APPLE )
   target_link_libraries(
     video_annotator
     common
-    ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
-    Qt5::OpenGL
     Qt5::PrintSupport
-    ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
     )
 elseif( UNIX )
@@ -64,16 +58,13 @@ elseif( UNIX )
     video_annotator
     dl
     common
-    ${OpenCV_LIBS}
     ${UNIX_LIBRARIES}
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
-    Qt5::OpenGL
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
-    ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
     )
 endif()
