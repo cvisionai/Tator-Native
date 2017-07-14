@@ -232,7 +232,6 @@ void Player::getOneFrame() {
           return;
         }
         else {
-          frame_->pts = av_frame_get_best_effort_timestamp(frame_);
           sws_scale(
               sws_context_, 
               frame_->data, 
@@ -283,7 +282,9 @@ void Player::setCurrentFrame(qint64 frame_num) {
   qint64 bounded = frame_num < 0 ? 0 : frame_num;
   const qint64 max_frame = seek_map_.left.rbegin()->first;
   bounded = bounded > max_frame ? max_frame : bounded;
-  auto it = seek_map_.left.find(bounded);
+  qint64 seek_to = bounded - 3;
+  seek_to = seek_to < 0 ? 0 : seek_to;
+  auto it = seek_map_.left.find(seek_to);
   if(it != seek_map_.left.end()) {
     int status = av_seek_frame(
         format_context_, 
