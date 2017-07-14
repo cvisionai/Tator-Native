@@ -182,6 +182,7 @@ void MainWindow::on_loadVideo_triggered() {
       tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
+    ui_->currentSpeed->setText("Loading movie, please wait...");
     emit requestLoadVideo(file_str);
   }
 }
