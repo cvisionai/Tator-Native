@@ -549,16 +549,16 @@ QColor MainWindow::getColor(std::string type) {
   if(type=="skate") type_int = 3;
   switch (type_int) {
     case 0:
-      color = QColor(255,0,0);
+      color = QColor(228,182,82);
       break;
     case 1:
-      color = QColor(0,255,0);
+      color = QColor(93,145,85);
       break;
     case 2:
-      color = QColor(0,0,255);
+      color = QColor(28,89,89);
       break;
     case 3:
-      color = QColor(0,0,0);
+      color = QColor(33,32,45);
       break;
     default:
       color = QColor(255,255,255);
