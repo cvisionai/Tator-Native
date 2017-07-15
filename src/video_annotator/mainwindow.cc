@@ -1,10 +1,7 @@
 #include <vector>
-
 #include <boost/filesystem.hpp>
-
 #include <QtMath>
 #include <QTime>
-
 #include "fish_annotator/common/species_dialog.h"
 #include "fish_annotator/common/metadata_dialog.h"
 #include "fish_annotator/common/annotatedregion.h"
@@ -31,11 +28,11 @@ MainWindow::MainWindow(QWidget *parent)
   , height_(0)
   , last_frame_(nullptr)
   , last_position_(0)
-  , stopped_(true) 
+  , stopped_(true)
   , was_stopped_(true)
   , rate_(0.0)
   , native_rate_(0.0)
-  , fish_id_(0) 
+  , fish_id_(0)
   , current_annotations_()
   , metadata_() {
   ui_->setupUi(this);
@@ -79,9 +76,9 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addDotAnnotation);
   Player *player = new Player();
   QThread *thread = new QThread();
-  QObject::connect(player, &Player::processedImage, 
+  QObject::connect(player, &Player::processedImage,
       this, &MainWindow::showFrame);
-  QObject::connect(player, &Player::durationChanged, 
+  QObject::connect(player, &Player::durationChanged,
       this, &MainWindow::handlePlayerDurationChanged);
   QObject::connect(player, &Player::playbackRateChanged,
       this, &MainWindow::handlePlayerPlaybackRateChanged);
@@ -93,15 +90,15 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerMediaLoaded);
   QObject::connect(player, &Player::error,
       this, &MainWindow::handlePlayerError);
-  QObject::connect(this, &MainWindow::requestLoadVideo, 
+  QObject::connect(this, &MainWindow::requestLoadVideo,
       player, &Player::loadVideo);
-  QObject::connect(this, &MainWindow::requestPlay, 
+  QObject::connect(this, &MainWindow::requestPlay,
       player, &Player::play);
-  QObject::connect(this, &MainWindow::requestStop, 
+  QObject::connect(this, &MainWindow::requestStop,
       player, &Player::stop);
-  QObject::connect(this, &MainWindow::requestSpeedUp, 
+  QObject::connect(this, &MainWindow::requestSpeedUp,
       player, &Player::speedUp);
-  QObject::connect(this, &MainWindow::requestSlowDown, 
+  QObject::connect(this, &MainWindow::requestSlowDown,
       player, &Player::slowDown);
   QObject::connect(this, &MainWindow::requestSetFrame,
       player, &Player::setFrame);
@@ -177,7 +174,7 @@ void MainWindow::on_minusOneFrame_clicked() {
 void MainWindow::on_loadVideo_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
-      tr("Open Video"), 
+      tr("Open Video"),
       QFileInfo(video_path_).dir().canonicalPath(),
       tr("Video Files (*.avi *.mpg *.mp4 *.mkv)"));
   QFileInfo file(file_str);
@@ -217,18 +214,18 @@ void MainWindow::on_saveAnnotationFile_triggered() {
   }
   else if(filename.empty() == true && reviewer.empty() == false) {
     fs::path vid_path(video_path_.toStdString());
-    fs::path out_path = 
-      vid_path.parent_path() / 
-      fs::path(vid_path.stem().string() + 
-      std::string("_") + 
-      reviewer + 
+    fs::path out_path =
+      vid_path.parent_path() /
+      fs::path(vid_path.stem().string() +
+      std::string("_") +
+      reviewer +
       std::string(".csv"));
     filename = out_path.string();
   }
   else {
     fs::path vid_path(video_path_.toStdString());
-    fs::path out_path = 
-      vid_path.parent_path() / 
+    fs::path out_path =
+      vid_path.parent_path() /
       fs::path(filename +
       std::string("_") +
       reviewer +
@@ -236,9 +233,9 @@ void MainWindow::on_saveAnnotationFile_triggered() {
     filename = out_path.string();
   }
   QString fname = QFileDialog::getSaveFileName(
-      this, 
+      this,
       "Save annotation file",
-      filename.c_str(), 
+      filename.c_str(),
       "*.csv");
   if(fname.isNull() == false) {
     fs::path vid_path(fname.toStdString());
@@ -253,7 +250,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
 }
 
 void MainWindow::on_writeImage_triggered() {
-    // filename needs to be procedurally generated. 
+    // filename needs to be procedurally generated.
     if (images_save_path_.isEmpty())
       images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
 
@@ -401,7 +398,8 @@ void MainWindow::on_nextAndCopy_clicked() {
           last_position_ + 1,
           fish_id_,
           det->area_,
-          det->type_));
+          det->type_,
+          det->box_color_));
     on_plusOneFrame_clicked();
   }
   else {
@@ -466,7 +464,7 @@ void MainWindow::handlePlayerStateChanged(bool stopped) {
 }
 
 void MainWindow::handlePlayerMediaLoaded(
-  QString video_path, 
+  QString video_path,
   qreal native_rate) {
   video_path_ = video_path;
   native_rate_ = native_rate;
@@ -520,7 +518,7 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
     last_position_,
     fish_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
-    kBox));
+    kBox,getColor(annotation_->findTrack(fish_id_)->getSpecies())));
   drawAnnotations();
 }
 
@@ -529,7 +527,7 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
     last_position_,
     fish_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
-    kLine));
+    kLine, QColor(255,0,0)));
   drawAnnotations();
 }
 
@@ -538,8 +536,35 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
     last_position_,
     fish_id_,
     Rect(dot.x(), dot.y(), 0, 0),
-    kDot));
+    kDot, QColor(255,0,0)));
   drawAnnotations();
+}
+
+QColor MainWindow::getColor(std::string type) {
+  QColor color;
+  int type_int = 5;
+  if(type=="flat") type_int = 0;
+  if(type=="round") type_int = 1;
+  if(type=="other") type_int = 2;
+  if(type=="skate") type_int = 3;
+  switch (type_int) {
+    case 0:
+      color = QColor(255,0,0);
+      break;
+    case 1:
+      color = QColor(0,255,0);
+      break;
+    case 2:
+      color = QColor(0,0,255);
+      break;
+    case 3:
+      color = QColor(0,0,0);
+      break;
+    default:
+      color = QColor(255,255,255);
+      break;
+  }
+  return color;
 }
 
 void MainWindow::updateSpeciesCounts() {
@@ -607,7 +632,7 @@ void MainWindow::drawAnnotations() {
     switch(ann->type_) {
       case kBox:
         box = new AnnotatedRegion<DetectionAnnotation>(
-            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect(),getColor(annotation_->findTrack(ann->id_)->getSpecies()));
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);
@@ -643,7 +668,7 @@ void MainWindow::drawAnnotations() {
     pen.setWidth(pen_width);
 		pen.setColor(QColor(255, 92, 33));
     visibility_box_ = scene_->addRect(
-        0.5 * pen_width, 0.5 * pen_width, 
+        0.5 * pen_width, 0.5 * pen_width,
         width_ - pen_width, height_ - pen_width, pen);
     ui_->degradedStatus->setChecked(true);
   }
@@ -673,4 +698,3 @@ QString MainWindow::frameToTime(qint64 frame_number) {
 #include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"
 
 }} // namespace fish_annotator::video_annotator
-

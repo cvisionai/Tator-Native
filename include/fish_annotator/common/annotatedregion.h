@@ -35,9 +35,10 @@ public:
   /// @param uid Unique ID associated with this region.
   /// @param annotation Annotation associated with this region.
   /// @param bounding_rect Bounding rect for this region.
-  AnnotatedRegion(uint64_t uid, 
+  AnnotatedRegion(uint64_t uid,
                   std::shared_ptr<Info> annotation,
-                  const QRectF &bounding_rect);
+                  const QRectF &bounding_rect,
+                  QColor box_color);
 
   /// @brief Reimplemented from QGraphicsItem.
   ///
@@ -115,19 +116,20 @@ template<typename Info>
 AnnotatedRegion<Info>::AnnotatedRegion(
   uint64_t uid,
   std::shared_ptr<Info> annotation,
-  const QRectF &bounding_rect)
+  const QRectF &bounding_rect,
+  QColor box_color)
   : annotation_(annotation)
   , uid_(uid)
   , bounding_rect_(bounding_rect)
-  , drag_() 
+  , drag_()
   , min_dim_(std::min(bounding_rect_.width(), bounding_rect_.height()))
   , margin_(min_dim_ * 0.02)
-  , font_("Helvetica", min_dim_ * 0.02) 
-  , pen_(QColor(255, 0, 0))
+  , font_("Helvetica", min_dim_ * 0.02)
+  , pen_(box_color)
   , valid_(true) {
   if(annotation_->area_.w == 0 && annotation_->area_.h == 0) {
     // Default rectangle.
-    setRect(QRectF(bounding_rect_.x() * 0.5, bounding_rect_.y() * 0.5, 
+    setRect(QRectF(bounding_rect_.x() * 0.5, bounding_rect_.y() * 0.5,
           0.1 * min_dim_, 0.1 * min_dim_));
   }
   else {
@@ -153,9 +155,9 @@ AnnotatedRegion<Info>::AnnotatedRegion(
       annotation_->area_.h = bounding_rect_.height() - annotation_->area_.y;
     }
     setRect(QRectF(
-          annotation_->area_.x, 
+          annotation_->area_.x,
           annotation_->area_.y,
-          annotation_->area_.w, 
+          annotation_->area_.w,
           annotation_->area_.h));
   }
   pen_.setWidthF(std::min(
@@ -183,36 +185,36 @@ void AnnotatedRegion<Info>::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
       drag_ = DRAG_TOP;
       setCursor(QCursor(Qt::SizeVerCursor));
     }
-  } 
+  }
   else if (std::abs(from_bottom) < margin_) {
     if (std::abs(from_left) < margin_) {
       drag_ = DRAG_BOTTOM_LEFT;
       setCursor(QCursor(Qt::SizeBDiagCursor));
-    } 
+    }
     else if (std::abs(from_right) < margin_) {
       drag_ = DRAG_BOTTOM_RIGHT;
       setCursor(QCursor(Qt::SizeFDiagCursor));
-    } 
+    }
     else {
       drag_ = DRAG_BOTTOM;
       setCursor(QCursor(Qt::SizeVerCursor));
     }
-  } 
+  }
   else if (std::abs(from_left) < margin_) {
     drag_ = DRAG_LEFT;
     setCursor(QCursor(Qt::SizeHorCursor));
-  } 
+  }
   else if (std::abs(from_right) < margin_) {
     drag_ = DRAG_RIGHT;
     setCursor(QCursor(Qt::SizeHorCursor));
-  } 
+  }
   else {
     drag_ = DRAG_NONE;
     setCursor(QCursor());
   }
   if (drag_ != DRAG_NONE) {
     setFlag(ItemIsMovable, false);
-  } 
+  }
   else {
     setFlag(ItemIsMovable, true);
   }
@@ -317,7 +319,7 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
   if(area.left() >= bounding_rect_.left()
     && area.top() >= bounding_rect_.top()
-    && area.width() + area.left() <= 
+    && area.width() + area.left() <=
       bounding_rect_.width() + bounding_rect_.left()
     && area.height() + area.top() <=
       bounding_rect_.height() + bounding_rect_.top()) {
@@ -329,7 +331,7 @@ void AnnotatedRegion<Info>::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 template<typename Info>
-void AnnotatedRegion<Info>::paint(QPainter *painter, 
+void AnnotatedRegion<Info>::paint(QPainter *painter,
   const QStyleOptionGraphicsItem *option, QWidget *widget) {
   painter->setFont(font_);
   painter->setPen(pen_);
@@ -342,15 +344,15 @@ void AnnotatedRegion<Info>::paint(QPainter *painter,
   QBrush brush;
   brush.setColor(Qt::gray);
   QRectF text_area = QRectF(
-    rect().right() - width, 
-    rect().bottom() - fm.height(), 
-    width, 
+    rect().right() - width,
+    rect().bottom() - fm.height(),
+    width,
     fm.height()
     );
   painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
   painter->drawText(
-      text_area, 
-      QString::number(uid_), 
+      text_area,
+      QString::number(uid_),
       QTextOption(Qt::AlignRight));
 }
 
@@ -385,4 +387,3 @@ void AnnotatedRegion<Info>::updateAnnotation() {
 } // namespace fish_annotator
 
 #endif // ANNOTATEDREGION_H
-
