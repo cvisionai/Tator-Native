@@ -6,15 +6,23 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <map>
+
+#include <boost/bimap.hpp>
 
 #include <QImage>
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+extern "C" {
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavutil/frame.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/mem.h>
+#include <libswscale/swscale.h>
+}
 
 namespace fish_annotator { namespace video_annotator {
 
@@ -26,9 +34,6 @@ public:
 
     /// @brief Destructor.
     ~Player();
-
-    /// @brief Processes a single frame.
-    inline QImage getOneFrame();
 public slots:
     /// @brief Plays the video.
     void play();
@@ -105,32 +110,56 @@ private:
     /// @brief True if player is stopped, false otherwise.
     bool stopped_;
 
-    /// @brief Stores most recent frame.
-    cv::Mat frame_mat_;
-
-    /// @brief Stores most recent RGB frame.
-    cv::Mat rgb_frame_mat_;
-
     /// @brief Stores most recent image.
     QImage image_;
 
     /// @brief Current playback rate.
     double current_speed_;
 
-    /// @brief Video capture object.
-    std::unique_ptr<cv::VideoCapture> capture_;
+    /// @brief Codec context.
+    AVCodecContext *codec_context_;
+
+    /// @brief Format context.
+    AVFormatContext *format_context_;
+
+    /// @brief Packet.
+    AVPacket packet_;
+
+    /// @brief Index of video stream.
+    int stream_index_;
+
+    /// @brief Most recent frame.
+    AVFrame *frame_;
+
+    /// @brief For converting decoded frame to RGB.
+    AVFrame *frame_rgb_;
+
+    /// @brief Conversion context.
+    SwsContext *sws_context_;
 
     /// @brief Delay between frames in microseconds.
     double delay_;
 
-    /// @brief Current frame index.
-    qint64 frame_index_;
+    /// @brief Last decoded frame.
+    qint64 dec_frame_;
+
+    /// @brief Last requested frame.
+    qint64 req_frame_;
+
+    /// @brief Map between frame index and decompression timestamp.
+    boost::bimap<qint64, qint64> seek_map_;
+
+    /// @brief Frame buffer.
+    std::map<qint64, QImage> frame_buffer_;
 
     /// @brief Mutex for deletion.
     QMutex mutex_;
 
     /// @brief Wait condition for deletion.
     QWaitCondition condition_;
+
+    /// @brief Processes a single frame.
+    void getOneFrame();
 
     /// @brief Sets the current frame.
     void setCurrentFrame(qint64 frame_num);

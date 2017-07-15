@@ -19,6 +19,15 @@ if( WIN32 )
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${Boost_LIBRARIES}
+    ${FFMPEG_LIBRARY_DIR}/avformat.lib
+    ${FFMPEG_LIBRARY_DIR}/avcodec.lib
+    ${FFMPEG_LIBRARY_DIR}/avutil.lib
+    ${FFMPEG_LIBRARY_DIR}/swscale.lib
+    )
+  target_include_directories(
+    test_video_annotator
+    PUBLIC
+    ${FFMPEG_INCLUDE_DIR}
     )
   set_target_properties(
     test_video_annotator
@@ -83,6 +92,10 @@ elseif( UNIX )
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
     ${Boost_LIBRARIES}
+    avformat
+    avcodec
+    avutil
+    swscale
     )
   add_test( 
     NAME test_video_annotator 

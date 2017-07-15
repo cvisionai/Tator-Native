@@ -13,18 +13,22 @@ if( WIN32 )
   target_link_libraries(
     video_annotator
     common
-    ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
-    Qt5::OpenGL
     ${QT_THIRD_PARTY_LIBS}
-    ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
+    ${FFMPEG_LIBRARY_DIR}/avformat.lib
+    ${FFMPEG_LIBRARY_DIR}/avcodec.lib
+    ${FFMPEG_LIBRARY_DIR}/avutil.lib
+    ${FFMPEG_LIBRARY_DIR}/swscale.lib
     )
   set_target_properties( 
     video_annotator 
     PROPERTIES 
     LINK_FLAGS "${LINK_FLAGS} /SUBSYSTEM:WINDOWS" 
+    )
+  target_include_directories( video_annotator PUBLIC
+    ${FFMPEG_INCLUDE_DIR}
     )
 elseif( APPLE )
   add_executable( video_annotator MACOSX_BUNDLE
@@ -40,12 +44,9 @@ elseif( APPLE )
   target_link_libraries(
     video_annotator
     common
-    ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
-    Qt5::OpenGL
     Qt5::PrintSupport
-    ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
     )
 elseif( UNIX )
@@ -57,17 +58,18 @@ elseif( UNIX )
     video_annotator
     dl
     common
-    ${OpenCV_LIBS}
     ${UNIX_LIBRARIES}
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
-    Qt5::OpenGL
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
-    ${OPENGL_LIBRARIES}
     ${Boost_LIBRARIES}
+    avformat
+    avcodec
+    avutil
+    swscale
     )
 endif()
 
