@@ -10,6 +10,8 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QColor>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QThread>
@@ -103,6 +105,12 @@ public slots:
   ///
   /// @param dot Definition of the dot.
   void addDotAnnotation(const QPointF &dot);
+
+  /// @brief chooses color for box annotation.
+  ///
+  /// @param type Type of the annotation.
+  QColor getColor(std::string type);
+
 signals:
   /// @brief Requests play.
   void requestPlay();
@@ -211,11 +219,11 @@ private slots:
   /// @brief Updates the current fish to the specified ID.
   void on_goToFishVal_returnPressed();
 
-  /// @brief Adds a region for the current fish.  If a region already 
+  /// @brief Adds a region for the current fish.  If a region already
   ///        exists for this fish and frame, an error is raised.
   void on_addRegion_clicked();
 
-  /// @brief Removes a region for the current fish and frame.  If a 
+  /// @brief Removes a region for the current fish and frame.  If a
   ///        region does not exist an error is raised.
   void on_removeRegion_clicked();
 
