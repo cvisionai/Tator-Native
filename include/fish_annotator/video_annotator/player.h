@@ -2,10 +2,8 @@
 #define VIDEO_ANNOTATOR_PLAYER_H
 
 #include <string>
-#include <iostream>
-#include <chrono>
-#include <thread>
 #include <memory>
+#include <atomic>
 #include <map>
 
 #include <boost/bimap.hpp>
@@ -157,6 +155,9 @@ private:
 
     /// @brief Mutex for filling buffer.
     QMutex buffer_mutex_;
+
+    /// @brief True when buffering.
+    std::atomic<bool> buffering_;
 
     /// @brief Wait condition for deletion.
     QWaitCondition condition_;
