@@ -8,8 +8,6 @@ Introduction
 and images of fish.  Eventually it will be expanded to automatically create
 annotations using computer vision algorithms.
 
-**05/13/2017 - Mac build is currently not working correctly. We are aware of the performance issues and hope to have a fix soon.**
-
 Building and testing
 ====================
 
