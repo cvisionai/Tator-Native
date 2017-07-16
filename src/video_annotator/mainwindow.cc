@@ -156,13 +156,13 @@ void MainWindow::on_slower_clicked() {
 
 void MainWindow::on_minusOneSecond_clicked() {
   qint64 frame = last_position_;
-  frame -= static_cast<qint64>(std::round(rate_));
+  frame -= static_cast<qint64>(std::round(native_rate_));
   emit requestSetFrame(frame);
 }
 
 void MainWindow::on_minusThreeSecond_clicked() {
   qint64 frame = last_position_;
-  frame -= static_cast<qint64>(std::round(rate_ * 3.0));
+  frame -= static_cast<qint64>(std::round(native_rate_ * 3.0));
   emit requestSetFrame(frame);
 }
 
