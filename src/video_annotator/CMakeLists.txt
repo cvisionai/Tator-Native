@@ -48,6 +48,10 @@ elseif( APPLE )
     Qt5::Widgets
     Qt5::PrintSupport
     ${Boost_LIBRARIES}
+    avformat
+    avcodec
+    avutil
+    swscale
     )
 elseif( UNIX )
   add_executable( video_annotator

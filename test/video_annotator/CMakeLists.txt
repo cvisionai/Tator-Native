@@ -60,6 +60,10 @@ elseif( APPLE )
     Qt5::Test
     ${QT_THIRD_PARTY_LIBS}
     ${Boost_LIBRARIES}
+    avformat
+    avcodec
+    avutil
+    swscale
     )
   add_test( 
     NAME test_video_annotator 
