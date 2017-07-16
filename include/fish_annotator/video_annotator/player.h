@@ -2,10 +2,8 @@
 #define VIDEO_ANNOTATOR_PLAYER_H
 
 #include <string>
-#include <iostream>
-#include <chrono>
-#include <thread>
 #include <memory>
+#include <atomic>
 #include <map>
 
 #include <boost/bimap.hpp>
@@ -152,8 +150,11 @@ private:
     /// @brief Frame buffer.
     std::map<qint64, QImage> frame_buffer_;
 
-    /// @brief Mutex for deletion.
-    QMutex mutex_;
+    /// @brief Mutex for grabbing frames.
+    QMutex frame_mutex_;
+
+    /// @brief True when buffering.
+    std::atomic<bool> buffering_;
 
     /// @brief Wait condition for deletion.
     QWaitCondition condition_;
@@ -162,7 +163,15 @@ private:
     void getOneFrame();
 
     /// @brief Sets the current frame.
+    ///
+    /// @param frame_num Set to this frame. Bounded by this function.
     void setCurrentFrame(qint64 frame_num);
+
+    /// @brief Buffers frames.
+    ///
+    /// @param frame_num Buffer up to this frame number.
+    /// @param wait Number of usec to wait between decoding frames.
+    void buffer(qint64 frame_num, qint64 wait = 0);
 
     /// @brief Waits for specified time while allowing events to process.
     void processWait(qint64 usec);
