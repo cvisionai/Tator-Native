@@ -310,6 +310,14 @@ void Player::nextFrame() {
 void Player::prevFrame() {
   setCurrentFrame(req_frame_ - 1);
   emit processedImage(image_, req_frame_);
+  if(buffering_ == false) {
+    buffering_ = true;
+    auto buf_it = frame_buffer_.begin();
+    if(req_frame_ - buf_it->first < kTrimBound / 2) {
+      buffer(req_frame_, 1000);
+    }
+    buffering_ = false;
+  }
 }
 
 void Player::setCurrentFrame(qint64 frame_num) {
