@@ -32,7 +32,6 @@ Player::Player()
   , seek_map_()
   , frame_buffer_()
   , frame_mutex_()
-  , buffer_mutex_()
   , buffering_(false)
   , condition_() {
   av_register_all();
@@ -41,7 +40,6 @@ Player::Player()
 
 Player::~Player() {
   QMutexLocker locker(&frame_mutex_);
-  QMutexLocker buf_locker(&buffer_mutex_);
   if(codec_context_ != nullptr) {
     avcodec_close(codec_context_);
     codec_context_ = nullptr;
@@ -342,7 +340,6 @@ void Player::setCurrentFrame(qint64 frame_num) {
 }
 
 void Player::buffer(qint64 frame_num, qint64 wait) {
-  buffering_ = true;
   qint64 seek_to = frame_num - kTrimBound;
   seek_to = seek_to < 0 ? 0 : seek_to;
   auto it = seek_map_.left.find(seek_to);
@@ -367,7 +364,6 @@ void Player::buffer(qint64 frame_num, qint64 wait) {
       }
     }
   }
-  buffering_ = false;
 }
 
 void Player::setFrame(qint64 frame) {

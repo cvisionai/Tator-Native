@@ -153,9 +153,6 @@ private:
     /// @brief Mutex for grabbing frames.
     QMutex frame_mutex_;
 
-    /// @brief Mutex for filling buffer.
-    QMutex buffer_mutex_;
-
     /// @brief True when buffering.
     std::atomic<bool> buffering_;
 
