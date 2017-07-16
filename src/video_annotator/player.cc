@@ -7,6 +7,11 @@
 
 namespace fish_annotator { namespace video_annotator {
 
+namespace {
+  static const int kMaxBufferSize = 50;
+  static const int kTrimBound = kMaxBufferSize / 2;
+}
+
 Player::Player()
   : QObject()
   , video_path_()
@@ -213,8 +218,6 @@ void Player::stop() {
 
 void Player::getOneFrame() {
   QMutexLocker locker(&mutex_);
-  static const int kMaxBufferSize = 50;
-  static const int kTrimBound = kMaxBufferSize / 2;
   while(true) {
     int status = av_read_frame(format_context_, &packet_);
     if(status < 0) {
@@ -320,7 +323,7 @@ void Player::setCurrentFrame(qint64 frame_num) {
       image_ = buf_it->second;
     }
     else {
-      qint64 seek_to = bounded - 3;
+      qint64 seek_to = bounded - kTrimBound;
       seek_to = seek_to < 0 ? 0 : seek_to;
       auto it = seek_map_.left.find(seek_to);
       if(it != seek_map_.left.end()) {
