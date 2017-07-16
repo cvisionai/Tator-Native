@@ -31,14 +31,16 @@ Player::Player()
   , req_frame_(0) 
   , seek_map_()
   , frame_buffer_()
-  , mutex_()
+  , frame_mutex_()
+  , buffer_mutex_()
   , condition_() {
   av_register_all();
   av_init_packet(&packet_);
 }
 
 Player::~Player() {
-  QMutexLocker locker(&mutex_);
+  QMutexLocker locker(&frame_mutex_);
+  QMutexLocker buf_locker(&buffer_mutex_);
   if(codec_context_ != nullptr) {
     avcodec_close(codec_context_);
     codec_context_ = nullptr;
@@ -217,7 +219,7 @@ void Player::stop() {
 }
 
 void Player::getOneFrame() {
-  QMutexLocker locker(&mutex_);
+  QMutexLocker locker(&frame_mutex_);
   while(true) {
     int status = av_read_frame(format_context_, &packet_);
     if(status < 0) {
@@ -318,31 +320,39 @@ void Player::setCurrentFrame(qint64 frame_num) {
     getOneFrame();
   }
   else {
+    QMutexLocker locker(&buffer_mutex_);
     auto buf_it = frame_buffer_.find(frame_num);
     if(buf_it != frame_buffer_.end()) {
       image_ = buf_it->second;
     }
     else {
-      qint64 seek_to = bounded - kTrimBound;
-      seek_to = seek_to < 0 ? 0 : seek_to;
-      auto it = seek_map_.left.find(seek_to);
-      if(it != seek_map_.left.end()) {
-        int status = av_seek_frame(
-            format_context_, 
-            stream_index_, 
-            it->second, 
-            AVSEEK_FLAG_BACKWARD);
-        if(status < 0) {
-          emit error("Error seeking to frame!");
-          return;
-        }
-        avcodec_flush_buffers(codec_context_);
-        while(true) {
-          getOneFrame();
-          if(dec_frame_ >= bounded) {
-            break;
-          }
-        }
+      buffer(bounded, 0);
+    }
+  }
+}
+
+void Player::buffer(qint64 frame_num, qint64 wait) {
+  qint64 seek_to = frame_num - kTrimBound;
+  seek_to = seek_to < 0 ? 0 : seek_to;
+  auto it = seek_map_.left.find(seek_to);
+  if(it != seek_map_.left.end()) {
+    int status = av_seek_frame(
+        format_context_, 
+        stream_index_, 
+        it->second, 
+        AVSEEK_FLAG_BACKWARD);
+    if(status < 0) {
+      emit error("Error seeking to frame!");
+      return;
+    }
+    avcodec_flush_buffers(codec_context_);
+    while(true) {
+      getOneFrame();
+      if(dec_frame_ >= frame_num) {
+        break;
+      }
+      if(wait > 0) {
+        processWait(wait);
       }
     }
   }
