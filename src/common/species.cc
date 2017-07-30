@@ -5,11 +5,9 @@
 namespace fish_annotator {
 
 Species::Species(const std::string& name)
-  : name_()
+  : name_(name)
   , subspecies_() {
-  std::string lower_name = name;
-  boost::algorithm::to_lower(lower_name);
-  name_ = lower_name;
+  boost::algorithm::to_lower(name_);
 }
 
 Species::Species()
@@ -49,6 +47,7 @@ pt::ptree Species::write() const {
 
 void Species::read(const pt::ptree &tree) {
   name_ = tree.get<std::string>("name");
+  boost::algorithm::to_lower(name_);
   if(tree.count("subspecies_list") > 0) {
     for(auto &val : tree.get_child("subspecies_list")) {
       subspecies_.push_back(val.second.data());
