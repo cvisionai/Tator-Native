@@ -747,7 +747,7 @@ border-radius: 2px;</string>
         <item>
          <layout class="QVBoxLayout" name="navigatorLayout">
           <property name="spacing">
-           <number>0</number>
+           <number>13</number>
           </property>
           <property name="topMargin">
            <number>0</number>
