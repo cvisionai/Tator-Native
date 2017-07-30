@@ -1,10 +1,15 @@
+#include <boost/algorithm/string.hpp>
+
 #include "fish_annotator/common/species.h"
 
 namespace fish_annotator {
 
 Species::Species(const std::string& name)
-  : name_(name)
+  : name_()
   , subspecies_() {
+  std::string lower_name = name;
+  boost::algorithm::to_lower(lower_name);
+  name_ = lower_name;
 }
 
 Species::Species()
