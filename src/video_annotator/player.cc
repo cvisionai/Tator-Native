@@ -160,7 +160,7 @@ void Player::loadVideo(QString filename) {
     if(status < 0) {
       break;
     }
-    if(packet_.stream_index == stream_index_) {
+    if(packet_.stream_index == stream_index_ && packet_.dts >= 0) {
       seek_map_.left.insert({frame_index, packet_.dts});
       ++frame_index;
     }
@@ -226,7 +226,7 @@ void Player::getOneFrame() {
     }
     if(packet_.stream_index == stream_index_) {
       auto it = seek_map_.right.find(packet_.dts);
-      if(it == seek_map_.right.end()) {
+      if(it == seek_map_.right.end() && packet_.dts >= 0) {
         emit error("Could not find decompression timestamp!");
         return;
       }

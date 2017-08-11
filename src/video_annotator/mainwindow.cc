@@ -10,6 +10,7 @@
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/common/annotated_line.h"
 #include "fish_annotator/common/annotated_dot.h"
+#include "fish_annotator/video_annotator/reassign_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -65,9 +66,12 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/next_fish.svg"));
   ui_->prevFish->setIcon(
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
-  ui_->sideBarLayout->addWidget(annotation_widget_.get());
-  ui_->sideBarLayout->addWidget(species_controls_.get());
+  ui_->reassignFish->setIcon(
+      QIcon(":/icons/fish_navigation/reassign_fish.svg"));
+  ui_->speciesLayout->addWidget(annotation_widget_.get());
+  ui_->speciesLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
+  tabifyDockWidget(ui_->navigationDockWidget, ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   scene_->setToolWidget(annotation_widget_.get());
@@ -253,16 +257,19 @@ void MainWindow::on_saveAnnotationFile_triggered() {
 }
 
 void MainWindow::on_writeImage_triggered() {
-    // filename needs to be procedurally generated. 
-    if (images_save_path_.isEmpty())
-      images_save_path_ = QFileDialog::getExistingDirectory(this, tr("Choose save directory"));
-
-    QImage img(scene_->sceneRect().size().toSize(), QImage::Format_ARGB32_Premultiplied);
-    QPainter p(&img);
-    scene_->render(&p);
-    p.end();
-    img.save(images_save_path_ + QStringLiteral("/") + QStringLiteral("/Fish_%1.png").arg(fish_id_));
-
+  // filename needs to be procedurally generated. 
+  if (images_save_path_.isEmpty())
+    images_save_path_ = QFileDialog::getExistingDirectory(
+        this, tr("Choose save directory"));
+  QImage img(scene_->sceneRect().size().toSize(), 
+      QImage::Format_ARGB32_Premultiplied);
+  QPainter p(&img);
+  scene_->render(&p);
+  p.end();
+  img.save(
+      images_save_path_ 
+      + QStringLiteral("/") 
+      + QStringLiteral("/Fish_%1.png").arg(fish_id_));
 }
 
 void MainWindow::on_setMetadata_triggered() {
@@ -367,6 +374,71 @@ void MainWindow::on_removeFish_clicked() {
 void MainWindow::on_goToFrame_clicked() {
   qint64 frame = annotation_->trackFirstFrame(fish_id_);
   emit requestSetFrame(frame);
+}
+
+void MainWindow::on_reassignFish_clicked() {
+  auto new_id = annotation_->nextId();
+  ReassignDialog *dlg = new ReassignDialog(
+      last_position_,
+      annotation_->trackFirstFrame(fish_id_),
+      annotation_->trackLastFrame(fish_id_),
+      fish_id_,
+      new_id,
+      this);
+  if(dlg->exec()) {
+    Reassignment reassign = dlg->getReassignment();
+    auto from_trk = annotation_->findTrack(reassign.from_id_);
+    auto from_det = annotation_->getDetectionAnnotationsById(
+        reassign.from_id_);
+    auto to_trk = annotation_->findTrack(reassign.to_id_);
+    if(to_trk == nullptr) {
+      auto new_trk = std::make_shared<TrackAnnotation>(
+          reassign.to_id_,
+          from_trk->species_,
+          from_trk->subspecies_,
+          from_trk->frame_added_,
+          from_trk->count_label_);
+      annotation_->insert(new_trk);
+    }
+    bool need_new = false;
+    for(auto& det : from_det) {
+      if(det->frame_ >= reassign.from_frame_ && 
+          det->frame_ <= reassign.to_frame_) {
+        auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
+        if(exist != nullptr) {
+          need_new = true;
+          break;
+        }
+      }
+    }
+    if(need_new == true) {
+      auto new_trk = std::make_shared<TrackAnnotation>(
+          new_id,
+          from_trk->species_,
+          from_trk->subspecies_,
+          from_trk->frame_added_,
+          from_trk->count_label_);
+      annotation_->insert(new_trk);
+    }
+    for(auto& det : from_det) {
+      if(det->frame_ >= reassign.from_frame_ && 
+          det->frame_ <= reassign.to_frame_) {
+        auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
+        if(exist != nullptr) {
+          annotation_->remove(exist->frame_, exist->id_);
+          exist->id_ = new_id;
+          annotation_->insert(exist);
+        }
+        annotation_->remove(det->frame_, det->id_);
+        det->id_ = reassign.to_id_;
+        annotation_->insert(det);
+      }
+    }
+  }
+  delete dlg;
+  updateStats();
+  updateSpeciesCounts();
+  drawAnnotations();
 }
 
 void MainWindow::on_goToFishVal_returnPressed() {
@@ -492,6 +564,7 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->prevFish->setEnabled(true);
   ui_->nextFish->setEnabled(true);
   ui_->removeFish->setEnabled(true);
+  ui_->reassignFish->setEnabled(true);
   ui_->goToFrame->setEnabled(true);
   ui_->goToFishLabel->setEnabled(true);
   ui_->goToFishVal->setEnabled(true);
@@ -506,7 +579,7 @@ void MainWindow::handlePlayerMediaLoaded(
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
   ui_->videoWindow->show();
-  emit requestNextFrame();
+  emit requestPrevFrame();
 }
 
 void MainWindow::handlePlayerError(QString err) {
@@ -600,7 +673,7 @@ void MainWindow::drawAnnotations() {
     scene_->removeItem(ann);
   }
   current_annotations_.clear();
-  for(auto ann : annotation_->getDetectionAnnotations(last_position_)) {
+  for(auto ann : annotation_->getDetectionAnnotationsByFrame(last_position_)) {
     AnnotatedRegion<DetectionAnnotation> *box = nullptr;
     AnnotatedLine<DetectionAnnotation> *line = nullptr;
     AnnotatedDot<DetectionAnnotation> *dot = nullptr;
@@ -658,12 +731,6 @@ QString MainWindow::frameToTime(qint64 frame_number) {
   qint64 seconds = frame_number / native_rate_;
   qint64 mm = seconds / 60;
   qint64 ss = seconds % 60;
-  /*
-  return QString("%1:%2")
-      .arg(mm, 2, 10, QChar('0'))
-      .arg(ss, 2, 10, QChar('0'));
-      */
-
   return QString("%1:%2 | %3")
       .arg(mm, 2, 10, QChar('0'))
       .arg(ss, 2, 10, QChar('0'))

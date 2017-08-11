@@ -208,6 +208,9 @@ private slots:
   ///        occurs, if any.
   void on_goToFrame_clicked();
 
+  /// @brief Reassigns ID of current fish to another ID.
+  void on_reassignFish_clicked();
+
   /// @brief Updates the current fish to the specified ID.
   void on_goToFishVal_returnPressed();
 

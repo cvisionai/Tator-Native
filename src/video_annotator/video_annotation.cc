@@ -235,9 +235,19 @@ uint64_t VideoAnnotation::nextId() {
 }
 
 std::vector<std::shared_ptr<DetectionAnnotation>>
-VideoAnnotation::getDetectionAnnotations(uint64_t frame) {
+VideoAnnotation::getDetectionAnnotationsByFrame(uint64_t frame) {
   std::vector<std::shared_ptr<DetectionAnnotation>> annotations;
   auto range = detections_by_frame_.left.equal_range(frame);
+  for(auto it = range.first; it != range.second; ++it) {
+    annotations.push_back(*(it->second));
+  }
+  return annotations;
+}
+
+std::vector<std::shared_ptr<DetectionAnnotation>>
+VideoAnnotation::getDetectionAnnotationsById(uint64_t id) {
+  std::vector<std::shared_ptr<DetectionAnnotation>> annotations;
+  auto range = detections_by_id_.left.equal_range(id);
   for(auto it = range.first; it != range.second; ++it) {
     annotations.push_back(*(it->second));
   }
@@ -360,6 +370,23 @@ uint64_t VideoAnnotation::trackFirstFrame(uint64_t id) {
       });
     if(first_det != detections_by_frame_.left.end()) {
       return first_det->first;
+    }
+  }
+  return 0;
+}
+
+uint64_t VideoAnnotation::trackLastFrame(uint64_t id) {
+  auto it = tracks_by_id_.left.find(id);
+  if(it != tracks_by_id_.left.end()) {
+    auto t = *(it->second);
+    auto last_det = std::find_if(
+      detections_by_frame_.left.rbegin(), 
+      detections_by_frame_.left.rend(),
+      [&t](const DetectionsByInteger::left_value_type &d) {
+        return t->id_ == (*(d.second))->id_;
+      });
+    if(last_det != detections_by_frame_.left.rend()) {
+      return last_det->first;
     }
   }
   return 0;

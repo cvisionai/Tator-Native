@@ -21,6 +21,7 @@
   <file>icons/fish_navigation/next_fish.svg</file>
   <file>icons/fish_navigation/prev_fish.svg</file>
   <file>icons/fish_navigation/remove_fish.svg</file>
+  <file>icons/fish_navigation/reassign_fish.svg</file>
   <file>icons/species_controls/add_species.svg</file>
   <file>icons/species_controls/clear_species.svg</file>
   <file>icons/species_controls/edit_species.svg</file>

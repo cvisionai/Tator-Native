@@ -200,7 +200,14 @@ public:
   /// @param frame Frame in the video.
   /// @return Annotations for the given frame.
   std::vector<std::shared_ptr<DetectionAnnotation>>
-    getDetectionAnnotations(uint64_t frame);
+    getDetectionAnnotationsByFrame(uint64_t frame);
+
+  /// @brief Gets annotations for a given ID.
+  ///
+  /// @param id Track ID.
+  /// @return Annotations for the given frame.
+  std::vector<std::shared_ptr<DetectionAnnotation>>
+    getDetectionAnnotationsById(uint64_t id);
 
   /// @brief Gets counts for each species in a video.
   ///
@@ -251,6 +258,12 @@ public:
   /// @param id Track ID.
   /// @return Frame of first occurrence, zero if not found or no detections.
   uint64_t trackFirstFrame(uint64_t id);
+
+  /// @brief Gets last frame where a track occurs.
+  ///
+  /// @param id Track ID.
+  /// @return Frame of last occurrence, zero if not found or no detections.
+  uint64_t trackLastFrame(uint64_t id);
 
   /// @brief Gets ID of earliest track.
   ///

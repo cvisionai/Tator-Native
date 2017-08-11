@@ -1,10 +1,18 @@
 # Find the sources for video annotator
-file( GLOB VIDEO_ANNOTATOR_SOURCES "*.cc" )
+set( VIDEO_ANNOTATOR_SOURCES 
+  "main.cc"
+  "mainwindow.cc"
+  "player.cc"
+  "video_annotation.cc"
+  "reassign_dialog.cc"
+)
+set( VIDEO_ANNOTATOR_RESOURCES
+  "video_annotator.rc"
+)
 
 # Add video annotator executable
 if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )
-  file( GLOB VIDEO_ANNOTATOR_RESOURCES "*.rc" )
   add_executable( video_annotator WIN32 
     ${VIDEO_ANNOTATOR_SOURCES} 
     ${VIDEO_ANNOTATOR_RESOURCES}
