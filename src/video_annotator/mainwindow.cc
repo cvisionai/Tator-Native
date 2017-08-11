@@ -10,6 +10,7 @@
 #include "fish_annotator/common/annotatedregion.h"
 #include "fish_annotator/common/annotated_line.h"
 #include "fish_annotator/common/annotated_dot.h"
+#include "fish_annotator/video_annotator/reassign_dialog.h"
 #include "fish_annotator/video_annotator/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -370,6 +371,21 @@ void MainWindow::on_removeFish_clicked() {
 void MainWindow::on_goToFrame_clicked() {
   qint64 frame = annotation_->trackFirstFrame(fish_id_);
   emit requestSetFrame(frame);
+}
+
+void MainWindow::on_reassignFish_clicked() {
+  ReassignDialog *dlg = new ReassignDialog(
+      last_position_,
+      annotation_->trackFirstFrame(fish_id_),
+      annotation_->trackLastFrame(fish_id_),
+      fish_id_,
+      annotation_->nextId(),
+      this);
+  if(dlg->exec()) {
+    Reassignment reassign = dlg->getReassignment();
+    // Do reassignment
+  }
+  delete dlg;
 }
 
 void MainWindow::on_goToFishVal_returnPressed() {
