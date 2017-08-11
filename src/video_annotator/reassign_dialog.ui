@@ -20,7 +20,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Reassign ID</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -48,18 +48,27 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="fromId">
+      <widget class="QLabel" name="fromId">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>60</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="text">
+        <string>000</string>
        </property>
       </widget>
      </item>
@@ -90,6 +99,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="toId">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -108,6 +120,12 @@
       <widget class="QCheckBox" name="newTrack">
        <property name="text">
         <string>New Track</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

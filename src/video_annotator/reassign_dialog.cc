@@ -29,6 +29,10 @@ ReassignDialog::ReassignDialog(
   , ui_(new Ui::ReassignDialog) {
   setModal(true);
   ui_->setupUi(this);
+  ui_->fromId->setText(QString::number(id_));
+  ui_->toId->setText(QString::number(new_track_id_));
+  ui_->frameStart->setText(QString::number(current_frame_));
+  ui_->frameStop->setText(QString::number(last_frame_));
 }
 
 void ReassignDialog::on_ok_clicked() {
