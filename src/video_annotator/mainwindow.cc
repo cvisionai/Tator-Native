@@ -65,9 +65,10 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/next_fish.svg"));
   ui_->prevFish->setIcon(
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
-  ui_->sideBarLayout->addWidget(annotation_widget_.get());
-  ui_->sideBarLayout->addWidget(species_controls_.get());
+  ui_->speciesLayout->addWidget(annotation_widget_.get());
+  ui_->speciesLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
+  tabifyDockWidget(ui_->navigationDockWidget, ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   scene_->setToolWidget(annotation_widget_.get());

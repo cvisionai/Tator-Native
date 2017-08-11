@@ -48,7 +48,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="species">
+      <widget class="QLineEdit" name="fromId">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -89,7 +89,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="species_2">
+      <widget class="QLineEdit" name="toId">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -105,7 +105,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="newTrack">
        <property name="text">
         <string>New Track</string>
        </property>
@@ -135,7 +135,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="species_4">
+      <widget class="QLineEdit" name="frameStart">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -170,7 +170,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="species_3">
+      <widget class="QLineEdit" name="frameStop">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -192,7 +192,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="framePresets">
        <item>
         <property name="text">
          <string>Current to Last</string>
