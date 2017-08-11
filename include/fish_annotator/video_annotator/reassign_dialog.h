@@ -26,7 +26,13 @@ public:
   /// @brief Constructor.
   ///
   /// @param parent Parent widget.
-  explicit ReassignDialog(QWidget *parent = 0);
+  explicit ReassignDialog(
+      qint64 current_frame,
+      qint64 first_frame,
+      qint64 last_frame,
+      qint64 id,
+      qint64 new_track_id,
+      QWidget *parent = 0);
 
   /// @brief Returns a reassignment object corresponding to the dialog
   ///        values.
@@ -44,9 +50,33 @@ private slots:
   void on_newTrack_stateChanged(int state);
 
   /// @brief Updates frame according to presets.
-  void on_framePresets_currentIndexChanged(const QString &text);
+  void on_framePresets_currentIndexChanged(int index);
+
+  /// @brief Changes frame preset selection.
+  void on_fromFrame_textChanged();
+
+  /// @brief Changes frame preset selection.
+  void on_toFrame_textChanged();
 
 private:
+  /// @brief Current frame.
+  qint64 current_frame_;
+
+  /// @brief First frame.
+  qint64 first_frame_;
+
+  /// @brief Last frame.
+  qint64 last_frame_;
+
+  /// @brief ID of fish to be reassigned.
+  qint64 id_;
+
+  /// @brief ID of new track.
+  qint64 new_track_id_;
+
+  /// @brief Struct representing the reassignment.
+  Reassignment reassign_;
+
   /// @brief Dialog loaded from ui file.
   std::unique_ptr<Ui::ReassignDialog> ui_;
 };
