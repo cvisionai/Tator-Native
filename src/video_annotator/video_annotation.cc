@@ -365,6 +365,23 @@ uint64_t VideoAnnotation::trackFirstFrame(uint64_t id) {
   return 0;
 }
 
+uint64_t VideoAnnotation::trackLastFrame(uint64_t id) {
+  auto it = tracks_by_id_.left.find(id);
+  if(it != tracks_by_id_.left.end()) {
+    auto t = *(it->second);
+    auto last_det = std::find_if(
+      detections_by_frame_.left.rbegin(), 
+      detections_by_frame_.left.rend(),
+      [&t](const DetectionsByInteger::left_value_type &d) {
+        return t->id_ == (*(d.second))->id_;
+      });
+    if(last_det != detections_by_frame_.left.rend()) {
+      return last_det->first;
+    }
+  }
+  return 0;
+}
+
 uint64_t VideoAnnotation::earliestTrackID() {
   if(tracks_by_id_.left.size() == 0) {
     return 0;

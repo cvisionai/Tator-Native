@@ -252,6 +252,12 @@ public:
   /// @return Frame of first occurrence, zero if not found or no detections.
   uint64_t trackFirstFrame(uint64_t id);
 
+  /// @brief Gets last frame where a track occurs.
+  ///
+  /// @param id Track ID.
+  /// @return Frame of last occurrence, zero if not found or no detections.
+  uint64_t trackLastFrame(uint64_t id);
+
   /// @brief Gets ID of earliest track.
   ///
   /// @return ID of earliest track.
