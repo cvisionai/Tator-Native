@@ -65,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/next_fish.svg"));
   ui_->prevFish->setIcon(
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
+  ui_->reassignFish->setIcon(
+      QIcon(":/icons/fish_navigation/reassign_fish.svg"));
   ui_->speciesLayout->addWidget(annotation_widget_.get());
   ui_->speciesLayout->addWidget(species_controls_.get());
   ui_->videoWindow->setScene(scene_.get());
@@ -493,6 +495,7 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->prevFish->setEnabled(true);
   ui_->nextFish->setEnabled(true);
   ui_->removeFish->setEnabled(true);
+  ui_->reassignFish->setEnabled(true);
   ui_->goToFrame->setEnabled(true);
   ui_->goToFishLabel->setEnabled(true);
   ui_->goToFishVal->setEnabled(true);
