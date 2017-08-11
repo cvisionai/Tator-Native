@@ -235,9 +235,19 @@ uint64_t VideoAnnotation::nextId() {
 }
 
 std::vector<std::shared_ptr<DetectionAnnotation>>
-VideoAnnotation::getDetectionAnnotations(uint64_t frame) {
+VideoAnnotation::getDetectionAnnotationsByFrame(uint64_t frame) {
   std::vector<std::shared_ptr<DetectionAnnotation>> annotations;
   auto range = detections_by_frame_.left.equal_range(frame);
+  for(auto it = range.first; it != range.second; ++it) {
+    annotations.push_back(*(it->second));
+  }
+  return annotations;
+}
+
+std::vector<std::shared_ptr<DetectionAnnotation>>
+VideoAnnotation::getDetectionAnnotationsById(uint64_t id) {
+  std::vector<std::shared_ptr<DetectionAnnotation>> annotations;
+  auto range = detections_by_id_.left.equal_range(id);
   for(auto it = range.first; it != range.second; ++it) {
     annotations.push_back(*(it->second));
   }
