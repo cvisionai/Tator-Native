@@ -678,12 +678,6 @@ QString MainWindow::frameToTime(qint64 frame_number) {
   qint64 seconds = frame_number / native_rate_;
   qint64 mm = seconds / 60;
   qint64 ss = seconds % 60;
-  /*
-  return QString("%1:%2")
-      .arg(mm, 2, 10, QChar('0'))
-      .arg(ss, 2, 10, QChar('0'));
-      */
-
   return QString("%1:%2 | %3")
       .arg(mm, 2, 10, QChar('0'))
       .arg(ss, 2, 10, QChar('0'))
