@@ -4,9 +4,16 @@ FishAnnotator                                                  {#mainpage}
 Introduction
 ============
 
-**FishAnnotator** is an application that facilitates annotation of videos 
-and images of fish.  Eventually it will be expanded to automatically create
-annotations using computer vision algorithms.
+**FishAnnotator** is a standalone, cross-platform application for creating 
+and visualizing video annotations.  It currently supports annotations in 
+the form of bounding boxes, lines, and dots.  Annotations are saved in the 
+widely supported JSON format, which can be imported separately for use in 
+algorithms or other tools.  Species (annotation labels) can be specified by 
+the user with the flexible graphical user interface.  It includes a single 
+frame increment and decrement, and guarantees frame level accuracy for 
+annotations, even after seeking.  Videos are decoded using FFMPEG, so a 
+wide variety of codecs are supported; there is no need to convert your 
+videos to imagery or other format before annotating.
 
 Building and testing
 ====================
@@ -23,20 +30,90 @@ FishAnnotator uses the following 3rd party libraries:
 
 [CMake][CMake] is also required to build.
 
-**Please find the appropriate install section for your OS. Static builds are only required on Windows.**
-
-To simplify distribution, Boost, Qt and OpenCV must be built as static 
-libraries.  It is recommended to download compiled Boost binaries for your
-compiler if they are available, which typically include static libraries.
-Most likely Qt and OpenCV will need to be built from scratch; see detailed
-instructions below.
-
-**IMPORTANT: Make sure that you build Qt and OpenCV with the same compiler you
-will use for building the application (e.g. all MSVC 32 bit, or all MSVC 64 bit).**
+**Please find the appropriate install section for your OS. Static builds 
+are only required on Windows.**
 
 Building the documentation requires installing [doxygen][doxysite] and
 [LaTeX][latexsite].  
 Building the installer requires installing [NSIS][nsissite].
+
+Mac Instructions
+================
+
+Building the application on Mac
+-------------------------------
+
+1\. Install required libraries:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+brew install qt5
+brew install homebrew/science/opencv3 --with-ffmpeg
+brew install boost
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2\. Run cmake to generate library hints file (build will fail on a fresh build):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+mkdir build
+cd build
+cmake ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+3\. Update the library hints file (cmake/FishDetFindLibsHints.cmake)
+    to point to brew's qt5 and opencv:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cmake}
+# Qt5
+set( CMAKE_PREFIX_PATH "/usr/local/opt/qt5/lib/cmake" )
+
+# Boost
+set( BOOST_ROOT  )
+set( BOOST_LIBRARYDIR  )
+
+# OpenCV
+set( CMAKE_CL_64  )
+set( OpenCV_DIR "/usr/local/opt/opencv3/share/OpenCV" )
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4\. Build the application:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+cmake ..
+make -j4
+make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ubuntu Instructions
+===================
+
+Building the application on Ubuntu
+----------------------------------
+
+1\. Install required libraries:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+sudo apt install libopencv-dev qtbase5-dev libboost-dev
+sudo add-apt-repository ppa:jonathonf/ffmpeg-3
+sudo apt update && sudo apt upgrade
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2\. Build the application.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+mkdir build
+cd build
+cmake ..
+make -j4
+make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Windows instructions
+====================
+
+To simplify distribution, Boost, Qt and OpenCV must be built as static 
+libraries on Windows.  It is recommended to download compiled Boost 
+binaries for your compiler if they are available, which typically include 
+static libraries.  Most likely Qt and OpenCV will need to be built from 
+scratch; see detailed instructions below.
+
+**IMPORTANT: Make sure that you build Qt and OpenCV with the same compiler you
+will use for building the application (e.g. all MSVC 32 bit, or all MSVC 64 bit).**
 
 Building static Qt on Windows
 -----------------------------
@@ -182,66 +259,6 @@ cmake --build . --target INSTALL --config Release
     build/inst subdirectory.  If a different installation location is
     desired, cmake can be invoked with the variable CMAKE_INSTALL_PREFIX
     set to the install directory.
-
-Building the application on Mac
--------------------------------
-
-1\. Install required libraries:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-brew install qt5
-brew install homebrew/science/opencv3 --with-ffmpeg
-brew install boost
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-2\. Run cmake to generate library hints file (build will fail on a fresh build):
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-mkdir build
-cd build
-cmake ..
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-3\. Update the library hints file (cmake/FishDetFindLibsHints.cmake)
-    to point to brew's qt5 and opencv:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cmake}
-# Qt5
-set( CMAKE_PREFIX_PATH "/usr/local/opt/qt5/lib/cmake" )
-
-# Boost
-set( BOOST_ROOT  )
-set( BOOST_LIBRARYDIR  )
-
-# OpenCV
-set( CMAKE_CL_64  )
-set( OpenCV_DIR "/usr/local/opt/opencv3/share/OpenCV" )
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-4\. Build the application:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-cmake ..
-make -j4
-make install
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Building the application on Ubuntu
-----------------------------------
-
-1\. Install required libraries:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-sudo apt install libopencv-dev qtbase5-dev libboost-dev
-sudo add-apt-repository ppa:jonathonf/ffmpeg-3
-sudo apt update && sudo apt upgrade
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-2\. Build the application.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-mkdir build
-cd build
-cmake ..
-make -j4
-make install
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Building documentation
 ----------------------
