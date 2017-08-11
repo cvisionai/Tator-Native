@@ -4,6 +4,7 @@ set( VIDEO_ANNOTATOR_SOURCES
   "../../src/video_annotator/mainwindow.cc"
   "../../src/video_annotator/video_annotation.cc"
   "../../src/video_annotator/player.cc"
+  "../../src/video_annotator/reassign_dialog.cc"
   )
 if( WIN32 )
   add_executable( test_video_annotator WIN32 
