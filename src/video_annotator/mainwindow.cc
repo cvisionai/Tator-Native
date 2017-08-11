@@ -526,7 +526,7 @@ void MainWindow::handlePlayerMediaLoaded(
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
   ui_->videoWindow->show();
-  emit requestNextFrame();
+  emit requestPrevFrame();
 }
 
 void MainWindow::handlePlayerError(QString err) {
