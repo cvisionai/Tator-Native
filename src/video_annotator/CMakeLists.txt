@@ -4,6 +4,7 @@ set( VIDEO_ANNOTATOR_SOURCES
   "mainwindow.cc"
   "player.cc"
   "video_annotation.cc"
+  "reassign_dialog.cc"
 )
 set( VIDEO_ANNOTATOR_RESOURCES
   "video_annotator.rc"
