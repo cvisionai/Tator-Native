@@ -3,6 +3,7 @@ file( GLOB IMAGE_ANNOTATOR_SOURCES "*.cc" )
 
 include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../common"
   "../common"
 )
 

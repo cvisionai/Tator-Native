@@ -12,6 +12,7 @@ set( VIDEO_ANNOTATOR_RESOURCES
 
 include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../common"
   "../common"
 )
 
