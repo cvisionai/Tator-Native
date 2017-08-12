@@ -4,6 +4,12 @@ project( fish_annotator )
 
 set( CMAKE_BUILD_TYPE Release )
 
+option( BUILD_TESTS           "Whether to build unit tests."            OFF )
+option( BUILD_DOCS            "Whether to enable documentation target." ON  )
+option( BUILD_VIDEO_ANNOTATOR "Whether to build video annotator."       ON  )
+option( BUILD_IMAGE_ANNOTATOR "Whether to build image annotator."       ON  )
+option( BUILD_DB_UPLOADER     "Whether to build database uploader."     OFF )
+
 if( MSVC )
   set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /MP" )
 elseif( APPLE )
