@@ -315,8 +315,8 @@ private:
 
   /// @brief chooses color for annotation.
   ///
-  /// @param type Type of the annotation.
-  QColor getColor();
+  /// @param id Track ID.
+  QColor getColor(qint64 id);
 };
 
 }} // namespace fish_annotator::video_annotator

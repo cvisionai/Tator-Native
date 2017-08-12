@@ -601,7 +601,7 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
     fish_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
     kBox, 
-    getColor()));
+    getColor(fish_id_)));
   drawAnnotations();
 }
 
@@ -611,7 +611,7 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
     fish_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
     kLine, 
-    getColor()));
+    getColor(fish_id_)));
   drawAnnotations();
 }
 
@@ -621,12 +621,12 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
     fish_id_,
     Rect(dot.x(), dot.y(), 0, 0), 
     kDot, 
-    getColor()));
+    getColor(fish_id_)));
   drawAnnotations();
 }
 
-QColor MainWindow::getColor() {
-  auto species = annotation_->findTrack(fish_id_)->getSpecies();
+QColor MainWindow::getColor(qint64 id) {
+  auto species = annotation_->findTrack(id)->getSpecies();
   QString name = species.c_str();
   return color_map_[name.toLower()];
 }
@@ -699,7 +699,7 @@ void MainWindow::drawAnnotations() {
             ann->id_, 
             ann, 
             pixmap_item_->pixmap().toImage().rect(), 
-            getColor());
+            getColor(ann->id_));
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);
