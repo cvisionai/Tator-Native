@@ -26,14 +26,6 @@ if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
     )
 endif()
 
-# FishAnnotator subdirectories
-set( FISHDET_SRC_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set( FISHDET_INCLUDE_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set( FISHDET_CMAKE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
-set( FISHDET_TEST_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/test" )
-set( FISHDET_DOC_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/doc" )
-set( FISHDET_RES_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/res" )
-
 # Set the cmake module path
 set( CMAKE_MODULE_PATH ${FISHDET_CMAKE_DIR} )
 
@@ -68,17 +60,21 @@ include_directories(
 enable_testing()
 
 if( WIN32 )
-  set( FISHDET_ICON "${FISHDET_RES_DIR}/icons/cvision\\\\cvision_no_text.ico" )
-  set( FISHDET_BMP "${FISHDET_RES_DIR}/icons/cvision\\\\cvision_no_text.bmp" )
+  set( FISHDET_ICON "res/icons/cvision\\\\cvision_no_text.ico" )
+  set( FISHDET_BMP "res/icons/cvision\\\\cvision_no_text.bmp" )
 elseif( APPLE )
   set( FISHDET_ICON "cvision_no_text.icns" )
-  set( FISHDET_ICON_FULL "${FISHDET_RES_DIR}/icons/cvision/cvision_no_text.icns" )
+  set( FISHDET_ICON_FULL "res/icons/cvision/cvision_no_text.icns" )
 endif()
-set( FISHDET_RES_FILE "${FISHDET_RES_DIR}/resources.qrc" )
+set( FISHDET_RES_FILE "res/resources.qrc" )
 
-add_subdirectory( ${FISHDET_SRC_DIR} )
-add_subdirectory( ${FISHDET_TEST_DIR} )
-add_subdirectory( ${FISHDET_DOC_DIR} )
+add_subdirectory( "src" )
+if( ${BUILD_TESTS} )
+  add_subdirectory( "test" )
+endif()
+if( ${BUILD_DOCS} )
+  add_subdirectory( "doc" )
+endif()
 
 # Configure CPack
 set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
