@@ -53,8 +53,9 @@ void SpeciesControls::insertSpeciesWidget(const Species &species) {
         SIGNAL(individualAdded(std::string, std::string)),
         this, SIGNAL(individualAdded(std::string, std::string)));
     QObject::connect(
-        species_widgets_.back().get(), SIGNAL(colorChanged()),
-        this, SLOT(onColorChanged()));
+        species_widgets_.back().get(), &SpeciesWidget::colorChanged,
+        this, &SpeciesControls::onColorChanged);
+    onColorChanged();
   }
 }
 
