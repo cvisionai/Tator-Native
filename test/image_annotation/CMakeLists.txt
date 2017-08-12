@@ -3,8 +3,10 @@ set( IMAGE_ANNOTATION_SOURCES
   "../../src/image_annotator/image_annotation.cc"
   )
 include_directories( 
-  "../../include/fish_annotator/common"
-  "../../include/fish_annotator/image_annotator"
+  "../../src/common"
+  "../../src/image_annotator"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common"
   )
 if( WIN32 )
   add_executable( test_image_annotation WIN32 

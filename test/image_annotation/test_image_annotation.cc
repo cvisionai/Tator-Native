@@ -1,8 +1,8 @@
 #include <boost/filesystem.hpp>
 
-#include "fish_annotator/common/rect.h"
-#include "fish_annotator/common/annotation_scene.h"
-#include "fish_annotator/image_annotator/image_annotation.h"
+#include "rect.h"
+#include "annotation_scene.h"
+#include "image_annotation.h"
 #include "test_image_annotation.h"
 
 #ifdef _WIN32

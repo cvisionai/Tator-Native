@@ -3,8 +3,10 @@ set( VIDEO_ANNOTATION_SOURCES
   "../../src/video_annotator/video_annotation.cc"
   )
 include_directories( 
-  "../../include/fish_annotator/common"
-  "../../include/fish_annotator/video_annotator"
+  "../../src/common"
+  "../../src/video_annotator"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common"
   )
 if( WIN32 )
   add_executable( test_video_annotation WIN32 

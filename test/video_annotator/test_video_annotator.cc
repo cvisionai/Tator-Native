@@ -1,7 +1,7 @@
 #include <QtPlugin>
 
 #include "test_video_annotator.h"
-#include "fish_annotator/video_annotator/mainwindow.h"
+#include "mainwindow.h"
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)

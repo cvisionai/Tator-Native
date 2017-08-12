@@ -6,6 +6,12 @@ set( VIDEO_ANNOTATOR_SOURCES
   "../../src/video_annotator/player.cc"
   "../../src/video_annotator/reassign_dialog.cc"
   )
+include_directories(
+  "../../src/common"
+  "../../src/video_annotator"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common"
+  )
 if( WIN32 )
   add_executable( test_video_annotator WIN32 
     ${TEST_VIDEO_ANNOTATOR_SOURCES} 

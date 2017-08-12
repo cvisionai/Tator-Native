@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>199</width>
-    <height>40</height>
+    <height>48</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -24,7 +24,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>-1</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -47,7 +47,7 @@
       <widget class="QLabel" name="name">
        <property name="font">
         <font>
-         <pointsize>9</pointsize>
+         <pointsize>12</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -78,7 +78,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>10</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -90,7 +90,7 @@
         <widget class="QLabel" name="count">
          <property name="font">
           <font>
-           <pointsize>10</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
@@ -138,6 +138,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>30</width>
@@ -160,7 +166,7 @@
      <property name="minimumSize">
       <size>
        <width>20</width>
-       <height>0</height>
+       <height>30</height>
       </size>
      </property>
      <property name="maximumSize">
