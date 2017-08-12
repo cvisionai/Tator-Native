@@ -6,6 +6,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include <QGraphicsRectItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
@@ -73,6 +74,11 @@ protected:
   ///
   /// @param event Pointer to Qt mouse event.
   void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override final;
+
+  /// @brief Cancels drawing mode if escape is pressed.
+  ///
+  /// @param event Pointer to Qt key event.
+  void keyPressEvent(QKeyEvent *event) override final;
 private:
   /// @brief Current drawing mode.
   Mode mode_;

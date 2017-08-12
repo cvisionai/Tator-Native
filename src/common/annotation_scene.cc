@@ -153,6 +153,14 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   QGraphicsScene::mouseReleaseEvent(event);
 }
 
+void AnnotationScene::keyPressEvent(QKeyEvent *event) {
+  if(mode_ == kDraw && event->key() == Qt::Key_Escape) {
+    mode_ = kSelect;
+    QApplication::restoreOverrideCursor();
+  }
+  QGraphicsScene::keyPressEvent(event);
+}
+
 void AnnotationScene::makeItemsControllable(bool controllable) {
   foreach(QGraphicsItem *item, items()) {
     item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
