@@ -4,13 +4,13 @@ Windows build instructions
 Static libraries
 ----------------
 
-To simplify distribution, Boost, Qt and OpenCV must be built as static 
+To simplify distribution, Boost and Qt must be built as static 
 libraries on Windows.  It is recommended to download compiled Boost 
 binaries for your compiler if they are available, which typically include 
-static libraries.  Most likely Qt and OpenCV will need to be built from 
+static libraries.  Most likely Qt will need to be built from 
 scratch; see detailed instructions below.
 
-**IMPORTANT: Make sure that you build Qt and OpenCV with the same compiler you
+**IMPORTANT: Make sure that you build Qt with the same compiler you
 will use for building the application (e.g. all MSVC 32 bit, or all MSVC 64 bit).**
 
 Building static Qt on Windows
@@ -64,35 +64,6 @@ nmake
 
 The Qt5 static libraries should now be built.
 
-Building static OpenCV on Windows
----------------------------------
-
-1\. Clone the [OpenCV repository][OpenCVRepo] from github.
-
-2\. By default, the master branch will be checked out.  Change the version
-    to v3.2.0:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-git checkout v3.2.0
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-3\. Navigate to the top level opencv directory and create a subdirectory
-    called build.
-
-4\. From a Visual Studio command prompt, navigate to the build directory
-    and type:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-cmake -DBUILD_SHARED_LIBS=OFF ..
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-5\. Type:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-cmake --build . --target INSTALL --config Release
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The OpenCV static libraries should now be built.
-
 Boost Binaries on Windows
 ------------------------------------
 1\. Download the prebuilt binaries for [Boost 1.62][BoostBinaries].
@@ -134,8 +105,6 @@ For example,
     set( CMAKE_PREFIX_PATH "D:/Projects/qt5/qtbase")
     set( BOOST_ROOT "D:/Projects/boost_1_62_0"  )
     set( BOOST_LIBRARYDIR "D:/Projects/boost_1_62_0/lib64-msvc-14.0" )
-    set( CMAKE_CL_64 TRUE)
-    set( OpenCV_DIR "D:/Projects/opencv/build/install")
     set( FFMPEG_LIBRARY_DIR "D:/Projects/ffmpeg/lib")
     set( FFMPEG_INCLUDE_DIR "D:/Projects/ffmpeg/include")
 
@@ -165,7 +134,6 @@ cmake --build . --target INSTALL --config Release
 [zlib]: https://github.com/madler/zlib
 [libjpeg]: https://github.com/LuaDist/libjpeg
 [libpng]: https://github.com/glennrp/libpng
-[OpenCVRepo]: https://github.com/opencv/opencv
 [BoostBinaries]: https://sourceforge.net/projects/boost/files/boost-binaries/1.62.0/
 [FFMPEGBinaries]: https://ffmpeg.zeranoe.com/builds/
 
