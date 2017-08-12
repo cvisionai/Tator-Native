@@ -26,9 +26,6 @@ if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
     )
 endif()
 
-# Set the cmake module path
-set( CMAKE_MODULE_PATH ${FISHDET_CMAKE_DIR} )
-
 # Do Qt specific settings
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
@@ -36,7 +33,7 @@ set( CMAKE_AUTOUIC ON )
 set( CMAKE_AUTORCC ON )
 
 # Generate the library hints file if necessary
-set( HINTS_PATH "${FISHDET_CMAKE_DIR}/FishDetFindLibsHints.cmake" )
+set( HINTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FishDetFindLibsHints.cmake" )
 if( EXISTS "${HINTS_PATH}" )
   message( STATUS "Found library hints file at ${HINTS_PATH}" )
 else()
@@ -53,20 +50,25 @@ include( "cmake/FishDetFindLibs.cmake" )
 include_directories(
   ${Qt5Widgets_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
-  ${FISHDET_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-enable_testing()
+if(${BUILD_TESTS})
+  enable_testing()
+endif()
 
 if( WIN32 )
-  set( FISHDET_ICON "res/icons/cvision\\\\cvision_no_text.ico" )
-  set( FISHDET_BMP "res/icons/cvision\\\\cvision_no_text.bmp" )
+  set( FISHDET_ICON 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision\\\\cvision_no_text.ico" )
+  set( FISHDET_BMP 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision\\\\cvision_no_text.bmp" )
 elseif( APPLE )
   set( FISHDET_ICON "cvision_no_text.icns" )
-  set( FISHDET_ICON_FULL "res/icons/cvision/cvision_no_text.icns" )
+  set( FISHDET_ICON_FULL 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision/cvision_no_text.icns" )
 endif()
-set( FISHDET_RES_FILE "res/resources.qrc" )
+set( FISHDET_RES_FILE 
+  "${CMAKE_CURRENT_SOURCE_DIR}/res/resources.qrc" )
 
 add_subdirectory( "src" )
 if( ${BUILD_TESTS} )
