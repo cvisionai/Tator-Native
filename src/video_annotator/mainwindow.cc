@@ -706,7 +706,8 @@ void MainWindow::drawAnnotations() {
     switch(ann->type_) {
       case kBox:
         box = new AnnotatedRegion<DetectionAnnotation>(
-            ann->id_, ann, pixmap_item_->pixmap().toImage().rect(),getColor(annotation_->findTrack(ann->id_)->getSpecies()));
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect(),
+            getColor(annotation_->findTrack(ann->id_)->getSpecies()));
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);
