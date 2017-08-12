@@ -39,15 +39,6 @@ set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_STATIC_RUNTIME ON )
 find_package( Boost REQUIRED COMPONENTS filesystem system )
 
-# --- OpenCV ---
-find_package( OpenCV REQUIRED )
-if( WIN32 )
-  file( GLOB_RECURSE OpenCV_SHARED_LIBS "${OpenCV_LIB_PATH}/../bin/*.dll" )
-endif()
-
-# --- OpenGL ---
-find_package( OpenGL REQUIRED )
-
 # --- Doxygen ---
 find_package( Doxygen )
 if( NOT DOXYGEN_FOUND )
