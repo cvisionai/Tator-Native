@@ -32,9 +32,15 @@ public:
   /// @brief Updates individual counts.
   void setCount(uint64_t count);
 
+  /// @brief Gets color used to represent this species.
+  QColor getColor();
+
 private slots:
   /// @brief Adds an individual of this species.
   void on_addIndividual_clicked();
+
+  /// @brief Changes the color used to represent this species.
+  void on_changeColor_clicked();
 
   /// @brief Adds an individual of this species and subspecies.
   void onSubspeciesClicked();
@@ -42,6 +48,9 @@ private slots:
 signals:
   /// @brief Signal for individual added.
   void individualAdded(std::string species, std::string subspecies);
+
+  /// @brief Signal for species color changed.
+  void colorChanged();
 
 private:
   /// @brief Widget loaded from ui file.
@@ -52,6 +61,12 @@ private:
 
   /// @brief Species used to construct this widget.
   Species species_;
+
+  /// @brief Color used to represent this species.
+  QColor color_;
+
+  /// @brief Updates button color.
+  void updateButtonColor();
 };
 
 } // namespace fish_annotator

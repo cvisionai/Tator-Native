@@ -15,18 +15,21 @@ DetectionAnnotation::DetectionAnnotation(
   uint64_t frame,
   uint64_t id,
   const Rect &rect,
-  enum AnnotationType type)
+  enum AnnotationType type,
+  QColor box_color)
   : frame_(frame)
   , id_(id)
   , area_(rect)
-  , type_(type) {
+  , type_(type)
+  , box_color_(box_color) {
 }
 
-DetectionAnnotation::DetectionAnnotation() 
+DetectionAnnotation::DetectionAnnotation()
   : frame_(0)
   , id_(0)
   , area_(0, 0, 0, 0)
-  , type_(kBox) {
+  , type_(kBox)
+  , box_color_(QColor(255,0,0)) {
 }
 
 bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
@@ -105,7 +108,7 @@ TrackAnnotation::TrackAnnotation(
 TrackAnnotation::TrackAnnotation()
   : id_(0)
   , species_()
-  , subspecies_() 
+  , subspecies_()
   , frame_added_(0)
   , count_label_(kIgnore) {
 }
@@ -123,6 +126,9 @@ bool TrackAnnotation::operator!=(const TrackAnnotation &rhs) const {
   return !operator==(rhs);
 }
 
+std::string TrackAnnotation::getSpecies() {
+  return species_;
+}
 std::string TrackAnnotation::write(double fps) const {
   std::string csv_row;
   double time_added = static_cast<double>(frame_added_) / fps;
@@ -165,14 +171,14 @@ void TrackAnnotation::read(const std::string &csv_row) {
   }
 }
 
-VideoAnnotation::VideoAnnotation() 
+VideoAnnotation::VideoAnnotation()
   : detection_list_()
   , track_list_()
   , detections_by_frame_()
   , detections_by_id_()
   , tracks_by_id_()
   , tracks_by_species_()
-  , tracks_by_frame_added_() 
+  , tracks_by_frame_added_()
   , degraded_by_frame_() {
 }
 
@@ -311,7 +317,7 @@ void VideoAnnotation::clear() {
   tracks_by_frame_added_.clear();
 }
 
-std::shared_ptr<DetectionAnnotation> 
+std::shared_ptr<DetectionAnnotation>
 VideoAnnotation::findDetection(uint64_t frame, uint64_t id) {
   auto range = detections_by_frame_.left.equal_range(frame);
   for(auto it = range.first; it != range.second; ++it) {
@@ -363,7 +369,7 @@ uint64_t VideoAnnotation::trackFirstFrame(uint64_t id) {
   if(it != tracks_by_id_.left.end()) {
     auto t = *(it->second);
     auto first_det = std::find_if(
-      detections_by_frame_.left.begin(), 
+      detections_by_frame_.left.begin(),
       detections_by_frame_.left.end(),
       [&t](const DetectionsByInteger::left_value_type &d) {
         return t->id_ == (*(d.second))->id_;
@@ -421,18 +427,18 @@ bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();
   auto it_rhs = rhs.tracks_by_id_.left.begin();
-  for(; 
-    it != tracks_by_id_.left.end() && 
-    it_rhs != rhs.tracks_by_id_.left.end(); 
+  for(;
+    it != tracks_by_id_.left.end() &&
+    it_rhs != rhs.tracks_by_id_.left.end();
     ++it, ++it_rhs) {
     if(**(it->second) != **(it_rhs->second)) return false;
   }
   if(detection_list_.size() != rhs.detection_list_.size()) return false;
   auto dit = detections_by_frame_.left.begin();
   auto dit_rhs = rhs.detections_by_frame_.left.begin();
-  for(; 
-    dit != detections_by_frame_.left.end() && 
-    dit_rhs != rhs.detections_by_frame_.left.end(); 
+  for(;
+    dit != detections_by_frame_.left.end() &&
+    dit_rhs != rhs.detections_by_frame_.left.end();
     ++dit, ++dit_rhs) {
     if(**(dit->second) != **(dit_rhs->second)) return false;
   }
@@ -560,4 +566,3 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
 }
 
 }} // namespace fish_annotator::video_annotator
-

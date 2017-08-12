@@ -21,7 +21,7 @@ enum Mode {
   kDraw
 };
 
-/// @brief Scene that implements special mouse event handlers for 
+/// @brief Scene that implements special mouse event handlers for
 ///        drawing annotations.
 class AnnotationScene : public QGraphicsScene {
   Q_OBJECT
@@ -101,4 +101,3 @@ private:
 } // namespace fish_annotator
 
 #endif // ANNOTATION_SCENE_H
-

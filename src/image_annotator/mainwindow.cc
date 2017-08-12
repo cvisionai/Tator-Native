@@ -44,8 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->videoWindowLayout->addWidget(view_.get());
   ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
-  QObject::connect(species_controls_.get(), 
-      SIGNAL(individualAdded(std::string, std::string)), 
+  QObject::connect(species_controls_.get(),
+      SIGNAL(individualAdded(std::string, std::string)),
       this, SLOT(addIndividual(std::string, std::string)));
   scene_->setToolWidget(annotation_widget_.get());
   QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
@@ -81,7 +81,7 @@ void MainWindow::on_prev_clicked() {
 }
 
 void MainWindow::on_loadImageDir_triggered() {
-  QString image_dir = QFileDialog::getExistingDirectory(this, 
+  QString image_dir = QFileDialog::getExistingDirectory(this,
     "Select an image directory.");
   if(!image_dir.isEmpty()) {
     onLoadDirectorySuccess(image_dir);
@@ -114,7 +114,7 @@ void MainWindow::on_imageSlider_valueChanged() {
     view_->show();
     ui_->fileNameValue->setText(filename.c_str());
     fs::path img_path(filename);
-    auto annotations = 
+    auto annotations =
       annotations_->getImageAnnotations(img_path.filename());
     for(auto annotation : annotations) {
     }
@@ -262,7 +262,7 @@ std::shared_ptr<ImageAnnotation> MainWindow::currentAnnotation() {
   if(image_files_.size() > 0 && ui_->imageSlider->isEnabled()) {
     auto id = ui_->idSelection->currentText();
     auto current_image = image_files_[ui_->imageSlider->value()];
-    auto annotations = 
+    auto annotations =
       annotations_->getImageAnnotations(current_image);
     for(auto annotation : annotations) {
       if(annotation->id_ == id.toInt()) {
@@ -305,7 +305,7 @@ void MainWindow::drawAnnotations() {
   QImage current(filename.c_str());
   if(!current.isNull()) {
     fs::path img_path(filename);
-    auto annotations = 
+    auto annotations =
       annotations_->getImageAnnotations(img_path.filename());
     for(auto annotation : annotations) {
       if(ui_->showAnnotations->isChecked()) {
@@ -315,7 +315,7 @@ void MainWindow::drawAnnotations() {
         switch(annotation->type_) {
           case kBox:
             box = new AnnotatedRegion<ImageAnnotation>(
-                  annotation->id_, annotation, current.rect());
+                  annotation->id_, annotation, current.rect(),QColor(255,0,0));
             scene_->addItem(box);
             current_annotations_.push_back(box);
             break;

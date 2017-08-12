@@ -39,7 +39,8 @@ struct DetectionAnnotation : public Serialization {
     uint64_t frame,
     uint64_t id,
     const Rect &rect,
-    enum AnnotationType type);
+    enum AnnotationType type,
+    QColor box_color);
 
   /// @brief Default constructor.
   DetectionAnnotation();
@@ -70,6 +71,7 @@ struct DetectionAnnotation : public Serialization {
   uint64_t id_; ///< ID of the individual.
   Rect area_; ///< Rectangle defining the annotation.
   enum AnnotationType type_; ///< Annotation type.
+  QColor box_color_; ///< Annotation color.
 };
 
 /// @brief List of detection annotations.
@@ -82,7 +84,7 @@ typedef std::list<std::shared_ptr<DetectionAnnotation>> DetectionList;
 /// @param lhs Left hand side argument.
 /// @param rhs Right hand side argument.
 inline bool operator<(
-  const DetectionList::iterator& lhs, 
+  const DetectionList::iterator& lhs,
   const DetectionList::iterator& rhs) {
   return &(*lhs) < &(*rhs);
 }
@@ -125,6 +127,11 @@ struct TrackAnnotation {
   /// @return Whether the object is not equal to rhs.
   bool operator!=(const TrackAnnotation &rhs) const;
 
+  /// @brief returns the species of the track.
+  ///
+  /// @return string containing species of track.
+  std::string getSpecies();
+
   /// @brief Writes to a string containing comma separated values.
   ///
   /// @param fps Frames per second of the video.
@@ -153,7 +160,7 @@ typedef std::list<std::shared_ptr<TrackAnnotation>> TrackList;
 /// @param lhs Left hand side argument.
 /// @param rhs Right hand side argument.
 inline bool operator<(
-  const TrackList::iterator& lhs, 
+  const TrackList::iterator& lhs,
   const TrackList::iterator& rhs) {
   return &(*lhs) < &(*rhs);
 }
@@ -232,7 +239,7 @@ public:
   /// @param frame Detection frame.
   /// @param id Track ID.
   /// @return Shared pointer to detection annotation, nullptr if not found.
-  std::shared_ptr<DetectionAnnotation> 
+  std::shared_ptr<DetectionAnnotation>
   findDetection(uint64_t frame, uint64_t id);
 
   /// @brief Find track for a given ID.
@@ -272,7 +279,7 @@ public:
 
   /// @brief Sets degraded state for a particular frame.
   ///
-  /// Subsequent frames have the same degraded state until another 
+  /// Subsequent frames have the same degraded state until another
   /// degraded state is inserted.
   ///
   /// @param frame Frame for which the degraded state is specified.
@@ -360,7 +367,7 @@ private:
   /// @brief Map between id and iterator to track annotations.
   TracksByUniqueInteger tracks_by_id_;
 
-  /// @brief Map between species/subspecies and iterator to track annotations. 
+  /// @brief Map between species/subspecies and iterator to track annotations.
   TracksByStringPair tracks_by_species_;
 
   /// @brief Map between frame added and iterator to track annotations.

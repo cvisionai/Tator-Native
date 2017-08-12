@@ -8,6 +8,7 @@
 #include <list>
 
 #include <QMenu>
+#include <QMap>
 
 #include "fish_annotator/common/species_widget.h"
 #include "../../src/common/ui_species_controls.h"
@@ -53,6 +54,10 @@ public:
   /// @param in_file Path to input species file.
   void loadSpeciesFile(const QString &in_file);
 
+public slots:
+  /// @brief Handles color change in a species widget.
+  void onColorChanged();
+
 private slots:
   /// @brief Brings up a dialog box to add a species.
   void on_addSpecies_clicked();
@@ -78,6 +83,9 @@ signals:
   /// @param species Species name.
   /// @param subspecies Subspecies name.
   void individualAdded(std::string species, std::string subspecies);
+
+  /// @brief Emits map between species name and color.
+  void colorChanged(QMap<QString, QColor>);
 
 private:
   /// @brief Widget loaded from ui file.

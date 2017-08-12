@@ -10,9 +10,12 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QColor>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QThread>
+#include <QMap>
 
 #include "fish_annotator/common/species_controls.h"
 #include "fish_annotator/common/annotation_widget.h"
@@ -56,6 +59,11 @@ public slots:
   /// @param species Species name of the new individual.
   /// @param subspecies Subspecies name of the new individual.
   void addIndividual(std::string species, std::string subspecies);
+
+  /// @brief Handles color change for a species.
+  ///
+  /// @param color_map Map between species names and colors.
+  void colorChanged(QMap<QString, QColor> color_map);
 
   /// @brief Handles player duration change.
   ///
@@ -103,6 +111,7 @@ public slots:
   ///
   /// @param dot Definition of the dot.
   void addDotAnnotation(const QPointF &dot);
+
 signals:
   /// @brief Requests play.
   void requestPlay();
@@ -214,11 +223,11 @@ private slots:
   /// @brief Updates the current fish to the specified ID.
   void on_goToFishVal_returnPressed();
 
-  /// @brief Adds a region for the current fish.  If a region already 
+  /// @brief Adds a region for the current fish.  If a region already
   ///        exists for this fish and frame, an error is raised.
   void on_addRegion_clicked();
 
-  /// @brief Removes a region for the current fish and frame.  If a 
+  /// @brief Removes a region for the current fish and frame.  If a
   ///        region does not exist an error is raised.
   void on_removeRegion_clicked();
 
@@ -286,6 +295,12 @@ private:
   /// @brief Annotation metadata.
   Metadata metadata_;
 
+  /// @brief Path to save images using Write Image
+  QString images_save_path_;
+
+  /// @brief Map of species names to colors.
+  QMap<QString, QColor> color_map_;
+
   /// @brief Updates counts of each species in species controls.
   void updateSpeciesCounts();
 
@@ -298,8 +313,10 @@ private:
   /// @brief Converts a frame number to a formatted time string.
   QString frameToTime(qint64 frame_number);
 
-  /// @brief Path to save images using Write Image
-  QString images_save_path_;
+  /// @brief chooses color for annotation.
+  ///
+  /// @param id Track ID.
+  QColor getColor(qint64 id);
 };
 
 }} // namespace fish_annotator::video_annotator
