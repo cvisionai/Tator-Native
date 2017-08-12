@@ -158,11 +158,6 @@ cmake --build . --target INSTALL --config Release
     desired, cmake can be invoked with the variable CMAKE_INSTALL_PREFIX
     set to the install directory.
 
-[Qt5]: https://www.qt.io/developers/
-[Boost]: http://www.boost.org
-[OpenCV]: http://opencv.org/
-[FFMPEG]: http://ffmpeg.org/
-[CMake]: https://cmake.org/
 [QtRepo]: https://github.com/qt/qt5
 [Perl]: https://www.perl.org/
 [Python]: https://www.python.org/

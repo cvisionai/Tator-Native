@@ -22,3 +22,9 @@ Detailed build instructions
 * [Build the source documentation](build_docs.md)
 * [Build an installer](build_installer.md)
 
+[Qt5]: https://www.qt.io/developers/
+[Boost]: http://www.boost.org
+[OpenCV]: http://opencv.org/
+[FFMPEG]: http://ffmpeg.org/
+[CMake]: https://cmake.org/
+
