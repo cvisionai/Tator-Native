@@ -10,8 +10,8 @@
 #include <QMenu>
 #include <QMap>
 
-#include "fish_annotator/common/species_widget.h"
-#include "../../src/common/ui_species_controls.h"
+#include "species_widget.h"
+#include "ui_species_controls.h"
 
 #ifndef NO_TESTING
 class TestImageAnnotator;

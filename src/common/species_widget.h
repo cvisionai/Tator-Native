@@ -9,8 +9,8 @@
 #include <QWidget>
 #include <QMenu>
 
-#include "fish_annotator/common/species.h"
-#include "../../src/common/ui_species_widget.h"
+#include "species.h"
+#include "ui_species_widget.h"
 
 namespace fish_annotator {
 

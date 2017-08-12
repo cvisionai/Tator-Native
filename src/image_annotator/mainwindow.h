@@ -14,12 +14,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 
-#include "fish_annotator/common/species_controls.h"
-#include "fish_annotator/common/annotation_widget.h"
-#include "fish_annotator/common/annotation_view.h"
-#include "fish_annotator/common/annotation_scene.h"
-#include "fish_annotator/common/metadata.h"
-#include "fish_annotator/image_annotator/image_annotation.h"
+#include "species_controls.h"
+#include "annotation_widget.h"
+#include "annotation_view.h"
+#include "annotation_scene.h"
+#include "metadata.h"
+#include "image_annotation.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING

@@ -1,9 +1,10 @@
-#include "fish_annotator/video_annotator/player.h"
 
 #include <QTime>
 #include <QCoreApplication>
 #include <QEventLoop>
 #include <QMutexLocker>
+
+#include "player.h"
 
 namespace fish_annotator { namespace video_annotator {
 
@@ -379,7 +380,7 @@ void Player::processWait(qint64 usec) {
   }
 }
 
-#include "../../include/fish_annotator/video_annotator/moc_player.cpp"
+#include "moc_player.cpp"
 
 }} // namespace fish_annotator::gui
 

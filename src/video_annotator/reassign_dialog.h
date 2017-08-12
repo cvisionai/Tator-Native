@@ -9,7 +9,7 @@
 #include <QWidget>
 #include <QDialog>
 
-#include "../../src/video_annotator/ui_reassign_dialog.h"
+#include "ui_reassign_dialog.h"
 
 namespace fish_annotator { namespace video_annotator {
 

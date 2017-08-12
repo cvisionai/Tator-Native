@@ -9,8 +9,8 @@
 #include <QWidget>
 #include <QDialog>
 
-#include "fish_annotator/common/metadata.h"
-#include "../../src/common/ui_metadata_dialog.h"
+#include "metadata.h"
+#include "ui_metadata_dialog.h"
 
 namespace fish_annotator {
 
