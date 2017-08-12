@@ -13,7 +13,7 @@
 Makefile*
 fishguibuild*
 ui_*
-build*
+/build*
 .DS_Store
 cmake/FishDetFindLibsHints.cmake
 doc/manual.md
