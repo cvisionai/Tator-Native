@@ -458,6 +458,7 @@ void MainWindow::on_addRegion_clicked() {
     handlePlayerError("Please add a fish before adding a region!");
   }
   else {
+    ui_->videoWindow->setFocus();
     scene_->setMode(kDraw);
   }
 }
