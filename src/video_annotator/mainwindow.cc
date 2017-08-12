@@ -35,7 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
   , native_rate_(0.0)
   , fish_id_(0)
   , current_annotations_()
-  , metadata_() {
+  , metadata_()
+  , color_map_() {
   ui_->setupUi(this);
   setWindowTitle("Video Annotator");
 #ifdef _WIN32
@@ -71,6 +72,8 @@ MainWindow::MainWindow(QWidget *parent)
   tabifyDockWidget(ui_->navigationDockWidget, ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
+  QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
+      this, &MainWindow::colorChanged);
   scene_->setToolWidget(annotation_widget_.get());
   QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
       this, &MainWindow::addBoxAnnotation);
@@ -514,6 +517,11 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
   drawAnnotations();
 }
 
+void MainWindow::colorChanged(QMap<QString, QColor> color_map) {
+  color_map_ = color_map;
+  drawAnnotations();
+}
+
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
@@ -592,7 +600,8 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
     last_position_,
     fish_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
-    kBox,getColor(annotation_->findTrack(fish_id_)->getSpecies())));
+    kBox, 
+    getColor()));
   drawAnnotations();
 }
 
@@ -601,7 +610,8 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
     last_position_,
     fish_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
-    kLine, QColor(255,0,0)));
+    kLine, 
+    getColor()));
   drawAnnotations();
 }
 
@@ -609,36 +619,16 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(dot.x(), dot.y(), 0, 0),
-    kDot, QColor(255,0,0)));
+    Rect(dot.x(), dot.y(), 0, 0), 
+    kDot, 
+    getColor()));
   drawAnnotations();
 }
 
-QColor MainWindow::getColor(std::string type) {
-  QColor color;
-  int type_int = 5;
-  if(type=="flat") type_int = 0;
-  if(type=="round") type_int = 1;
-  if(type=="other") type_int = 2;
-  if(type=="skate") type_int = 3;
-  switch (type_int) {
-    case 0:
-      color = QColor(228,182,82);
-      break;
-    case 1:
-      color = QColor(93,145,85);
-      break;
-    case 2:
-      color = QColor(28,89,89);
-      break;
-    case 3:
-      color = QColor(33,32,45);
-      break;
-    default:
-      color = QColor(255,255,255);
-      break;
-  }
-  return color;
+QColor MainWindow::getColor() {
+  auto species = annotation_->findTrack(fish_id_)->getSpecies();
+  QString name = species.c_str();
+  return color_map_[name.toLower()];
 }
 
 void MainWindow::updateSpeciesCounts() {
@@ -706,8 +696,10 @@ void MainWindow::drawAnnotations() {
     switch(ann->type_) {
       case kBox:
         box = new AnnotatedRegion<DetectionAnnotation>(
-            ann->id_, ann, pixmap_item_->pixmap().toImage().rect(),
-            getColor(annotation_->findTrack(ann->id_)->getSpecies()));
+            ann->id_, 
+            ann, 
+            pixmap_item_->pixmap().toImage().rect(), 
+            getColor());
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);
