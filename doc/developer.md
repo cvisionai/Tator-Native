@@ -11,6 +11,8 @@ coding practices and naming conventions.
 
 Running unit tests
 ------------------
+When running cmake, the option BUILD_TESTS must be enabled.
+
 After CMake has been run the ALL_BUILD or INSTALL target has been built,
 unit tests can be run by typing:
 
