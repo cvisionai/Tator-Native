@@ -17,12 +17,12 @@
 #include <QThread>
 #include <QMap>
 
-#include "fish_annotator/common/species_controls.h"
-#include "fish_annotator/common/annotation_widget.h"
-#include "fish_annotator/common/annotation_scene.h"
-#include "fish_annotator/common/metadata.h"
-#include "fish_annotator/video_annotator/video_annotation.h"
-#include "fish_annotator/video_annotator/player.h"
+#include "species_controls.h"
+#include "annotation_widget.h"
+#include "annotation_scene.h"
+#include "metadata.h"
+#include "video_annotation.h"
+#include "player.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING

@@ -4,7 +4,7 @@
 #include <QProgressDialog>
 #include <QMessageBox>
 
-#include "fish_annotator/video_annotator/video_annotation.h"
+#include "video_annotation.h"
 
 namespace fish_annotator { namespace video_annotator {
 

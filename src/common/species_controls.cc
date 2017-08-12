@@ -1,8 +1,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/common/species_controls.h"
+#include "species_dialog.h"
+#include "species_controls.h"
 #include "ui_species_controls.h"
 
 namespace fish_annotator {
@@ -202,7 +202,7 @@ void SpeciesControls::setCount(uint64_t count, const std::string &species) {
   }
 }
 
-#include "../../include/fish_annotator/common/moc_species_controls.cpp"
+#include "moc_species_controls.cpp"
 
 } // namespace fish_annotator
 

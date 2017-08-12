@@ -1,4 +1,4 @@
-#include "fish_annotator/common/rect.h"
+#include "rect.h"
 
 namespace fish_annotator {
 

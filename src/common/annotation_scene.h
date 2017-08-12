@@ -11,7 +11,7 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
 
-#include "fish_annotator/common/annotation_widget.h"
+#include "annotation_widget.h"
 
 namespace fish_annotator {
 

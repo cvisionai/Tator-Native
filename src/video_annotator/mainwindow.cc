@@ -2,13 +2,13 @@
 #include <boost/filesystem.hpp>
 #include <QtMath>
 #include <QTime>
-#include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/common/metadata_dialog.h"
-#include "fish_annotator/common/annotatedregion.h"
-#include "fish_annotator/common/annotated_line.h"
-#include "fish_annotator/common/annotated_dot.h"
-#include "fish_annotator/video_annotator/reassign_dialog.h"
-#include "fish_annotator/video_annotator/mainwindow.h"
+#include "species_dialog.h"
+#include "metadata_dialog.h"
+#include "annotatedregion.h"
+#include "annotated_line.h"
+#include "annotated_dot.h"
+#include "reassign_dialog.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace video_annotator {
@@ -757,6 +757,6 @@ QString MainWindow::frameToTime(qint64 frame_number) {
       .arg(QString::number(frame_number));
 }
 
-#include "../../include/fish_annotator/video_annotator/moc_mainwindow.cpp"
+#include "moc_mainwindow.cpp"
 
 }} // namespace fish_annotator::video_annotator

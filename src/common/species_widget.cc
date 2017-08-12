@@ -1,6 +1,6 @@
 #include <QColorDialog>
 
-#include "fish_annotator/common/species_widget.h"
+#include "species_widget.h"
 #include "ui_species_widget.h"
 
 namespace fish_annotator {
@@ -78,6 +78,6 @@ void SpeciesWidget::updateButtonColor() {
   emit colorChanged();
 }
 
-#include "../../include/fish_annotator/common/moc_species_widget.cpp"
+#include "moc_species_widget.cpp"
 
 } // namespace fish_annotator

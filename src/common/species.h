@@ -10,7 +10,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "fish_annotator/common/serialization.h"
+#include "serialization.h"
 
 namespace fish_annotator {
 

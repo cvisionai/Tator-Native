@@ -6,8 +6,8 @@
 
 #include <memory>
 
-#include "fish_annotator/common/annotation_widget.h"
-#include "../../src/common/ui_annotation_widget.h"
+#include "annotation_widget.h"
+#include "ui_annotation_widget.h"
 
 namespace fish_annotator {
 

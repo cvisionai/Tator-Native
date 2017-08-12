@@ -2,7 +2,7 @@
 
 #include <QProgressDialog>
 
-#include "fish_annotator/image_annotator/image_annotation.h"
+#include "image_annotation.h"
 
 namespace fish_annotator { namespace image_annotator {
 

@@ -1,4 +1,4 @@
-#include "fish_annotator/common/species_dialog.h"
+#include "species_dialog.h"
 #include "ui_species_dialog.h"
 
 namespace fish_annotator {
@@ -49,6 +49,6 @@ void SpeciesDialog::setSpecies(const Species &species) {
   }
 }
 
-#include "../../include/fish_annotator/common/moc_species_dialog.cpp"
+#include "moc_species_dialog.cpp"
 
 } // namespace fish_annotator

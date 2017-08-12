@@ -1,6 +1,6 @@
 #include <QMessageBox>
 
-#include "fish_annotator/video_annotator/reassign_dialog.h"
+#include "reassign_dialog.h"
 #include "ui_reassign_dialog.h"
 
 namespace fish_annotator { namespace video_annotator {
@@ -108,6 +108,6 @@ Reassignment ReassignDialog::getReassignment() {
   return reassign_;
 }
 
-#include "../../include/fish_annotator/video_annotator/moc_reassign_dialog.cpp"
+#include "moc_reassign_dialog.cpp"
 
 }} // namespace fish_annotator::video_annotator

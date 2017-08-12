@@ -3,12 +3,12 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/common/metadata_dialog.h"
-#include "fish_annotator/common/annotatedregion.h"
-#include "fish_annotator/common/annotated_line.h"
-#include "fish_annotator/common/annotated_dot.h"
-#include "fish_annotator/image_annotator/mainwindow.h"
+#include "species_dialog.h"
+#include "metadata_dialog.h"
+#include "annotatedregion.h"
+#include "annotated_line.h"
+#include "annotated_dot.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace image_annotator {
@@ -354,6 +354,6 @@ void MainWindow::updateSpeciesCounts() {
   }
 }
 
-#include "../../include/fish_annotator/image_annotator/moc_mainwindow.cpp"
+#include "moc_mainwindow.cpp"
 
 }} // namespace fish_annotator::image_annotator

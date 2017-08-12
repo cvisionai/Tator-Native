@@ -1,6 +1,6 @@
 #include <boost/algorithm/string.hpp>
 
-#include "fish_annotator/common/species.h"
+#include "species.h"
 
 namespace fish_annotator {
 

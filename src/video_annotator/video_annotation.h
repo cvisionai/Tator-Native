@@ -15,10 +15,10 @@
 #include <boost/bimap/multiset_of.hpp>
 #include <boost/filesystem.hpp>
 
-#include "fish_annotator/common/serialization.h"
-#include "fish_annotator/common/rect.h"
-#include "fish_annotator/common/species.h"
-#include "fish_annotator/common/annotation_scene.h"
+#include "serialization.h"
+#include "rect.h"
+#include "species.h"
+#include "annotation_scene.h"
 
 #ifndef NO_TESTING
 class TestVideoAnnotation;

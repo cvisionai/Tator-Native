@@ -1,5 +1,5 @@
 #include "test_species.h"
-#include "fish_annotator/common/species.h"
+#include "species.h"
 
 void TestSpecies::testSerialize() {
   fish_annotator::Species dog("Dog");

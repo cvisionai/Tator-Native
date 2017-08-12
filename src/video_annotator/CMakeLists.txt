@@ -10,6 +10,12 @@ set( VIDEO_ANNOTATOR_RESOURCES
   "video_annotator.rc"
 )
 
+include_directories(
+  "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../common"
+  "../common"
+)
+
 # Add video annotator executable
 if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )
