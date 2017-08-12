@@ -6,12 +6,11 @@ Dependencies
 
 FishAnnotator uses the following 3rd party libraries:
 
-* [Qt5][Qt5]
-* [Boost][Boost]
-* [OpenCV][OpenCV]
-* [FFMPEG][FFMPEG]
+* [Qt5][Qt5] 5.8.0
+* [Boost][Boost] 1.62
+* [FFMPEG][FFMPEG] 3.3.2
 
-[CMake][CMake] is also required to build.
+[CMake][CMake] 3.5.1+ is also required to build.
 
 Detailed build instructions
 ---------------------------
@@ -24,7 +23,6 @@ Detailed build instructions
 
 [Qt5]: https://www.qt.io/developers/
 [Boost]: http://www.boost.org
-[OpenCV]: http://opencv.org/
 [FFMPEG]: http://ffmpeg.org/
 [CMake]: https://cmake.org/
 

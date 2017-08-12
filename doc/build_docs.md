@@ -4,6 +4,8 @@ Building documentation
 Building the documentation requires installing [doxygen][doxysite] and
 [LaTeX][latexsite].
 
+When cmake is run, the option BUILD_DOCS must be enabled.
+
 After CMake has been run, documentation can be built by typing:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}

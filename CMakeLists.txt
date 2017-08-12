@@ -1,8 +1,15 @@
-cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.5.1 FATAL_ERROR )
 
 project( fish_annotator )
 
 set( CMAKE_BUILD_TYPE Release )
+
+option( BUILD_TESTS           "Whether to build unit tests."            OFF )
+option( BUILD_DOCS            "Whether to enable documentation target." ON  )
+option( BUILD_VIDEO_ANNOTATOR "Whether to build video annotator."       ON  )
+option( BUILD_IMAGE_ANNOTATOR "Whether to build image annotator."       ON  )
+option( BUILD_DB_UPLOADER     "Whether to build database uploader."     OFF )
+option( BUILD_INSTALLER       "Whether to build cpack target."          OFF )
 
 if( MSVC )
   set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /MP" )
@@ -20,17 +27,6 @@ if( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
     )
 endif()
 
-# FishAnnotator subdirectories
-set( FISHDET_SRC_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set( FISHDET_INCLUDE_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set( FISHDET_CMAKE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
-set( FISHDET_TEST_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/test" )
-set( FISHDET_DOC_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/doc" )
-set( FISHDET_RES_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/res" )
-
-# Set the cmake module path
-set( CMAKE_MODULE_PATH ${FISHDET_CMAKE_DIR} )
-
 # Do Qt specific settings
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
@@ -38,7 +34,7 @@ set( CMAKE_AUTOUIC ON )
 set( CMAKE_AUTORCC ON )
 
 # Generate the library hints file if necessary
-set( HINTS_PATH "${FISHDET_CMAKE_DIR}/FishDetFindLibsHints.cmake" )
+set( HINTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FishDetFindLibsHints.cmake" )
 if( EXISTS "${HINTS_PATH}" )
   message( STATUS "Found library hints file at ${HINTS_PATH}" )
 else()
@@ -55,66 +51,77 @@ include( "cmake/FishDetFindLibs.cmake" )
 include_directories(
   ${Qt5Widgets_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
-  ${FISHDET_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-enable_testing()
+if(${BUILD_TESTS})
+  enable_testing()
+endif()
 
 if( WIN32 )
-  set( FISHDET_ICON "${FISHDET_RES_DIR}/icons/cvision\\\\cvision_no_text.ico" )
-  set( FISHDET_BMP "${FISHDET_RES_DIR}/icons/cvision\\\\cvision_no_text.bmp" )
+  set( FISHDET_ICON 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision\\\\cvision_no_text.ico" )
+  set( FISHDET_BMP 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision\\\\cvision_no_text.bmp" )
 elseif( APPLE )
   set( FISHDET_ICON "cvision_no_text.icns" )
-  set( FISHDET_ICON_FULL "${FISHDET_RES_DIR}/icons/cvision/cvision_no_text.icns" )
+  set( FISHDET_ICON_FULL 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision/cvision_no_text.icns" )
 endif()
-set( FISHDET_RES_FILE "${FISHDET_RES_DIR}/resources.qrc" )
+set( FISHDET_RES_FILE 
+  "${CMAKE_CURRENT_SOURCE_DIR}/res/resources.qrc" )
 
-add_subdirectory( ${FISHDET_SRC_DIR} )
-add_subdirectory( ${FISHDET_TEST_DIR} )
-add_subdirectory( ${FISHDET_DOC_DIR} )
+add_subdirectory( "src" )
+if( ${BUILD_TESTS} )
+  add_subdirectory( "test" )
+endif()
+if( ${BUILD_DOCS} )
+  add_subdirectory( "doc" )
+endif()
 
 # Configure CPack
-set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
-include( InstallRequiredSystemLibraries )
-set( CPACK_PACKAGE_NAME "FishAnnotator" )
-set( CPACK_PACKAGE_DESCRIPTION_SUMMARY 
-     "An application for assisting estimation of fish populations." )
-set( CPACK_PACKAGE_VENDOR "CVision Consulting LLC" )
-set( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
-set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md" )
-set( CPACK_PACKAGE_VERSION "1.0.0" )
-set( CPACK_PACKAGE_VERSION_MAJOR "1" )
-set( CPACK_PACKAGE_VERSION_MINOR "0" )
-set( CPACK_PACKAGE_VERSION_PATCH "0" )
-set( CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME} )
-if( WIN32 )
-  set( CPACK_GENERATOR "NSIS" )
-  set( CPACK_NSIS_MUI_ICON ${FISHDET_ICON} )
-  set( CPACK_NSIS_MUI_HEADERIMAGE_BITMAP ${FISHDET_ICON} )
-  set( CPACK_NSIS_MUI_HEADERIMAGE_RIGHT ON )
-  set( CPACK_NSIS_MUI_UNIICON ${FISHDET_ICON} )
-  set( CPACK_NSIS_MUI_UNIHEADERIMAGE_BITMAP ${FISHDET_ICON} )
-  set( CPACK_NSIS_MUI_UNIHEADERIMAGE_RIGHT ON )
-  set( CPACK_NSIS_INSTALLED_ICON_NAME ${FISHDET_ICON} )
-  set( CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME} )
-  set( CPACK_NSIS_CONTACT "benjamin.woodward@cvisionconsulting.com" )
-  set( CPACK_NSIS_MODIFY_PATH ON )
-  set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
-  set( CPACK_CREATE_DESKTOP_LINKS video_annotator video_slicer image_annotator Uninstall)
-elseif( APPLE )
-  set( CPACK_GENERATOR "DragNDrop" )
-elseif( UNIX )
-  set( CPACK_GENERATOR "STGZ" )
-  set( CPACK_SOURCE_STRIP_FILES "" )
-else()
-  message( FATAL_ERROR "Unsupported operating system." )
+if( ${BUILD_INSTALLER} )
+  set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
+  include( InstallRequiredSystemLibraries )
+  set( CPACK_PACKAGE_NAME "FishAnnotator" )
+  set( CPACK_PACKAGE_DESCRIPTION_SUMMARY 
+       "An application for assisting estimation of fish populations." )
+  set( CPACK_PACKAGE_VENDOR "CVision Consulting LLC" )
+  set( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
+  set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md" )
+  set( CPACK_PACKAGE_VERSION "1.0.0" )
+  set( CPACK_PACKAGE_VERSION_MAJOR "1" )
+  set( CPACK_PACKAGE_VERSION_MINOR "0" )
+  set( CPACK_PACKAGE_VERSION_PATCH "0" )
+  set( CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME} )
+  if( WIN32 )
+    set( CPACK_GENERATOR "NSIS" )
+    set( CPACK_NSIS_MUI_ICON ${FISHDET_ICON} )
+    set( CPACK_NSIS_MUI_HEADERIMAGE_BITMAP ${FISHDET_ICON} )
+    set( CPACK_NSIS_MUI_HEADERIMAGE_RIGHT ON )
+    set( CPACK_NSIS_MUI_UNIICON ${FISHDET_ICON} )
+    set( CPACK_NSIS_MUI_UNIHEADERIMAGE_BITMAP ${FISHDET_ICON} )
+    set( CPACK_NSIS_MUI_UNIHEADERIMAGE_RIGHT ON )
+    set( CPACK_NSIS_INSTALLED_ICON_NAME ${FISHDET_ICON} )
+    set( CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME} )
+    set( CPACK_NSIS_CONTACT "benjamin.woodward@cvisionconsulting.com" )
+    set( CPACK_NSIS_MODIFY_PATH ON )
+    set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
+    set( CPACK_CREATE_DESKTOP_LINKS video_annotator video_slicer image_annotator Uninstall)
+  elseif( APPLE )
+    set( CPACK_GENERATOR "DragNDrop" )
+  elseif( UNIX )
+    set( CPACK_GENERATOR "STGZ" )
+    set( CPACK_SOURCE_STRIP_FILES "" )
+  else()
+    message( FATAL_ERROR "Unsupported operating system." )
+  endif()
+  set( CPACK_PACKAGE_EXECUTABLES 
+    video_annotator "Video Annotator" 
+    video_slicer "Video Slicer" 
+    image_annotator "Image Annotator" 
+    uninstall "Uninstall" 
+    )
+  include( CPack )
 endif()
-set( CPACK_PACKAGE_EXECUTABLES 
-  video_annotator "Video Annotator" 
-  video_slicer "Video Slicer" 
-  image_annotator "Image Annotator" 
-  uninstall "Uninstall" 
-  )
-include( CPack )
 
