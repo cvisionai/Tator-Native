@@ -103,6 +103,8 @@ TrackAnnotation::TrackAnnotation(
   , subspecies_(subspecies)
   , frame_added_(frame_added)
   , count_label_(count_label) {
+  boost::algorithm::to_lower(species_);
+  boost::algorithm::to_lower(subspecies_);
 }
 
 TrackAnnotation::TrackAnnotation()
@@ -156,7 +158,9 @@ void TrackAnnotation::read(const std::string &csv_row) {
   }
   id_ = std::stoull(vals[4]);
   species_ = vals[5];
+  boost::algorithm::to_lower(species_);
   subspecies_ = vals[6];
+  boost::algorithm::to_lower(subspecies_);
   frame_added_ = std::stoull(vals[7]);
   if(vals.size() > 9) {
     if(vals[9].find("Ignore") != std::string::npos) {

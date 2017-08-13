@@ -1,4 +1,5 @@
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <QProgressDialog>
 
@@ -21,6 +22,8 @@ ImageAnnotation::ImageAnnotation(
   , id_(id)
   , area_(rect)
   , type_(type) {
+  boost::algorithm::to_lower(species_);
+  boost::algorithm::to_lower(subspecies_);
 }
 
 ImageAnnotation::ImageAnnotation()
@@ -104,7 +107,9 @@ void ImageAnnotation::write_csv(std::ofstream &csv) const {
 void ImageAnnotation::read(const pt::ptree &tree) {
   image_file_ = tree.get<std::string>("image_file");
   species_ = tree.get<std::string>("species");
+  boost::algorithm::to_lower(species_);
   subspecies_ = tree.get<std::string>("subspecies");
+  boost::algorithm::to_lower(subspecies_);
   id_ = tree.get<uint64_t>("id");
   uint64_t x = tree.get<uint64_t>("x");
   uint64_t y = tree.get<uint64_t>("y");
