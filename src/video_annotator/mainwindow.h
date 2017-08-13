@@ -327,10 +327,15 @@ private:
   /// @brief Converts a frame number to a formatted time string.
   QString frameToTime(qint64 frame_number);
 
-  /// @brief chooses color for annotation.
+  /// @brief Retrieves color for annotation.
   ///
   /// @param id Track ID.
   QColor getColor(qint64 id);
+
+  /// @brief Retrieves species for annotation.
+  ///
+  /// @param id Track ID.
+  std::string getSpecies(qint64 id);
 };
 
 }} // namespace fish_annotator::video_annotator

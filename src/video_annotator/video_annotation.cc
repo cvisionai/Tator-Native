@@ -16,12 +16,14 @@ DetectionAnnotation::DetectionAnnotation(
   uint64_t id,
   const Rect &rect,
   enum AnnotationType type,
-  QColor box_color)
+  std::string species,
+  double prob)
   : frame_(frame)
   , id_(id)
   , area_(rect)
   , type_(type)
-  , box_color_(box_color) {
+  , species_(species)
+  , prob_(prob) {
 }
 
 DetectionAnnotation::DetectionAnnotation()
@@ -29,7 +31,8 @@ DetectionAnnotation::DetectionAnnotation()
   , id_(0)
   , area_(0, 0, 0, 0)
   , type_(kBox)
-  , box_color_(QColor(255,0,0)) {
+  , species_()
+  , prob_(0.0) {
 }
 
 bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
@@ -66,6 +69,8 @@ pt::ptree DetectionAnnotation::write() const {
       tree.put("type", "dot");
       break;
   }
+  tree.put("species", species_);
+  tree.put("prob", prob_);
   return tree;
 }
 
@@ -89,6 +94,16 @@ void DetectionAnnotation::read(const pt::ptree &tree) {
     else if(type_str == "dot") {
       type_ = kDot;
     }
+  }
+  species_ = ""; // default
+  auto opt_species = tree.get_optional<std::string>("species");
+  if(opt_species != boost::none) {
+    species_ = opt_species.get();
+  }
+  prob_ = 0.0; // default
+  auto opt_prob = tree.get_optional<double>("prob");
+  if(opt_prob != boost::none) {
+    prob_ = opt_prob.get();
   }
 }
 

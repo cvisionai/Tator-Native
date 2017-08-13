@@ -484,7 +484,8 @@ void MainWindow::on_nextAndCopy_clicked() {
           fish_id_,
           det->area_,
           det->type_,
-          det->box_color_));
+          det->species_,
+          det->prob_));
     on_plusOneFrame_clicked();
   }
   else {
@@ -634,7 +635,8 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
     fish_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
     kBox, 
-    getColor(fish_id_)));
+    getSpecies(fish_id_),
+    1.0));
   drawAnnotations();
 }
 
@@ -644,7 +646,8 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
     fish_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
     kLine, 
-    getColor(fish_id_)));
+    getSpecies(fish_id_),
+    1.0));
   drawAnnotations();
 }
 
@@ -654,7 +657,8 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
     fish_id_,
     Rect(dot.x(), dot.y(), 0, 0), 
     kDot, 
-    getColor(fish_id_)));
+    getSpecies(fish_id_),
+    1.0));
   drawAnnotations();
 }
 
@@ -662,6 +666,10 @@ QColor MainWindow::getColor(qint64 id) {
   auto species = annotation_->findTrack(id)->getSpecies();
   QString name = species.c_str();
   return color_map_[name.toLower()];
+}
+
+std::string MainWindow::getSpecies(qint64 id) {
+  return annotation_->findTrack(id)->getSpecies();
 }
 
 void MainWindow::updateSpeciesCounts() {

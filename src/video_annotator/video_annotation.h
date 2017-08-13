@@ -35,12 +35,15 @@ struct DetectionAnnotation : public Serialization {
   /// @param frame Frame associated with the annotation.
   /// @param id ID of the individual.
   /// @param rect Rectangle defining the annotation.
+  /// @param species Species identified by this detection.
+  /// @param prob Probability associated with this detection.
   DetectionAnnotation(
     uint64_t frame,
     uint64_t id,
     const Rect &rect,
     enum AnnotationType type,
-    QColor box_color);
+    std::string species,
+    double prob);
 
   /// @brief Default constructor.
   DetectionAnnotation();
@@ -71,7 +74,8 @@ struct DetectionAnnotation : public Serialization {
   uint64_t id_; ///< ID of the individual.
   Rect area_; ///< Rectangle defining the annotation.
   enum AnnotationType type_; ///< Annotation type.
-  QColor box_color_; ///< Annotation color.
+  std::string species_; ///< Species.
+  double prob_; ///< Detection probability.
 };
 
 /// @brief List of detection annotations.
