@@ -501,63 +501,72 @@ bool VideoAnnotation::operator!=(VideoAnnotation &rhs) {
   return !operator==(rhs);
 }
 
-void VideoAnnotation::write(const boost::filesystem::path &csv_path,
+void VideoAnnotation::write(
+    const boost::filesystem::path &json_path,
     const std::string &trip_id,
     const std::string &tow_number,
     const std::string &reviewer,
     const std::string &tow_type,
-    double fps) const {
+    double fps,
+    bool with_csv) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
     "Saving annotations...", "Abort", 0,
     static_cast<int>(track_list_.size() + detection_list_.size())));
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
-  // Track file
   int iter = 0;
-  std::string meta;
-  meta += trip_id; meta += ",";
-  meta += tow_number; meta += ",";
-  meta += reviewer; meta += ",";
-  meta += tow_type;
-  std::ofstream csv(csv_path.string());
-  csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
-  csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
-  csv << std::endl;
-  for(const auto &t : tracks_by_id_.left) {
-    csv << meta;
-    csv << (*(t.second))->write(fps);
+  // csv file
+  if(with_csv == true) {
+    fs::path csv_path(json_path);
+    csv_path.replace_extension(".csv");
+    std::string meta;
+    meta += trip_id; meta += ",";
+    meta += tow_number; meta += ",";
+    meta += reviewer; meta += ",";
+    meta += tow_type;
+    std::ofstream csv(csv_path.string());
+    csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
+    csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
     csv << std::endl;
-    dlg->setValue(++iter);
-    if(dlg->wasCanceled()) break;
+    for(const auto &t : tracks_by_id_.left) {
+      csv << meta;
+      csv << (*(t.second))->write_csv(fps);
+      csv << std::endl;
+    }
   }
-  // Detection file
+  // json file
   pt::ptree tree;
-  pt::ptree ann_array;
-  for(const auto &d : detections_by_frame_.left) {
-    pt::ptree ann;
-    pt::ptree ann_val = (*(d.second))->write();
-    ann.add_child("annotation", ann_val);
-    ann_array.push_back(std::make_pair("", ann));
+  pt::ptree tracks;
+  pt::ptree detections;
+  pt::ptree global_state;
+  for(const auto &t : tracks_by_id_.left) {
+    tracks.push_back(std::make_pair("", (*(t.second))->write()));
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
-  tree.add_child("Annotation Array", ann_array);
-  fs::path json_path(csv_path);
-  json_path.replace_extension(".json");
-  pt::write_json(json_path.string(), tree);
-  // Degraded state file
-  fs::path csv1_path(csv_path);
-  csv1_path.replace_extension(".csv1");
-  std::ofstream csv1(csv1_path.string());
-  csv1 << "Frame,Degraded_State" << std::endl;
-  for(const auto &d : degraded_by_frame_) {
-    csv1 << std::to_string(d.first) << ",";
-    csv1 << (d.second ? "degraded" : "visible");
-    csv1 << std::endl;
+  for(const auto &d : detections_by_frame_.left) {
+    detections.push_back(std::make_pair("", (*(d.second))->write()));
+    dlg->setValue(++iter);
+    if(dlg->wasCanceled()) break;
   }
+  for(const auto &d : degraded_by_frame_) {
+    pt::ptree degraded;
+    degraded.put("frame", d.first);
+    degraded.put("state", "degraded");
+    degraded.put("value", d.second ? 1.0 : 0.0);
+    global_state.push_back(std::make_pair("", degraded));
+  }
+  tree.add_child("tracks", tracks);
+  tree.add_child("detections", detections);
+  tree.add_child("global_state", global_state);
+  // video state information here
+  pt::write_json(json_path.string(), tree);
 }
 
-void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
+void VideoAnnotation::read_v1(const boost::filesystem::path &json_path) {
+}
+
+void VideoAnnotation::read_v0(const boost::filesystem::path &csv_path) {
   std::ifstream f(csv_path.string());
   int num_lines = std::count(
       std::istreambuf_iterator<char>(f),
@@ -575,7 +584,7 @@ void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
   std::getline(csv, line);
   for(; std::getline(csv, line);) {
     auto trk = std::make_shared<TrackAnnotation>();
-    trk->read(line);
+    trk->read_csv(line);
     insert(trk);
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;

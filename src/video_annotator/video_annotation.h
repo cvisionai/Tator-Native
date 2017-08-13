@@ -320,23 +320,31 @@ public:
 
   /// @brief Writes annotations to file.
   ///
-  /// Writes two files, a csv and a json file.  The json file contains
-  /// position information within the video, and the csv file contains
-  /// the species and subspecies information.  The json file has the same
-  /// path as the input csv path with different extension.
+  /// Writes a json file and optionally a csv file.  The json file contains
+  /// all video annotation information, and the csv file contains
+  /// a track level summary of the annotations.  The csv file has the same
+  /// path as the input json path with different extension.
   ///
-  /// @param csv_path Path to csv file.
+  /// @param json_path Path to json file.
   /// @param trip_id Trip ID.
   /// @param tow_number Tow number.
   /// @param reviewer Name of reviewer.
   /// @param tow_type Tow type.
   /// @param fps Native frames per second of the video.
-  void write(const boost::filesystem::path &csv_path,
+  /// @param with_csv True to include csv file in output.
+  void write(
+    const boost::filesystem::path &json_path,
     const std::string &trip_id,
     const std::string &tow_number,
     const std::string &reviewer,
     const std::string &tow_type,
-    double fps) const;
+    double fps,
+    bool with_csv) const;
+
+  /// @brief Reads annotations from json files.
+  ///
+  /// @param json_path Path to json file.
+  void read_v1(const boost::filesystem::path &json_path);
 
   /// @brief Reads annotations from csv and json files.
   ///
@@ -344,7 +352,7 @@ public:
   /// with different extension.
   ///
   /// @param csv_path Path to csv file.
-  void read(const boost::filesystem::path &csv_path);
+  void read_v0(const boost::filesystem::path &csv_path);
 private:
   /// @brief For mapping integers to detection annotations.
   typedef boost::bimap<

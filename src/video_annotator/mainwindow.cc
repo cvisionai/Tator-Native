@@ -204,10 +204,15 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       this,
       tr("Open Annotation File"),
       QFileInfo(video_path_).dir().canonicalPath(),
-      tr("Annotation Files (*.csv)"));
+      tr("Annotation Files (*.json);;Legacy Format (*.csv)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    annotation_->read(file_str.toStdString());
+    if(file.suffix() == "json") {
+      annotation_->read_v1(file_str.toStdString());
+    }
+    else {
+      annotation_->read_v0(file_str.toStdString());
+    }
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     fish_id_ = annotation_->earliestTrackID();
     if(fish_id_ != 0) {
@@ -251,7 +256,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
       this,
       "Save annotation file",
       filename.c_str(),
-      "*.csv");
+      "*.json");
   if(fname.isNull() == false) {
     fs::path vid_path(fname.toStdString());
     annotation_->write(
@@ -260,7 +265,8 @@ void MainWindow::on_saveAnnotationFile_triggered() {
         std::to_string(metadata_.tow_number_),
         metadata_.reviewer_name_,
         metadata_.tow_status_ ? "Open" : "Closed",
-        native_rate_);
+        native_rate_,
+        true);
   }
 }
 
