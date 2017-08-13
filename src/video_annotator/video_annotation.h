@@ -344,15 +344,8 @@ public:
   /// @brief Reads annotations from json files.
   ///
   /// @param json_path Path to json file.
-  void read_v1(const boost::filesystem::path &json_path);
+  void read(const boost::filesystem::path &json_path);
 
-  /// @brief Reads annotations from csv and json files.
-  ///
-  /// Path to json file is assumed to be the same as the input csv path
-  /// with different extension.
-  ///
-  /// @param csv_path Path to csv file.
-  void read_v0(const boost::filesystem::path &csv_path);
 private:
   /// @brief For mapping integers to detection annotations.
   typedef boost::bimap<

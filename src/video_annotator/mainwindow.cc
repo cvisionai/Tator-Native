@@ -204,15 +204,10 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       this,
       tr("Open Annotation File"),
       QFileInfo(video_path_).dir().canonicalPath(),
-      tr("Annotation Files (*.json);;Legacy Format (*.csv)"));
+      tr("Annotation Files (*.json)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    if(file.suffix() == "json") {
-      annotation_->read_v1(file_str.toStdString());
-    }
-    else {
-      annotation_->read_v0(file_str.toStdString());
-    }
+    annotation_->read(file_str.toStdString());
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     fish_id_ = annotation_->earliestTrackID();
     if(fish_id_ != 0) {
