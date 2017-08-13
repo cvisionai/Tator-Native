@@ -583,8 +583,9 @@ void VideoAnnotation::read_v1(const boost::filesystem::path &json_path) {
         it_gst == tree.not_found()) {
       QMessageBox err;
       err.setText(
-          "Invalid file format!  "
-          "Did you intend to load legacy format?");
+          "Invalid file format!\n\n"
+          "If this file is legacy format, select \"Legacy Format (*.csv)\" \n"
+          "when loading an annotation file.");
       err.exec();
     }
     else {
