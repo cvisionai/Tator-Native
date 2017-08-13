@@ -243,7 +243,8 @@ void Player::getOneFrame() {
       }
       status = avcodec_send_packet(codec_context_, &packet_);
       if(status < 0) {
-        emit error("Error while sending packet to the decoder!");
+        // Intentionally neglecting to post an error message here
+        // as this may be a bad packet.
         return;
       }
       while(status >= 0) {
