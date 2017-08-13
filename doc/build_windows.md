@@ -75,7 +75,7 @@ FFMPEG Binaries on Windows
 1\. Download the prebuilt binaries for [FFMPEG 3.3.2][FFMPEGBinaries], 
     both the developer and shared versions.
 
-2\. Extract both.  Copy the contents of the lib directory in the shared
+2\. Extract both.  Copy the contents of the bin directory in the shared
     version into the lib directory of the developer version.  Discard 
     the shared version and use the developer version.
 
