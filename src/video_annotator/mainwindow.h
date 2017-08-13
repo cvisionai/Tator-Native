@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QThread>
 #include <QMap>
+#include <QProgressDialog>
 
 #include "species_controls.h"
 #include "annotation_widget.h"
@@ -85,6 +86,16 @@ public slots:
   ///
   /// @param stopped True if player stopped, false otherwise.
   void handlePlayerStateChanged(bool stopped);
+
+  /// @brief Handles start of media load by creating a progress dialog.
+  ///
+  /// @param max_progress Maximum value of the progress bar.
+  void handlePlayerMediaLoadStart(int max_progress);
+
+  /// @brief Handles file open progress update.
+  ///
+  /// @param progress Progress update.
+  void handlePlayerLoadProgress(int progress);
 
   /// @brief Handles new media loaded.
   ///
@@ -258,6 +269,9 @@ private:
 
   /// @brief Annotation widget.
   std::unique_ptr<AnnotationWidget> annotation_widget_;
+
+  /// @brief Load progress dialog.
+  std::unique_ptr<QProgressDialog> load_progress_;
 
   /// @brief Path to loaded video.
   QString video_path_;

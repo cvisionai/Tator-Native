@@ -88,6 +88,16 @@ signals:
     /// @param stopped True if stopped, false otherwise.
     void stateChanged(bool stopped);
 
+    /// @brief Emitted when media load starts.
+    ///
+    /// @param max_progress Maximum progress.
+    void mediaLoadStart(int max_progress);
+
+    /// @brief Emitted when media load progresses.
+    ///
+    /// @param progress Load progress.
+    void loadProgress(int progress);
+
     /// @brief Emitted when new media is loaded.
     ///
     /// @param video_path Path to loaded video file.

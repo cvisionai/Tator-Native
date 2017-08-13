@@ -1,7 +1,10 @@
 #include <vector>
+
 #include <boost/filesystem.hpp>
+
 #include <QtMath>
 #include <QTime>
+
 #include "species_dialog.h"
 #include "metadata_dialog.h"
 #include "annotatedregion.h"
@@ -24,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
+  , load_progress_(nullptr)
   , video_path_()
   , width_(0)
   , height_(0)
@@ -93,6 +97,10 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerResolutionChanged);
   QObject::connect(player, &Player::stateChanged,
       this, &MainWindow::handlePlayerStateChanged);
+  QObject::connect(player, &Player::mediaLoadStart,
+      this, &MainWindow::handlePlayerMediaLoadStart);
+  QObject::connect(player, &Player::loadProgress,
+      this, &MainWindow::handlePlayerLoadProgress);
   QObject::connect(player, &Player::mediaLoaded,
       this, &MainWindow::handlePlayerMediaLoaded);
   QObject::connect(player, &Player::error,
@@ -545,9 +553,33 @@ void MainWindow::handlePlayerStateChanged(bool stopped) {
   stopped_ = stopped;
 }
 
+void MainWindow::handlePlayerMediaLoadStart(int max_progress) {
+  if(load_progress_ == nullptr) {
+    load_progress_.reset(new QProgressDialog(
+          "Extracting video timestamps...", 
+          "",
+          0,
+          max_progress,
+          this,
+          Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+    load_progress_->setCancelButton(0);
+    load_progress_->setWindowTitle("Loading video");
+  }
+}
+
+void MainWindow::handlePlayerLoadProgress(int progress) {
+  if(load_progress_ != nullptr) {
+    load_progress_->setValue(progress);
+  }
+}
+
 void MainWindow::handlePlayerMediaLoaded(
   QString video_path,
   qreal native_rate) {
+  if(load_progress_ != nullptr) {
+    load_progress_->setValue(load_progress_->maximum());
+    load_progress_.reset(nullptr);
+  }
   video_path_ = video_path;
   native_rate_ = native_rate;
   ui_->videoSlider->setEnabled(true);
