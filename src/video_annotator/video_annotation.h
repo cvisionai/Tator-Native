@@ -136,16 +136,26 @@ struct TrackAnnotation {
   /// @return string containing species of track.
   std::string getSpecies();
 
+  /// @brief Writes to a property tree.
+  ///
+  /// @return Property tree constructed from the object.
+  pt::ptree write() const;
+
+  /// @brief Reads from a property tree.
+  ///
+  /// @param tree Property tree to be read.
+  void read(const pt::ptree &tree);
+
   /// @brief Writes to a string containing comma separated values.
   ///
   /// @param fps Frames per second of the video.
   /// @return String containing comma separated values.
-  std::string write(double fps) const;
+  std::string write_csv(double fps) const;
 
   /// @brief Reads from a string containing comma separated values.
   ///
   /// @param csv_row String to be read.
-  void read(const std::string &csv_row);
+  void read_csv(const std::string &csv_row);
 
   uint64_t id_; ///< ID of the individual.
   std::string species_; ///< Species of the individual.

@@ -8,6 +8,19 @@
 
 namespace fish_annotator { namespace video_annotator {
 
+namespace {
+  template<typename L, typename R>
+  boost::bimap<L, R> 
+  makeBimap(std::initializer_list<
+      typename boost::bimap<L, R>::value_type> list) {
+    return boost::bimap<L, R>(list.begin(), list.end());
+  }
+  static const auto count_label_map = makeBimap<CountLabel, std::string>({
+      {kIgnore, "ignore"},
+      {kEntering, "entering"},
+      {kExiting, "exiting"}});
+} // namespace
+
 namespace fs = boost::filesystem;
 namespace pt = boost::property_tree;
 
@@ -146,7 +159,27 @@ bool TrackAnnotation::operator!=(const TrackAnnotation &rhs) const {
 std::string TrackAnnotation::getSpecies() {
   return species_;
 }
-std::string TrackAnnotation::write(double fps) const {
+
+pt::ptree TrackAnnotation::write() const {
+  pt::ptree tree;
+  tree.put("id", id_);
+  tree.put("species", species_);
+  tree.put("subspecies", subspecies_);
+  tree.put("frame_added", frame_added_);
+  tree.put("count_label", count_label_map.left.at(count_label_));
+  return tree;
+}
+
+void TrackAnnotation::read(const pt::ptree &tree) {
+  id_ = tree.get<decltype(id_)>("id");
+  species_ = tree.get<decltype(species_)>("species");
+  subspecies_ = tree.get<decltype(subspecies_)>("subspecies");
+  frame_added_ = tree.get<decltype(frame_added_)>("frame_added");
+  auto count_label_str = count_label_map.right.at(
+    tree.get<std::string>("count_label"));
+}
+
+std::string TrackAnnotation::write_csv(double fps) const {
   std::string csv_row;
   double time_added = static_cast<double>(frame_added_) / fps;
   csv_row += ","; csv_row += std::to_string(id_);
@@ -162,7 +195,7 @@ std::string TrackAnnotation::write(double fps) const {
   return csv_row;
 }
 
-void TrackAnnotation::read(const std::string &csv_row) {
+void TrackAnnotation::read_csv(const std::string &csv_row) {
   std::vector<std::string> vals;
   boost::split(vals, csv_row, boost::is_any_of(","));
   if(vals.size() < 8) {
