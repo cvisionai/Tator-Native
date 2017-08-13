@@ -229,7 +229,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
   if(filename.empty() == true && reviewer.empty() == true) {
     filename = video_path_.toStdString();
     fs::path replace(filename);
-    replace.replace_extension(".csv");
+    replace.replace_extension(".json");
     filename = replace.string();
   }
   else if(filename.empty() == true && reviewer.empty() == false) {
@@ -239,7 +239,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
       fs::path(vid_path.stem().string() +
       std::string("_") +
       reviewer +
-      std::string(".csv"));
+      std::string(".json"));
     filename = out_path.string();
   }
   else {
@@ -249,7 +249,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
       fs::path(filename +
       std::string("_") +
       reviewer +
-      std::string(".csv"));
+      std::string(".json"));
     filename = out_path.string();
   }
   QString fname = QFileDialog::getSaveFileName(

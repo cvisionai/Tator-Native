@@ -564,6 +564,50 @@ void VideoAnnotation::write(
 }
 
 void VideoAnnotation::read_v1(const boost::filesystem::path &json_path) {
+  if(fs::exists(json_path) == false) {
+    QMessageBox err;
+    err.setText(std::string(
+          std::string("Could not find path ") +
+          json_path.string() +
+          std::string("!")).c_str());
+    err.exec();
+  }
+  else {
+    pt::ptree tree;
+    pt::read_json(json_path.string(), tree);
+    auto it_trk = tree.find("tracks");
+    auto it_det = tree.find("detections");
+    auto it_gst = tree.find("global_state");
+    if(it_trk == tree.not_found() ||
+        it_det == tree.not_found() ||
+        it_gst == tree.not_found()) {
+      QMessageBox err;
+      err.setText(
+          "Invalid file format!  "
+          "Did you intend to load legacy format?");
+      err.exec();
+    }
+    else {
+      for(auto &trk : tree.get_child("tracks")) {
+        auto track = std::make_shared<TrackAnnotation>();
+        track->read(trk.second.get_child(""));
+        insert(track);
+      }
+      for(auto &det : tree.get_child("detections")) {
+        auto detection = std::make_shared<DetectionAnnotation>();
+        detection->read(det.second.get_child(""));
+        insert(detection);
+      }
+      for(auto &gst : tree.get_child("global_state")) {
+        auto state = gst.second.get_child("");
+        if(state.get<std::string>("state") == "degraded") {
+          setDegraded(
+              state.get<uint64_t>("frame"),
+              state.get<double>("value") > 0.5 ? true : false);
+        }
+      }
+    }
+  }
 }
 
 void VideoAnnotation::read_v0(const boost::filesystem::path &csv_path) {
