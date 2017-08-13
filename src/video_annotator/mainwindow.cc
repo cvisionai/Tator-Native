@@ -258,6 +258,9 @@ void MainWindow::on_saveAnnotationFile_triggered() {
       filename.c_str(),
       "*.json");
   if(fname.isNull() == false) {
+    auto include_csv = QMessageBox::question(this, "CSV Output",
+        "Include csv summary with output?",
+        QMessageBox::Yes | QMessageBox::No);
     fs::path vid_path(fname.toStdString());
     annotation_->write(
         vid_path,
@@ -266,7 +269,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
         metadata_.reviewer_name_,
         metadata_.tow_status_ ? "Open" : "Closed",
         native_rate_,
-        true);
+        include_csv == QMessageBox::Yes);
   }
 }
 
