@@ -2,6 +2,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <QProgressDialog>
+#include <QMessageBox>
 
 #include "image_annotation.h"
 
@@ -255,12 +256,14 @@ void ImageAnnotationList::write(
     csv << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
     csv << std::endl;
     pt::ptree tree;
+    pt::ptree detections;
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
       (*(it->second))->write_csv(csv);
       (*(it->second))->write_csv(sum);
-      tree.add_child("annotation_list.annotation", (*(it->second))->write());
+      detections.push_back(std::make_pair("", (*(it->second))->write()));
     }
+    tree.add_child("detections", detections);
     fs::path json_file(image_file);
     json_file.replace_extension(".json");
     pt::write_json(json_file.string(), tree);
@@ -285,6 +288,16 @@ void ImageAnnotationList::read(
           auto annotation = std::make_shared<ImageAnnotation>();
           annotation->read(val.second);
           insert(annotation);
+        }
+      }
+      else {
+        auto it_new = tree.find("detections");
+        if(it_new != tree.not_found()) {
+          for(auto &val : tree.get_child("detections")) {
+            auto annotation = std::make_shared<ImageAnnotation>();
+            annotation->read(val.second.get_child(""));
+            insert(annotation);
+          }
         }
       }
     }

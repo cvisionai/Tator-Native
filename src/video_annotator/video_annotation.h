@@ -35,12 +35,15 @@ struct DetectionAnnotation : public Serialization {
   /// @param frame Frame associated with the annotation.
   /// @param id ID of the individual.
   /// @param rect Rectangle defining the annotation.
+  /// @param species Species identified by this detection.
+  /// @param prob Probability associated with this detection.
   DetectionAnnotation(
     uint64_t frame,
     uint64_t id,
     const Rect &rect,
     enum AnnotationType type,
-    QColor box_color);
+    std::string species,
+    double prob);
 
   /// @brief Default constructor.
   DetectionAnnotation();
@@ -71,7 +74,8 @@ struct DetectionAnnotation : public Serialization {
   uint64_t id_; ///< ID of the individual.
   Rect area_; ///< Rectangle defining the annotation.
   enum AnnotationType type_; ///< Annotation type.
-  QColor box_color_; ///< Annotation color.
+  std::string species_; ///< Species.
+  double prob_; ///< Detection probability.
 };
 
 /// @brief List of detection annotations.
@@ -132,16 +136,26 @@ struct TrackAnnotation {
   /// @return string containing species of track.
   std::string getSpecies();
 
+  /// @brief Writes to a property tree.
+  ///
+  /// @return Property tree constructed from the object.
+  pt::ptree write() const;
+
+  /// @brief Reads from a property tree.
+  ///
+  /// @param tree Property tree to be read.
+  void read(const pt::ptree &tree);
+
   /// @brief Writes to a string containing comma separated values.
   ///
   /// @param fps Frames per second of the video.
   /// @return String containing comma separated values.
-  std::string write(double fps) const;
+  std::string write_csv(double fps) const;
 
   /// @brief Reads from a string containing comma separated values.
   ///
   /// @param csv_row String to be read.
-  void read(const std::string &csv_row);
+  void read_csv(const std::string &csv_row);
 
   uint64_t id_; ///< ID of the individual.
   std::string species_; ///< Species of the individual.
@@ -306,31 +320,32 @@ public:
 
   /// @brief Writes annotations to file.
   ///
-  /// Writes two files, a csv and a json file.  The json file contains
-  /// position information within the video, and the csv file contains
-  /// the species and subspecies information.  The json file has the same
-  /// path as the input csv path with different extension.
+  /// Writes a json file and optionally a csv file.  The json file contains
+  /// all video annotation information, and the csv file contains
+  /// a track level summary of the annotations.  The csv file has the same
+  /// path as the input json path with different extension.
   ///
-  /// @param csv_path Path to csv file.
+  /// @param json_path Path to json file.
   /// @param trip_id Trip ID.
   /// @param tow_number Tow number.
   /// @param reviewer Name of reviewer.
   /// @param tow_type Tow type.
   /// @param fps Native frames per second of the video.
-  void write(const boost::filesystem::path &csv_path,
+  /// @param with_csv True to include csv file in output.
+  void write(
+    const boost::filesystem::path &json_path,
     const std::string &trip_id,
     const std::string &tow_number,
     const std::string &reviewer,
     const std::string &tow_type,
-    double fps) const;
+    double fps,
+    bool with_csv) const;
 
-  /// @brief Reads annotations from csv and json files.
+  /// @brief Reads annotations from json files.
   ///
-  /// Path to json file is assumed to be the same as the input csv path
-  /// with different extension.
-  ///
-  /// @param csv_path Path to csv file.
-  void read(const boost::filesystem::path &csv_path);
+  /// @param json_path Path to json file.
+  void read(const boost::filesystem::path &json_path);
+
 private:
   /// @brief For mapping integers to detection annotations.
   typedef boost::bimap<

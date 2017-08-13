@@ -812,17 +812,17 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
           </property>
           <item>
            <property name="text">
-            <string>Ignore</string>
+            <string>ignore</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Entering</string>
+            <string>entering</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Exiting</string>
+            <string>exiting</string>
            </property>
           </item>
          </widget>

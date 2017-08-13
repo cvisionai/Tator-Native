@@ -204,7 +204,7 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       this,
       tr("Open Annotation File"),
       QFileInfo(video_path_).dir().canonicalPath(),
-      tr("Annotation Files (*.csv)"));
+      tr("Annotation Files (*.json)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     annotation_->read(file_str.toStdString());
@@ -224,7 +224,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
   if(filename.empty() == true && reviewer.empty() == true) {
     filename = video_path_.toStdString();
     fs::path replace(filename);
-    replace.replace_extension(".csv");
+    replace.replace_extension(".json");
     filename = replace.string();
   }
   else if(filename.empty() == true && reviewer.empty() == false) {
@@ -234,7 +234,7 @@ void MainWindow::on_saveAnnotationFile_triggered() {
       fs::path(vid_path.stem().string() +
       std::string("_") +
       reviewer +
-      std::string(".csv"));
+      std::string(".json"));
     filename = out_path.string();
   }
   else {
@@ -244,15 +244,18 @@ void MainWindow::on_saveAnnotationFile_triggered() {
       fs::path(filename +
       std::string("_") +
       reviewer +
-      std::string(".csv"));
+      std::string(".json"));
     filename = out_path.string();
   }
   QString fname = QFileDialog::getSaveFileName(
       this,
       "Save annotation file",
       filename.c_str(),
-      "*.csv");
+      "*.json");
   if(fname.isNull() == false) {
+    auto include_csv = QMessageBox::question(this, "CSV Output",
+        "Include csv summary with output?",
+        QMessageBox::Yes | QMessageBox::No);
     fs::path vid_path(fname.toStdString());
     annotation_->write(
         vid_path,
@@ -260,7 +263,8 @@ void MainWindow::on_saveAnnotationFile_triggered() {
         std::to_string(metadata_.tow_number_),
         metadata_.reviewer_name_,
         metadata_.tow_status_ ? "Open" : "Closed",
-        native_rate_);
+        native_rate_,
+        include_csv == QMessageBox::Yes);
   }
 }
 
@@ -484,7 +488,8 @@ void MainWindow::on_nextAndCopy_clicked() {
           fish_id_,
           det->area_,
           det->type_,
-          det->box_color_));
+          det->species_,
+          det->prob_));
     on_plusOneFrame_clicked();
   }
   else {
@@ -634,7 +639,8 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
     fish_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
     kBox, 
-    getColor(fish_id_)));
+    getSpecies(fish_id_),
+    1.0));
   drawAnnotations();
 }
 
@@ -644,7 +650,8 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
     fish_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
     kLine, 
-    getColor(fish_id_)));
+    getSpecies(fish_id_),
+    1.0));
   drawAnnotations();
 }
 
@@ -654,7 +661,8 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
     fish_id_,
     Rect(dot.x(), dot.y(), 0, 0), 
     kDot, 
-    getColor(fish_id_)));
+    getSpecies(fish_id_),
+    1.0));
   drawAnnotations();
 }
 
@@ -662,6 +670,10 @@ QColor MainWindow::getColor(qint64 id) {
   auto species = annotation_->findTrack(id)->getSpecies();
   QString name = species.c_str();
   return color_map_[name.toLower()];
+}
+
+std::string MainWindow::getSpecies(qint64 id) {
+  return annotation_->findTrack(id)->getSpecies();
 }
 
 void MainWindow::updateSpeciesCounts() {

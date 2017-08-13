@@ -8,6 +8,19 @@
 
 namespace fish_annotator { namespace video_annotator {
 
+namespace {
+  template<typename L, typename R>
+  boost::bimap<L, R> 
+  makeBimap(std::initializer_list<
+      typename boost::bimap<L, R>::value_type> list) {
+    return boost::bimap<L, R>(list.begin(), list.end());
+  }
+  static const auto count_label_map = makeBimap<CountLabel, std::string>({
+      {kIgnore, "ignore"},
+      {kEntering, "entering"},
+      {kExiting, "exiting"}});
+} // namespace
+
 namespace fs = boost::filesystem;
 namespace pt = boost::property_tree;
 
@@ -16,12 +29,14 @@ DetectionAnnotation::DetectionAnnotation(
   uint64_t id,
   const Rect &rect,
   enum AnnotationType type,
-  QColor box_color)
+  std::string species,
+  double prob)
   : frame_(frame)
   , id_(id)
   , area_(rect)
   , type_(type)
-  , box_color_(box_color) {
+  , species_(species)
+  , prob_(prob) {
 }
 
 DetectionAnnotation::DetectionAnnotation()
@@ -29,7 +44,8 @@ DetectionAnnotation::DetectionAnnotation()
   , id_(0)
   , area_(0, 0, 0, 0)
   , type_(kBox)
-  , box_color_(QColor(255,0,0)) {
+  , species_()
+  , prob_(0.0) {
 }
 
 bool DetectionAnnotation::operator==(const DetectionAnnotation &rhs) const {
@@ -66,6 +82,8 @@ pt::ptree DetectionAnnotation::write() const {
       tree.put("type", "dot");
       break;
   }
+  tree.put("species", species_);
+  tree.put("prob", prob_);
   return tree;
 }
 
@@ -89,6 +107,16 @@ void DetectionAnnotation::read(const pt::ptree &tree) {
     else if(type_str == "dot") {
       type_ = kDot;
     }
+  }
+  species_ = ""; // default
+  auto opt_species = tree.get_optional<std::string>("species");
+  if(opt_species != boost::none) {
+    species_ = opt_species.get();
+  }
+  prob_ = 0.0; // default
+  auto opt_prob = tree.get_optional<double>("prob");
+  if(opt_prob != boost::none) {
+    prob_ = opt_prob.get();
   }
 }
 
@@ -131,7 +159,27 @@ bool TrackAnnotation::operator!=(const TrackAnnotation &rhs) const {
 std::string TrackAnnotation::getSpecies() {
   return species_;
 }
-std::string TrackAnnotation::write(double fps) const {
+
+pt::ptree TrackAnnotation::write() const {
+  pt::ptree tree;
+  tree.put("id", id_);
+  tree.put("species", species_);
+  tree.put("subspecies", subspecies_);
+  tree.put("frame_added", frame_added_);
+  tree.put("count_label", count_label_map.left.at(count_label_));
+  return tree;
+}
+
+void TrackAnnotation::read(const pt::ptree &tree) {
+  id_ = tree.get<decltype(id_)>("id");
+  species_ = tree.get<decltype(species_)>("species");
+  subspecies_ = tree.get<decltype(subspecies_)>("subspecies");
+  frame_added_ = tree.get<decltype(frame_added_)>("frame_added");
+  auto count_label_str = count_label_map.right.at(
+    tree.get<std::string>("count_label"));
+}
+
+std::string TrackAnnotation::write_csv(double fps) const {
   std::string csv_row;
   double time_added = static_cast<double>(frame_added_) / fps;
   csv_row += ","; csv_row += std::to_string(id_);
@@ -147,7 +195,7 @@ std::string TrackAnnotation::write(double fps) const {
   return csv_row;
 }
 
-void TrackAnnotation::read(const std::string &csv_row) {
+void TrackAnnotation::read_csv(const std::string &csv_row) {
   std::vector<std::string> vals;
   boost::split(vals, csv_row, boost::is_any_of(","));
   if(vals.size() < 8) {
@@ -453,117 +501,170 @@ bool VideoAnnotation::operator!=(VideoAnnotation &rhs) {
   return !operator==(rhs);
 }
 
-void VideoAnnotation::write(const boost::filesystem::path &csv_path,
+void VideoAnnotation::write(
+    const boost::filesystem::path &json_path,
     const std::string &trip_id,
     const std::string &tow_number,
     const std::string &reviewer,
     const std::string &tow_type,
-    double fps) const {
+    double fps,
+    bool with_csv) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
     "Saving annotations...", "Abort", 0,
     static_cast<int>(track_list_.size() + detection_list_.size())));
   dlg->setWindowModality(Qt::WindowModal);
   dlg->show();
-  // Track file
   int iter = 0;
-  std::string meta;
-  meta += trip_id; meta += ",";
-  meta += tow_number; meta += ",";
-  meta += reviewer; meta += ",";
-  meta += tow_type;
-  std::ofstream csv(csv_path.string());
-  csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
-  csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
-  csv << std::endl;
-  for(const auto &t : tracks_by_id_.left) {
-    csv << meta;
-    csv << (*(t.second))->write(fps);
+  // csv file
+  if(with_csv == true) {
+    fs::path csv_path(json_path);
+    csv_path.replace_extension(".csv");
+    std::string meta;
+    meta += trip_id; meta += ",";
+    meta += tow_number; meta += ",";
+    meta += reviewer; meta += ",";
+    meta += tow_type;
+    std::ofstream csv(csv_path.string());
+    csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
+    csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
     csv << std::endl;
-    dlg->setValue(++iter);
-    if(dlg->wasCanceled()) break;
-  }
-  // Detection file
-  pt::ptree tree;
-  pt::ptree ann_array;
-  for(const auto &d : detections_by_frame_.left) {
-    pt::ptree ann;
-    pt::ptree ann_val = (*(d.second))->write();
-    ann.add_child("annotation", ann_val);
-    ann_array.push_back(std::make_pair("", ann));
-    dlg->setValue(++iter);
-    if(dlg->wasCanceled()) break;
-  }
-  tree.add_child("Annotation Array", ann_array);
-  fs::path json_path(csv_path);
-  json_path.replace_extension(".json");
-  pt::write_json(json_path.string(), tree);
-  // Degraded state file
-  fs::path csv1_path(csv_path);
-  csv1_path.replace_extension(".csv1");
-  std::ofstream csv1(csv1_path.string());
-  csv1 << "Frame,Degraded_State" << std::endl;
-  for(const auto &d : degraded_by_frame_) {
-    csv1 << std::to_string(d.first) << ",";
-    csv1 << (d.second ? "degraded" : "visible");
-    csv1 << std::endl;
-  }
-}
-
-void VideoAnnotation::read(const boost::filesystem::path &csv_path) {
-  std::ifstream f(csv_path.string());
-  int num_lines = std::count(
-      std::istreambuf_iterator<char>(f),
-      std::istreambuf_iterator<char>(),
-      '\n');
-  f.close();
-  std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
-    "Loading annotations...", "Abort", 0, 2 * num_lines));
-  dlg->setWindowModality(Qt::WindowModal);
-  dlg->show();
-  // Track file
-  int iter = 0;
-  std::ifstream csv(csv_path.string());
-  std::string line;
-  std::getline(csv, line);
-  for(; std::getline(csv, line);) {
-    auto trk = std::make_shared<TrackAnnotation>();
-    trk->read(line);
-    insert(trk);
-    dlg->setValue(++iter);
-    if(dlg->wasCanceled()) break;
-  }
-  // Detection file
-  fs::path json_path(csv_path);
-  json_path.replace_extension(".json");
-  if(fs::exists(json_path)) {
-    pt::ptree tree;
-    pt::read_json(json_path.string(), tree);
-    auto it = tree.find("Annotation Array");
-    if(it != tree.not_found()) {
-      for(auto &val : tree.get_child("Annotation Array")) {
-        auto annotation = std::make_shared<DetectionAnnotation>();
-        annotation->read(val.second.get_child("annotation"));
-        insert(annotation);
-        if(dlg->wasCanceled()) break;
-      }
-      dlg->setValue(2 * num_lines);
+    for(const auto &t : tracks_by_id_.left) {
+      csv << meta;
+      csv << (*(t.second))->write_csv(fps);
+      csv << std::endl;
     }
   }
-  // Degraded state file
-  fs::path csv1_path(csv_path);
-  csv1_path.replace_extension(".csv1");
-  if(fs::exists(csv1_path)) {
-    std::ifstream csv1(csv1_path.string());
-    std::string line1;
-    std::getline(csv1, line1);
-    for(; std::getline(csv1, line1);) {
-      std::vector<std::string> tokens;
-      boost::split(tokens, line1, boost::is_any_of(","));
-      if(tokens[1] == "degraded") {
-        setDegraded(std::stoull(tokens[0]), true);
+  // json file
+  pt::ptree tree;
+  pt::ptree tracks;
+  pt::ptree detections;
+  pt::ptree global_state;
+  for(const auto &t : tracks_by_id_.left) {
+    tracks.push_back(std::make_pair("", (*(t.second))->write()));
+    dlg->setValue(++iter);
+    if(dlg->wasCanceled()) break;
+  }
+  for(const auto &d : detections_by_frame_.left) {
+    detections.push_back(std::make_pair("", (*(d.second))->write()));
+    dlg->setValue(++iter);
+    if(dlg->wasCanceled()) break;
+  }
+  for(const auto &d : degraded_by_frame_) {
+    pt::ptree degraded;
+    degraded.put("frame", d.first);
+    degraded.put("state", "degraded");
+    degraded.put("value", d.second ? 1.0 : 0.0);
+    global_state.push_back(std::make_pair("", degraded));
+  }
+  tree.add_child("tracks", tracks);
+  tree.add_child("detections", detections);
+  tree.add_child("global_state", global_state);
+  // video state information here
+  pt::write_json(json_path.string(), tree);
+}
+
+void VideoAnnotation::read(const boost::filesystem::path &json_path) {
+  if(fs::exists(json_path) == false) {
+    QMessageBox err;
+    err.setText(std::string(
+          std::string("Could not find path ") +
+          json_path.string() +
+          std::string("!")).c_str());
+    err.exec();
+  }
+  else {
+    pt::ptree tree;
+    pt::read_json(json_path.string(), tree);
+    auto it_trk = tree.find("tracks");
+    auto it_det = tree.find("detections");
+    auto it_gst = tree.find("global_state");
+    if(it_trk == tree.not_found() ||
+        it_det == tree.not_found() ||
+        it_gst == tree.not_found()) {
+      auto it = tree.find("Annotation Array");
+      if(it == tree.not_found()) {
+        // Neither legacy nor new format
+        QMessageBox err;
+        err.setText("Invalid file format!");
+        err.exec();
       }
-      else if(tokens[1] == "visible") {
-        setDegraded(std::stoull(tokens[0]), false);
+      else {
+        // Legacy format
+        fs::path csv_path(json_path);
+        csv_path.replace_extension(".csv");
+        std::ifstream f(csv_path.string());
+        int num_lines = std::count(
+            std::istreambuf_iterator<char>(f),
+            std::istreambuf_iterator<char>(),
+            '\n');
+        f.close();
+        std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
+          "Loading annotations...", "Abort", 0, 2 * num_lines));
+        dlg->setWindowModality(Qt::WindowModal);
+        dlg->show();
+        // Track file
+        int iter = 0;
+        std::ifstream csv(csv_path.string());
+        std::string line;
+        std::getline(csv, line);
+        for(; std::getline(csv, line);) {
+          auto trk = std::make_shared<TrackAnnotation>();
+          trk->read_csv(line);
+          insert(trk);
+          dlg->setValue(++iter);
+          if(dlg->wasCanceled()) break;
+        }
+        // Detections
+        for(auto &val : tree.get_child("Annotation Array")) {
+          auto annotation = std::make_shared<DetectionAnnotation>();
+          annotation->read(val.second.get_child("annotation"));
+          insert(annotation);
+          if(dlg->wasCanceled()) break;
+        }
+        dlg->setValue(2 * num_lines);
+        // Degraded state file
+        fs::path csv1_path(csv_path);
+        csv1_path.replace_extension(".csv1");
+        if(fs::exists(csv1_path)) {
+          std::ifstream csv1(csv1_path.string());
+          std::string line1;
+          std::getline(csv1, line1);
+          for(; std::getline(csv1, line1);) {
+            std::vector<std::string> tokens;
+            boost::split(tokens, line1, boost::is_any_of(","));
+            if(tokens[1] == "degraded") {
+              setDegraded(std::stoull(tokens[0]), true);
+            }
+            else if(tokens[1] == "visible") {
+              setDegraded(std::stoull(tokens[0]), false);
+            }
+          }
+        }
+      }
+    }
+    else {
+      std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
+        "Loading annotations...", "Abort", 0, -1));
+      dlg->setWindowModality(Qt::WindowModal);
+      dlg->show();
+      // New format
+      for(auto &trk : tree.get_child("tracks")) {
+        auto track = std::make_shared<TrackAnnotation>();
+        track->read(trk.second.get_child(""));
+        insert(track);
+      }
+      for(auto &det : tree.get_child("detections")) {
+        auto detection = std::make_shared<DetectionAnnotation>();
+        detection->read(det.second.get_child(""));
+        insert(detection);
+      }
+      for(auto &gst : tree.get_child("global_state")) {
+        auto state = gst.second.get_child("");
+        if(state.get<std::string>("state") == "degraded") {
+          setDegraded(
+              state.get<uint64_t>("frame"),
+              state.get<double>("value") > 0.5 ? true : false);
+        }
       }
     }
   }
