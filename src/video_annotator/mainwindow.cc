@@ -738,13 +738,13 @@ void MainWindow::drawAnnotations() {
     AnnotatedRegion<DetectionAnnotation> *box = nullptr;
     AnnotatedLine<DetectionAnnotation> *line = nullptr;
     AnnotatedDot<DetectionAnnotation> *dot = nullptr;
+    QColor color = getColor(ann->id_);
     switch(ann->type_) {
       case kBox:
         box = new AnnotatedRegion<DetectionAnnotation>(
             ann->id_, 
             ann, 
-            pixmap_item_->pixmap().toImage().rect(), 
-            getColor(ann->id_));
+            pixmap_item_->pixmap().toImage().rect(), color);
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);
@@ -752,7 +752,7 @@ void MainWindow::drawAnnotations() {
         break;
       case kLine:
         line = new AnnotatedLine<DetectionAnnotation>(
-            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect(), color);
         if(line->isValid() == true) {
           scene_->addItem(line);
           current_annotations_.push_back(line);
@@ -760,7 +760,7 @@ void MainWindow::drawAnnotations() {
         break;
       case kDot:
         dot = new AnnotatedDot<DetectionAnnotation>(
-            ann->id_, ann, pixmap_item_->pixmap().toImage().rect());
+            ann->id_, ann, pixmap_item_->pixmap().toImage().rect(), color);
         if(dot->isValid() == true) {
           scene_->addItem(dot);
           current_annotations_.push_back(dot);

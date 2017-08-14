@@ -35,6 +35,7 @@ public:
   /// @param uid Unique ID associated with this region.
   /// @param annotation Annotation associated with this region.
   /// @param bounding_rect Bounding rect for this region.
+  /// @param box_color Color of the box.
   AnnotatedRegion(uint64_t uid,
                   std::shared_ptr<Info> annotation,
                   const QRectF &bounding_rect,

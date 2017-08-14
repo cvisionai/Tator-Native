@@ -322,23 +322,23 @@ void MainWindow::drawAnnotations() {
           AnnotatedLine<ImageAnnotation> *line = nullptr;
           AnnotatedDot<ImageAnnotation> *dot = nullptr;
           QString name = annotation->species_.c_str();
+          QColor color = color_map_[name.toLower()];
           switch(annotation->type_) {
             case kBox:
               box = new AnnotatedRegion<ImageAnnotation>(
-                    annotation->id_, annotation, current.rect(),
-                    color_map_[name.toLower()]);
+                  annotation->id_, annotation, current.rect(), color);
               scene_->addItem(box);
               current_annotations_.push_back(box);
               break;
             case kLine:
               line = new AnnotatedLine<ImageAnnotation>(
-                  annotation->id_, annotation, current.rect());
+                  annotation->id_, annotation, current.rect(), color);
               scene_->addItem(line);
               current_annotations_.push_back(line);
               break;
             case kDot:
               dot = new AnnotatedDot<ImageAnnotation>(
-                  annotation->id_, annotation, current.rect());
+                  annotation->id_, annotation, current.rect(), color);
               scene_->addItem(dot);
               current_annotations_.push_back(dot);
               break;

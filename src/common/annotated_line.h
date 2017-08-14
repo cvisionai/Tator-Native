@@ -16,9 +16,11 @@ public:
   /// @param uid Unique ID associated with this region.
   /// @param annotation Annotation associated with this region.
   /// @param bounding_rect Bounding rect for this region.
+  /// @param color Color of the line.
   AnnotatedLine(uint64_t uid, 
                   std::shared_ptr<Info> annotation,
-                  const QRectF &bounding_rect);
+                  const QRectF &bounding_rect,
+                  QColor color);
 
   /// @brief Reimplemented from QGraphicsItem.
   ///
@@ -74,13 +76,14 @@ template<typename Info>
 AnnotatedLine<Info>::AnnotatedLine(
     uint64_t uid,
     std::shared_ptr<Info> annotation,
-    const QRectF &bounding_rect)
+    const QRectF &bounding_rect,
+    QColor color)
   : annotation_(annotation)
   , uid_(uid)
   , bounding_rect_(bounding_rect)
   , min_dim_(std::min(bounding_rect_.width(), bounding_rect_.height()))
   , font_("Helvetica", min_dim_ * 0.02)
-  , pen_(QColor(255, 0, 0))
+  , pen_(color)
   , valid_(true) {
   if(annotation_->area_.x < 0) {
     annotation_->area_.x = 0;
