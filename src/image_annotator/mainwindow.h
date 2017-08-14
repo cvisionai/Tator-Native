@@ -13,6 +13,8 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QMap>
+#include <QColor>
 
 #include "species_controls.h"
 #include "annotation_widget.h"
@@ -81,8 +83,14 @@ private slots:
   /// @brief Removes currently selected annotation.
   void on_removeAnnotation_clicked();
 
+public slots:
   /// @brief Adds an individual and enables bounding box drawing.
   void addIndividual(std::string species, std::string subspecies);
+
+  /// @brief Handles color change for a species.
+  ///
+  /// @param color_map Map between species names and colors.
+  void colorChanged(QMap<QString, QColor> color_map);
 
   /// @brief Adds a box annotation.
   ///
@@ -131,6 +139,9 @@ private:
 
   /// @brief Current annotations.
   std::vector<QGraphicsItem*> current_annotations_;
+
+  /// @brief Map of species names to colors.
+  QMap<QString, QColor> color_map_;
 
   /// @brief Runs when image directory loaded successfully.
   ///

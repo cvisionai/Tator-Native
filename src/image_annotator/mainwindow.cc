@@ -33,7 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
   , image_files_()
   , metadata_()
   , species_()
-  , subspecies_() {
+  , subspecies_()
+  , current_annotations_() 
+  , color_map_() {
   ui_->setupUi(this);
   setWindowTitle("Image Annotator");
 #ifdef _WIN32
@@ -44,9 +46,10 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->videoWindowLayout->addWidget(view_.get());
   ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
-  QObject::connect(species_controls_.get(),
-      SIGNAL(individualAdded(std::string, std::string)),
-      this, SLOT(addIndividual(std::string, std::string)));
+  QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
+      this, &MainWindow::addIndividual);
+  QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
+      this, &MainWindow::colorChanged);
   scene_->setToolWidget(annotation_widget_.get());
   QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
       this, &MainWindow::addBoxAnnotation);
@@ -168,6 +171,11 @@ void MainWindow::addIndividual(std::string species, std::string subspecies) {
   species_ = species;
   subspecies_ = subspecies;
   scene_->setMode(kDraw);
+}
+
+void MainWindow::colorChanged(QMap<QString, QColor> color_map) {
+  color_map_ = color_map;
+  drawAnnotations();
 }
 
 void MainWindow::addBoxAnnotation(const QRectF &rect) {
@@ -301,39 +309,43 @@ void MainWindow::drawAnnotations() {
   }
   current_annotations_.clear();
   ui_->idSelection->clear();
-  std::string filename = image_files_[ui_->imageSlider->value()].string();
-  QImage current(filename.c_str());
-  if(!current.isNull()) {
-    fs::path img_path(filename);
-    auto annotations =
-      annotations_->getImageAnnotations(img_path.filename());
-    for(auto annotation : annotations) {
-      if(ui_->showAnnotations->isChecked()) {
-        AnnotatedRegion<ImageAnnotation> *box = nullptr;
-        AnnotatedLine<ImageAnnotation> *line = nullptr;
-        AnnotatedDot<ImageAnnotation> *dot = nullptr;
-        switch(annotation->type_) {
-          case kBox:
-            box = new AnnotatedRegion<ImageAnnotation>(
-                  annotation->id_, annotation, current.rect(),QColor(255,0,0));
-            scene_->addItem(box);
-            current_annotations_.push_back(box);
-            break;
-          case kLine:
-            line = new AnnotatedLine<ImageAnnotation>(
-                annotation->id_, annotation, current.rect());
-            scene_->addItem(line);
-            current_annotations_.push_back(line);
-            break;
-          case kDot:
-            dot = new AnnotatedDot<ImageAnnotation>(
-                annotation->id_, annotation, current.rect());
-            scene_->addItem(dot);
-            current_annotations_.push_back(dot);
-            break;
+  if(image_files_.size() > 0) {
+    std::string filename = image_files_[ui_->imageSlider->value()].string();
+    QImage current(filename.c_str());
+    if(!current.isNull()) {
+      fs::path img_path(filename);
+      auto annotations =
+        annotations_->getImageAnnotations(img_path.filename());
+      for(auto annotation : annotations) {
+        if(ui_->showAnnotations->isChecked()) {
+          AnnotatedRegion<ImageAnnotation> *box = nullptr;
+          AnnotatedLine<ImageAnnotation> *line = nullptr;
+          AnnotatedDot<ImageAnnotation> *dot = nullptr;
+          QString name = annotation->species_.c_str();
+          switch(annotation->type_) {
+            case kBox:
+              box = new AnnotatedRegion<ImageAnnotation>(
+                    annotation->id_, annotation, current.rect(),
+                    color_map_[name.toLower()]);
+              scene_->addItem(box);
+              current_annotations_.push_back(box);
+              break;
+            case kLine:
+              line = new AnnotatedLine<ImageAnnotation>(
+                  annotation->id_, annotation, current.rect());
+              scene_->addItem(line);
+              current_annotations_.push_back(line);
+              break;
+            case kDot:
+              dot = new AnnotatedDot<ImageAnnotation>(
+                  annotation->id_, annotation, current.rect());
+              scene_->addItem(dot);
+              current_annotations_.push_back(dot);
+              break;
+          }
         }
+        ui_->idSelection->addItem(QString::number(annotation->id_));
       }
-      ui_->idSelection->addItem(QString::number(annotation->id_));
     }
   }
 }
