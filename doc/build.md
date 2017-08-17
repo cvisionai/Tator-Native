@@ -15,11 +15,11 @@ FishAnnotator uses the following 3rd party libraries:
 Detailed build instructions
 ---------------------------
 
-* [Build on Windows](doc/build_windows.md)
-* [Build on Mac](doc/build_mac.md)
-* [Build on Ubuntu](doc/build_ubuntu.md)
-* [Build the source documentation](doc/build_docs.md)
-* [Build an installer](doc/build_installer.md)
+* [Build on Windows](build_windows.md)
+* [Build on Mac](build_mac.md)
+* [Build on Ubuntu](build_ubuntu.md)
+* [Build the source documentation](build_docs.md)
+* [Build an installer](build_installer.md)
 
 [Qt5]: https://www.qt.io/developers/
 [Boost]: http://www.boost.org
