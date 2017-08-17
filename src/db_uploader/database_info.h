@@ -15,38 +15,38 @@ namespace fish_annotator { namespace db_uploader {
 
 namespace pt = boost::property_tree;
 
-/// @brief Stores information needed to connect to a database.
+/// Stores information needed to connect to a database.
 class DatabaseInfo : public Serialization {
 public:
-  /// @brief Constructor.
+  /// Constructor.
   DatabaseInfo();
 
-  /// @brief Gets server name.
+  /// Gets server name.
   std::string getServer() const {return server_;}
 
-  /// @brief Gets database name.
+  /// Gets database name.
   std::string getDatabase() const {return database_;}
 
-  /// @brief Gets username.
+  /// Gets username.
   std::string getUsername() const {return username_;}
 
-  /// @brief Writes to a property tree.
+  /// Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
   pt::ptree write() const;
 
-  /// @brief Reads from a property tree.
+  /// Reads from a property tree.
   ///
   /// @param tree Property tree to be read.
   void read(const pt::ptree &tree);
 private:
-  /// @brief Server name.
+  /// Server name.
   std::string server_;
 
-  /// @brief Database name.
+  /// Database name.
   std::string database_;
 
-  /// @brief Username.
+  /// Username.
   std::string username_;
 };
 

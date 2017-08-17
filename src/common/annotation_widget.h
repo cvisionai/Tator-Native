@@ -20,33 +20,33 @@ enum AnnotationType {
 class AnnotationWidget : public QWidget {
   Q_OBJECT
 public:
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param parent Parent widget.
   explicit AnnotationWidget(QWidget *parent = 0);
 
 private slots:
-  /// @brief Emits signal to make a box annotation.
+  /// Emits signal to make a box annotation.
   ///
   /// @param Whether the button is toggled on or off.
   void on_makeBox_toggled(bool checked);
 
-  /// @brief Emits signal to make a line annotation.
+  /// Emits signal to make a line annotation.
   ///
   /// @param Whether the button is toggled on or off.
   void on_makeLine_toggled(bool checked);
 
-  /// @brief Emits signal to make a dot annotation.
+  /// Emits signal to make a dot annotation.
   ///
   /// @param Whether the button is toggled on or off.
   void on_makeDot_toggled(bool checked);
 
 signals:
-  /// @brief Requests enabling a particular annotation tool.
+  /// Requests enabling a particular annotation tool.
   void setAnnotation(AnnotationType type);
 
 private:
-  /// @brief Widget loaded from ui file.
+  /// Widget loaded from ui file.
   std::unique_ptr<Ui::AnnotationWidget> ui_;
 };
 

@@ -17,55 +17,55 @@ namespace fish_annotator {
 class SpeciesWidget : public QWidget {
   Q_OBJECT
 public:
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param species Species object.
   /// @param parent Parent widget.
   explicit SpeciesWidget(const Species &species, QWidget *parent = 0);
 
-  /// @brief Gets const reference to species used to construct this widget.
+  /// Gets const reference to species used to construct this widget.
   const Species &getSpecies() const {return species_;}
 
-  /// @brief Sets widget values according to input Species object.
+  /// Sets widget values according to input Species object.
   void setSpecies(const Species &species);
 
-  /// @brief Updates individual counts.
+  /// Updates individual counts.
   void setCount(uint64_t count);
 
-  /// @brief Gets color used to represent this species.
+  /// Gets color used to represent this species.
   QColor getColor();
 
 private slots:
-  /// @brief Adds an individual of this species.
+  /// Adds an individual of this species.
   void on_addIndividual_clicked();
 
-  /// @brief Changes the color used to represent this species.
+  /// Changes the color used to represent this species.
   void on_changeColor_clicked();
 
-  /// @brief Adds an individual of this species and subspecies.
+  /// Adds an individual of this species and subspecies.
   void onSubspeciesClicked();
 
 signals:
-  /// @brief Signal for individual added.
+  /// Signal for individual added.
   void individualAdded(std::string species, std::string subspecies);
 
-  /// @brief Signal for species color changed.
+  /// Signal for species color changed.
   void colorChanged();
 
 private:
-  /// @brief Widget loaded from ui file.
+  /// Widget loaded from ui file.
   std::unique_ptr<Ui::SpeciesWidget> ui_;
 
-  /// @brief Subspecies menu.
+  /// Subspecies menu.
   std::unique_ptr<QMenu> subspecies_menu_;
 
-  /// @brief Species used to construct this widget.
+  /// Species used to construct this widget.
   Species species_;
 
-  /// @brief Color used to represent this species.
+  /// Color used to represent this species.
   QColor color_;
 
-  /// @brief Updates button color.
+  /// Updates button color.
   void updateButtonColor();
 };
 

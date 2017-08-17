@@ -1,3 +1,6 @@
+/// @file
+/// @brief Defines class for making dot annotations.
+
 #ifndef ANNOTATED_DOT_H
 #define ANNOTATED_DOT_H
 
@@ -5,13 +8,13 @@
 
 namespace fish_annotator {
 
-/// @brief Displays dot annotations.
+/// Displays dot annotations.
 ///
 /// @tparam Info Contains data associated with a dot.
 template<typename Info>
 class AnnotatedDot: public QGraphicsEllipseItem {
 public:
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param uid Unique ID associated with this region.
   /// @param annotation Annotation associated with this region.
@@ -22,7 +25,7 @@ public:
                const QRectF &bounding_rect,
                QColor color);
 
-  /// @brief Reimplemented from QGraphicsItem.
+  /// Reimplemented from QGraphicsItem.
   ///
   /// @param painter Qt painter pointer.
   /// @param option Qt option pointer.
@@ -30,41 +33,41 @@ public:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget);
 
-  /// @brief Gets the ID associated with this region.
+  /// Gets the ID associated with this region.
   ///
   /// @return Unique ID associated with this region.
   uint64_t getUID();
 
-  /// @brief Gets the point associated with this annotation.
+  /// Gets the point associated with this annotation.
   ///
   /// @return Point associated with this annotation.
   QPointF getAnnPoint();
 
-  ///@brief Whether to draw this annotation or not
+  ///Whether to draw this annotation or not
   bool isValid();
 private:
-  /// @brief Pointer to the annotation location.
+  /// Pointer to the annotation location.
   std::shared_ptr<Info> annotation_;
 
-  /// @brief ID associated with this object.
+  /// ID associated with this object.
   uint64_t uid_;
 
-  /// @brief Bounding rectangle.
+  /// Bounding rectangle.
   QRectF bounding_rect_;
 
-  /// @brief Min dimension of bounding rect for scaling drawing sizes.
+  /// Min dimension of bounding rect for scaling drawing sizes.
   qreal min_dim_;
 
-  /// @brief Font.
+  /// Font.
   QFont font_;
 
-  /// @brief Pen.
+  /// Pen.
   QPen pen_;
 
-  /// @brief Whether this annotation is valid.
+  /// Whether this annotation is valid.
   bool valid_;
 
-  /// @brief Updates annotation with this object's current rect.
+  /// Updates annotation with this object's current rect.
   void updateAnnotation();
 };
 

@@ -8,9 +8,9 @@
 
 namespace fish_annotator {
 
-/// @brief Geometric definition of a rectangle.
+/// Geometric definition of a rectangle.
 struct Rect {
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param x Horizontal coordinate of top-left corner.
   /// @param y Vertical coordinate of top-left corner.
@@ -18,7 +18,7 @@ struct Rect {
   /// @param h Height.
   Rect(int64_t x, int64_t y, int64_t w, int64_t h);
 
-  /// @brief Copy constructor.
+  /// Copy constructor.
   ///
   /// @param r Rect object to be copied.
   Rect(const Rect &r);

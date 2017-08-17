@@ -17,30 +17,30 @@ namespace fish_annotator {
 class MetadataDialog : public QDialog {
   Q_OBJECT
 public:
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param parent Parent widget.
   explicit MetadataDialog(QWidget *parent = 0);
 
-  /// @brief Returns a Metadata object corresponding to the dialog values.
+  /// Returns a Metadata object corresponding to the dialog values.
   ///
   /// @return Metadata object corresponding to the dialog values.
   Metadata getMetadata();
 
-  /// @brief Sets dialog values to values corresponding to input metadata.
+  /// Sets dialog values to values corresponding to input metadata.
   ///
   /// @param metadata Metadata object.
   void setMetadata(const Metadata &metadata);
 
 private slots:
-  /// @brief Calls inherited accept function.
+  /// Calls inherited accept function.
   void on_ok_clicked();
 
-  /// @brief Calls inherited reject function.
+  /// Calls inherited reject function.
   void on_cancel_clicked();
 
 private:
-  /// @brief Widget loaded from ui file.
+  /// Widget loaded from ui file.
   std::unique_ptr<Ui::MetadataDialog> ui_;
 };
 

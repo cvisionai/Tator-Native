@@ -28,9 +28,9 @@ namespace fish_annotator { namespace video_annotator {
 
 namespace pt = boost::property_tree;
 
-/// @brief Defines annotation information for one detection.
+/// Defines annotation information for one detection.
 struct DetectionAnnotation : public Serialization {
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param frame Frame associated with the annotation.
   /// @param id ID of the individual.
@@ -45,27 +45,27 @@ struct DetectionAnnotation : public Serialization {
     std::string species,
     double prob);
 
-  /// @brief Default constructor.
+  /// Default constructor.
   DetectionAnnotation();
 
-  /// @brief Equality operator.
+  /// Equality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is equal to rhs.
   bool operator==(const DetectionAnnotation &rhs) const;
 
-  /// @brief Inequality operator.
+  /// Inequality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is not equal to rhs.
   bool operator!=(const DetectionAnnotation &rhs) const;
 
-  /// @brief Writes to a property tree.
+  /// Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
   pt::ptree write() const;
 
-  /// @brief Reads from a property tree.
+  /// Reads from a property tree.
   ///
   /// @param tree Property tree to be read.
   void read(const pt::ptree &tree);
@@ -78,10 +78,10 @@ struct DetectionAnnotation : public Serialization {
   double prob_; ///< Detection probability.
 };
 
-/// @brief List of detection annotations.
+/// List of detection annotations.
 typedef std::list<std::shared_ptr<DetectionAnnotation>> DetectionList;
 
-/// @brief Makes iterator sortable so it can be used as key in maps.
+/// Makes iterator sortable so it can be used as key in maps.
 ///
 /// Works by converting both iterators to pointers and applying operator<.
 ///
@@ -93,16 +93,16 @@ inline bool operator<(
   return &(*lhs) < &(*rhs);
 }
 
-/// @brief Specifies how a track should contribute to overall fish count.
+/// Specifies how a track should contribute to overall fish count.
 enum CountLabel {
   kIgnore,
   kEntering,
   kExiting
 };
 
-/// @brief Defines annotation information for a track.
+/// Defines annotation information for a track.
 struct TrackAnnotation {
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param ID of the individual.
   /// @param species Species of the individual.
@@ -116,43 +116,43 @@ struct TrackAnnotation {
     uint64_t frame_added,
     CountLabel count_label);
 
-  /// @brief Default constructor.
+  /// Default constructor.
   TrackAnnotation();
 
-  /// @brief Equality operator.
+  /// Equality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is equal to rhs.
   bool operator==(const TrackAnnotation &rhs) const;
 
-  /// @brief Inequality operator.
+  /// Inequality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is not equal to rhs.
   bool operator!=(const TrackAnnotation &rhs) const;
 
-  /// @brief returns the species of the track.
+  /// returns the species of the track.
   ///
   /// @return string containing species of track.
   std::string getSpecies();
 
-  /// @brief Writes to a property tree.
+  /// Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
   pt::ptree write() const;
 
-  /// @brief Reads from a property tree.
+  /// Reads from a property tree.
   ///
   /// @param tree Property tree to be read.
   void read(const pt::ptree &tree);
 
-  /// @brief Writes to a string containing comma separated values.
+  /// Writes to a string containing comma separated values.
   ///
   /// @param fps Frames per second of the video.
   /// @return String containing comma separated values.
   std::string write_csv(double fps) const;
 
-  /// @brief Reads from a string containing comma separated values.
+  /// Reads from a string containing comma separated values.
   ///
   /// @param csv_row String to be read.
   void read_csv(const std::string &csv_row);
@@ -164,10 +164,10 @@ struct TrackAnnotation {
   CountLabel count_label_; ///< How this track contributes to overall count.
 };
 
-/// @brief List of track annotations.
+/// List of track annotations.
 typedef std::list<std::shared_ptr<TrackAnnotation>> TrackList;
 
-/// @brief Makes iterator sortable so it can be used as key in maps.
+/// Makes iterator sortable so it can be used as key in maps.
 ///
 /// Works by converting both iterators to pointers and applying operator<.
 ///
@@ -179,76 +179,76 @@ inline bool operator<(
   return &(*lhs) < &(*rhs);
 }
 
-/// @brief Defines annotation information for a video.
+/// Defines annotation information for a video.
 class VideoAnnotation {
 #ifndef NO_TESTING
   friend class ::TestVideoAnnotation;
 #endif
 public:
-  /// @brief Constructor.
+  /// Constructor.
   VideoAnnotation();
 
-  /// @brief Inserts a detection annotation.
+  /// Inserts a detection annotation.
   ///
   /// @param annotation Annotation to be inserted.
   void insert(std::shared_ptr<DetectionAnnotation> annotation);
 
-  /// @brief Inserts a track annotation.
+  /// Inserts a track annotation.
   ///
   /// @param annotation Annotation to be inserted.
   void insert(std::shared_ptr<TrackAnnotation> annotation);
 
-  /// @brief Removes a detection annotation.
+  /// Removes a detection annotation.
   ///
   /// @param frame Frame of the annotation.
   /// @param id ID of the individual associated with the detection.
   void remove(uint64_t frame, uint64_t id);
 
-  /// @brief Removes a track annotation.
+  /// Removes a track annotation.
   ///
   /// Also removes all detections with the same ID.
   ///
   /// @param id ID of the individual associated with the track.
   void remove(uint64_t id);
 
-  /// @brief Gets next assignable ID for a video.
+  /// Gets next assignable ID for a video.
   ///
   /// @return Next assignable ID.
   uint64_t nextId();
 
-  /// @brief Gets annotations for a given frame.
+  /// Gets annotations for a given frame.
   ///
   /// @param frame Frame in the video.
   /// @return Annotations for the given frame.
   std::vector<std::shared_ptr<DetectionAnnotation>>
     getDetectionAnnotationsByFrame(uint64_t frame);
 
-  /// @brief Gets annotations for a given ID.
+  /// Gets annotations for a given ID.
   ///
   /// @param id Track ID.
   /// @return Annotations for the given frame.
   std::vector<std::shared_ptr<DetectionAnnotation>>
     getDetectionAnnotationsById(uint64_t id);
 
-  /// @brief Gets counts for each species in a video.
+  /// Gets counts for each species in a video.
   ///
   /// @return Counts for each species in the annotations.
   std::map<std::string, uint64_t> getCounts();
 
-  /// @brief Gets all species in the annotations.
+  /// Gets all species in the annotations.
   ///
   /// @return All species in annotations.
   std::vector<Species> getAllSpecies();
 
-  /// @brief Gets total tracks in the video.
+  /// Gets total tracks in the video.
   ///
   /// @return Total tracks in entire video.
   uint64_t getTotal();
 
-  /// @brief Clears all annotations.
+  /// Clears all annotations.
   void clear();
 
-  /// @brief Find detection for a given frame and ID.
+  /// Find detection for a given frame and ID.
   ///
   /// @param frame Detection frame.
   /// @param id Track ID.
@@ -256,42 +256,42 @@ public:
   std::shared_ptr<DetectionAnnotation>
   findDetection(uint64_t frame, uint64_t id);
 
-  /// @brief Find track for a given ID.
+  /// Find track for a given ID.
   ///
   /// @param id Track ID.
   /// @return Shared pointer to track annotation, nullptr if not found.
   std::shared_ptr<TrackAnnotation> findTrack(uint64_t id);
 
-  /// @brief Retrieves next track after given ID.
+  /// Retrieves next track after given ID.
   ///
   /// @param id Track ID.
   /// @return Shared pointer to track annotation, nullptr if not found.
   std::shared_ptr<TrackAnnotation> nextTrack(uint64_t id);
 
-  /// @brief Retrieves previous track before given ID.
+  /// Retrieves previous track before given ID.
   ///
   /// @param id Track ID.
   /// @return Shared pointer to track annotation, nullptr if not found.
   std::shared_ptr<TrackAnnotation> prevTrack(uint64_t id);
 
-  /// @brief Gets first frame where a track occurs.
+  /// Gets first frame where a track occurs.
   ///
   /// @param id Track ID.
   /// @return Frame of first occurrence, zero if not found or no detections.
   uint64_t trackFirstFrame(uint64_t id);
 
-  /// @brief Gets last frame where a track occurs.
+  /// Gets last frame where a track occurs.
   ///
   /// @param id Track ID.
   /// @return Frame of last occurrence, zero if not found or no detections.
   uint64_t trackLastFrame(uint64_t id);
 
-  /// @brief Gets ID of earliest track.
+  /// Gets ID of earliest track.
   ///
   /// @return ID of earliest track.
   uint64_t earliestTrackID();
 
-  /// @brief Sets degraded state for a particular frame.
+  /// Sets degraded state for a particular frame.
   ///
   /// Subsequent frames have the same degraded state until another
   /// degraded state is inserted.
@@ -300,25 +300,25 @@ public:
   /// @param degraded True if degraded, false otherwise.
   void setDegraded(uint64_t frame, bool degraded);
 
-  /// @brief Gets recent degraded state.
+  /// Gets recent degraded state.
   ///
   /// @param frame Current frame.
   /// @return Most recent degraded state.
   bool isDegraded(uint64_t frame);
 
-  /// @brief Equality operator.
+  /// Equality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is equal to rhs.
   bool operator==(VideoAnnotation &rhs);
 
-  /// @brief Inequality operator.
+  /// Inequality operator.
   ///
   /// @param rhs Right hand side argument.
   /// @return Whether the object is not equal to rhs.
   bool operator!=(VideoAnnotation &rhs);
 
-  /// @brief Writes annotations to file.
+  /// Writes annotations to file.
   ///
   /// Writes a json file and optionally a csv file.  The json file contains
   /// all video annotation information, and the csv file contains
@@ -341,54 +341,54 @@ public:
     double fps,
     bool with_csv) const;
 
-  /// @brief Reads annotations from json files.
+  /// Reads annotations from json files.
   ///
   /// @param json_path Path to json file.
   void read(const boost::filesystem::path &json_path);
 
 private:
-  /// @brief For mapping integers to detection annotations.
+  /// For mapping integers to detection annotations.
   typedef boost::bimap<
     boost::bimaps::multiset_of<uint64_t>,
     boost::bimaps::multiset_of<DetectionList::iterator>> DetectionsByInteger;
 
-  /// @brief For mapping unique integers to track annotations.
+  /// For mapping unique integers to track annotations.
   typedef boost::bimap<
     uint64_t,
     boost::bimaps::multiset_of<TrackList::iterator>> TracksByUniqueInteger;
 
-  /// @brief For mapping integers to track annotations.
+  /// For mapping integers to track annotations.
   typedef boost::bimap<
     boost::bimaps::multiset_of<uint64_t>,
     boost::bimaps::multiset_of<TrackList::iterator>> TracksByInteger;
 
-  /// @brief For mapping pair of strings to track annotations.
+  /// For mapping pair of strings to track annotations.
   typedef boost::bimap<
     boost::bimaps::multiset_of<std::pair<std::string, std::string>>,
     boost::bimaps::multiset_of<TrackList::iterator>> TracksByStringPair;
 
-  /// @brief List of detection annotations.
+  /// List of detection annotations.
   DetectionList detection_list_;
 
-  /// @brief List of track annotations.
+  /// List of track annotations.
   TrackList track_list_;
 
-  /// @brief Map between frame and iterator to detection annotations.
+  /// Map between frame and iterator to detection annotations.
   DetectionsByInteger detections_by_frame_;
 
-  /// @brief Map between id and iterator to detection annotations.
+  /// Map between id and iterator to detection annotations.
   DetectionsByInteger detections_by_id_;
 
-  /// @brief Map between id and iterator to track annotations.
+  /// Map between id and iterator to track annotations.
   TracksByUniqueInteger tracks_by_id_;
 
-  /// @brief Map between species/subspecies and iterator to track annotations.
+  /// Map between species/subspecies and iterator to track annotations.
   TracksByStringPair tracks_by_species_;
 
-  /// @brief Map between frame added and iterator to track annotations.
+  /// Map between frame added and iterator to track annotations.
   TracksByInteger tracks_by_frame_added_;
 
-  /// @brief Degraded state by frame.
+  /// Degraded state by frame.
   std::map<uint64_t, bool> degraded_by_frame_;
 };
 

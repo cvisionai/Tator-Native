@@ -8,19 +8,19 @@
 
 namespace fish_annotator {
 
-/// @brief Stores video annotation metadata.
+/// Stores video annotation metadata.
 struct Metadata {
 
-  /// @brief Base file name.
+  /// Base file name.
   std::string file_name_;
 
-  /// @brief Reviewer name.
+  /// Reviewer name.
   std::string reviewer_name_;
 
-  /// @brief Trip ID.
+  /// Trip ID.
   uint32_t trip_id_;
 
-  /// @brief Tow number.
+  /// Tow number.
   uint32_t tow_number_;
 
   bool tow_status_;

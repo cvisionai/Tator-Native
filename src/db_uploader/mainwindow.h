@@ -1,3 +1,6 @@
+/// @file
+/// @brief Defines main window class for database uploader.
+
 #ifndef DB_UPLOADER_MAINWINDOW_H
 #define DB_UPLOADER_MAINWINDOW_H
 
@@ -14,33 +17,33 @@ namespace fish_annotator { namespace db_uploader {
 class MainWindow : public QMainWindow {
   Q_OBJECT
 public:
-  /// @brief Constructor.
+  /// Constructor.
   ///
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
 private slots:
-  /// @brief Connects to input database.
+  /// Connects to input database.
   void on_connectInputDb_clicked();
 
-  /// @brief Connects to output database.
+  /// Connects to output database.
   void on_connectOutputDb_clicked();
 
-  /// @brief Opens a browser window to specify annotated image directory.
+  /// Opens a browser window to specify annotated image directory.
   void on_browseImageDir_clicked();
 
-  /// @brief Cancels the upload.
+  /// Cancels the upload.
   void on_cancel_clicked();
 
-  /// @brief Uploads the annotations.
+  /// Uploads the annotations.
   void on_upload_clicked();
 private:
-  /// @brief Widget loaded from ui file.
+  /// Widget loaded from ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
 
-  /// @brief Input database.
+  /// Input database.
   std::unique_ptr<QSqlDatabase> input_db_;
 
-  /// @brief Output database.
+  /// Output database.
   std::unique_ptr<QSqlDatabase> output_db_;
 };
 
