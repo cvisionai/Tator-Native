@@ -10,8 +10,9 @@ binaries for your compiler if they are available, which typically include
 static libraries.  Most likely Qt will need to be built from 
 scratch; see detailed instructions below.
 
-**IMPORTANT: Make sure that you build Qt with the same compiler you
-will use for building the application (e.g. all MSVC 32 bit, or all MSVC 64 bit).**
+**IMPORTANT: Make sure that you build Qt with the same architecture you
+will use for building the application (e.g. all MSVC 32 bit, or all MSVC 
+64 bit).**
 
 Building static Qt on Windows
 -----------------------------
