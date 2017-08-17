@@ -35,6 +35,7 @@ struct DetectionAnnotation : public Serialization {
   /// @param frame Frame associated with the annotation.
   /// @param id ID of the individual.
   /// @param rect Rectangle defining the annotation.
+  /// @param type Shape of the annotation.
   /// @param species Species identified by this detection.
   /// @param prob Probability associated with this detection.
   DetectionAnnotation(
@@ -104,7 +105,7 @@ enum CountLabel {
 struct TrackAnnotation {
   /// Constructor.
   ///
-  /// @param ID of the individual.
+  /// @param id ID of the individual.
   /// @param species Species of the individual.
   /// @param subspecies Subspecies of the individual.
   /// @param frame_added Frame that individual was added.

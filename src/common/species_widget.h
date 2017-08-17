@@ -14,6 +14,7 @@
 
 namespace fish_annotator {
 
+/// Widget containing all controls associated with a single species.
 class SpeciesWidget : public QWidget {
   Q_OBJECT
 public:

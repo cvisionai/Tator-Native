@@ -23,6 +23,7 @@ struct Metadata {
   /// Tow number.
   uint32_t tow_number_;
 
+  /// Tow status.
   bool tow_status_;
 
 };

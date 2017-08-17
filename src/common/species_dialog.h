@@ -14,6 +14,7 @@
 
 namespace fish_annotator {
 
+/// Dialog for adding a new species.
 class SpeciesDialog : public QDialog {
   Q_OBJECT
 public:

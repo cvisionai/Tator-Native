@@ -56,7 +56,7 @@ struct ImageAnnotation : public Serialization {
 
   /// Writes to a csv.  Does not include header.
   ///
-  /// @param csv Output file stream.
+  /// @param csv_file Output file stream.
   void write_csv(std::ofstream &csv_file) const;
 
   /// Equality operator.

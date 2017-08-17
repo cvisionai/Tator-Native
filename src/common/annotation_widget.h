@@ -11,12 +11,14 @@
 
 namespace fish_annotator {
 
+/// Shape of the annotation.
 enum AnnotationType {
   kBox,
   kLine,
   kDot
 };
 
+/// Widget containing controls associated with a single species.
 class AnnotationWidget : public QWidget {
   Q_OBJECT
 public:

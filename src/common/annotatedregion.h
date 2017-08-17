@@ -14,6 +14,7 @@
 
 namespace fish_annotator {
 
+/// Possible types of mouse movements while dragging.
 enum Drag {
   DRAG_NONE = 0,
   DRAG_TOP,

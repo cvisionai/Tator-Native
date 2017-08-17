@@ -19,6 +19,7 @@ class TestImageAnnotator;
 
 namespace fish_annotator {
 
+/// Widget containing all species controls.
 class SpeciesControls : public QWidget {
   Q_OBJECT
 #ifndef NO_TESTING

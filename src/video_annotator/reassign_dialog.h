@@ -13,6 +13,7 @@
 
 namespace fish_annotator { namespace video_annotator {
 
+/// Contains data needed to do an ID reassignment.
 struct Reassignment {
   uint32_t from_id_; ///< ID to reassign.
   uint32_t to_id_; ///< ID to reassign to.
@@ -20,11 +21,17 @@ struct Reassignment {
   uint64_t to_frame_; ///< Frame to stop reassignment.
 };
 
+/// Dialog for specifying ID reassignment parameters.
 class ReassignDialog : public QDialog {
   Q_OBJECT
 public:
   /// Constructor.
   ///
+  /// @param current_frame Current frame when this dialog was opened.
+  /// @param first_frame First frame where this track occurs.
+  /// @param last_frame Last frame where this track occurs.
+  /// @param id ID of this track.
+  /// @param new_track_id First available ID of a new track.
   /// @param parent Parent widget.
   explicit ReassignDialog(
       qint64 current_frame,
@@ -34,8 +41,8 @@ public:
       qint64 new_track_id,
       QWidget *parent = 0);
 
-  /// Returns a reassignment object corresponding to the dialog
-  ///        values.
+  /// Returns a reassignment object corresponding to the dialog values.
+  ///
   /// @return Reassignment object corresponding to dialog values.
   Reassignment getReassignment();
 

@@ -30,6 +30,7 @@ class TestImageAnnotator;
 
 namespace fish_annotator { namespace image_annotator {
 
+/// Main window for image annotator.
 class MainWindow : public QMainWindow {
   Q_OBJECT
 #ifndef NO_TESTING

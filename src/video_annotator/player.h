@@ -27,6 +27,7 @@ extern "C" {
 
 namespace fish_annotator { namespace video_annotator {
 
+/// Class for playing video.
 class Player : public QObject {	
     Q_OBJECT
 public:
@@ -72,7 +73,7 @@ signals:
 
     /// Emitted when duration changes.
     ///
-    /// @param New video duration.
+    /// @param duration New video duration.
     void durationChanged(qint64 duration);
 
     /// Emitted when playback rate changes.

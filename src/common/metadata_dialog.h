@@ -14,6 +14,7 @@
 
 namespace fish_annotator {
 
+/// Dialog for specifying annotatoin metadata.
 class MetadataDialog : public QDialog {
   Q_OBJECT
 public:

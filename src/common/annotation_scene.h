@@ -47,17 +47,17 @@ public slots:
 signals:
   /// Notifies that a box annotation has been drawn.
   ///
-  /// @param Bounding rect of completed annotation.
+  /// @param rect Bounding rect of completed annotation.
   void boxFinished(const QRectF &rect);
 
   /// Notifies that a line annotation has been drawn.
   ///
-  /// @param Bounding rect of completed annotation.
+  /// @param line Start and end of completed annotation.
   void lineFinished(const QLineF &line);
 
   /// Notifies that a dot annotation has been drawn.
   ///
-  /// @param Bounding rect of completed annotation.
+  /// @param dot Location of completed annotation.
   void dotFinished(const QPointF &dot);
 protected:
   /// Initiates drawing of an annotation if mode is kDraw.
