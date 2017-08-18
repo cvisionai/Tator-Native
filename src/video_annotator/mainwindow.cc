@@ -405,6 +405,7 @@ void MainWindow::on_reassignFish_clicked() {
         reassign.from_id_);
     auto to_trk = annotation_->findTrack(reassign.to_id_);
     if(to_trk == nullptr) {
+      // Detections assigned to new track
       auto new_trk = std::make_shared<TrackAnnotation>(
           reassign.to_id_,
           from_trk->species_,
@@ -413,38 +414,55 @@ void MainWindow::on_reassignFish_clicked() {
           from_trk->count_label_);
       annotation_->insert(new_trk);
     }
-    bool need_new = false;
-    for(auto& det : from_det) {
-      if(det->frame_ >= reassign.from_frame_ && 
-          det->frame_ <= reassign.to_frame_) {
-        auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
-        if(exist != nullptr) {
-          need_new = true;
-          break;
+    else {
+      // Detections assigned to existing track, check for 
+      // overwrite of existing detections
+      bool need_new = false;
+      for(auto& det : from_det) {
+        if(det->frame_ >= reassign.from_frame_ && 
+            det->frame_ <= reassign.to_frame_) {
+          auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
+          if(exist != nullptr) {
+            need_new = true;
+            break;
+          }
         }
       }
-    }
-    if(need_new == true) {
-      auto new_trk = std::make_shared<TrackAnnotation>(
-          new_id,
-          from_trk->species_,
-          from_trk->subspecies_,
-          from_trk->frame_added_,
-          from_trk->count_label_);
-      annotation_->insert(new_trk);
+      if(need_new == true) {
+        // Overwrite is necessary, make new track to store them
+        auto new_trk = std::make_shared<TrackAnnotation>(
+            new_id,
+            from_trk->species_,
+            from_trk->subspecies_,
+            from_trk->frame_added_,
+            from_trk->count_label_);
+        annotation_->insert(new_trk);
+      }
     }
     for(auto& det : from_det) {
       if(det->frame_ >= reassign.from_frame_ && 
           det->frame_ <= reassign.to_frame_) {
         auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
         if(exist != nullptr) {
+          auto replace = std::make_shared<DetectionAnnotation>(
+              exist->frame_,
+              new_id,
+              exist->area_,
+              exist->type_,
+              exist->species_,
+              exist->prob_);
           annotation_->remove(exist->frame_, exist->id_);
-          exist->id_ = new_id;
-          annotation_->insert(exist);
+          annotation_->insert(replace);
         }
+        auto updated = std::make_shared<DetectionAnnotation>(
+            det->frame_,
+            reassign.to_id_,
+            det->area_,
+            det->type_,
+            det->species_,
+            det->prob_);
         annotation_->remove(det->frame_, det->id_);
-        det->id_ = reassign.to_id_;
-        annotation_->insert(det);
+        annotation_->insert(updated);
       }
     }
   }
