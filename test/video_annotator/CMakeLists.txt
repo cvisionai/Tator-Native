@@ -6,6 +6,12 @@ set( VIDEO_ANNOTATOR_SOURCES
   "../../src/video_annotator/player.cc"
   "../../src/video_annotator/reassign_dialog.cc"
   )
+include_directories(
+  "../../src/common"
+  "../../src/video_annotator"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../../src/common"
+  )
 if( WIN32 )
   add_executable( test_video_annotator WIN32 
     ${TEST_VIDEO_ANNOTATOR_SOURCES} 
@@ -14,7 +20,6 @@ if( WIN32 )
   target_link_libraries( 
     test_video_annotator 
     common
-    ${OpenCV_LIBS}
     ${WINDOWS_LIBRARIES}
     Qt5::Widgets
     Qt5::Test
@@ -44,7 +49,6 @@ if( WIN32 )
     test_video_annotator PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
-  file( COPY ${OpenCV_SHARED_LIBS} DESTINATION Release )
   file( COPY slow_motion_drop.mp4 DESTINATION Release )
 elseif( APPLE )
   add_executable( test_video_annotator 
@@ -54,7 +58,6 @@ elseif( APPLE )
   target_link_libraries( 
     test_video_annotator 
     common
-    ${OpenCV_LIBS}
     ${APPLE_LIBRARIES}
     Qt5::Widgets
     Qt5::PrintSupport
@@ -75,10 +78,8 @@ elseif( APPLE )
     test_video_annotator PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
-  file( COPY ${OpenCV_SHARED_LIBS} DESTINATION . )
   file( COPY slow_motion_drop.mp4 DESTINATION . )
 elseif( UNIX )
-  message( STATUS "OPENCV SHARED LIBS: ${OpenCV_SHARED_LIBS}" )
   add_executable( test_video_annotator 
     ${TEST_VIDEO_ANNOTATOR_SOURCES} 
     ${VIDEO_ANNOTATOR_SOURCES}
@@ -87,7 +88,6 @@ elseif( UNIX )
     test_video_annotator 
     dl
     common
-    ${OpenCV_LIBS}
     ${UNIX_LIBRARIES}
     Qt5::Widgets
     Qt5::Core
@@ -111,7 +111,6 @@ elseif( UNIX )
     test_video_annotator PROPERTIES
     FAIL_REGULAR_EXPRESSION "FAIL"
     )
-  file( COPY ${OpenCV_SHARED_LIBS} DESTINATION . )
   file( COPY slow_motion_drop.mp4 DESTINATION . )
 endif()
 target_include_directories( test_video_annotator PUBLIC

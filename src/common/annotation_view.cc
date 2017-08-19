@@ -1,4 +1,4 @@
-#include "fish_annotator/common/annotation_view.h"
+#include "annotation_view.h"
 
 namespace fish_annotator {
 
@@ -50,7 +50,7 @@ void AnnotationView::setBoundingRect(const QRectF &rect) {
   bounding_rect_ = rect;
 }
 
-#include "../../include/fish_annotator/common/moc_annotation_view.cpp"
+#include "moc_annotation_view.cpp"
 
 } // namespace fish_annotator
 

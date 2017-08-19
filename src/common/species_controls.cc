@@ -1,8 +1,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "fish_annotator/common/species_dialog.h"
-#include "fish_annotator/common/species_controls.h"
+#include "species_dialog.h"
+#include "species_controls.h"
 #include "ui_species_controls.h"
 
 namespace fish_annotator {
@@ -52,6 +52,10 @@ void SpeciesControls::insertSpeciesWidget(const Species &species) {
         species_widgets_.back().get(), 
         SIGNAL(individualAdded(std::string, std::string)),
         this, SIGNAL(individualAdded(std::string, std::string)));
+    QObject::connect(
+        species_widgets_.back().get(), &SpeciesWidget::colorChanged,
+        this, &SpeciesControls::onColorChanged);
+    onColorChanged();
   }
 }
 
@@ -88,6 +92,16 @@ void SpeciesControls::loadSpeciesFile(const QString &in_file) {
         + in_file.toStdString()
         + std::string(".")).c_str());
   }
+}
+
+void SpeciesControls::onColorChanged() {
+  QMap<QString, QColor> colors;
+  for(const auto& widget : species_widgets_) {
+    colors.insert(
+        widget->getSpecies().getName().c_str(), 
+        widget->getColor());
+  }
+  emit colorChanged(colors);
 }
 
 void SpeciesControls::loadFromVector(const std::vector<Species> &vec) {
@@ -188,7 +202,7 @@ void SpeciesControls::setCount(uint64_t count, const std::string &species) {
   }
 }
 
-#include "../../include/fish_annotator/common/moc_species_controls.cpp"
+#include "moc_species_controls.cpp"
 
 } // namespace fish_annotator
 

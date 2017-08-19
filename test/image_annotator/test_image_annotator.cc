@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 
 #include "test_image_annotator.h"
-#include "fish_annotator/image_annotator/mainwindow.h"
+#include "mainwindow.h"
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)

@@ -1,8 +1,10 @@
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <QProgressDialog>
+#include <QMessageBox>
 
-#include "fish_annotator/image_annotator/image_annotation.h"
+#include "image_annotation.h"
 
 namespace fish_annotator { namespace image_annotator {
 
@@ -21,6 +23,8 @@ ImageAnnotation::ImageAnnotation(
   , id_(id)
   , area_(rect)
   , type_(type) {
+  boost::algorithm::to_lower(species_);
+  boost::algorithm::to_lower(subspecies_);
 }
 
 ImageAnnotation::ImageAnnotation()
@@ -104,7 +108,9 @@ void ImageAnnotation::write_csv(std::ofstream &csv) const {
 void ImageAnnotation::read(const pt::ptree &tree) {
   image_file_ = tree.get<std::string>("image_file");
   species_ = tree.get<std::string>("species");
+  boost::algorithm::to_lower(species_);
   subspecies_ = tree.get<std::string>("subspecies");
+  boost::algorithm::to_lower(subspecies_);
   id_ = tree.get<uint64_t>("id");
   uint64_t x = tree.get<uint64_t>("x");
   uint64_t y = tree.get<uint64_t>("y");
@@ -250,12 +256,14 @@ void ImageAnnotationList::write(
     csv << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
     csv << std::endl;
     pt::ptree tree;
+    pt::ptree detections;
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
       (*(it->second))->write_csv(csv);
       (*(it->second))->write_csv(sum);
-      tree.add_child("annotation_list.annotation", (*(it->second))->write());
+      detections.push_back(std::make_pair("", (*(it->second))->write()));
     }
+    tree.add_child("detections", detections);
     fs::path json_file(image_file);
     json_file.replace_extension(".json");
     pt::write_json(json_file.string(), tree);
@@ -280,6 +288,16 @@ void ImageAnnotationList::read(
           auto annotation = std::make_shared<ImageAnnotation>();
           annotation->read(val.second);
           insert(annotation);
+        }
+      }
+      else {
+        auto it_new = tree.find("detections");
+        if(it_new != tree.not_found()) {
+          for(auto &val : tree.get_child("detections")) {
+            auto annotation = std::make_shared<ImageAnnotation>();
+            annotation->read(val.second.get_child(""));
+            insert(annotation);
+          }
         }
       }
     }

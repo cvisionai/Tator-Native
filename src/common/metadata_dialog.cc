@@ -1,6 +1,6 @@
 #include <QMessageBox>
 
-#include "fish_annotator/common/metadata_dialog.h"
+#include "metadata_dialog.h"
 #include "ui_metadata_dialog.h"
 
 namespace fish_annotator {
@@ -52,7 +52,7 @@ void MetadataDialog::setMetadata(const Metadata &metadata) {
   ui_->towStatus->setChecked(metadata.tow_status_);
 }
 
-#include "../../include/fish_annotator/common/moc_metadata_dialog.cpp"
+#include "moc_metadata_dialog.cpp"
 
 } // namespace fish_annotator
 

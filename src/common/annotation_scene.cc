@@ -1,6 +1,6 @@
 #include <QGraphicsView>
 
-#include "fish_annotator/common/annotation_scene.h"
+#include "annotation_scene.h"
 
 namespace fish_annotator {
 
@@ -153,6 +153,14 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   QGraphicsScene::mouseReleaseEvent(event);
 }
 
+void AnnotationScene::keyPressEvent(QKeyEvent *event) {
+  if(mode_ == kDraw && event->key() == Qt::Key_Escape) {
+    mode_ = kSelect;
+    QApplication::restoreOverrideCursor();
+  }
+  QGraphicsScene::keyPressEvent(event);
+}
+
 void AnnotationScene::makeItemsControllable(bool controllable) {
   foreach(QGraphicsItem *item, items()) {
     item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
@@ -160,6 +168,6 @@ void AnnotationScene::makeItemsControllable(bool controllable) {
   }
 }
 
-#include "../../include/fish_annotator/common/moc_annotation_scene.cpp"
+#include "moc_annotation_scene.cpp"
 
 } // namespace fish_annotator

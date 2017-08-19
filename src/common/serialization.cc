@@ -1,7 +1,7 @@
 
 #include <boost/property_tree/json_parser.hpp>
 
-#include "fish_annotator/common/serialization.h"
+#include "serialization.h"
 
 namespace fish_annotator {
 

@@ -1,6 +1,12 @@
 # Find the sources for image annotator
 file( GLOB IMAGE_ANNOTATOR_SOURCES "*.cc" )
 
+include_directories(
+  "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../common"
+  "../common"
+)
+
 # Add image_annotator executable
 if( WIN32 )
   file( COPY ${FISHDET_ICON} DESTINATION . )

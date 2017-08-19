@@ -4,7 +4,7 @@ set( SPECIES_SOURCES
   "../../src/common/species.cc"
   )
 include_directories( 
-  "../../include/fish_annotator/common"
+  "../../src/common"
   )
 if( WIN32 )
   add_executable( test_species WIN32 

@@ -1,4 +1,4 @@
-#include "fish_annotator/common/annotation_widget.h"
+#include "annotation_widget.h"
 #include "ui_annotation_widget.h"
 
 namespace fish_annotator {
@@ -54,7 +54,7 @@ void AnnotationWidget::on_makeDot_toggled(bool checked) {
   emit setAnnotation(kDot);
 }
 
-#include "../../include/fish_annotator/common/moc_annotation_widget.cpp"
+#include "moc_annotation_widget.cpp"
 
 } // namespace fish_annotator
 

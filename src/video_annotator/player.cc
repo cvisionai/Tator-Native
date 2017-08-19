@@ -1,9 +1,10 @@
-#include "fish_annotator/video_annotator/player.h"
 
 #include <QTime>
 #include <QCoreApplication>
 #include <QEventLoop>
 #include <QMutexLocker>
+
+#include "player.h"
 
 namespace fish_annotator { namespace video_annotator {
 
@@ -105,6 +106,13 @@ void Player::loadVideo(QString filename) {
   }
   stream_index_ = status;
   AVStream *stream = format_context_->streams[stream_index_];
+  frame_rate_ = 
+    static_cast<double>(stream->avg_frame_rate.num) / 
+    static_cast<double>(stream->avg_frame_rate.den);
+  uint64_t num_frames_est = format_context_->duration;
+  num_frames_est /= AV_TIME_BASE;
+  num_frames_est *= frame_rate_;
+  emit mediaLoadStart(num_frames_est / 1000);
   AVCodec *codec = avcodec_find_decoder(stream->codecpar->codec_id);
   if(codec == nullptr) {
     std::string msg(
@@ -161,6 +169,9 @@ void Player::loadVideo(QString filename) {
       break;
     }
     if(packet_.stream_index == stream_index_ && packet_.dts >= 0) {
+      if(frame_index % 1000 == 0) {
+        emit loadProgress(frame_index / 1000);
+      }
       seek_map_.left.insert({frame_index, packet_.dts});
       ++frame_index;
     }
@@ -170,9 +181,6 @@ void Player::loadVideo(QString filename) {
       stream_index_, 
       seek_map_.right.begin()->first,
       AVSEEK_FLAG_BACKWARD);
-  frame_rate_ = 
-    static_cast<double>(stream->avg_frame_rate.num) / 
-    static_cast<double>(stream->avg_frame_rate.den);
   current_speed_ = frame_rate_;
   delay_ = 1000000.0 / frame_rate_;
   image_ = QImage(
@@ -235,7 +243,8 @@ void Player::getOneFrame() {
       }
       status = avcodec_send_packet(codec_context_, &packet_);
       if(status < 0) {
-        emit error("Error while sending packet to the decoder!");
+        // Intentionally neglecting to post an error message here
+        // as this may be a bad packet.
         return;
       }
       while(status >= 0) {
@@ -379,7 +388,7 @@ void Player::processWait(qint64 usec) {
   }
 }
 
-#include "../../include/fish_annotator/video_annotator/moc_player.cpp"
+#include "moc_player.cpp"
 
 }} // namespace fish_annotator::gui
 
