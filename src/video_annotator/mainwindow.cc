@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
   , scene_(new AnnotationScene)
   , pixmap_item_(nullptr)
   , visibility_box_(nullptr)
+  , count_text_(nullptr)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
@@ -805,6 +806,23 @@ void MainWindow::drawAnnotations() {
   else {
     ui_->degradedStatus->setChecked(false);
   }
+  if(count_text_ != nullptr) {
+    scene_->removeItem(count_text_);
+    count_text_ = nullptr;
+  }
+  auto counts = annotation_->getCounts(0, 
+    static_cast<uint64_t>(last_position_));
+  QString count_str;
+  for(const auto& cnt : counts) {
+    QString species_str = QString(
+      "%1: %2\n").arg(cnt.first.c_str()).arg(cnt.second);
+    count_str.append(species_str);
+  }
+  QFont font;
+  font.setPixelSize(100);
+  font.setBold(true);
+  count_text_ = scene_->addText(count_str, font);
+  count_text_->setDefaultTextColor(QColor(255, 0, 0));
   // This is needed to prevent clipping of text
   ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
 }

@@ -261,6 +261,9 @@ private:
   /// Border rect for indicating degraded state.
   QGraphicsRectItem *visibility_box_;
 
+  /// Count text.
+  QGraphicsTextItem* count_text_;
+
   /// Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
 
