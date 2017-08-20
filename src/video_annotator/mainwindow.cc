@@ -812,17 +812,19 @@ void MainWindow::drawAnnotations() {
   }
   auto counts = annotation_->getCounts(0, 
     static_cast<uint64_t>(last_position_));
-  QString count_str;
-  for(const auto& cnt : counts) {
-    QString species_str = QString(
-      "%1: %2\n").arg(cnt.first.c_str()).arg(cnt.second);
-    count_str.append(species_str);
+  if(counts.size() > 0) {
+    QString count_str;
+    for(const auto& cnt : counts) {
+      QString species_str = QString(
+        "%1: %2\n").arg(cnt.first.c_str()).arg(cnt.second);
+      count_str.append(species_str);
+    }
+    QFont font;
+    font.setPixelSize(100);
+    font.setBold(true);
+    count_text_ = scene_->addText(count_str, font);
+    count_text_->setDefaultTextColor(QColor(255, 0, 0));
   }
-  QFont font;
-  font.setPixelSize(100);
-  font.setBold(true);
-  count_text_ = scene_->addText(count_str, font);
-  count_text_->setDefaultTextColor(QColor(255, 0, 0));
   // This is needed to prevent clipping of text
   ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
 }
