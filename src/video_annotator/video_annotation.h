@@ -234,8 +234,10 @@ public:
   /// Gets counts for each species in a video.
   ///
   /// @param start Frame to start counting.
+  /// @param stop Last frame to count, -1 means til end of video.
   /// @return Counts for each species in the annotations.
-  std::map<std::string, uint64_t> getCounts(uint64_t start = 0);
+  std::map<std::string, uint64_t> getCounts(uint64_t start = 0, 
+    uint64_t stop = -1);
 
   /// Gets all species in the annotations.
   ///
