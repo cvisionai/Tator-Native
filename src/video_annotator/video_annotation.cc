@@ -37,6 +37,7 @@ DetectionAnnotation::DetectionAnnotation(
   , type_(type)
   , species_(species)
   , prob_(prob) {
+  boost::algorithm::to_lower(species_);
 }
 
 DetectionAnnotation::DetectionAnnotation()
@@ -112,6 +113,7 @@ void DetectionAnnotation::read(const pt::ptree &tree) {
   auto opt_species = tree.get_optional<std::string>("species");
   if(opt_species != boost::none) {
     species_ = opt_species.get();
+    boost::algorithm::to_lower(species_);
   }
   prob_ = 0.0; // default
   auto opt_prob = tree.get_optional<double>("prob");
@@ -177,6 +179,8 @@ void TrackAnnotation::read(const pt::ptree &tree) {
   frame_added_ = tree.get<decltype(frame_added_)>("frame_added");
   auto count_label_str = count_label_map.right.at(
     tree.get<std::string>("count_label"));
+  boost::algorithm::to_lower(species_);
+  boost::algorithm::to_lower(subspecies_);
 }
 
 std::string TrackAnnotation::write_csv(double fps) const {
