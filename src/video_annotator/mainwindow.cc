@@ -642,7 +642,10 @@ void MainWindow::handlePlayerMediaLoaded(
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
   ui_->videoWindow->show();
-  emit requestPrevFrame();
+  updateSpeciesCounts();
+  updateStats();
+  drawAnnotations();
+  emit requestSetFrame(0);
 }
 
 void MainWindow::handlePlayerError(QString err) {

@@ -189,6 +189,9 @@ private:
 
     /// Waits for specified time while allowing events to process.
     void processWait(qint64 usec);
+
+    /// Reinitializes the player.
+    void reinit();
 };
 
 }} // namespace fish_annotator::video_annotator

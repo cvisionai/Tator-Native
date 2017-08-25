@@ -21,11 +21,11 @@ Player::Player()
   , image_()
   , current_speed_(0.0)
   , codec_context_(nullptr)
-  , format_context_(avformat_alloc_context())
+  , format_context_(nullptr)
   , packet_()
   , stream_index_(-1)
-  , frame_(av_frame_alloc())
-  , frame_rgb_(av_frame_alloc())
+  , frame_(nullptr)
+  , frame_rgb_(nullptr)
   , sws_context_(nullptr)
   , delay_(0.0)
   , dec_frame_(0)
@@ -40,37 +40,17 @@ Player::Player()
 }
 
 Player::~Player() {
-  QMutexLocker locker(&frame_mutex_);
-  if(codec_context_ != nullptr) {
-    avcodec_close(codec_context_);
-    codec_context_ = nullptr;
-  }
-  if(format_context_ != nullptr) {
-    avformat_close_input(&format_context_);
-    format_context_ = nullptr;
-  }
-  if(frame_rgb_ != nullptr) {
-    if(frame_rgb_->data[0] != nullptr) {
-      av_freep(&frame_rgb_->data[0]);
-    }
-    av_frame_free(&frame_rgb_);
-    frame_rgb_ = nullptr;
-  }
-  if(frame_ != nullptr) {
-    av_frame_free(&frame_);
-    frame_ = nullptr;
-  }
-  stopped_ = true;
+  reinit();
   condition_.wakeOne();
 }
 
 void Player::loadVideo(QString filename) {
+  reinit();
   video_path_ = filename;
   frame_buffer_.clear();
-  if(format_context_ != nullptr) {
-    avformat_close_input(&format_context_);
-    format_context_ = nullptr;
-  }
+  format_context_ = avformat_alloc_context();
+  frame_ = av_frame_alloc();
+  frame_rgb_ = av_frame_alloc();
   int status = avformat_open_input(
     &format_context_, 
     filename.toStdString().c_str(),
@@ -386,6 +366,30 @@ void Player::processWait(qint64 usec) {
   while(QTime::currentTime() < die_time) {
     QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
   }
+}
+
+void Player::reinit() {
+  QMutexLocker locker(&frame_mutex_);
+  if(codec_context_ != nullptr) {
+    avcodec_close(codec_context_);
+    codec_context_ = nullptr;
+  }
+  if(format_context_ != nullptr) {
+    avformat_close_input(&format_context_);
+    format_context_ = nullptr;
+  }
+  if(frame_rgb_ != nullptr) {
+    if(frame_rgb_->data[0] != nullptr) {
+      av_freep(&frame_rgb_->data[0]);
+    }
+    av_frame_free(&frame_rgb_);
+    frame_rgb_ = nullptr;
+  }
+  if(frame_ != nullptr) {
+    av_frame_free(&frame_);
+    frame_ = nullptr;
+  }
+  stopped_ = true;
 }
 
 #include "moc_player.cpp"
