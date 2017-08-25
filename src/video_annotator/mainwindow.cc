@@ -556,6 +556,7 @@ void MainWindow::colorChanged(QMap<QString, QColor> color_map) {
 }
 
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
+  annotation_->setVideoLength(duration);
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
   ui_->videoSlider->setPageStep(duration / 20);
