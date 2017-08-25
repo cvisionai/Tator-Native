@@ -28,6 +28,18 @@ namespace fish_annotator { namespace video_annotator {
 
 namespace pt = boost::property_tree;
 
+/// Gets a required field from a property tree.
+///
+/// This function creates an error message box on failure, and also
+/// returns an error if the parent function should discontinue.
+///
+/// @tparam FieldType Type of the field.
+/// @param tree Property tree to read from.
+/// @param name Name of the field.
+/// @param value Value is read into this variable.
+template<typename FieldType>
+void getRequired(const pt::ptree &tree, const char *name, FieldType &value);
+
 /// Defines annotation information for one detection.
 struct DetectionAnnotation : public Serialization {
   /// Constructor.
@@ -188,6 +200,11 @@ class VideoAnnotation {
 public:
   /// Constructor.
   VideoAnnotation();
+
+  /// Sets length of video.
+  ///
+  /// @param video_length Length of video being annotated.
+  void setVideoLength(uint64_t video_length);
 
   /// Inserts a detection annotation.
   ///
@@ -391,7 +408,38 @@ private:
 
   /// Degraded state by frame.
   std::map<uint64_t, bool> degraded_by_frame_;
+
+  /// Length of the video being annotated.
+  uint64_t video_length_;
+
+  /// Verifies that frame number is in bounds.
+  ///
+  /// If a frame is out of bounds, it is capped so that it is in bounds.
+  ///
+  /// @param frame Frame number to check.
+  void boundFrame(uint64_t &frame);
 };
+
+// 
+// Implementations
+//
+
+template<typename FieldType>
+void getRequired<FieldType>(
+    const pt::ptree &tree, 
+    const char *name, 
+    FieldType &value) {
+  auto it = tree.find(name);
+  if(it == tree.not_found()) {
+    QMessageBox err;
+    err.setText(QString("Could not find required field %1.  A default "
+          "value will be used instead.").arg(name));
+    err.exec();
+  }
+  else {
+    value = tree.get<FieldType>(name);
+  }
+}
 
 }} // namespace fish_annotator::video_annotator
 

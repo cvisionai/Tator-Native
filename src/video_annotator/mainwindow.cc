@@ -207,6 +207,7 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       tr("Annotation Files (*.json)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
+    annotation_->clear();
     annotation_->read(file_str.toStdString());
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     fish_id_ = annotation_->earliestTrackID();
@@ -555,6 +556,7 @@ void MainWindow::colorChanged(QMap<QString, QColor> color_map) {
 }
 
 void MainWindow::handlePlayerDurationChanged(qint64 duration) {
+  annotation_->setVideoLength(duration);
   ui_->videoSlider->setRange(0, duration);
   ui_->videoSlider->setSingleStep(1);
   ui_->videoSlider->setPageStep(duration / 20);
