@@ -679,4 +679,14 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
   }
 }
 
+void VideoAnnotation::boundFrame(uint64_t &frame) {
+  if(frame >= video_length_) {
+    QMessageBox err;
+    err.setText(QString("Frame must be less than video length (%1)!"
+         " Value will be truncated.").arg(video_length_));
+    err.exec();
+    frame = video_length_ > 0 ? video_length_ - 1 : 0;
+  }
+}
+
 }} // namespace fish_annotator::video_annotator

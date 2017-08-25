@@ -411,6 +411,13 @@ private:
 
   /// Length of the video being annotated.
   uint64_t video_length_;
+
+  /// Verifies that frame number is in bounds.
+  ///
+  /// If a frame is out of bounds, it is capped so that it is in bounds.
+  ///
+  /// @param frame Frame number to check.
+  void boundFrame(uint64_t &frame);
 };
 
 // 
