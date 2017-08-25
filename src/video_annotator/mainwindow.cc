@@ -207,6 +207,7 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       tr("Annotation Files (*.json)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
+    annotation_->clear();
     annotation_->read(file_str.toStdString());
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     fish_id_ = annotation_->earliestTrackID();
