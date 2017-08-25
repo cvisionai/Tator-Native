@@ -89,12 +89,12 @@ pt::ptree DetectionAnnotation::write() const {
 }
 
 void DetectionAnnotation::read(const pt::ptree &tree) {
-  frame_ = tree.get<uint64_t>("frame");
-  id_ = tree.get<uint64_t>("id");
-  area_.x = tree.get<uint64_t>("x");
-  area_.y = tree.get<uint64_t>("y");
-  area_.w = tree.get<uint64_t>("w");
-  area_.h = tree.get<uint64_t>("h");
+  getRequired(tree, "frame", frame_);
+  getRequired(tree, "id", id_);
+  getRequired(tree, "x", area_.x);
+  getRequired(tree, "y", area_.y);
+  getRequired(tree, "w", area_.w);
+  getRequired(tree, "h", area_.h);
   type_ = kBox; // default
   auto opt_type_str = tree.get_optional<std::string>("type");
   if(opt_type_str != boost::none) {
@@ -173,12 +173,13 @@ pt::ptree TrackAnnotation::write() const {
 }
 
 void TrackAnnotation::read(const pt::ptree &tree) {
-  id_ = tree.get<decltype(id_)>("id");
-  species_ = tree.get<decltype(species_)>("species");
-  subspecies_ = tree.get<decltype(subspecies_)>("subspecies");
-  frame_added_ = tree.get<decltype(frame_added_)>("frame_added");
-  auto count_label_str = count_label_map.right.at(
-    tree.get<std::string>("count_label"));
+  std::string count_label_str;
+  getRequired(tree, "id", id_);
+  getRequired(tree, "species", species_);
+  getRequired(tree, "subspecies", subspecies_);
+  getRequired(tree, "frame_added", frame_added_);
+  getRequired(tree, "count_label", count_label_str);
+  count_label_ = count_label_map.right.at(count_label_str);
   boost::algorithm::to_lower(species_);
   boost::algorithm::to_lower(subspecies_);
 }
@@ -594,7 +595,9 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
       if(it == tree.not_found()) {
         // Neither legacy nor new format
         QMessageBox err;
-        err.setText("Invalid file format!");
+        err.setText("Invalid file format! File must be valid JSON and"
+            " contain top level tracks, detections, and global_state"
+            " fields.");
         err.exec();
       }
       else {
@@ -660,19 +663,26 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
       for(auto &trk : tree.get_child("tracks")) {
         auto track = std::make_shared<TrackAnnotation>();
         track->read(trk.second.get_child(""));
+        boundFrame(track->frame_added_);
         insert(track);
       }
       for(auto &det : tree.get_child("detections")) {
         auto detection = std::make_shared<DetectionAnnotation>();
         detection->read(det.second.get_child(""));
+        boundFrame(detection->frame_);
         insert(detection);
       }
       for(auto &gst : tree.get_child("global_state")) {
         auto state = gst.second.get_child("");
-        if(state.get<std::string>("state") == "degraded") {
-          setDegraded(
-              state.get<uint64_t>("frame"),
-              state.get<double>("value") > 0.5 ? true : false);
+        std::string state_str = "";
+        uint64_t frame = 0;
+        double value = 0;
+        getRequired(state, "state", state_str);
+        getRequired(state, "frame", frame);
+        boundFrame(frame);
+        getRequired(state, "value", value);
+        if(state_str == "degraded") {
+          setDegraded(frame, value > 0.5 ? true : false);
         }
       }
     }
