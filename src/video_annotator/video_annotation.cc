@@ -235,7 +235,12 @@ VideoAnnotation::VideoAnnotation()
   , tracks_by_id_()
   , tracks_by_species_()
   , tracks_by_frame_added_()
-  , degraded_by_frame_() {
+  , degraded_by_frame_() 
+  , video_length_(0) {
+}
+
+void VideoAnnotation::setVideoLength(uint64_t video_length) {
+  video_length_ = video_length;
 }
 
 void VideoAnnotation::insert(std::shared_ptr<DetectionAnnotation> annotation) {

@@ -201,6 +201,11 @@ public:
   /// Constructor.
   VideoAnnotation();
 
+  /// Sets length of video.
+  ///
+  /// @param video_length Length of video being annotated.
+  void setVideoLength(uint64_t video_length);
+
   /// Inserts a detection annotation.
   ///
   /// @param annotation Annotation to be inserted.
@@ -403,6 +408,9 @@ private:
 
   /// Degraded state by frame.
   std::map<uint64_t, bool> degraded_by_frame_;
+
+  /// Length of the video being annotated.
+  uint64_t video_length_;
 };
 
 // 
