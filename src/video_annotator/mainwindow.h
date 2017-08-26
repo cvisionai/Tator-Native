@@ -234,6 +234,9 @@ private slots:
   /// Updates the current fish to the specified ID.
   void on_goToFishVal_returnPressed();
 
+  /// Updates the current frame.
+  void on_goToFrameVal_returnPressed();
+
   /// Adds a region for the current fish.  If a region already
   ///        exists for this fish and frame, an error is raised.
   void on_addRegion_clicked();

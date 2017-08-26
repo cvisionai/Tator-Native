@@ -238,10 +238,15 @@ bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
 void ImageAnnotationList::write(
   const std::vector<fs::path> &filenames) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
-        "Saving annotations...", "Abort", 0, 
-        static_cast<int>(filenames.size()-1)));
-  dlg->setWindowModality(Qt::WindowModal);
-  dlg->show();
+    "Saving annotations...", 
+    "Abort", 
+    0,
+    static_cast<int>(filenames.size() - 1),
+    nullptr,
+    Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+  dlg->setCancelButton(0);
+  dlg->setWindowTitle("Save Annotations");
+  dlg->setMinimumDuration(10);
   int iter = 0;
   fs::path sum_file(filenames[0]);
   sum_file = sum_file.parent_path();

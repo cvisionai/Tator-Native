@@ -484,6 +484,11 @@ void MainWindow::on_goToFishVal_returnPressed() {
   }
 }
 
+void MainWindow::on_goToFrameVal_returnPressed() {
+  auto frame = ui_->goToFrameVal->text().toInt();
+  emit requestSetFrame(frame);
+}
+
 void MainWindow::on_addRegion_clicked() {
   if(annotation_->getTotal() < 1) {
     handlePlayerError("Please add a fish before adding a region!");
@@ -589,6 +594,7 @@ void MainWindow::handlePlayerMediaLoadStart(int max_progress) {
           Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
     load_progress_->setCancelButton(0);
     load_progress_->setWindowTitle("Loading video");
+    load_progress_->setMinimumDuration(10);
   }
 }
 
@@ -633,6 +639,8 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->goToFrame->setEnabled(true);
   ui_->goToFishLabel->setEnabled(true);
   ui_->goToFishVal->setEnabled(true);
+  ui_->goToFrameLabel->setEnabled(true);
+  ui_->goToFrameVal->setEnabled(true);
   ui_->addRegion->setEnabled(true);
   ui_->removeRegion->setEnabled(true);
   ui_->nextAndCopy->setEnabled(true);
