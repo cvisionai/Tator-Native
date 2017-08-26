@@ -594,6 +594,7 @@ void MainWindow::handlePlayerMediaLoadStart(int max_progress) {
           Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
     load_progress_->setCancelButton(0);
     load_progress_->setWindowTitle("Loading video");
+    load_progress_->setMinimumDuration(10);
   }
 }
 

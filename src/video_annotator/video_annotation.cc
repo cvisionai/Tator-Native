@@ -520,10 +520,15 @@ void VideoAnnotation::write(
     double fps,
     bool with_csv) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
-    "Saving annotations...", "Abort", 0,
-    static_cast<int>(track_list_.size() + detection_list_.size())));
-  dlg->setWindowModality(Qt::WindowModal);
-  dlg->show();
+    "Saving annotations...", 
+    "Abort", 
+    0,
+    static_cast<int>(track_list_.size() + detection_list_.size()),
+    nullptr,
+    Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+  dlg->setCancelButton(0);
+  dlg->setWindowTitle("Save Annotations");
+  dlg->setMinimumDuration(10);
   int iter = 0;
   // csv file
   if(with_csv == true) {
@@ -611,9 +616,15 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
             '\n');
         f.close();
         std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
-          "Loading annotations...", "Abort", 0, 2 * num_lines));
-        dlg->setWindowModality(Qt::WindowModal);
-        dlg->show();
+          "Loading annotations...", 
+          "Abort", 
+          0,
+          2 * num_lines,
+          nullptr,
+          Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+        dlg->setCancelButton(0);
+        dlg->setWindowTitle("Load Annotations");
+        dlg->setMinimumDuration(10);
         // Track file
         int iter = 0;
         std::ifstream csv(csv_path.string());
@@ -656,9 +667,15 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
     }
     else {
       std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
-        "Loading annotations...", "Abort", 0, -1));
-      dlg->setWindowModality(Qt::WindowModal);
-      dlg->show();
+        "Loading annotations...", 
+        "Abort", 
+        0,
+        -1,
+        nullptr,
+        Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+      dlg->setCancelButton(0);
+      dlg->setWindowTitle("Load Annotations");
+      dlg->setMinimumDuration(10);
       // New format
       for(auto &trk : tree.get_child("tracks")) {
         auto track = std::make_shared<TrackAnnotation>();
