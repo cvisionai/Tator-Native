@@ -38,7 +38,19 @@ namespace pt = boost::property_tree;
 /// @param name Name of the field.
 /// @param value Value is read into this variable.
 template<typename FieldType>
-void getRequired(const pt::ptree &tree, const char *name, FieldType &value);
+void getRequired(const pt::ptree &tree, const char *name, FieldType &value) {
+  auto it = tree.find(name);
+  if(it == tree.not_found()) {
+    QMessageBox err;
+    err.setText(QString("Could not find required field %1.  A default "
+          "value will be used instead.").arg(name));
+    err.exec();
+  }
+  else {
+    value = tree.get<FieldType>(name);
+  }
+}
+
 
 /// Defines annotation information for one detection.
 struct DetectionAnnotation : public Serialization {
@@ -419,27 +431,6 @@ private:
   /// @param frame Frame number to check.
   void boundFrame(uint64_t &frame);
 };
-
-// 
-// Implementations
-//
-
-template<typename FieldType>
-void getRequired<FieldType>(
-    const pt::ptree &tree, 
-    const char *name, 
-    FieldType &value) {
-  auto it = tree.find(name);
-  if(it == tree.not_found()) {
-    QMessageBox err;
-    err.setText(QString("Could not find required field %1.  A default "
-          "value will be used instead.").arg(name));
-    err.exec();
-  }
-  else {
-    value = tree.get<FieldType>(name);
-  }
-}
 
 }} // namespace fish_annotator::video_annotator
 
