@@ -7,9 +7,9 @@
 #include <QSqlTableModel>
 #include <QProgressDialog>
 
-#include "fish_annotator/image_annotator/image_annotation.h"
-#include "fish_annotator/db_uploader/database_info.h"
-#include "fish_annotator/db_uploader/mainwindow.h"
+#include "image_annotation.h"
+#include "database_info.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace db_uploader {
@@ -207,7 +207,7 @@ void MainWindow::on_upload_clicked() {
   progress.setValue(num_img);
 }
 
-#include "../../include/fish_annotator/db_uploader/moc_mainwindow.cpp"
+#include "moc_mainwindow.cpp"
 
 }} // namespace fish_annotator::db_uploader
 

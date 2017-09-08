@@ -2,6 +2,7 @@ include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include"
   "${CMAKE_CURRENT_BINARY_DIR}/../common"
   "../common"
+  "../image_annotator"
 )
 
 # Add db_uploader executable
