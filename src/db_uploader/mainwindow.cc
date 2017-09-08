@@ -143,7 +143,7 @@ void MainWindow::on_upload_clicked() {
   QSqlTableModel input_model(this, *input_db_);
   QSqlTableModel output_model(this, *output_db_);
   /// @TODO Parse metadata from input database.
-  output_model.setTable("dbo.measurements_data");
+  output_model.setTable("dbo.STAGING_MEASUREMENTS");
   output_model.setEditStrategy(QSqlTableModel::OnManualSubmit);
   output_model.select();
   QProgressDialog progress(
@@ -171,18 +171,14 @@ void MainWindow::on_upload_clicked() {
         err.critical(0, "Error", "Unable to insert row into table.");
         break;
       }
-      // surveyyear
-      output_model.setData(output_model.index(row_count, 0), "");
-      // areashortname
-      output_model.setData(output_model.index(row_count, 1), "");
-      // areacontrolpk
-      output_model.setData(output_model.index(row_count, 2), "");
-      // cameraControlIPK
-      output_model.setData(output_model.index(row_count, 3), "");
-      // station
-      output_model.setData(output_model.index(row_count, 4), "");
-      // quadrat
-      output_model.setData(output_model.index(row_count, 5), "");
+      // measurementPK
+      output_model.setData(output_model.index(row_count, 0), 0);
+      // measurementControlPK
+      output_model.setData(output_model.index(row_count, 1), 0);
+      // updatedPK
+      output_model.setData(output_model.index(row_count, 2), 0);
+      // dfo
+      output_model.setData(output_model.index(row_count, 3), 0);
       // measurement
       double meas = 0.0;
       if(ann[ai]->type_ == kLine) {
@@ -190,12 +186,19 @@ void MainWindow::on_upload_clicked() {
         double ydiff = ann[ai]->area_.y - ann[ai]->area_.h;
         meas = std::sqrt(xdiff * xdiff + ydiff * ydiff);
       }
-      output_model.setData(output_model.index(row_count, 6), 
-          std::to_string(meas).c_str());
-      // latitude
-      output_model.setData(output_model.index(row_count, 7), "");
-      // longitude
-      output_model.setData(output_model.index(row_count, 8), "");
+      output_model.setData(output_model.index(row_count, 4), meas);
+      // areacontrolpk
+      output_model.setData(output_model.index(row_count, 5), 0);
+      // station
+      output_model.setData(output_model.index(row_count, 6), "---");
+      // quadrat
+      output_model.setData(output_model.index(row_count, 7), 0);
+      // cameracontrolpk
+      output_model.setData(output_model.index(row_count, 8), 0);
+      // area
+      output_model.setData(output_model.index(row_count, 9), "");
+      // year
+      output_model.setData(output_model.index(row_count, 10), "2017");
     }
     if(output_model.submitAll() == true) {
       output_model.database().commit();
