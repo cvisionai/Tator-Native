@@ -151,7 +151,11 @@ void MainWindow::on_upload_clicked() {
       "Abort",
       0,
       num_img,
-      this);
+      this,
+      Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+  progress.setCancelButton(0);
+  progress.setWindowTitle("Uploading Annotations");
+  progress.setMinimumDuration(10);
   for(int img_index = 0; img_index < num_img; ++img_index) {
     progress.setValue(img_index);
     if(progress.wasCanceled()) {
