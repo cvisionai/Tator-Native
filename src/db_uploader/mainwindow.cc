@@ -142,6 +142,12 @@ void MainWindow::on_upload_clicked() {
   int num_img = static_cast<int>(image_files.size());
   QSqlTableModel input_model(this, *input_db_);
   QSqlTableModel output_model(this, *output_db_);
+  output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS ON");
+  if(output_db_->lastError().isValid()) {
+    QMessageBox err;
+    err.critical(0, "Error", "Unable to enable IDENTITY_INSERT.");
+    return;
+  }
   /// @TODO Parse metadata from input database.
   output_model.setTable("dbo.STAGING_MEASUREMENTS");
   output_model.setEditStrategy(QSqlTableModel::OnManualSubmit);
@@ -214,6 +220,12 @@ void MainWindow::on_upload_clicked() {
   progress.setValue(num_img);
   QMessageBox status;
   status.information(0, "Success", "Database upload succeeded!");
+  output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS OFF");
+  if(output_db_->lastError().isValid()) {
+    QMessageBox err;
+    err.warning(0, "Warning", "Unable to disable IDENTITY_INSERT.");
+    return;
+  }
 }
 
 #include "moc_mainwindow.cpp"
