@@ -212,6 +212,8 @@ void MainWindow::on_upload_clicked() {
     }
   }
   progress.setValue(num_img);
+  QMessageBox status;
+  status.information(0, "Success", "Database upload succeeded!");
 }
 
 #include "moc_mainwindow.cpp"
