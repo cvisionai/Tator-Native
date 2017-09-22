@@ -22,9 +22,6 @@ public:
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
 private slots:
-  /// Connects to input database.
-  void on_connectInputDb_clicked();
-
   /// Connects to output database.
   void on_connectOutputDb_clicked();
 
@@ -39,9 +36,6 @@ private slots:
 private:
   /// Widget loaded from ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
-
-  /// Input database.
-  std::unique_ptr<QSqlDatabase> input_db_;
 
   /// Output database.
   std::unique_ptr<QSqlDatabase> output_db_;

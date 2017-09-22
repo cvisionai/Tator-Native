@@ -26,7 +26,6 @@ static const std::vector<std::string> kDirExtensions = {
 
 MainWindow::MainWindow(QWidget *parent)
   : ui_(new Ui::MainWindow) 
-  , input_db_(new QSqlDatabase())
   , output_db_(new QSqlDatabase()) {
   ui_->setupUi(this);
   setWindowTitle("Database Uploader");
@@ -34,52 +33,13 @@ MainWindow::MainWindow(QWidget *parent)
   setWindowIcon(QIcon(":/icons/cvision/cvision_no_text.ico"));
 #endif
   fs::path current_path(QDir::currentPath().toStdString());
-  fs::path default_input = current_path / fs::path("default.input_database");
   fs::path default_output = current_path / fs::path("default.output_database");
-  if(fs::exists(default_input)) {
-    DatabaseInfo input;
-    deserialize(input, default_input.string());
-    ui_->inputServer->setText(input.getServer().c_str());
-    ui_->inputDatabase->setText(input.getDatabase().c_str());
-    ui_->inputUsername->setText(input.getUsername().c_str());
-  }
   if(fs::exists(default_output)) {
     DatabaseInfo output;
     deserialize(output, default_output.string());
     ui_->outputServer->setText(output.getServer().c_str());
     ui_->outputDatabase->setText(output.getDatabase().c_str());
     ui_->outputUsername->setText(output.getUsername().c_str());
-  }
-}
-
-void MainWindow::on_connectInputDb_clicked() {
-  ui_->inputDbStatus->setText("Attempting to connect...");
-  ui_->inputDbStatus->repaint();
-  *input_db_ = QSqlDatabase::addDatabase("QODBC3", "input");
-  if(input_db_->isDriverAvailable("QODBC") == false) {
-    QMessageBox err;
-    err.critical(0, "Error", "ODBC driver is not available!");
-  }
-  input_db_->setDatabaseName(
-      "DRIVER={SQL Server};SERVER={" + ui_->inputServer->text() + 
-      "};DATABASE=" + ui_->inputDatabase->text() + 
-      ";Trusted_Connection=no;user_id=" + ui_->inputUsername->text() + 
-      ";password=" + ui_->inputPassword->text() + ";WSID=.");
-  if(input_db_->isValid() == false) {
-    ui_->inputDbStatus->setText("Not connected");
-    QMessageBox err;
-    err.critical(0, "Error", "Not a valid database!");
-  }
-  if(input_db_->open() == false) {
-    ui_->inputDbStatus->setText("Not connected");
-    QMessageBox err;
-    err.critical(0, "Error", input_db_->lastError().text());
-  }
-  else {
-    ui_->inputDbStatus->setText("Connected");
-  }
-  if(output_db_->isOpen() == true && input_db_->isOpen() == true) {
-    ui_->upload->setEnabled(true);
   }
 }
 
@@ -96,6 +56,8 @@ void MainWindow::on_connectOutputDb_clicked() {
       "};DATABASE=" + ui_->outputDatabase->text() + 
       ";Trusted_Connection=no;user_id=" + ui_->outputUsername->text() + 
       ";password=" + ui_->outputPassword->text() + ";WSID=.");
+  output_db_->setUserName(ui_->outputUsername->text());
+  output_db_->setPassword(ui_->outputPassword->text());
   if(output_db_->isValid() == false) {
     ui_->outputDbStatus->setText("Not connected");
     QMessageBox err;
@@ -109,7 +71,7 @@ void MainWindow::on_connectOutputDb_clicked() {
   else {
     ui_->outputDbStatus->setText("Connected");
   }
-  if(output_db_->isOpen() == true && input_db_->isOpen() == true) {
+  if(output_db_->isOpen() == true) {
     ui_->upload->setEnabled(true);
   }
 }
@@ -140,7 +102,6 @@ void MainWindow::on_upload_clicked() {
   image_annotator::ImageAnnotationList annotations;
   annotations.read(image_files);
   int num_img = static_cast<int>(image_files.size());
-  QSqlTableModel input_model(this, *input_db_);
   QSqlTableModel output_model(this, *output_db_);
   output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS ON");
   if(output_db_->lastError().isValid()) {
@@ -148,7 +109,6 @@ void MainWindow::on_upload_clicked() {
     err.critical(0, "Error", "Unable to enable IDENTITY_INSERT.");
     return;
   }
-  /// @TODO Parse metadata from input database.
   output_model.setTable("dbo.STAGING_MEASUREMENTS");
   output_model.setEditStrategy(QSqlTableModel::OnManualSubmit);
   output_model.select();
