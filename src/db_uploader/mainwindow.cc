@@ -139,17 +139,14 @@ void MainWindow::on_upload_clicked() {
   //}
   
   // Set up table models
-  QSqlTableModel camera_control(this, *output_db_);
   QSqlTableModel survey_raw_data(this, *output_db_);
   QSqlTableModel survey_data(this, *output_db_);
   QSqlTableModel dot_history(this, *output_db_);
-  camera_control.setTable("dbo.CAMERA_CONTROL");
   survey_raw_data.setTable("dbo.SURVEY_RAW_DATA");
   survey_data.setTable("dbo.SURVEY_DATA");
   dot_history.setTable("dbo.DOT_HISTORY");
   survey_data.setEditStrategy(QSqlTableModel::OnManualSubmit);
   dot_history.setEditStrategy(QSqlTableModel::OnManualSubmit);
-  camera_control.select();
   survey_raw_data.select();
   survey_data.select();
   dot_history.select();
@@ -249,7 +246,7 @@ void MainWindow::on_upload_clicked() {
     debug << "AREA CONTROL QUERY: " << area_control.lastQuery().toStdString() << std::endl;
     debug << "AREA CONTROL ACTIVE: " << area_control.isActive() << std::endl;
     debug << "AREA CONTROL EXEC SUCCESS: " << ok << std::endl;
-    if(area_control.next() == false) {
+    if(ok == false || area_control.next() == false) {
       QMessageBox err;
       err.critical(0, "Error", std::string(
             std::string("Could not find a AREA_CONTROL entry") +
@@ -263,6 +260,28 @@ void MainWindow::on_upload_clicked() {
     }
     int area_control_pk = area_control.value(0).toInt();
     area_control.finish();
+
+    // Find entry in CAMERA_CONTROL corresponding to this image.
+    QSqlQuery camera_control(*output_db_);
+    camera_control.prepare(
+        QString("SELECT cameraControlPK FROM CAMERA_CONTROL WHERE ") +
+        QString("cameraName = :camera_control_camera_name"));
+    camera_control.bindValue(
+        ":camera_control_camera_name",
+        camera_control_camera_name.c_str());
+    ok = camera_control.exec();
+    if(ok == false || camera_control.next() == false) {
+      QMessageBox err;
+      err.critical(0, "Error", std::string(
+            std::string("Could not find a CAMERA_CONTROL entry") +
+            std::string(" for cameraName=") +
+            camera_control_camera_name +
+            std::string("!")).c_str());
+      ok = false;
+      break;
+    }
+    int camera_control_pk = camera_control.value(0).toInt();
+    camera_control.finish();
 
     auto row_count = survey_data.rowCount();
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
