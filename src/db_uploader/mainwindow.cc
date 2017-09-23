@@ -204,13 +204,13 @@ void MainWindow::on_upload_clicked() {
       ok = false;
       break;
     }
-    std::string area_control_station = file_parts[0].substr(0, 3);
-    std::string area_control_quadrat_str = file_parts[1];
-    int area_control_quadrat = 0;
+    std::string survey_raw_data_station = file_parts[0].substr(0, 3);
+    std::string survey_raw_data_quadrat_str = file_parts[1];
+    int survey_raw_data_quadrat = 0;
     if(1 != sscanf_s(
-          area_control_station.c_str(), 
+          survey_raw_data_quadrat_str.c_str(), 
           "%dQ", 
-          &area_control_quadrat)) {
+          &survey_raw_data_quadrat)) {
       QMessageBox err;
       err.critical(0, "Error", 
           std::string(
@@ -220,8 +220,8 @@ void MainWindow::on_upload_clicked() {
       ok = false;
       break;
     }
-    debug << "STATION: " << area_control_station << std::endl;
-    debug << "QUADRAT: " << area_control_quadrat << std::endl;
+    debug << "STATION: " << survey_raw_data_station << std::endl;
+    debug << "QUADRAT: " << survey_raw_data_quadrat << std::endl;
 
     // Update progress bar
     progress.setValue(img_index);
@@ -282,6 +282,40 @@ void MainWindow::on_upload_clicked() {
     }
     int camera_control_pk = camera_control.value(0).toInt();
     camera_control.finish();
+
+    // Find entry in SURVEY_RAW_DATA corresponding to this image.
+    QSqlQuery survey_raw_data(*output_db_);
+    survey_raw_data.prepare(
+        QString("SELECT * FROM SURVEY_RAW_DATA WHERE ") +
+        QString("areaControlPK = :area_control_pk AND ") +
+        QString("quadrat = :quadrat AND ") +
+        QString("station = :station"));
+    survey_raw_data.bindValue(
+        ":area_control_pk",
+        area_control_pk);
+    survey_raw_data.bindValue(
+        ":quadrat",
+        survey_raw_data_quadrat);
+    survey_raw_data.bindValue(
+        ":station",
+        survey_raw_data_station.c_str());
+    ok = survey_raw_data.exec();
+    if(ok == false || survey_raw_data.next() == false) {
+      QMessageBox err;
+      err.critical(0, "Error", std::string(
+            std::string("Could not find a SURVEY_RAW_DATA entry") +
+            std::string(" for areaControlPK=") +
+            std::to_string(area_control_pk) +
+            std::string(" and station=") +
+            survey_raw_data_station +
+            std::string(" and quadrat=") +
+            std::to_string(survey_raw_data_quadrat) +
+            std::string("!")).c_str());
+      ok = false;
+      break;
+    }
+    QSqlRecord survey_raw_data_record = survey_raw_data.record();
+    survey_raw_data.finish();
 
     auto row_count = survey_data.rowCount();
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
