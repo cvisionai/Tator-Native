@@ -90,6 +90,8 @@ void MainWindow::on_cancel_clicked() {
 }
 
 void MainWindow::on_upload_clicked() {
+
+  // Grab the image names recursively
   QString image_dir = ui_->imageDirectory->text();
   std::vector<boost::filesystem::path> image_files;
   fs::recursive_directory_iterator dir_it(image_dir.toStdString());
@@ -102,20 +104,14 @@ void MainWindow::on_upload_clicked() {
       }
     }
   }
+
+  // Read in the annotations
   std::sort(image_files.begin(), image_files.end());
   image_annotator::ImageAnnotationList annotations;
   annotations.read(image_files);
   int num_img = static_cast<int>(image_files.size());
-  QSqlTableModel output_model(this, *output_db_);
-  output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS ON");
-  if(output_db_->lastError().isValid()) {
-    QMessageBox err;
-    err.critical(0, "Error", "Unable to enable IDENTITY_INSERT.");
-    return;
-  }
-  output_model.setTable("dbo.STAGING_MEASUREMENTS");
-  output_model.setEditStrategy(QSqlTableModel::OnManualSubmit);
-  output_model.select();
+
+  // Make a progress dialog
   QProgressDialog progress(
       "Uploading annotations...",
       "Abort",
@@ -126,9 +122,43 @@ void MainWindow::on_upload_clicked() {
   progress.setCancelButton(0);
   progress.setWindowTitle("Uploading Annotations");
   progress.setMinimumDuration(10);
+
+  // Enable identity insert for relevant tables
+  output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
+  if(output_db_->lastError().isValid()) {
+    QMessageBox err;
+    err.critical(0, "Error", "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
+    return;
+  }
+  // @TODO ENABLE THIS FOR CUSTOMER
+  //output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
+  //if(output_db_->lastError().isValid()) {
+  //  QMessageBox err;
+  //  err.critical(0, "Error", "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
+  //  return;
+  //}
+  
+  // Set up table models
+  QSqlTableModel camera_control(this, *output_db_);
+  QSqlTableModel survey_raw_data(this, *output_db_);
+  QSqlTableModel survey_data(this, *output_db_);
+  QSqlTableModel dot_history(this, *output_db_);
+  camera_control.setTable("dbo.CAMERA_CONTROL");
+  survey_raw_data.setTable("dbo.SURVEY_RAW_DATA");
+  survey_data.setTable("dbo.SURVEY_DATA");
+  dot_history.setTable("dbo.DOT_HISTORY");
+  survey_data.setEditStrategy(QSqlTableModel::OnManualSubmit);
+  dot_history.setEditStrategy(QSqlTableModel::OnManualSubmit);
+  camera_control.select();
+  survey_raw_data.select();
+  survey_data.select();
+  dot_history.select();
+
+  // Iterate through images
   bool ok = true;
   for(int img_index = 0; img_index < num_img; ++img_index) {
     debug << "IMAGE FILE: " << image_files[img_index] << std::endl;
+
     // Parse metadata from directory structure
     std::vector<std::string> dir_parts;
     for(const auto &sub : image_files[img_index]) {
@@ -146,6 +176,10 @@ void MainWindow::on_upload_clicked() {
       break;
     }
     std::string filename = dir_parts[dir_len - 1];
+    std::string image_state = dir_parts[dir_len - 2];
+    if(image_state != "Original") {
+      continue;
+    }
     std::string camera_control_camera_name = dir_parts[dir_len - 3];
     std::string area_control_short_name = dir_parts[dir_len - 4];
     std::string area_control_long_name = dir_parts[dir_len - 5];
@@ -154,6 +188,7 @@ void MainWindow::on_upload_clicked() {
     debug << "SHORT NAME: " << area_control_short_name << std::endl;
     debug << "LONG NAME: " << area_control_long_name << std::endl;
     debug << "YEAR: " << area_control_year << std::endl;
+
     // Parse metadata from filename
     std::vector<std::string> file_parts;
     std::string file_part;
@@ -190,29 +225,63 @@ void MainWindow::on_upload_clicked() {
     }
     debug << "STATION: " << area_control_station << std::endl;
     debug << "QUADRAT: " << area_control_quadrat << std::endl;
+
+    // Update progress bar
     progress.setValue(img_index);
     if(progress.wasCanceled()) {
       ok = false;
       break;
     }
+
+    // Find entry in AREA_CONTROL corresponding to this image
+    QSqlQuery area_control(*output_db_);
+    area_control.prepare(
+        QString("SELECT areaControlPK FROM AREA_CONTROL WHERE ") +
+        QString("surveyYear = :area_control_year AND ") + 
+        QString("areaShortName = :area_control_short_name"));
+    area_control.bindValue(
+        ":area_control_year", 
+        area_control_year.c_str());
+    area_control.bindValue(
+        ":area_control_short_name", 
+        area_control_short_name.c_str());
+    ok = area_control.exec();
+    debug << "AREA CONTROL QUERY: " << area_control.lastQuery().toStdString() << std::endl;
+    debug << "AREA CONTROL ACTIVE: " << area_control.isActive() << std::endl;
+    debug << "AREA CONTROL EXEC SUCCESS: " << ok << std::endl;
+    if(area_control.next() == false) {
+      QMessageBox err;
+      err.critical(0, "Error", std::string(
+            std::string("Could not find a AREA_CONTROL entry") +
+            std::string(" for surveyYear=") +
+            area_control_year +
+            std::string(" and areaShortName=") +
+            area_control_short_name +
+            std::string("!")).c_str());
+      ok = false;
+      break;
+    }
+    int area_control_pk = area_control.value(0).toInt();
+    area_control.finish();
+
+    auto row_count = survey_data.rowCount();
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
     int num_ann = static_cast<int>(ann.size());
     for(int ai = 0; ai < num_ann; ++ai) {
-      auto row_count = output_model.rowCount();
-      if(output_model.insertRows(row_count, 1) == false) {
+      if(survey_data.insertRows(row_count, 1) == false) {
         QMessageBox err;
         err.critical(0, "Error", "Unable to insert row into table.");
         ok = false;
         break;
       }
       // measurementPK
-      output_model.setData(output_model.index(row_count, 0), 0);
+      survey_data.setData(survey_data.index(row_count, 0), 0);
       // measurementControlPK
-      output_model.setData(output_model.index(row_count, 1), 0);
+      survey_data.setData(survey_data.index(row_count, 1), 0);
       // updatedPK
-      output_model.setData(output_model.index(row_count, 2), 0);
+      survey_data.setData(survey_data.index(row_count, 2), 0);
       // dfo
-      output_model.setData(output_model.index(row_count, 3), 0);
+      survey_data.setData(survey_data.index(row_count, 3), 0);
       // measurement
       double meas = 0.0;
       if(ann[ai]->type_ == kLine) {
@@ -220,39 +289,39 @@ void MainWindow::on_upload_clicked() {
         double ydiff = ann[ai]->area_.y - ann[ai]->area_.h;
         meas = std::sqrt(xdiff * xdiff + ydiff * ydiff);
       }
-      output_model.setData(output_model.index(row_count, 4), meas);
+      survey_data.setData(survey_data.index(row_count, 4), meas);
       // areacontrolpk
-      output_model.setData(output_model.index(row_count, 5), 0);
+      survey_data.setData(survey_data.index(row_count, 5), 0);
       // station
-      output_model.setData(output_model.index(row_count, 6), "---");
+      survey_data.setData(survey_data.index(row_count, 6), "---");
       // quadrat
-      output_model.setData(output_model.index(row_count, 7), 0);
+      survey_data.setData(survey_data.index(row_count, 7), 0);
       // cameracontrolpk
-      output_model.setData(output_model.index(row_count, 8), 0);
+      survey_data.setData(survey_data.index(row_count, 8), 0);
       // area
-      output_model.setData(output_model.index(row_count, 9), "");
+      survey_data.setData(survey_data.index(row_count, 9), "");
       // year
-      output_model.setData(output_model.index(row_count, 10), "2017");
+      survey_data.setData(survey_data.index(row_count, 10), "2017");
     }
     if(ok == false) {
       break;
     }
   }
   if(ok == true) {
-    ok = output_model.submitAll();
+    ok = survey_data.submitAll();
   }
   if(ok == true) {
-    output_model.database().commit();
+    survey_data.database().commit();
     progress.setValue(num_img);
     QMessageBox status;
     status.information(0, "Success", "Database upload succeeded!");
   }
   else {
-    output_model.database().rollback();
+    survey_data.database().rollback();
     progress.close();
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", output_model.lastError().text());
+      err.critical(0, "Error", survey_data.lastError().text());
     }
   }
   output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS OFF");
