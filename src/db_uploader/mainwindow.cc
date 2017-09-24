@@ -12,9 +12,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <fstream>
-std::ofstream debug("DEBUG.txt");
-
 namespace fish_annotator { namespace db_uploader {
 
 namespace fs = boost::filesystem;
@@ -172,7 +169,6 @@ void MainWindow::on_upload_clicked() {
 
   // Iterate through images
   for(int img_index = 0; img_index < num_img; ++img_index) {
-    debug << "IMAGE FILE: " << image_files[img_index] << std::endl;
 
     // Parse metadata from directory structure
     std::vector<std::string> dir_parts;
@@ -199,10 +195,6 @@ void MainWindow::on_upload_clicked() {
     std::string area_control_short_name = dir_parts[dir_len - 4];
     std::string area_control_long_name = dir_parts[dir_len - 5];
     std::string area_control_year = dir_parts[dir_len - 6];
-    debug << "CAMERA NAME: " << camera_control_camera_name << std::endl;
-    debug << "SHORT NAME: " << area_control_short_name << std::endl;
-    debug << "LONG NAME: " << area_control_long_name << std::endl;
-    debug << "YEAR: " << area_control_year << std::endl;
 
     // Parse metadata from filename
     std::vector<std::string> file_parts;
@@ -238,8 +230,6 @@ void MainWindow::on_upload_clicked() {
       ok = false;
       break;
     }
-    debug << "STATION: " << survey_raw_data_station << std::endl;
-    debug << "QUADRAT: " << survey_raw_data_quadrat << std::endl;
 
     // Update progress bar
     progress.setValue(img_index);
@@ -261,9 +251,6 @@ void MainWindow::on_upload_clicked() {
         ":area_control_short_name", 
         area_control_short_name.c_str());
     ok = area_control.exec();
-    debug << "AREA CONTROL QUERY: " << area_control.lastQuery().toStdString() << std::endl;
-    debug << "AREA CONTROL ACTIVE: " << area_control.isActive() << std::endl;
-    debug << "AREA CONTROL EXEC SUCCESS: " << ok << std::endl;
     if(ok == false || area_control.next() == false) {
       QMessageBox err;
       err.critical(0, "Error", std::string(
@@ -338,7 +325,6 @@ void MainWindow::on_upload_clicked() {
     // Get annotations for this image
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
     int num_ann = static_cast<int>(ann.size());
-    debug << "NUMBER OF ANNOTATIONS FOR THIS IMAGE: " << num_ann << std::endl;
 
     // Enable identity insert for survey data
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
@@ -812,8 +798,6 @@ void MainWindow::on_upload_clicked() {
         break;
       }
     }
-
-    debug << "FINISHED AN IMAGE!  OK=" << ok << std::endl;
     if(ok == false) {
       break;
     }
