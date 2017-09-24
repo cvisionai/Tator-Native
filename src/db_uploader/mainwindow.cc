@@ -98,6 +98,8 @@ void MainWindow::on_upload_clicked() {
     err.critical(0, "Error", "Image directory does not exist!");
     return;
   }
+
+  // Grab the image names recursively
   std::vector<boost::filesystem::path> image_files;
   fs::recursive_directory_iterator dir_it(image_dir.toStdString());
   fs::recursive_directory_iterator dir_end;
@@ -126,38 +128,35 @@ void MainWindow::on_upload_clicked() {
       Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
   progress.setCancelButton(0);
   progress.setWindowTitle("Uploading Annotations");
+  progress.setValue(0);
   progress.setMinimumDuration(10);
 
-  // Enable identity insert for relevant tables
-  output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
-  if(output_db_->lastError().isValid()) {
-    QMessageBox err;
-    err.critical(0, "Error", "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
-    return;
-  }
-  // @TODO ENABLE THIS FOR CUSTOMER
-  //output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
-  //if(output_db_->lastError().isValid()) {
-  //  QMessageBox err;
-  //  err.critical(0, "Error", "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
-  //  return;
-  //}
-  
   // Set up table models
-  QSqlTableModel survey_raw_data(this, *output_db_);
   QSqlTableModel survey_data(this, *output_db_);
   QSqlTableModel dot_history(this, *output_db_);
-  survey_raw_data.setTable("dbo.SURVEY_RAW_DATA");
   survey_data.setTable("dbo.SURVEY_DATA");
   dot_history.setTable("dbo.DOT_HISTORY");
   survey_data.setEditStrategy(QSqlTableModel::OnManualSubmit);
   dot_history.setEditStrategy(QSqlTableModel::OnManualSubmit);
-  survey_raw_data.select();
   survey_data.select();
   dot_history.select();
 
-  // Iterate through images
+  // Find the max id in SURVEY_DATA
   bool ok = true;
+  QSqlQuery survey_data_max_id(*output_db_);
+  survey_data_max_id.prepare(
+      QString("SELECT MAX(updatedPK) from SURVEY_DATA"));
+  ok = survey_data_max_id.exec();
+  if(ok == false || survey_data_max_id.next() == false) {
+    QMessageBox err;
+    err.critical(0, "Error", 
+        "Could not find the max updatedPK in SURVEY_DATA!");
+    return;
+  }
+  int survey_data_updated_pk = survey_data_max_id.value(0).toInt();
+  survey_data_max_id.finish();
+
+  // Iterate through images
   for(int img_index = 0; img_index < num_img; ++img_index) {
     debug << "IMAGE FILE: " << image_files[img_index] << std::endl;
 
@@ -322,71 +321,456 @@ void MainWindow::on_upload_clicked() {
     QSqlRecord survey_raw_data_record = survey_raw_data.record();
     survey_raw_data.finish();
 
-    auto row_count = survey_data.rowCount();
+    // Get annotations for this image
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
     int num_ann = static_cast<int>(ann.size());
-    for(int ai = 0; ai < num_ann; ++ai) {
-      if(survey_data.insertRows(row_count, 1) == false) {
-        QMessageBox err;
-        err.critical(0, "Error", "Unable to insert row into table.");
-        ok = false;
-        break;
-      }
-      // measurementPK
-      survey_data.setData(survey_data.index(row_count, 0), 0);
-      // measurementControlPK
-      survey_data.setData(survey_data.index(row_count, 1), 0);
-      // updatedPK
-      survey_data.setData(survey_data.index(row_count, 2), 0);
-      // dfo
-      survey_data.setData(survey_data.index(row_count, 3), 0);
-      // measurement
-      double meas = 0.0;
-      if(ann[ai]->type_ == kLine) {
-        double xdiff = ann[ai]->area_.x - ann[ai]->area_.w;
-        double ydiff = ann[ai]->area_.y - ann[ai]->area_.h;
-        meas = std::sqrt(xdiff * xdiff + ydiff * ydiff);
-      }
-      survey_data.setData(survey_data.index(row_count, 4), meas);
-      // areacontrolpk
-      survey_data.setData(survey_data.index(row_count, 5), 0);
-      // station
-      survey_data.setData(survey_data.index(row_count, 6), "---");
-      // quadrat
-      survey_data.setData(survey_data.index(row_count, 7), 0);
-      // cameracontrolpk
-      survey_data.setData(survey_data.index(row_count, 8), 0);
-      // area
-      survey_data.setData(survey_data.index(row_count, 9), "");
-      // year
-      survey_data.setData(survey_data.index(row_count, 10), "2017");
+    debug << "NUMBER OF ANNOTATIONS FOR THIS IMAGE: " << num_ann << std::endl;
+
+    // Enable identity insert for survey data
+    output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
+      return;
     }
+    
+    // Create a new row in SURVEY_DATA
+    auto row_count = survey_data.rowCount();
+    if(survey_data.insertRows(row_count, 1) == false) {
+      QMessageBox err;
+      err.critical(0, "Error", "Unable to insert row into table.");
+      ok = false;
+      break;
+    }
+
+    // Update the record values
+    QSqlRecord survey_data_record = survey_data.record(row_count);
+    survey_data.setData(
+        survey_data.index(
+          row_count, 
+          survey_data.fieldIndex("updatedPK")), 
+        survey_data_updated_pk + img_index + 1);
+    survey_data.setData(
+        survey_data.index(
+          row_count, 
+          survey_data.fieldIndex("surveyRawDataPK")), 
+        survey_raw_data_record.value("surveyRawDataPK"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("cameraControlPK")), 
+        camera_control_pk);
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("imageExists")), 
+        1);
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("isImageOfInterest")),
+        0);
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("sand")),
+        survey_raw_data_record.value("sand"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("sandRipple")),
+        survey_raw_data_record.value("sandRipple"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("shellDebris")),
+        survey_raw_data_record.value("shellDebris"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("silt")),
+        survey_raw_data_record.value("silt"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("gravel")),
+        survey_raw_data_record.value("gravel"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("cobble")),
+        survey_raw_data_record.value("cobble"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("rock")),
+        survey_raw_data_record.value("rock"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("wasVisible")),
+        survey_raw_data_record.value("wasVisible"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("scallops")),
+        survey_raw_data_record.value("scallops"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("clappers")),
+        survey_raw_data_record.value("clappers"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("seed")),
+        0);// @TODO Get from global state
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("seaStars")),
+        survey_raw_data_record.value("seaStars"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("crabs")),
+        survey_raw_data_record.value("crabs"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("hermitCrabs")),
+        survey_raw_data_record.value("hermitCrabs"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("echinodermOther")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("lobster")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("sandDollars")),
+        survey_raw_data_record.value("sandDollars"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("ad")),
+        survey_raw_data_record.value("ad"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("anemone")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("bHydra")),
+        survey_raw_data_record.value("bHydra"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("brittleStar")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("buccinum")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("clams")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("coral")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("ctenophores")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("detritus")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("euphausids")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("filo")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("holes")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("jellyFish")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("moonsnail")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("moonsnailEggCase")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("mouse")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("mussels")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("otherCrustaceans")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("otherMolluscs")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("seaweed")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("skateEggCase")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("sponges")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("squid")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("urchin")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("tunicate")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("cod")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("dogfish")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("eel")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("oceanPout")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("flounder")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("haddock")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("hagfish")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("hake")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("herring")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("mackerel")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("monkFish")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("otherFish")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("sandlance")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("sculpin")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("seaRaven")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("seaRobin")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("skate")),
+        survey_raw_data_record.value("skate"));
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("silverHake")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("unidentifiedFish")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("comments")),
+        survey_raw_data_record.value("comments"));
+    /*
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("modified")),
+        0);// @TODO Get from ???
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("createdDTTM")),
+        0);// @TODO Get from ???
+        */
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("scallopsAtEdge")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("imageHasBeenChecked")),
+        0);// @TODO Get from ???
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("imageHasBeenMeasured")),
+        0);// @TODO Get from ???
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("rowIsLocked")),
+        0);// @TODO Get from ???
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("Icelandic")),
+        0);// @TODO Get from annotations
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("SeaCuke")),
+        0);// @TODO Get from annotations
+
+    // Disable identity insert for survey data
+    output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS OFF");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.warning(0, "Warning", "Unable to disable IDENTITY_INSERT.");
+      return;
+    }
+
+/*
+    // Enable identity insert for dot history
+    output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", 
+          "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
+      return;
+    }
+
+    // Disable identity insert for dot history
+    output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.warning(0, "Warning", "Unable to disable IDENTITY_INSERT.");
+      return;
+    }
+*/
+
+    debug << "FINISHED AN IMAGE!  OK=" << ok << std::endl;
     if(ok == false) {
       break;
     }
   }
   if(ok == true) {
-    ok = survey_data.submitAll();
+    ok = survey_data.submitAll() && dot_history.submitAll();
   }
   if(ok == true) {
-    survey_data.database().commit();
+    output_db_->commit();
     progress.setValue(num_img);
     QMessageBox status;
     status.information(0, "Success", "Database upload succeeded!");
   }
   else {
-    survey_data.database().rollback();
-    progress.close();
-    if(output_db_->lastError().isValid()) {
+    if(survey_data.lastError().isValid()) {
       QMessageBox err;
       err.critical(0, "Error", survey_data.lastError().text());
     }
-  }
-  output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS OFF");
-  if(output_db_->lastError().isValid()) {
-    QMessageBox err;
-    err.warning(0, "Warning", "Unable to disable IDENTITY_INSERT.");
-    return;
+    output_db_->rollback();
+    progress.close();
   }
 }
 
