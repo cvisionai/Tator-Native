@@ -156,6 +156,20 @@ void MainWindow::on_upload_clicked() {
   int survey_data_updated_pk = survey_data_max_id.value(0).toInt();
   survey_data_max_id.finish();
 
+  // Find the max id in DOT_HISTORY
+  QSqlQuery dot_history_max_id(*output_db_);
+  dot_history_max_id.prepare(
+      QString("SELECT MAX(dotHistoryPK) from DOT_HISTORY"));
+  ok = dot_history_max_id.exec();
+  if(ok == false || dot_history_max_id.next() == false) {
+    QMessageBox err;
+    err.critical(0, "Error",
+        "Could not find the max dotHistoryPK in DOT_HISTORY!");
+    return;
+  }
+  int dot_history_dot_history_pk = dot_history_max_id.value(0).toInt();
+  dot_history_max_id.finish();
+
   // Iterate through images
   for(int img_index = 0; img_index < num_img; ++img_index) {
     debug << "IMAGE FILE: " << image_files[img_index] << std::endl;
@@ -330,26 +344,29 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
-      return;
+      err.critical(0, "Error", 
+          "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
+      ok = false;
+      break;
     }
     
     // Create a new row in SURVEY_DATA
     auto row_count = survey_data.rowCount();
     if(survey_data.insertRows(row_count, 1) == false) {
       QMessageBox err;
-      err.critical(0, "Error", "Unable to insert row into table.");
+      err.critical(0, "Error", "Unable to insert row into SURVEY_DATA.");
       ok = false;
       break;
     }
 
     // Update the record values
+    survey_data_updated_pk++;
     QSqlRecord survey_data_record = survey_data.record(row_count);
     survey_data.setData(
         survey_data.index(
           row_count, 
           survey_data.fieldIndex("updatedPK")), 
-        survey_data_updated_pk + img_index + 1);
+        survey_data_updated_pk);
     survey_data.setData(
         survey_data.index(
           row_count, 
@@ -680,18 +697,6 @@ void MainWindow::on_upload_clicked() {
           row_count,
           survey_data.fieldIndex("comments")),
         survey_raw_data_record.value("comments"));
-    /*
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("modified")),
-        0);// @TODO Get from ???
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("createdDTTM")),
-        0);// @TODO Get from ???
-        */
     survey_data.setData(
         survey_data.index(
           row_count,
@@ -724,31 +729,89 @@ void MainWindow::on_upload_clicked() {
         0);// @TODO Get from annotations
 
     // Disable identity insert for survey data
-    output_db_->exec("SET IDENTITY_INSERT dbo.STAGING_MEASUREMENTS OFF");
-    if(output_db_->lastError().isValid()) {
-      QMessageBox err;
-      err.warning(0, "Warning", "Unable to disable IDENTITY_INSERT.");
-      return;
-    }
-
-/*
-    // Enable identity insert for dot history
-    output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
+    output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
       err.critical(0, "Error", 
-          "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
-      return;
+          "Unable to disable IDENTITY_INSERT for SURVEY_DATA.");
+      ok = false;
+      break;
     }
 
-    // Disable identity insert for dot history
-    output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
-    if(output_db_->lastError().isValid()) {
-      QMessageBox err;
-      err.warning(0, "Warning", "Unable to disable IDENTITY_INSERT.");
-      return;
+    for(auto ann_index = 0; ann_index < num_ann; ++ann_index) {
+
+      // Only create a row for dot annotations
+      if(ann[ann_index]->type_ != kDot) {
+        continue;
+      }
+
+      // Enable identity insert for dot history
+      output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
+      if(output_db_->lastError().isValid()) {
+        QMessageBox err;
+        err.critical(0, "Error", 
+            "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
+        ok = false;
+        break;
+      }
+
+      // Create a new row in DOT_HISTORY
+      auto dot_row_count = dot_history.rowCount();
+      if(dot_history.insertRows(dot_row_count, 1) == false) {
+        QMessageBox err;
+        err.critical(0, "Error", "Unable to insert row into DOT_HISTORY.");
+        ok = false;
+        break;
+      }
+
+      // Update the record values
+      dot_history_dot_history_pk++;
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("dotHistoryPK")),
+          dot_history_dot_history_pk);
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("updatedPK")),
+          survey_data_updated_pk);
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("topLeftX")),
+          ann[ann_index]->area_.x);
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("topLeftY")),
+          ann[ann_index]->area_.y);
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("width")),
+          ann[ann_index]->area_.w);
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("height")),
+          ann[ann_index]->area_.h);
+      dot_history.setData(
+          dot_history.index(
+            dot_row_count,
+            dot_history.fieldIndex("color")),
+          ann[ann_index]->species_.c_str());
+
+      // Disable identity insert for dot history
+      output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
+      if(output_db_->lastError().isValid()) {
+        QMessageBox err;
+        err.critical(0, "Error", 
+            "Unable to disable IDENTITY_INSERT for DOT_HISTORY.");
+        ok = false;
+        break;
+      }
     }
-*/
 
     debug << "FINISHED AN IMAGE!  OK=" << ok << std::endl;
     if(ok == false) {
@@ -756,7 +819,44 @@ void MainWindow::on_upload_clicked() {
     }
   }
   if(ok == true) {
-    ok = survey_data.submitAll() && dot_history.submitAll();
+    // Enable identity insert for survey data
+    output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", 
+          "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
+      ok = false;
+    }
+    ok = survey_data.submitAll();
+
+    // Disable identity insert for survey data
+    output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", 
+          "Unable to disable IDENTITY_INSERT for SURVEY_DATA.");
+      ok = false;
+    }
+
+    // Enable identity insert for dot history
+    output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", 
+          "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
+      ok = false;
+    }
+
+    ok = ok && dot_history.submitAll();
+
+    // Disable identity insert for dot history
+    output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
+    if(output_db_->lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", 
+          "Unable to disable IDENTITY_INSERT for DOT_HISTORY.");
+      ok = false;
+    }
   }
   if(ok == true) {
     output_db_->commit();
@@ -768,6 +868,10 @@ void MainWindow::on_upload_clicked() {
     if(survey_data.lastError().isValid()) {
       QMessageBox err;
       err.critical(0, "Error", survey_data.lastError().text());
+    }
+    if(dot_history.lastError().isValid()) {
+      QMessageBox err;
+      err.critical(0, "Error", dot_history.lastError().text());
     }
     output_db_->rollback();
     progress.close();
