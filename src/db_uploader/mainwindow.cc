@@ -91,8 +91,13 @@ void MainWindow::on_cancel_clicked() {
 
 void MainWindow::on_upload_clicked() {
 
-  // Grab the image names recursively
+  // Verify that image directory exists
   QString image_dir = ui_->imageDirectory->text();
+  if(fs::exists(image_dir.toStdString()) == false) {
+    QMessageBox err;
+    err.critical(0, "Error", "Image directory does not exist!");
+    return;
+  }
   std::vector<boost::filesystem::path> image_files;
   fs::recursive_directory_iterator dir_it(image_dir.toStdString());
   fs::recursive_directory_iterator dir_end;
