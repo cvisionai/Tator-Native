@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
   , metadata_()
   , species_()
   , subspecies_()
-  , current_annotations_() 
+  , current_annotations_()
   , color_map_() {
   ui_->setupUi(this);
   setWindowTitle("Image Annotator");
@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->videoWindowLayout->addWidget(view_.get());
   ui_->sideBarLayout->addWidget(annotation_widget_.get());
   ui_->sideBarLayout->addWidget(species_controls_.get());
+  ui_->sideBarLayout->addWidget(global_state_widget_.get());
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
