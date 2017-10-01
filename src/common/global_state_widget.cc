@@ -10,4 +10,9 @@ GlobalStateWidget::GlobalStateWidget(QWidget *parent) :
     ui_->setupUi(this);
 }
 
+void GlobalStateWidget::add_checkbox(QCheckBox *checkbox)
+{
+  ui_->entry_layout->addWidget(checkbox);
+}
+
 } // namespace fish_annotator

@@ -15,6 +15,7 @@
 #include <QGraphicsPixmapItem>
 #include <QMap>
 #include <QColor>
+#include <QCheckBox>
 
 #include "species_controls.h"
 #include "annotation_widget.h"
