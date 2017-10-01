@@ -65,12 +65,11 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
-  QCheckBox *checkbox = new QCheckBox("herp", this);
-  global_state_widget_->add_checkbox(checkbox);
-  QCheckBox *checkbox1 = new QCheckBox("derp", this);
-  global_state_widget_->add_checkbox(checkbox1);
-  QCheckBox *checkbox2 = new QCheckBox("ferp", this);
-  global_state_widget_->add_checkbox(checkbox2);
+  fs::path default_global_state = current_path / fs::path("default.global");
+  if(fs::exists(default_global_state)) {
+    global_state_widget_->loadGlobalFile(
+        QString(default_global_state.string().c_str()));
+  }
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
