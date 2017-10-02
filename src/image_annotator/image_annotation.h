@@ -179,6 +179,9 @@ private:
 
   /// Map between species/subspecies and reference to image annotations.
   ByStringPair by_species_;
+
+  /// Map between image filename and global state annotations.
+  std::map<std::string, std::shared_ptr<GlobalStateAnnotation>> global_states_;
 };
 
 }} // namespace fish_annotator::image_annotator
