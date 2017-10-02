@@ -24,7 +24,17 @@ struct GlobalStateAnnotation : public Serialization {
   /// Reads from a property tree.
   ///
   /// @param tree Property tree to be read.
-  void read(const pt::ptree &tree);
+  void read(const pt::ptree &tree) override final;
+
+  /// Writes csv header.
+  ///
+  /// @return Header names for global state.
+  std::string writeCsvHeader();
+
+  /// Writes csv values.
+  ///
+  /// @return Values for global state.
+  std::string writeCsvValues();
 
   /// Global states of this image/frame.
   std::map<std::string, bool> states_;
