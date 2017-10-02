@@ -45,9 +45,13 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->next->setIcon(QIcon(":/icons/image_controls/next.svg"));
   ui_->prev->setIcon(QIcon(":/icons/image_controls/prev.svg"));
   ui_->videoWindowLayout->addWidget(view_.get());
-  ui_->sideBarLayout->addWidget(annotation_widget_.get());
-  ui_->sideBarLayout->addWidget(species_controls_.get());
-  ui_->sideBarLayout->addWidget(global_state_widget_.get());
+  ui_->speciesLayout->addWidget(annotation_widget_.get());
+  ui_->speciesLayout->addWidget(species_controls_.get());
+  ui_->globalStateLayout->addWidget(global_state_widget_.get());
+  tabifyDockWidget(
+    ui_->navigationDockWidget, 
+    ui_->speciesDockWidget, 
+    ui_->globalStateDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
