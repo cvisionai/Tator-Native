@@ -12,27 +12,33 @@
 
 namespace fish_annotator {
 
-class GlobalStateWidget : public QWidget
-{
-    Q_OBJECT
-
+/// Gives access to underlying state name.
+class GlobalStateCheckBox : public QCheckBox {
+  Q_OBJECT
 public:
-    explicit GlobalStateWidget(QWidget *parent = 0);
-    /// List of global state checkbox pointers.
-    QList<QCheckBox *> global_states_;
-
+  /// Constructor.
+  QCheckBox(const QString &text, QWidget *parent=Q_NULLPTR);
 private:
-    /// Widget loaded from ui file.
-    std::unique_ptr<Ui::GlobalStateWidget> ui_;
+  QString name_; /// Name of the global state.
+};
+
+/// Represents global states.
+class GlobalStateWidget : public QWidget {
+  Q_OBJECT
 public:
-    /// Adds global state checkbox to UI.
-    ///
-    /// @param checkbox pointer to QCheckBox instance.
-    void add_checkbox(QCheckBox *checkbox);
-    /// Loads global state file.
-    ///
-    /// @param in_file Path to input global state file.
-    void loadGlobalFile(const QString &in_file);
+  /// Constructor.
+  explicit GlobalStateWidget(QWidget *parent = 0);
+
+  /// Sets widget contents to match underlying data.
+  ///
+  /// @param states Shared pointer to global state annotation.
+  void setStates(std::shared_ptr<GlobalStateAnnotation> states);
+private:
+  /// Widget loaded from ui file.
+  std::unique_ptr<Ui::GlobalStateWidget> ui_;
+
+  /// Shared pointer to global state.
+  std::shared_ptr<GlobalStateAnnotation> states_;
 };
 
 } // namespace fish_annotator
