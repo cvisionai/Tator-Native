@@ -178,6 +178,12 @@ ImageAnnotationList::getImageAnnotations(const fs::path &image_file) {
   return annotations;
 }
 
+void ImageAnnotationList::insertGlobalStateAnnotation(
+  std::string image_file_name,
+  std::shared_ptr<GlobalStateAnnotation> ann) {
+    global_states_[image_file_name] = ann;
+}
+
 std::map<std::string, uint64_t>
 ImageAnnotationList::getCounts(const std::string &image_file) {
   std::map<std::string, uint64_t> counts;
@@ -252,28 +258,29 @@ void ImageAnnotationList::write(
   sum_file /= "_summary.csv";
   std::ofstream sum(sum_file.string());
   sum << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
-  sum << global_states_.size() > 0 ?
-    global_states_.begin()->writeCsvHeader() : "";
+  sum << (global_states_.size() > 0 ?
+    global_states_.begin()->second->writeCsvHeader() : "");
   sum << std::endl;
   for(const auto &image_file : filenames) {
     fs::path csv_file(image_file);
     csv_file.replace_extension(".csv");
     std::ofstream csv(csv_file.string());
     csv << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
-    csv << global_states_[image_file].writeCsvHeader();
+    const auto &global_state = global_states_.at(image_file.string());
+    csv << global_state->writeCsvHeader();
     csv << std::endl;
     pt::ptree tree;
     pt::ptree detections;
     auto range = by_file_.left.equal_range(image_file.filename().string());
     for(auto it = range.first; it != range.second; ++it) {
       (*(it->second))->write_csv(csv);
-      csv << global_states_[image_file].writeCsvValues() << std::endl;
+      csv << global_state->writeCsvValues() << std::endl;
       (*(it->second))->write_csv(sum);
-      sum << global_states_[image_file].writeCsvValues() << std::endl;
+      sum << global_state->writeCsvValues() << std::endl;
       detections.push_back(std::make_pair("", (*(it->second))->write()));
     }
     tree.add_child("detections", detections);
-    tree.add_child("global_state", global_state_[image_file].write());
+    tree.add_child("global_state", global_state->write());
     fs::path json_file(image_file);
     json_file.replace_extension(".json");
     pt::write_json(json_file.string(), tree);
@@ -313,11 +320,11 @@ void ImageAnnotationList::read(
         if(it_new_gs != tree.not_found()) {
           std::map<std::string, bool> global_state_init;
           for(auto &val : tree.get_child("global_state")) {
-            global_state_init.push_back(std::pair<std::string, bool>(
+            global_state_init.insert(std::pair<std::string, bool>(
               val->first,
               val->second == "1"));
           }
-          global_states_.push_back(std::pair(
+          global_states_.insert(std::pair(
             image_file,
             std::make_shared<GlobalStateAnnotation>(global_state_init)));
         }

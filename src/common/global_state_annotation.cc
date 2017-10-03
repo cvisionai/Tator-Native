@@ -2,25 +2,27 @@
 
 namespace fish_annotator {
 
-GlobalStateAnnotation(std:map<std::string, bool> states)
+GlobalStateAnnotation::GlobalStateAnnotation(std::map<std::string, bool> states)
   : states_(states) {
 }
 
-pt::ptree write() const {
+pt::ptree GlobalStateAnnotation::write() const {
   pt::ptree tree;
   for(auto state : states_) {
     tree.put(state.first, state.second ? 1 : 0);
   }
 }
 
-void read(const pt::ptree &tree) {
+void GlobalStateAnnotation::read(const pt::ptree &tree) {
   states_.clear();
   for(auto it : tree) {
-    states_.push_back(*it);
+    states_.insert(std::pair<std::string, bool>(
+      it.first,
+      it.second.get<std::string>(it.first) == "1"));
   }
 }
 
-std::string writeCsvHeader() {
+std::string GlobalStateAnnotation::writeCsvHeader() {
   std::string header;
   for(auto state : states_) {
     header += ",";
@@ -29,7 +31,7 @@ std::string writeCsvHeader() {
   return header;
 }
 
-std::string writeCsvValues() {
+std::string GlobalStateAnnotation::writeCsvValues() {
   std::string values;
   for (auto state : states_) {
     values += ",";

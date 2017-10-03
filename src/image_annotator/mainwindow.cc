@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->globalStateLayout->addWidget(global_state_widget_.get());
   tabifyDockWidget(
     ui_->navigationDockWidget,
+    ui_->speciesDockWidget);
+  tabifyDockWidget(
     ui_->speciesDockWidget,
     ui_->globalStateDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
@@ -233,7 +235,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   image_files_.clear();
   fs::directory_iterator dir_it(image_dir.toStdString());
   fs::directory_iterator dir_end;
-  fs::path current_path(QDir::currentPath().toStdString());  
+  fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_global_state = current_path / fs::path("default.global");
   std::map<std::string, bool> global_state_init;
   if(fs::exists(default_global_state)) {
@@ -248,8 +250,9 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
-        global_states_[dir_it->path().filename().string()] =
-          std::make_shared<GlobalStateAnnotation>(global_state_init);
+        annotations_->insertGlobalStateAnnotation(
+          dir_it->path().filename().string(),
+          std::make_shared<GlobalStateAnnotation>(global_state_init));
         image_files_.push_back(dir_it->path());
       }
     }

@@ -3,11 +3,9 @@
 
 #include <QWidget>
 #include <QCheckBox>
-#include <QList>
 
 #include <memory>
-#include <iostream>
-#include <fstream>
+#include "global_state_annotation.h"
 #include "ui_global_state_widget.h"
 
 namespace fish_annotator {

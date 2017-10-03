@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "global_state_widget.h"
 #include "ui_global_state_widget.h"
 
@@ -15,15 +17,12 @@ void GlobalStateWidget::setStates(
   QLayoutItem* child;
   while(ui_->stateCheckboxes->count() != 0) {
     child = ui_->stateCheckboxes->takeAt(0);
-    if(child->layout() != 0) {
-        remove(child->layout());
-    }
-    else if(child->widget() != 0) {
+    if(child->widget() != 0) {
         delete child->widget();
     }
     delete child;
   }
-  for(auto state : states) {
+  for(auto state : states->states_) {
     auto *chkbox = new QCheckBox(state.first.c_str(), this);
     chkbox->setChecked(state.second);
     QObject::connect(chkbox, &QCheckBox::stateChanged, this,
@@ -32,8 +31,9 @@ void GlobalStateWidget::setStates(
   }
 }
 
-GlobalStateWidget::updateGlobalState(int checked) {
-  std::string name = QObject::sender()->text().c_str();
+void GlobalStateWidget::updateGlobalState(int checked) {
+  QCheckBox *sender = qobject_cast<QCheckBox *>(QObject::sender());
+  std::string name = sender->text().toStdString();
   if(checked == Qt::Unchecked) {
     states_->states_[name] = false;
   }

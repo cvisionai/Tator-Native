@@ -13,6 +13,8 @@
 
 namespace fish_annotator {
 
+namespace pt = boost::property_tree;
+
 /// Defines global state information for one image/frame.
 struct GlobalStateAnnotation : public Serialization {
   /// Constructor.
