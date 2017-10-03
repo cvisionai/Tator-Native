@@ -4,6 +4,13 @@
 #ifndef GLOBAL_STATE_ANNOTATION_H
 #define GLOBAL_STATE_ANNOTATION_H
 
+#include <map>
+#include <memory>
+
+#include <boost/property_tree/ptree.hpp>
+
+#include "serialization.h"
+
 namespace fish_annotator {
 
 /// Defines global state information for one image/frame.

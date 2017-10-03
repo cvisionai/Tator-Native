@@ -10,23 +10,36 @@ GlobalStateWidget::GlobalStateWidget(QWidget *parent)
   ui_->setupUi(this);
 }
 
-void setStates(std::shared_ptr<GlobalStateAnnotation> states) {
+void GlobalStateWidget::setStates(
+  std::shared_ptr<GlobalStateAnnotation> states) {
   QLayoutItem* child;
-  int i = 0;
-  for(auto state : states.states_) {
-    child = ui_->stateCheckboxes->takeAt(i);
-    // @TODO just delete everything instead of this and remake it
-    if(child == 0) {
-      ui_->stateCheckboxes->addWidget(
-          new GlobalStateCheckBox(state.first.c_str(), this));
-      child = ui_->stateCheckboxes->takeAt(i);
-      // @TODO connect stateChanged signal to an internal slot
+  while(ui_->stateCheckboxes->count() != 0) {
+    child = ui_->stateCheckboxes->takeAt(0);
+    if(child->layout() != 0) {
+        remove(child->layout());
     }
-    child->widget()->setChecked(state.second);
-    ++i;
+    else if(child->widget() != 0) {
+        delete child->widget();
+    }
+    delete child;
+  }
+  for(auto state : states) {
+    auto *chkbox = new QCheckBox(state.first.c_str(), this);
+    chkbox->setChecked(state.second);
+    QObject::connect(chkbox, &QCheckBox::stateChanged, this,
+       &GlobalStateWidget::updateGlobalState);
+    ui_->stateCheckboxes->addWidget(chkbox);
   }
 }
 
-// @TODO add internal slot that updates states_ whenever checkbox changed.
+GlobalStateWidget::updateGlobalState(int checked) {
+  std::string name = QObject::sender()->text().c_str();
+  if(checked == Qt::Unchecked) {
+    states_->states_[name] = false;
+  }
+  else if (checked == Qt::Checked) {
+    states_->states_[name] = true;
+  }
+}
 
 } // namespace fish_annotator
