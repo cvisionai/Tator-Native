@@ -274,23 +274,30 @@ void ImageAnnotationList::write(
   sum << (global_states_.size() > 0 ?
     global_states_.begin()->second->writeCsvHeader() : "");
   sum << std::endl;
+  fs::path global_state_path(filenames[0]);
+  global_state_path = global_state_path.parent_path();
+  global_state_path /= "_global_state.csv";
+  std::ofstream global_state_file(global_state_path.string());
+  global_state_file << "Image File,";
+  global_state_file << (global_states_.size() > 0 ?
+    global_states_.begin()->second->writeCsvHeader() : "");
+  global_state_file << std::endl;
   for(const auto &image_file : filenames) {
     fs::path csv_file(image_file);
     csv_file.replace_extension(".csv");
     std::ofstream csv(csv_file.string());
     csv << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
+    csv << std::endl;
     const auto &global_state = global_states_.at(
       image_file.filename().string());
-    csv << global_state->writeCsvHeader();
-    csv << std::endl;
     pt::ptree tree;
     pt::ptree detections;
     auto range = by_file_.left.equal_range(image_file.filename().string());
+    global_state_file << image_file.filename().string() << ",";
+    global_state_file << global_state->writeCsvValues() << std::endl;
     for(auto it = range.first; it != range.second; ++it) {
       (*(it->second))->write_csv(csv);
-      csv << global_state->writeCsvValues() << std::endl;
       (*(it->second))->write_csv(sum);
-      sum << global_state->writeCsvValues() << std::endl;
       detections.push_back(std::make_pair("", (*(it->second))->write()));
     }
     tree.add_child("detections", detections);
