@@ -29,7 +29,7 @@ void GlobalStateAnnotation::read(const pt::ptree &tree) {
     pt::ptree elem = val.second.get_child("");
     states_.insert(std::pair<std::string, bool>(
       elem.get<std::string>("state"),
-      elem.get<std::string>("value") == "true"));
+      elem.get<bool>("value")));
   }
 }
 
