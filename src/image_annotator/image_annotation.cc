@@ -5,8 +5,7 @@
 #include <QMessageBox>
 
 #include "image_annotation.h"
-#include <fstream>
-std::ofstream debug2("DEBUG2.txt");
+
 namespace fish_annotator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
@@ -265,7 +264,6 @@ void ImageAnnotationList::write(
   dlg->setWindowTitle("Save Annotations");
   dlg->setMinimumDuration(10);
   int iter = 0;
-  debug2 << "CREATING SUMMARY FILE " << filenames[0] << std::endl;
   fs::path sum_file(filenames[0]);
   sum_file = sum_file.parent_path();
   sum_file /= "_summary.csv";
@@ -341,9 +339,6 @@ void ImageAnnotationList::read(
         if(it_new_gs != tree.not_found()) {
           auto val = std::make_shared<GlobalStateAnnotation>();
           val->read(tree.get_child("global_state"));
-          debug2 << "CLAPPERS IS: " << val->states_["clappers"] << std::endl;
-          debug2 << "CLAMS IS: " << val->states_["clams"] << std::endl;
-          debug2 << "SCALLOPS IS: " << val->states_["scallops"] << std::endl;
           std::string fname = image_file.filename().string();
           if(global_states_.find(fname) == global_states_.end()) {
             global_states_.insert(

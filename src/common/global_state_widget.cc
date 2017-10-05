@@ -2,7 +2,7 @@
 
 #include "global_state_widget.h"
 #include "ui_global_state_widget.h"
-std::ofstream debug1("DEBUG1.txt");
+
 namespace fish_annotator {
 
 GlobalStateWidget::GlobalStateWidget(QWidget *parent)
@@ -24,8 +24,6 @@ void GlobalStateWidget::setStates(
   }
   for(auto state : states->states_) {
     auto *chkbox = new QCheckBox(state.first.c_str(), this);
-    debug1 << "STATE: " << state.first << std::endl;
-    debug1 << "VALUE: " << state.second << std::endl;
     chkbox->setChecked(state.second);
     QObject::connect(chkbox, &QCheckBox::stateChanged, this,
        &GlobalStateWidget::updateGlobalState);
@@ -35,18 +33,13 @@ void GlobalStateWidget::setStates(
 }
 
 void GlobalStateWidget::updateGlobalState(int checked) {
-  debug1 << "GOT TO UPDATEGLOBALSTATE" << std::endl;
   QCheckBox *sender = qobject_cast<QCheckBox *>(QObject::sender());
-  debug1 << "GOT HERE1" << std::endl;
   std::string name = sender->text().toStdString();
-  debug1 << "GOT HERE2" << std::endl;
   if(checked == Qt::Unchecked) {
     states_->states_[name] = false;
-  debug1 << "GOT HERE3" << std::endl;
   }
   else if (checked == Qt::Checked) {
     states_->states_[name] = true;
-  debug1 << "GOT 4" << std::endl;
   }
 }
 

@@ -1,6 +1,5 @@
 #include "global_state_annotation.h"
-#include <fstream>
-std::ofstream debug3("DEBUG3.TXT");
+
 namespace fish_annotator {
 
 GlobalStateAnnotation::GlobalStateAnnotation(
@@ -28,8 +27,6 @@ void GlobalStateAnnotation::read(const pt::ptree &tree) {
   states_.clear();
   for(auto val : tree) {
     pt::ptree elem = val.second.get_child("");
-    debug3 << "STATE: " << elem.get<std::string>("state") << std::endl;
-    debug3 << "VALUE: " << (elem.get<std::string>("value") == "true") << std::endl;
     states_.insert(std::pair<std::string, bool>(
       elem.get<std::string>("state"),
       elem.get<std::string>("value") == "true"));
