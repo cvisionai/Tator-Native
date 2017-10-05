@@ -321,11 +321,12 @@ void ImageAnnotationList::read(
           std::map<std::string, bool> global_state_init;
           for(auto &val : tree.get_child("global_state")) {
             global_state_init.insert(std::pair<std::string, bool>(
-              val->first,
-              val->second == "1"));
+              val.first,
+              val.second.get<std::string>(val.first) == "1"));
           }
-          global_states_.insert(std::pair(
-            image_file,
+          global_states_.insert(
+            std::pair<std::string, std::shared_ptr<GlobalStateAnnotation>>(
+            image_file.string(),
             std::make_shared<GlobalStateAnnotation>(global_state_init)));
         }
       }
