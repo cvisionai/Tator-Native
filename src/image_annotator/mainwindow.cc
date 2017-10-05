@@ -30,11 +30,12 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls(this))
   , annotation_widget_(new AnnotationWidget(this))
+  , global_state_widget_(new GlobalStateWidget(this))
   , image_files_()
   , metadata_()
   , species_()
   , subspecies_()
-  , current_annotations_() 
+  , current_annotations_()
   , color_map_() {
   ui_->setupUi(this);
   setWindowTitle("Image Annotator");
@@ -44,8 +45,15 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->next->setIcon(QIcon(":/icons/image_controls/next.svg"));
   ui_->prev->setIcon(QIcon(":/icons/image_controls/prev.svg"));
   ui_->videoWindowLayout->addWidget(view_.get());
-  ui_->sideBarLayout->addWidget(annotation_widget_.get());
-  ui_->sideBarLayout->addWidget(species_controls_.get());
+  ui_->speciesLayout->addWidget(annotation_widget_.get());
+  ui_->speciesLayout->addWidget(species_controls_.get());
+  ui_->globalStateLayout->addWidget(global_state_widget_.get());
+  tabifyDockWidget(
+    ui_->globalStateDockWidget,
+    ui_->navigationDockWidget);
+  tabifyDockWidget(
+    ui_->navigationDockWidget,
+    ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
@@ -227,10 +235,24 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   image_files_.clear();
   fs::directory_iterator dir_it(image_dir.toStdString());
   fs::directory_iterator dir_end;
+  fs::path current_path(QDir::currentPath().toStdString());
+  fs::path default_global_state = current_path / fs::path("default.global");
+  std::map<std::string, bool> global_state_init;
+  if(fs::exists(default_global_state)) {
+    std::ifstream input_file(default_global_state.string(), std::ifstream::in);
+    std::vector<std::string> file_list;
+    std::string line;
+    while(input_file >> line) {
+      global_state_init[line] = false;
+    }
+  }
   for(; dir_it != dir_end; ++dir_it) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
+        annotations_->insertGlobalStateAnnotation(
+          dir_it->path().filename().string(),
+          std::make_shared<GlobalStateAnnotation>(global_state_init));
         image_files_.push_back(dir_it->path());
       }
     }
@@ -314,6 +336,8 @@ void MainWindow::drawAnnotations() {
     QImage current(filename.c_str());
     if(!current.isNull()) {
       fs::path img_path(filename);
+      global_state_widget_->setStates(
+        annotations_->getGlobalStateAnnotation(img_path.filename().string()));
       auto annotations =
         annotations_->getImageAnnotations(img_path.filename());
       for(auto annotation : annotations) {

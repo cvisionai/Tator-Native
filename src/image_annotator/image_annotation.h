@@ -20,6 +20,7 @@
 #include "rect.h"
 #include "species.h"
 #include "annotation_scene.h"
+#include "global_state_annotation.h"
 
 #ifndef NO_TESTING
 class TestImageAnnotation;
@@ -39,10 +40,10 @@ struct ImageAnnotation : public Serialization {
   /// @param id ID of the individual within the image.
   /// @param rect Rectangle defining the annotation.
   /// @param type Type of annotation.
-  ImageAnnotation(const std::string& image_file, 
+  ImageAnnotation(const std::string& image_file,
                   const std::string& species,
                   const std::string& subspecies,
-                  uint64_t id, 
+                  uint64_t id,
                   const Rect &rect,
                   enum AnnotationType type);
 
@@ -80,7 +81,7 @@ struct ImageAnnotation : public Serialization {
   std::string species_; ///< Species of the individual.
   std::string subspecies_; ///< Subspecies of the individual.
   uint64_t id_; ///< ID of the individual within the image.
-  Rect area_; ///< Rectangle defining the annotation. 
+  Rect area_; ///< Rectangle defining the annotation.
   enum AnnotationType type_; ///< Type of annotation.
 };
 
@@ -125,8 +126,22 @@ public:
   /// Gets annotations for a given image.
   ///
   /// @param image_file Image file path.
-  std::vector<std::shared_ptr<ImageAnnotation>> 
+  std::vector<std::shared_ptr<ImageAnnotation>>
     getImageAnnotations(const boost::filesystem::path &image_file);
+
+  /// Inserts GlobalStateAnnotation object into global_states_.
+  ///
+  /// @param image_file_name string that is key.
+  /// @param ann GlobalStateAnnotation object.
+  void insertGlobalStateAnnotation(
+    std::string image_file_name,
+    std::shared_ptr<GlobalStateAnnotation> ann);
+
+  /// Gets GlobalStateAnnotation corresponding to given image.
+  ///
+  /// @param image_file Image filename.
+  std::shared_ptr<GlobalStateAnnotation>
+    getGlobalStateAnnotation(const std::string &image_file);
 
   /// Gets counts for each species in a given image.
   std::map<std::string, uint64_t> getCounts(const std::string &image_file);
@@ -151,19 +166,19 @@ public:
   /// Writes one file per image.  Multiple annotations for the same image
   /// are written to the same file.
   ///
-  /// @param filenames Vector of paths, each containing the full path 
+  /// @param filenames Vector of paths, each containing the full path
   ///        to an image.
   void write(const std::vector<boost::filesystem::path> &filenames) const;
 
   /// Reads annotations from a given list of input files.
   ///
-  /// @param filenames Vector of paths, each containing the full path 
+  /// @param filenames Vector of paths, each containing the full path
   ///        to an image.
   void read(const std::vector<boost::filesystem::path> &filenames);
 private:
   /// For mapping strings to image annotations.
   typedef boost::bimap<
-    boost::bimaps::multiset_of<std::string>, 
+    boost::bimaps::multiset_of<std::string>,
     boost::bimaps::set_of<List::iterator>> ByString;
 
   /// For mapping pair of strings to image annotations.
@@ -172,13 +187,16 @@ private:
     boost::bimaps::set_of<List::iterator>> ByStringPair;
 
   /// List of image annotations.
-  List list_; 
+  List list_;
 
   /// Map between image filename and reference to image annotations.
   ByString by_file_;
 
   /// Map between species/subspecies and reference to image annotations.
   ByStringPair by_species_;
+
+  /// Map between image filename and global state annotations.
+  std::map<std::string, std::shared_ptr<GlobalStateAnnotation>> global_states_;
 };
 
 }} // namespace fish_annotator::image_annotator
