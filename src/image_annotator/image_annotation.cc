@@ -339,16 +339,19 @@ void ImageAnnotationList::read(
         }
         auto it_new_gs = tree.find("global_state");
         if(it_new_gs != tree.not_found()) {
-          std::map<std::string, bool> global_state_init;
-          for(auto &val : tree.get_child("global_state")) {
-            global_state_init.insert(std::pair<std::string, bool>(
-              val.first,
-              val.second.get<std::string>(val.first) == "1"));
+          auto val = std::make_shared<GlobalStateAnnotation>();
+          val->read(tree.get_child("global_state"));
+          debug2 << "CLAPPERS IS: " << val->states_["clappers"] << std::endl;
+          debug2 << "CLAMS IS: " << val->states_["clams"] << std::endl;
+          debug2 << "SCALLOPS IS: " << val->states_["scallops"] << std::endl;
+          std::string fname = image_file.filename().string();
+          if(global_states_.find(fname) == global_states_.end()) {
+            global_states_.insert(
+              std::make_pair(fname, val));
           }
-          global_states_.insert(
-            std::pair<std::string, std::shared_ptr<GlobalStateAnnotation>>(
-            image_file.string(),
-            std::make_shared<GlobalStateAnnotation>(global_state_init)));
+          else {
+            global_states_[fname] = val;
+          }
         }
       }
     }

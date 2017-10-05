@@ -24,6 +24,8 @@ void GlobalStateWidget::setStates(
   }
   for(auto state : states->states_) {
     auto *chkbox = new QCheckBox(state.first.c_str(), this);
+    debug1 << "STATE: " << state.first << std::endl;
+    debug1 << "VALUE: " << state.second << std::endl;
     chkbox->setChecked(state.second);
     QObject::connect(chkbox, &QCheckBox::stateChanged, this,
        &GlobalStateWidget::updateGlobalState);

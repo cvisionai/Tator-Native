@@ -1,5 +1,6 @@
 #include "global_state_annotation.h"
-
+#include <fstream>
+std::ofstream debug3("DEBUG3.TXT");
 namespace fish_annotator {
 
 GlobalStateAnnotation::GlobalStateAnnotation(
@@ -7,20 +8,31 @@ GlobalStateAnnotation::GlobalStateAnnotation(
   : states_(states) {
 }
 
+GlobalStateAnnotation::GlobalStateAnnotation()
+  : states_() {
+}
+
 pt::ptree GlobalStateAnnotation::write() const {
-  pt::ptree tree;
+  pt::ptree arr;
   for(auto state : states_) {
-    tree.put(state.first, state.second ? 1 : 0);
+    pt::ptree tree;
+    tree.put("state", state.first);
+    tree.put("value", state.second);
+    tree.put("type", "bool");
+    arr.push_back(std::make_pair("", tree));
   }
-  return tree;
+  return arr;
 }
 
 void GlobalStateAnnotation::read(const pt::ptree &tree) {
   states_.clear();
-  for(auto it : tree) {
+  for(auto val : tree) {
+    pt::ptree elem = val.second.get_child("");
+    debug3 << "STATE: " << elem.get<std::string>("state") << std::endl;
+    debug3 << "VALUE: " << (elem.get<std::string>("value") == "true") << std::endl;
     states_.insert(std::pair<std::string, bool>(
-      it.first,
-      it.second.get<std::string>(it.first) == "1"));
+      elem.get<std::string>("state"),
+      elem.get<std::string>("value") == "true"));
   }
 }
 

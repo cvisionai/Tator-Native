@@ -281,6 +281,10 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setSingleStep(1);
     ui_->imageSlider->setValue(0);
     annotations_->read(image_files_);
+    auto gst = annotations_->getGlobalStateAnnotation("115_6729.png");
+    debug << "CLAPPERS IS: " << gst->states_["clappers"] << " IN MAINWINDOW" << std::endl;
+    debug << "CLAMS IS: " << gst->states_["clams"] << " IN MAINWINDOW" << std::endl;
+    debug << "SCALLOPS IS: " << gst->states_["scallops"] << " IN MAINWINDOW" << std::endl;
     species_controls_->loadFromVector(annotations_->getAllSpecies());
     on_imageSlider_valueChanged();
     view_->setBoundingRect(scene_->sceneRect());
