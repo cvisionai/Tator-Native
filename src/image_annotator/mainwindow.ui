@@ -454,7 +454,11 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
-      <layout class="QVBoxLayout" name="speciesLayout"/>
+      <layout class="QVBoxLayout" name="speciesLayout">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -469,7 +473,11 @@
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QVBoxLayout" name="verticalLayout_6">
      <item>
-      <layout class="QVBoxLayout" name="globalStateLayout"/>
+      <layout class="QVBoxLayout" name="globalStateLayout">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+      </layout>
      </item>
     </layout>
    </widget>

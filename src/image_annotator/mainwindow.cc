@@ -49,11 +49,11 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->speciesLayout->addWidget(species_controls_.get());
   ui_->globalStateLayout->addWidget(global_state_widget_.get());
   tabifyDockWidget(
+    ui_->globalStateDockWidget,
+    ui_->navigationDockWidget);
+  tabifyDockWidget(
     ui_->navigationDockWidget,
     ui_->speciesDockWidget);
-  tabifyDockWidget(
-    ui_->speciesDockWidget,
-    ui_->globalStateDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
@@ -277,7 +277,6 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setSingleStep(1);
     ui_->imageSlider->setValue(0);
     annotations_->read(image_files_);
-    auto gst = annotations_->getGlobalStateAnnotation("115_6729.png");
     species_controls_->loadFromVector(annotations_->getAllSpecies());
     on_imageSlider_valueChanged();
     view_->setBoundingRect(scene_->sceneRect());
