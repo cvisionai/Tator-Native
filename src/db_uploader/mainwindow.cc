@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -21,6 +22,20 @@ namespace { //anonymous
 static const std::vector<std::string> kDirExtensions = {
   ".jpg", ".png", ".bmp", ".tif", ".jpeg",
   ".JPG", ".PNG", ".BMP", ".TIF", ".JPEG"};
+
+const char *getCount(
+    const std::map<std::string, uint64_t> &count_map,
+    const std::string &species) {
+  std::string species_lower = species;
+  boost::algorithm::to_lower(species_lower);
+  if(count_map.find(species_lower) == count_map.end()) {
+    return "0";
+  }
+  else {
+    const uint64_t count = count_map.at(species_lower);
+    return std::to_string(count).c_str();
+  }
+}
 
 } // anonymous namespace
 
@@ -326,6 +341,14 @@ void MainWindow::on_upload_clicked() {
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
     int num_ann = static_cast<int>(ann.size());
 
+    // Get global state annotations for this image
+    auto global_state = annotations.getGlobalStateAnnotation(
+        image_files[img_index].filename().string());
+
+    // Get counts for each species in this image
+    auto species_counts = annotations.getCounts(
+        image_files[img_index].filename().string());
+
     // Enable identity insert for survey data
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
@@ -377,307 +400,307 @@ void MainWindow::on_upload_clicked() {
         survey_data.index(
           row_count,
           survey_data.fieldIndex("sand")),
-        survey_raw_data_record.value("sand"));
+        global_state->states_["sand"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("sandRipple")),
-        survey_raw_data_record.value("sandRipple"));
+        global_state->states_["sandRipple"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("shellDebris")),
-        survey_raw_data_record.value("shellDebris"));
+        global_state->states_["shellDebris"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("silt")),
-        survey_raw_data_record.value("silt"));
+        global_state->states_["silt"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("gravel")),
-        survey_raw_data_record.value("gravel"));
+        global_state->states_["gravel"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("cobble")),
-        survey_raw_data_record.value("cobble"));
+        global_state->states_["cobble"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("rock")),
-        survey_raw_data_record.value("rock"));
+        global_state->states_["rock"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("wasVisible")),
-        survey_raw_data_record.value("wasVisible"));
+        global_state->states_["wasVisible"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("scallops")),
-        survey_raw_data_record.value("scallops"));
+        getCount(species_counts, "scallops"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("clappers")),
-        survey_raw_data_record.value("clappers"));
+        getCount(species_counts, "clappers"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("seed")),
-        0);// @TODO Get from global state
+        global_state->states_["seed"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("seaStars")),
-        survey_raw_data_record.value("seaStars"));
+        getCount(species_counts, "seaStars"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("crabs")),
-        survey_raw_data_record.value("crabs"));
+        getCount(species_counts, "crabs"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("hermitCrabs")),
-        survey_raw_data_record.value("hermitCrabs"));
+        getCount(species_counts, "hermitCrabs"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("echinodermOther")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "echinodermOther"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("lobster")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "lobster"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("sandDollars")),
-        survey_raw_data_record.value("sandDollars"));
+        getCount(species_counts, "sandDollars"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("ad")),
-        survey_raw_data_record.value("ad"));
+        global_state->states_["ad"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("anemone")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "anemone"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("bHydra")),
-        survey_raw_data_record.value("bHydra"));
+        getCount(species_counts, "bHydra"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("brittleStar")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "brittleStar"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("buccinum")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "buccinum"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("clams")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "clams"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("coral")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "coral"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("ctenophores")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "ctenophores"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("detritus")),
-        0);// @TODO Get from annotations
+        global_state->states_["detritus"]);
     survey_data.setData(
         survey_data.index(
           row_count,
-          survey_data.fieldIndex("euphausids")),
-        0);// @TODO Get from annotations
+          survey_data.fieldIndex("euphasids")),
+        getCount(species_counts, "euphasids"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("filo")),
-        0);// @TODO Get from annotations
+        global_state->states_["filo"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("holes")),
-        0);// @TODO Get from annotations
+        global_state->states_["holes"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("jellyFish")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "jellyFish"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("moonsnail")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "moonsnail"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("moonsnailEggCase")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "moonsnailEggCase"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("mouse")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "mouse"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("mussels")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "mussels"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("otherCrustaceans")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "otherCrustaceans"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("otherMolluscs")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "otherMolluscs"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("seaweed")),
-        0);// @TODO Get from annotations
+        global_state->states_["seaweed"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("skateEggCase")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "skateEggCase"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("sponges")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "sponges"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("squid")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "squid"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("urchin")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "urchin"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("tunicate")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "tunicate"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("cod")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "cod"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("dogfish")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "dogfish"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("eel")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "eel"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("oceanPout")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "oceanPout"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("flounder")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "flounder"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("haddock")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "haddock"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("hagfish")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "hagfish"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("hake")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "hake"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("herring")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "herring"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("mackerel")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "mackerel"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("monkFish")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "monkFish"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("otherFish")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "otherFish"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("sandlance")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "sandlance"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("sculpin")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "sculpin"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("seaRaven")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "seaRaven"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("seaRobin")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "seaRobin"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("skate")),
-        survey_raw_data_record.value("skate"));
+        getCount(species_counts, "skate"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("silverHake")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "silverHake"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("unidentifiedFish")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "unidentifiedFish"));
     survey_data.setData(
         survey_data.index(
           row_count,
@@ -687,32 +710,32 @@ void MainWindow::on_upload_clicked() {
         survey_data.index(
           row_count,
           survey_data.fieldIndex("scallopsAtEdge")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "scallopsAtEdge"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("imageHasBeenChecked")),
-        0);// @TODO Get from ???
+        global_state->states_["imageHasBeenChecked"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("imageHasBeenMeasured")),
-        0);// @TODO Get from ???
+        global_state->states_["imageHasBeenMeasured"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("rowIsLocked")),
-        0);// @TODO Get from ???
+        global_state->states_["rowIsLocked"]);
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("Icelandic")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "Icelandic"));
     survey_data.setData(
         survey_data.index(
           row_count,
           survey_data.fieldIndex("SeaCuke")),
-        0);// @TODO Get from annotations
+        getCount(species_counts, "SeaCuke"));
 
     // Disable identity insert for survey data
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
