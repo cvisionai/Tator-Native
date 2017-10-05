@@ -184,6 +184,17 @@ void ImageAnnotationList::insertGlobalStateAnnotation(
     global_states_[image_file_name] = ann;
 }
 
+std::shared_ptr<GlobalStateAnnotation>
+ImageAnnotationList::getGlobalStateAnnotation(
+  const std::string &image_file) {
+  if(global_states_.find(image_file) == global_states_.end()) {
+    return nullptr;
+  }
+  else {
+    return global_states_[image_file];
+  }
+}
+
 std::map<std::string, uint64_t>
 ImageAnnotationList::getCounts(const std::string &image_file) {
   std::map<std::string, uint64_t> counts;

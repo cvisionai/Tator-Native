@@ -137,6 +137,12 @@ public:
     std::string image_file_name,
     std::shared_ptr<GlobalStateAnnotation> ann);
 
+  /// Gets GlobalStateAnnotation corresponding to given image.
+  ///
+  /// @param image_file Image filename.
+  std::shared_ptr<GlobalStateAnnotation>
+    getGlobalStateAnnotation(const std::string &image_file);
+
   /// Gets counts for each species in a given image.
   std::map<std::string, uint64_t> getCounts(const std::string &image_file);
 

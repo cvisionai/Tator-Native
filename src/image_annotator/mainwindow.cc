@@ -10,7 +10,8 @@
 #include "annotated_dot.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <fstream>
+std::ofstream debug("DEBUG.txt");
 namespace fish_annotator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
@@ -239,10 +240,12 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   fs::path default_global_state = current_path / fs::path("default.global");
   std::map<std::string, bool> global_state_init;
   if(fs::exists(default_global_state)) {
+    debug << "FOUND DEFAULT GLOBAL STATE FILE" << std::endl;
     std::ifstream input_file(default_global_state.string(), std::ifstream::in);
     std::vector<std::string> file_list;
     std::string line;
     while(input_file >> line) {
+      debug << "PARSED PATTERN " << line << std::endl;
       global_state_init[line] = false;
     }
   }
@@ -250,6 +253,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
+        debug << "CREATING GLOBAL STATE ANNOTATION FOR IMAGE FILE " <<  dir_it->path().filename().string() << std::endl;
         annotations_->insertGlobalStateAnnotation(
           dir_it->path().filename().string(),
           std::make_shared<GlobalStateAnnotation>(global_state_init));
@@ -336,6 +340,10 @@ void MainWindow::drawAnnotations() {
     QImage current(filename.c_str());
     if(!current.isNull()) {
       fs::path img_path(filename);
+      debug << "ABOUT TO SET STATES, FILENAME: " << img_path.filename().string() << std::endl;
+      global_state_widget_->setStates(
+        annotations_->getGlobalStateAnnotation(img_path.filename().string()));
+      debug << "SET STATES SUCCEEDED" << std::endl;
       auto annotations =
         annotations_->getImageAnnotations(img_path.filename());
       for(auto annotation : annotations) {
