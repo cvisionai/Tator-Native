@@ -281,16 +281,30 @@ void ImageAnnotationList::write(
     global_states_.begin()->second->writeCsvHeader() : "");
   global_state_file << std::endl;
   for(const auto &image_file : filenames) {
+    auto range = by_file_.left.equal_range(image_file.filename().string());
+    const auto &global_state = global_states_.at(
+      image_file.filename().string());
+    // If we don't have any annotations, don't write a file
+    if(range.first == range.second) {
+      bool has_data = false;
+      for(const auto &elem : global_state->states_) {
+        if(elem.second == true) {
+          has_data = true;
+          break;
+        }
+      }
+      if(has_data == false) {
+        continue;
+      }
+    }
+    // Write the files
     fs::path csv_file(image_file);
     csv_file.replace_extension(".csv");
     std::ofstream csv(csv_file.string());
     csv << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
     csv << std::endl;
-    const auto &global_state = global_states_.at(
-      image_file.filename().string());
     pt::ptree tree;
     pt::ptree detections;
-    auto range = by_file_.left.equal_range(image_file.filename().string());
     global_state_file << image_file.filename().string() << ",";
     global_state_file << global_state->writeCsvValues() << std::endl;
     for(auto it = range.first; it != range.second; ++it) {
