@@ -81,8 +81,8 @@ void MainWindow::on_connectOutputDb_clicked() {
       ";Trusted_Connection=no;user_id=" + ui_->outputUsername->text() +
       ";password=" + ui_->outputPassword->text() + ";WSID=.");
   //@TODO UNCOMMENT THESE FOR CUSTOMER
-  //output_db_->setUserName(ui_->outputUsername->text());
-  //output_db_->setPassword(ui_->outputPassword->text());
+  output_db_->setUserName(ui_->outputUsername->text());
+  output_db_->setPassword(ui_->outputPassword->text());
   if(output_db_->isValid() == false) {
     ui_->outputDbStatus->setText("Not connected");
     QMessageBox err;

@@ -451,6 +451,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="speciesDockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>180</width>
+     <height>42</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Species</string>
    </property>
