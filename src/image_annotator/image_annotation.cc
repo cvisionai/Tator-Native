@@ -11,10 +11,10 @@ namespace fish_annotator { namespace image_annotator {
 namespace fs = boost::filesystem;
 
 ImageAnnotation::ImageAnnotation(
-  const std::string& image_file, 
+  const std::string& image_file,
   const std::string& species,
   const std::string& subspecies,
-  uint64_t id, 
+  uint64_t id,
   const Rect &rect,
   enum AnnotationType type)
   : image_file_(image_file)
@@ -102,7 +102,6 @@ void ImageAnnotation::write_csv(std::ofstream &csv) const {
       csv << "Dot,0.0";
       break;
   }
-  csv << std::endl;
 }
 
 void ImageAnnotation::read(const pt::ptree &tree) {
@@ -142,7 +141,7 @@ ImageAnnotationList::ImageAnnotationList()
 void ImageAnnotationList::insert(std::shared_ptr<ImageAnnotation> annotation) {
   list_.push_front(annotation);
   by_file_.insert({annotation->image_file_, list_.begin()});
-  by_species_.insert({{annotation->species_, annotation->subspecies_}, 
+  by_species_.insert({{annotation->species_, annotation->subspecies_},
                       list_.begin()});
 }
 
@@ -169,7 +168,7 @@ uint64_t ImageAnnotationList::nextId(const fs::path &image_file) {
   return max_id + 1;
 }
 
-std::vector<std::shared_ptr<ImageAnnotation>> 
+std::vector<std::shared_ptr<ImageAnnotation>>
 ImageAnnotationList::getImageAnnotations(const fs::path &image_file) {
   std::vector<std::shared_ptr<ImageAnnotation>> annotations;
   auto range = by_file_.left.equal_range(image_file.filename().string());
@@ -179,7 +178,24 @@ ImageAnnotationList::getImageAnnotations(const fs::path &image_file) {
   return annotations;
 }
 
-std::map<std::string, uint64_t> 
+void ImageAnnotationList::insertGlobalStateAnnotation(
+  std::string image_file_name,
+  std::shared_ptr<GlobalStateAnnotation> ann) {
+    global_states_[image_file_name] = ann;
+}
+
+std::shared_ptr<GlobalStateAnnotation>
+ImageAnnotationList::getGlobalStateAnnotation(
+  const std::string &image_file) {
+  if(global_states_.find(image_file) == global_states_.end()) {
+    return nullptr;
+  }
+  else {
+    return global_states_[image_file];
+  }
+}
+
+std::map<std::string, uint64_t>
 ImageAnnotationList::getCounts(const std::string &image_file) {
   std::map<std::string, uint64_t> counts;
   auto range = by_file_.left.equal_range(image_file);
@@ -201,7 +217,7 @@ std::vector<Species> ImageAnnotationList::getAllSpecies() {
   for(const auto &elem : by_species_.left) {
     const std::string &species = elem.first.first;
     const std::string &subspecies = elem.first.second;
-    auto it = std::find_if(vec.begin(), vec.end(), 
+    auto it = std::find_if(vec.begin(), vec.end(),
         [&species](const Species &s) {
           return species == s.getName();
         });
@@ -238,8 +254,8 @@ bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
 void ImageAnnotationList::write(
   const std::vector<fs::path> &filenames) const {
   std::unique_ptr<QProgressDialog> dlg(new QProgressDialog(
-    "Saving annotations...", 
-    "Abort", 
+    "Saving annotations...",
+    "Abort",
     0,
     static_cast<int>(filenames.size() - 1),
     nullptr,
@@ -253,8 +269,35 @@ void ImageAnnotationList::write(
   sum_file /= "_summary.csv";
   std::ofstream sum(sum_file.string());
   sum << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
+  sum << (global_states_.size() > 0 ?
+    global_states_.begin()->second->writeCsvHeader() : "");
   sum << std::endl;
+  fs::path global_state_path(filenames[0]);
+  global_state_path = global_state_path.parent_path();
+  global_state_path /= "_global_state.csv";
+  std::ofstream global_state_file(global_state_path.string());
+  global_state_file << "Image File,";
+  global_state_file << (global_states_.size() > 0 ?
+    global_states_.begin()->second->writeCsvHeader() : "");
+  global_state_file << std::endl;
   for(const auto &image_file : filenames) {
+    auto range = by_file_.left.equal_range(image_file.filename().string());
+    const auto &global_state = global_states_.at(
+      image_file.filename().string());
+    // If we don't have any annotations, don't write a file
+    if(range.first == range.second) {
+      bool has_data = false;
+      for(const auto &elem : global_state->states_) {
+        if(elem.second == true) {
+          has_data = true;
+          break;
+        }
+      }
+      if(has_data == false) {
+        continue;
+      }
+    }
+    // Write the files
     fs::path csv_file(image_file);
     csv_file.replace_extension(".csv");
     std::ofstream csv(csv_file.string());
@@ -262,13 +305,15 @@ void ImageAnnotationList::write(
     csv << std::endl;
     pt::ptree tree;
     pt::ptree detections;
-    auto range = by_file_.left.equal_range(image_file.filename().string());
+    global_state_file << image_file.filename().string() << ",";
+    global_state_file << global_state->writeCsvValues() << std::endl;
     for(auto it = range.first; it != range.second; ++it) {
       (*(it->second))->write_csv(csv);
       (*(it->second))->write_csv(sum);
       detections.push_back(std::make_pair("", (*(it->second))->write()));
     }
     tree.add_child("detections", detections);
+    tree.add_child("global_state", global_state->write());
     fs::path json_file(image_file);
     json_file.replace_extension(".json");
     pt::write_json(json_file.string(), tree);
@@ -302,6 +347,19 @@ void ImageAnnotationList::read(
             auto annotation = std::make_shared<ImageAnnotation>();
             annotation->read(val.second.get_child(""));
             insert(annotation);
+          }
+        }
+        auto it_new_gs = tree.find("global_state");
+        if(it_new_gs != tree.not_found()) {
+          auto val = std::make_shared<GlobalStateAnnotation>();
+          val->read(tree.get_child("global_state"));
+          std::string fname = image_file.filename().string();
+          if(global_states_.find(fname) == global_states_.end()) {
+            global_states_.insert(
+              std::make_pair(fname, val));
+          }
+          else {
+            global_states_[fname] = val;
           }
         }
       }

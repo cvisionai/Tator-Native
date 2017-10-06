@@ -22,9 +22,6 @@ public:
   /// @param parent Parent widget.
   explicit MainWindow(QWidget *parent = 0);
 private slots:
-  /// Connects to input database.
-  void on_connectInputDb_clicked();
-
   /// Connects to output database.
   void on_connectOutputDb_clicked();
 
@@ -40,11 +37,17 @@ private:
   /// Widget loaded from ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
 
-  /// Input database.
-  std::unique_ptr<QSqlDatabase> input_db_;
-
   /// Output database.
   std::unique_ptr<QSqlDatabase> output_db_;
+
+  /// Species (must match database field name).
+  std::vector<std::string> species_;
+
+  /// Global states (must match database field name).
+  std::vector<std::string> states_;
+
+  /// Fields from survey raw data table (must match database field names).
+  std::vector<std::string> raw_fields_;
 };
 
 }} // namespace fish_annotator::db_uploader

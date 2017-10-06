@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QFontDatabase>
 
-#include "fish_annotator/db_uploader/mainwindow.h"
+#include "mainwindow.h"
 
 #ifdef _WIN32
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
