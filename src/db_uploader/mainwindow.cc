@@ -8,10 +8,14 @@
 #include <QSqlTableModel>
 #include <QProgressDialog>
 
+#include "species.h"
 #include "image_annotation.h"
 #include "database_info.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include <fstream>
+std::ofstream debug("DEBUG.txt");
 
 namespace fish_annotator { namespace db_uploader {
 
@@ -23,25 +27,14 @@ static const std::vector<std::string> kDirExtensions = {
   ".jpg", ".png", ".bmp", ".tif", ".jpeg",
   ".JPG", ".PNG", ".BMP", ".TIF", ".JPEG"};
 
-const char *getCount(
-    const std::map<std::string, uint64_t> &count_map,
-    const std::string &species) {
-  std::string species_lower = species;
-  boost::algorithm::to_lower(species_lower);
-  if(count_map.find(species_lower) == count_map.end()) {
-    return "0";
-  }
-  else {
-    const uint64_t count = count_map.at(species_lower);
-    return std::to_string(count).c_str();
-  }
-}
-
 } // anonymous namespace
 
 MainWindow::MainWindow(QWidget *parent)
   : ui_(new Ui::MainWindow) 
-  , output_db_(new QSqlDatabase()) {
+  , output_db_(new QSqlDatabase()) 
+  , species_()
+  , states_()
+  , raw_fields_() {
   ui_->setupUi(this);
   setWindowTitle("Database Uploader");
 #ifdef _WIN32
@@ -56,6 +49,24 @@ MainWindow::MainWindow(QWidget *parent)
     ui_->outputDatabase->setText(output.getDatabase().c_str());
     ui_->outputUsername->setText(output.getUsername().c_str());
   }
+  fs::path default_species = current_path / fs::path("default.species");
+  if(fs::exists(default_species)) {
+    SpeciesList species_list;
+    deserialize(species_list, default_species.string());
+    for(const auto &species : species_list.getSpecies()) {
+      species_.push_back(species.getName());
+    }
+  }
+  fs::path default_global = current_path / fs::path("default.global");
+  if(fs::exists(default_global)) {
+    std::ifstream state_file(default_global.string());
+    std::string line;
+    while(state_file >> line) {
+      states_.push_back(line);
+    }
+  }
+  raw_fields_.push_back("comments");
+  raw_fields_.push_back("surveyRawDataPK");
 }
 
 void MainWindow::on_connectOutputDb_clicked() {
@@ -371,6 +382,8 @@ void MainWindow::on_upload_clicked() {
     // Update the record values
     survey_data_updated_pk++;
     QSqlRecord survey_data_record = survey_data.record(row_count);
+
+
     survey_data.setData(
         survey_data.index(
           row_count, 
@@ -378,364 +391,36 @@ void MainWindow::on_upload_clicked() {
         survey_data_updated_pk);
     survey_data.setData(
         survey_data.index(
-          row_count, 
-          survey_data.fieldIndex("surveyRawDataPK")), 
-        survey_raw_data_record.value("surveyRawDataPK"));
-    survey_data.setData(
-        survey_data.index(
           row_count,
           survey_data.fieldIndex("cameraControlPK")), 
         camera_control_pk);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("imageExists")), 
-        1);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("isImageOfInterest")),
-        0);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("sand")),
-        global_state->states_["sand"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("sandRipple")),
-        global_state->states_["sandRipple"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("shellDebris")),
-        global_state->states_["shellDebris"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("silt")),
-        global_state->states_["silt"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("gravel")),
-        global_state->states_["gravel"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("cobble")),
-        global_state->states_["cobble"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("rock")),
-        global_state->states_["rock"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("wasVisible")),
-        global_state->states_["wasVisible"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("scallops")),
-        getCount(species_counts, "scallops"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("clappers")),
-        getCount(species_counts, "clappers"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("seed")),
-        global_state->states_["seed"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("seaStars")),
-        getCount(species_counts, "seaStars"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("crabs")),
-        getCount(species_counts, "crabs"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("hermitCrabs")),
-        getCount(species_counts, "hermitCrabs"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("echinodermOther")),
-        getCount(species_counts, "echinodermOther"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("lobster")),
-        getCount(species_counts, "lobster"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("sandDollars")),
-        getCount(species_counts, "sandDollars"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("ad")),
-        global_state->states_["ad"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("anemone")),
-        getCount(species_counts, "anemone"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("bHydra")),
-        getCount(species_counts, "bHydra"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("brittleStar")),
-        getCount(species_counts, "brittleStar"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("buccinum")),
-        getCount(species_counts, "buccinum"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("clams")),
-        getCount(species_counts, "clams"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("coral")),
-        getCount(species_counts, "coral"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("ctenophores")),
-        getCount(species_counts, "ctenophores"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("detritus")),
-        global_state->states_["detritus"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("euphasids")),
-        getCount(species_counts, "euphasids"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("filo")),
-        global_state->states_["filo"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("holes")),
-        global_state->states_["holes"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("jellyFish")),
-        getCount(species_counts, "jellyFish"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("moonsnail")),
-        getCount(species_counts, "moonsnail"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("moonsnailEggCase")),
-        getCount(species_counts, "moonsnailEggCase"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("mouse")),
-        getCount(species_counts, "mouse"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("mussels")),
-        getCount(species_counts, "mussels"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("otherCrustaceans")),
-        getCount(species_counts, "otherCrustaceans"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("otherMolluscs")),
-        getCount(species_counts, "otherMolluscs"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("seaweed")),
-        global_state->states_["seaweed"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("skateEggCase")),
-        getCount(species_counts, "skateEggCase"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("sponges")),
-        getCount(species_counts, "sponges"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("squid")),
-        getCount(species_counts, "squid"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("urchin")),
-        getCount(species_counts, "urchin"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("tunicate")),
-        getCount(species_counts, "tunicate"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("cod")),
-        getCount(species_counts, "cod"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("dogfish")),
-        getCount(species_counts, "dogfish"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("eel")),
-        getCount(species_counts, "eel"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("oceanPout")),
-        getCount(species_counts, "oceanPout"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("flounder")),
-        getCount(species_counts, "flounder"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("haddock")),
-        getCount(species_counts, "haddock"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("hagfish")),
-        getCount(species_counts, "hagfish"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("hake")),
-        getCount(species_counts, "hake"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("herring")),
-        getCount(species_counts, "herring"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("mackerel")),
-        getCount(species_counts, "mackerel"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("monkFish")),
-        getCount(species_counts, "monkFish"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("otherFish")),
-        getCount(species_counts, "otherFish"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("sandlance")),
-        getCount(species_counts, "sandlance"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("sculpin")),
-        getCount(species_counts, "sculpin"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("seaRaven")),
-        getCount(species_counts, "seaRaven"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("seaRobin")),
-        getCount(species_counts, "seaRobin"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("skate")),
-        getCount(species_counts, "skate"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("silverHake")),
-        getCount(species_counts, "silverHake"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("unidentifiedFish")),
-        getCount(species_counts, "unidentifiedFish"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("comments")),
-        survey_raw_data_record.value("comments"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("scallopsAtEdge")),
-        getCount(species_counts, "scallopsAtEdge"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("imageHasBeenChecked")),
-        global_state->states_["imageHasBeenChecked"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("imageHasBeenMeasured")),
-        global_state->states_["imageHasBeenMeasured"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("rowIsLocked")),
-        global_state->states_["rowIsLocked"]);
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("Icelandic")),
-        getCount(species_counts, "Icelandic"));
-    survey_data.setData(
-        survey_data.index(
-          row_count,
-          survey_data.fieldIndex("SeaCuke")),
-        getCount(species_counts, "SeaCuke"));
+    debug << "GETTING SPECIES" << std::endl;
+    for(const auto &species : species_) {
+      std::string species_lower = species;
+      boost::algorithm::to_lower(species_lower);
+      survey_data.setData(
+          survey_data.index(
+            row_count,
+            survey_data.fieldIndex(species.c_str())),
+          species_counts.find(species_lower) == species_counts.end() ?
+          "0" : std::to_string(species_counts[species_lower]).c_str());
+    }
+    debug << "GETTING STATES" << std::endl;
+    for(const auto &state : states_) {
+      survey_data.setData(
+          survey_data.index(
+            row_count,
+            survey_data.fieldIndex(state.c_str())),
+          global_state->states_[state]);
+    }
+    debug << "GETTING RAW" << std::endl;
+    for(const auto &raw_field : raw_fields_) {
+      survey_data.setData(
+          survey_data.index(
+            row_count, 
+            survey_data.fieldIndex(raw_field.c_str())), 
+          survey_raw_data_record.value(raw_field.c_str()));
+    }
 
     // Disable identity insert for survey data
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
@@ -827,6 +512,7 @@ void MainWindow::on_upload_clicked() {
   }
   if(ok == true) {
     // Enable identity insert for survey data
+    debug << "TURN ON IDENTITY INSERT FOR SURVEY DATA" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -834,9 +520,11 @@ void MainWindow::on_upload_clicked() {
           "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
       ok = false;
     }
+    debug << "SUBMITTING ALL" << std::endl;
     ok = survey_data.submitAll();
 
     // Disable identity insert for survey data
+    debug << "TURN OFF IDENTITY INSERT FOR SURVEY DATA" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -846,6 +534,7 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Enable identity insert for dot history
+    debug << "TURN ON IDENTITY INSERT FOR DOT HISTORY" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -854,9 +543,11 @@ void MainWindow::on_upload_clicked() {
       ok = false;
     }
 
+    debug << "SUBMIT ALL DOT HISTORY" << std::endl;
     ok = ok && dot_history.submitAll();
 
     // Disable identity insert for dot history
+    debug << "TURN OFF IDENTITY INSERT FOR DOT HISTORY" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -866,6 +557,7 @@ void MainWindow::on_upload_clicked() {
     }
   }
   if(ok == true) {
+    debug << "COMMITTING" << std::endl;
     output_db_->commit();
     progress.setValue(num_img);
     QMessageBox status;

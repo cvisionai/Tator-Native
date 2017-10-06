@@ -39,6 +39,15 @@ private:
 
   /// Output database.
   std::unique_ptr<QSqlDatabase> output_db_;
+
+  /// Species (must match database field name).
+  std::vector<std::string> species_;
+
+  /// Global states (must match database field name).
+  std::vector<std::string> states_;
+
+  /// Fields from survey raw data table (must match database field names).
+  std::vector<std::string> raw_fields_;
 };
 
 }} // namespace fish_annotator::db_uploader
