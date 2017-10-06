@@ -196,6 +196,31 @@ void MainWindow::on_upload_clicked() {
   // Iterate through images
   for(int img_index = 0; img_index < num_img; ++img_index) {
 
+    // Get annotations for this image
+    debug << "GOT HERE 4" << std::endl;
+    auto ann = annotations.getImageAnnotations(image_files[img_index]);
+    int num_ann = static_cast<int>(ann.size());
+
+    // Get global state annotations for this image
+    debug << "GOT HERE 5" << std::endl;
+    auto global_state = annotations.getGlobalStateAnnotation(
+        image_files[img_index].filename().string());
+
+    // If global state annotations don't exist, continue
+    if(global_state == nullptr) {
+      continue;
+    }
+
+    // If we don't have any annotations then continue
+    if(num_ann == 0 && global_state->states_.size() == 0) {
+      continue;
+    }
+
+    // Get counts for each species in this image
+    debug << "GOT HERE 6" << std::endl;
+    auto species_counts = annotations.getCounts(
+        image_files[img_index].filename().string());
+
     // Parse metadata from directory structure
     std::vector<std::string> dir_parts;
     for(const auto &sub : image_files[img_index]) {
@@ -265,6 +290,7 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Find entry in AREA_CONTROL corresponding to this image
+    debug << "GOT HERE 1" << std::endl;
     QSqlQuery area_control(*output_db_);
     area_control.prepare(
         QString("SELECT areaControlPK FROM AREA_CONTROL WHERE ") +
@@ -293,6 +319,7 @@ void MainWindow::on_upload_clicked() {
     area_control.finish();
 
     // Find entry in CAMERA_CONTROL corresponding to this image.
+    debug << "GOT HERE 2" << std::endl;
     QSqlQuery camera_control(*output_db_);
     camera_control.prepare(
         QString("SELECT cameraControlPK FROM CAMERA_CONTROL WHERE ") +
@@ -315,6 +342,7 @@ void MainWindow::on_upload_clicked() {
     camera_control.finish();
 
     // Find entry in SURVEY_RAW_DATA corresponding to this image.
+    debug << "GOT HERE 3" << std::endl;
     QSqlQuery survey_raw_data(*output_db_);
     survey_raw_data.prepare(
         QString("SELECT * FROM SURVEY_RAW_DATA WHERE ") +
@@ -348,18 +376,6 @@ void MainWindow::on_upload_clicked() {
     QSqlRecord survey_raw_data_record = survey_raw_data.record();
     survey_raw_data.finish();
 
-    // Get annotations for this image
-    auto ann = annotations.getImageAnnotations(image_files[img_index]);
-    int num_ann = static_cast<int>(ann.size());
-
-    // Get global state annotations for this image
-    auto global_state = annotations.getGlobalStateAnnotation(
-        image_files[img_index].filename().string());
-
-    // Get counts for each species in this image
-    auto species_counts = annotations.getCounts(
-        image_files[img_index].filename().string());
-
     // Enable identity insert for survey data
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
@@ -380,10 +396,9 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Update the record values
+    debug << "GOT HERE 7" << std::endl;
     survey_data_updated_pk++;
     QSqlRecord survey_data_record = survey_data.record(row_count);
-
-
     survey_data.setData(
         survey_data.index(
           row_count, 
@@ -394,8 +409,19 @@ void MainWindow::on_upload_clicked() {
           row_count,
           survey_data.fieldIndex("cameraControlPK")), 
         camera_control_pk);
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("imageExists")), 
+        "1");
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("isImageOfInterest")), 
+        "1");
     debug << "GETTING SPECIES" << std::endl;
     for(const auto &species : species_) {
+      debug << "WRITING SPECIES: " << species << std::endl;
       std::string species_lower = species;
       boost::algorithm::to_lower(species_lower);
       survey_data.setData(
