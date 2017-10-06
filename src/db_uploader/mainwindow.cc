@@ -28,8 +28,8 @@ static const std::vector<std::string> kDirExtensions = {
 } // anonymous namespace
 
 MainWindow::MainWindow(QWidget *parent)
-  : ui_(new Ui::MainWindow) 
-  , output_db_(new QSqlDatabase()) 
+  : ui_(new Ui::MainWindow)
+  , output_db_(new QSqlDatabase())
   , species_()
   , states_()
   , raw_fields_() {
@@ -76,9 +76,9 @@ void MainWindow::on_connectOutputDb_clicked() {
     err.critical(0, "Error", "ODBC driver is not available!");
   }
   output_db_->setDatabaseName(
-      "DRIVER={SQL Server};SERVER={" + ui_->outputServer->text() + 
-      "};DATABASE=" + ui_->outputDatabase->text() + 
-      ";Trusted_Connection=no;user_id=" + ui_->outputUsername->text() + 
+      "DRIVER={SQL Server};SERVER={" + ui_->outputServer->text() +
+      "};DATABASE=" + ui_->outputDatabase->text() +
+      ";Trusted_Connection=no;user_id=" + ui_->outputUsername->text() +
       ";password=" + ui_->outputPassword->text() + ";WSID=.");
   //@TODO UNCOMMENT THESE FOR CUSTOMER
   //output_db_->setUserName(ui_->outputUsername->text());
@@ -170,7 +170,7 @@ void MainWindow::on_upload_clicked() {
   ok = survey_data_max_id.exec();
   if(ok == false || survey_data_max_id.next() == false) {
     QMessageBox err;
-    err.critical(0, "Error", 
+    err.critical(0, "Error",
         "Could not find the max updatedPK in SURVEY_DATA!");
     return;
   }
@@ -224,7 +224,7 @@ void MainWindow::on_upload_clicked() {
     auto dir_len = dir_parts.size();
     if(dir_len < 6) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           std::string(
             std::string("Invalid directory structure for image ") +
             image_files[img_index].string() +
@@ -252,7 +252,7 @@ void MainWindow::on_upload_clicked() {
     auto file_len = file_parts.size();
     if(file_len < 5) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           std::string(
             std::string("Invalid filename for image ") +
             image_files[img_index].string() +
@@ -264,11 +264,11 @@ void MainWindow::on_upload_clicked() {
     std::string survey_raw_data_quadrat_str = file_parts[1];
     int survey_raw_data_quadrat = 0;
     if(1 != sscanf_s(
-          survey_raw_data_quadrat_str.c_str(), 
-          "%dQ", 
+          survey_raw_data_quadrat_str.c_str(),
+          "%dQ",
           &survey_raw_data_quadrat)) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           std::string(
             std::string("Could not parse quadrat from filename for image ") +
             image_files[img_index].string() +
@@ -288,13 +288,13 @@ void MainWindow::on_upload_clicked() {
     QSqlQuery area_control(*output_db_);
     area_control.prepare(
         QString("SELECT areaControlPK FROM AREA_CONTROL WHERE ") +
-        QString("surveyYear = :area_control_year AND ") + 
+        QString("surveyYear = :area_control_year AND ") +
         QString("areaShortName = :area_control_short_name"));
     area_control.bindValue(
-        ":area_control_year", 
+        ":area_control_year",
         area_control_year.c_str());
     area_control.bindValue(
-        ":area_control_short_name", 
+        ":area_control_short_name",
         area_control_short_name.c_str());
     ok = area_control.exec();
     if(ok == false || area_control.next() == false) {
@@ -372,12 +372,12 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
       ok = false;
       break;
     }
-    
+
     // Create a new row in SURVEY_DATA
     auto row_count = survey_data.rowCount();
     if(survey_data.insertRows(row_count, 1) == false) {
@@ -392,24 +392,29 @@ void MainWindow::on_upload_clicked() {
     QSqlRecord survey_data_record = survey_data.record(row_count);
     survey_data.setData(
         survey_data.index(
-          row_count, 
-          survey_data.fieldIndex("updatedPK")), 
+          row_count,
+          survey_data.fieldIndex("updatedPK")),
         survey_data_updated_pk);
     survey_data.setData(
         survey_data.index(
           row_count,
-          survey_data.fieldIndex("cameraControlPK")), 
+          survey_data.fieldIndex("cameraControlPK")),
         camera_control_pk);
     survey_data.setData(
         survey_data.index(
           row_count,
-          survey_data.fieldIndex("imageExists")), 
+          survey_data.fieldIndex("imageExists")),
         "1");
     survey_data.setData(
         survey_data.index(
           row_count,
-          survey_data.fieldIndex("isImageOfInterest")), 
+          survey_data.fieldIndex("isImageOfInterest")),
         "1");
+    survey_data.setData(
+        survey_data.index(
+          row_count,
+          survey_data.fieldIndex("rowIsLocked")),
+        "0");
     for(const auto &species : species_) {
       std::string species_lower = species;
       boost::algorithm::to_lower(species_lower);
@@ -430,8 +435,8 @@ void MainWindow::on_upload_clicked() {
     for(const auto &raw_field : raw_fields_) {
       survey_data.setData(
           survey_data.index(
-            row_count, 
-            survey_data.fieldIndex(raw_field.c_str())), 
+            row_count,
+            survey_data.fieldIndex(raw_field.c_str())),
           survey_raw_data_record.value(raw_field.c_str()));
     }
 
@@ -439,7 +444,7 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           "Unable to disable IDENTITY_INSERT for SURVEY_DATA.");
       ok = false;
       break;
@@ -456,7 +461,7 @@ void MainWindow::on_upload_clicked() {
       output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
       if(output_db_->lastError().isValid()) {
         QMessageBox err;
-        err.critical(0, "Error", 
+        err.critical(0, "Error",
             "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
         ok = false;
         break;
@@ -513,7 +518,7 @@ void MainWindow::on_upload_clicked() {
       output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
       if(output_db_->lastError().isValid()) {
         QMessageBox err;
-        err.critical(0, "Error", 
+        err.critical(0, "Error",
             "Unable to disable IDENTITY_INSERT for DOT_HISTORY.");
         ok = false;
         break;
@@ -528,7 +533,7 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
       ok = false;
     }
@@ -538,7 +543,7 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           "Unable to disable IDENTITY_INSERT for SURVEY_DATA.");
       ok = false;
     }
@@ -547,7 +552,7 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           "Unable to enable IDENTITY_INSERT for DOT_HISTORY.");
       ok = false;
     }
@@ -558,7 +563,7 @@ void MainWindow::on_upload_clicked() {
     output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
-      err.critical(0, "Error", 
+      err.critical(0, "Error",
           "Unable to disable IDENTITY_INSERT for DOT_HISTORY.");
       ok = false;
     }
@@ -586,4 +591,3 @@ void MainWindow::on_upload_clicked() {
 #include "moc_mainwindow.cpp"
 
 }} // namespace fish_annotator::db_uploader
-
