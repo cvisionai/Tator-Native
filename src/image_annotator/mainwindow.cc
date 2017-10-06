@@ -240,7 +240,6 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   std::map<std::string, bool> global_state_init;
   if(fs::exists(default_global_state)) {
     std::ifstream input_file(default_global_state.string(), std::ifstream::in);
-    std::vector<std::string> file_list;
     std::string line;
     while(input_file >> line) {
       global_state_init[line] = false;
