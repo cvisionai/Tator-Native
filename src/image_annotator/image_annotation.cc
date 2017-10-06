@@ -269,8 +269,6 @@ void ImageAnnotationList::write(
   sum_file /= "_summary.csv";
   std::ofstream sum(sum_file.string());
   sum << "Image File,Species,Subspecies,ID,Top,Left,Width,Height,Type,Length";
-  sum << (global_states_.size() > 0 ?
-    global_states_.begin()->second->writeCsvHeader() : "");
   sum << std::endl;
   fs::path global_state_path(filenames[0]);
   global_state_path = global_state_path.parent_path();
@@ -311,6 +309,8 @@ void ImageAnnotationList::write(
       (*(it->second))->write_csv(csv);
       (*(it->second))->write_csv(sum);
       detections.push_back(std::make_pair("", (*(it->second))->write()));
+      csv << std::endl;
+      sum << std::endl;
     }
     tree.add_child("detections", detections);
     tree.add_child("global_state", global_state->write());
