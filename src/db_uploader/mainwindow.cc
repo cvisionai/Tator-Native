@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <fstream>
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -13,9 +14,6 @@
 #include "database_info.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
-#include <fstream>
-std::ofstream debug("DEBUG.txt");
 
 namespace fish_annotator { namespace db_uploader {
 
@@ -197,12 +195,10 @@ void MainWindow::on_upload_clicked() {
   for(int img_index = 0; img_index < num_img; ++img_index) {
 
     // Get annotations for this image
-    debug << "GOT HERE 4" << std::endl;
     auto ann = annotations.getImageAnnotations(image_files[img_index]);
     int num_ann = static_cast<int>(ann.size());
 
     // Get global state annotations for this image
-    debug << "GOT HERE 5" << std::endl;
     auto global_state = annotations.getGlobalStateAnnotation(
         image_files[img_index].filename().string());
 
@@ -217,7 +213,6 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Get counts for each species in this image
-    debug << "GOT HERE 6" << std::endl;
     auto species_counts = annotations.getCounts(
         image_files[img_index].filename().string());
 
@@ -290,7 +285,6 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Find entry in AREA_CONTROL corresponding to this image
-    debug << "GOT HERE 1" << std::endl;
     QSqlQuery area_control(*output_db_);
     area_control.prepare(
         QString("SELECT areaControlPK FROM AREA_CONTROL WHERE ") +
@@ -319,7 +313,6 @@ void MainWindow::on_upload_clicked() {
     area_control.finish();
 
     // Find entry in CAMERA_CONTROL corresponding to this image.
-    debug << "GOT HERE 2" << std::endl;
     QSqlQuery camera_control(*output_db_);
     camera_control.prepare(
         QString("SELECT cameraControlPK FROM CAMERA_CONTROL WHERE ") +
@@ -342,7 +335,6 @@ void MainWindow::on_upload_clicked() {
     camera_control.finish();
 
     // Find entry in SURVEY_RAW_DATA corresponding to this image.
-    debug << "GOT HERE 3" << std::endl;
     QSqlQuery survey_raw_data(*output_db_);
     survey_raw_data.prepare(
         QString("SELECT * FROM SURVEY_RAW_DATA WHERE ") +
@@ -396,7 +388,6 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Update the record values
-    debug << "GOT HERE 7" << std::endl;
     survey_data_updated_pk++;
     QSqlRecord survey_data_record = survey_data.record(row_count);
     survey_data.setData(
@@ -419,9 +410,7 @@ void MainWindow::on_upload_clicked() {
           row_count,
           survey_data.fieldIndex("isImageOfInterest")), 
         "1");
-    debug << "GETTING SPECIES" << std::endl;
     for(const auto &species : species_) {
-      debug << "WRITING SPECIES: " << species << std::endl;
       std::string species_lower = species;
       boost::algorithm::to_lower(species_lower);
       survey_data.setData(
@@ -431,7 +420,6 @@ void MainWindow::on_upload_clicked() {
           species_counts.find(species_lower) == species_counts.end() ?
           "0" : std::to_string(species_counts[species_lower]).c_str());
     }
-    debug << "GETTING STATES" << std::endl;
     for(const auto &state : states_) {
       survey_data.setData(
           survey_data.index(
@@ -439,7 +427,6 @@ void MainWindow::on_upload_clicked() {
             survey_data.fieldIndex(state.c_str())),
           global_state->states_[state]);
     }
-    debug << "GETTING RAW" << std::endl;
     for(const auto &raw_field : raw_fields_) {
       survey_data.setData(
           survey_data.index(
@@ -538,7 +525,6 @@ void MainWindow::on_upload_clicked() {
   }
   if(ok == true) {
     // Enable identity insert for survey data
-    debug << "TURN ON IDENTITY INSERT FOR SURVEY DATA" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -546,11 +532,9 @@ void MainWindow::on_upload_clicked() {
           "Unable to enable IDENTITY_INSERT for SURVEY_DATA.");
       ok = false;
     }
-    debug << "SUBMITTING ALL" << std::endl;
     ok = survey_data.submitAll();
 
     // Disable identity insert for survey data
-    debug << "TURN OFF IDENTITY INSERT FOR SURVEY DATA" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.SURVEY_DATA OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -560,7 +544,6 @@ void MainWindow::on_upload_clicked() {
     }
 
     // Enable identity insert for dot history
-    debug << "TURN ON IDENTITY INSERT FOR DOT HISTORY" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY ON");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -569,11 +552,9 @@ void MainWindow::on_upload_clicked() {
       ok = false;
     }
 
-    debug << "SUBMIT ALL DOT HISTORY" << std::endl;
     ok = ok && dot_history.submitAll();
 
     // Disable identity insert for dot history
-    debug << "TURN OFF IDENTITY INSERT FOR DOT HISTORY" << std::endl;
     output_db_->exec("SET IDENTITY_INSERT dbo.DOT_HISTORY OFF");
     if(output_db_->lastError().isValid()) {
       QMessageBox err;
@@ -583,7 +564,6 @@ void MainWindow::on_upload_clicked() {
     }
   }
   if(ok == true) {
-    debug << "COMMITTING" << std::endl;
     output_db_->commit();
     progress.setValue(num_img);
     QMessageBox status;
