@@ -147,8 +147,6 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         }
         break;
     }
-    mode_ = kSelect;
-    QApplication::restoreOverrideCursor();
   }
   QGraphicsScene::mouseReleaseEvent(event);
 }
