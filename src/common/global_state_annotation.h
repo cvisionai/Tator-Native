@@ -20,7 +20,10 @@ struct GlobalStateAnnotation : public Serialization {
   /// Constructor.
   ///
   /// @param states Global states of this image/frame.
-  GlobalStateAnnotation(std::map<std::string, bool> states);
+  /// @param headers Header associated with each state.
+  GlobalStateAnnotation(
+      std::map<std::string, bool> states,
+      std::map<std::string, std::string> headers);
 
   /// Default constructor.
   GlobalStateAnnotation();
@@ -47,6 +50,9 @@ struct GlobalStateAnnotation : public Serialization {
 
   /// Global states of this image/frame.
   std::map<std::string, bool> states_;
+
+  /// Headers for global states.
+  std::map<std::string, std::string> headers_;
 };
 
 } // namespace fish_annotator

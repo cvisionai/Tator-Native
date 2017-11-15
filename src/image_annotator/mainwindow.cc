@@ -237,12 +237,19 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   fs::directory_iterator dir_end;
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_global_state = current_path / fs::path("default.global");
+  std::map<std::string, std::string> global_state_headers;
   std::map<std::string, bool> global_state_init;
+  std::string last_header = "";
   if(fs::exists(default_global_state)) {
     std::ifstream input_file(default_global_state.string(), std::ifstream::in);
     std::string line;
     while(input_file >> line) {
+      if(line.substr(0, 1) == std::string("*")) {
+        last_header = line.substr(1, line.size() - 1);
+        continue;
+      }
       global_state_init[line] = false;
+      global_state_headers[line] = last_header;
     }
   }
   for(; dir_it != dir_end; ++dir_it) {
@@ -251,7 +258,9 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
       if(ext == ok_ext) {
         annotations_->insertGlobalStateAnnotation(
           dir_it->path().filename().string(),
-          std::make_shared<GlobalStateAnnotation>(global_state_init));
+          std::make_shared<GlobalStateAnnotation>(
+            global_state_init, 
+            global_state_headers));
         image_files_.push_back(dir_it->path());
       }
     }

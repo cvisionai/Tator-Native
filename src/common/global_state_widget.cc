@@ -1,5 +1,7 @@
 #include <fstream>
 
+#include <QGroupBox>
+
 #include "global_state_widget.h"
 #include "ui_global_state_widget.h"
 
@@ -22,12 +24,21 @@ void GlobalStateWidget::setStates(
     }
     delete child;
   }
+  std::map<std::string, QGroupBox*> group_map;
+  for(auto header : states->headers_) {
+    if(group_map.find(header.second) == group_map.end()) {
+      group_map[header.second] = 
+        new QGroupBox(header.second.c_str(), this);
+      group_map[header.second]->setLayout(new QVBoxLayout);
+      ui_->stateCheckboxes->addWidget(group_map[header.second]);
+    }
+  }
   for(auto state : states->states_) {
     auto *chkbox = new QCheckBox(state.first.c_str(), this);
     chkbox->setChecked(state.second);
     QObject::connect(chkbox, &QCheckBox::stateChanged, this,
        &GlobalStateWidget::updateGlobalState);
-    ui_->stateCheckboxes->addWidget(chkbox);
+    group_map[states->headers_[state.first]]->layout()->addWidget(chkbox);
   }
   states_ = states;
 }
