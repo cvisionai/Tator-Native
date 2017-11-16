@@ -9,11 +9,6 @@ GlobalStateAnnotation::GlobalStateAnnotation(
   , headers_(headers) {
 }
 
-GlobalStateAnnotation::GlobalStateAnnotation()
-  : states_()
-  , headers_() {
-}
-
 pt::ptree GlobalStateAnnotation::write() const {
   pt::ptree arr;
   for(auto state : states_) {
@@ -30,18 +25,25 @@ pt::ptree GlobalStateAnnotation::write() const {
 void GlobalStateAnnotation::read(const pt::ptree &tree) {
   for(auto val : tree) {
     pt::ptree elem = val.second.get_child("");
-    states_.insert(std::pair<std::string, bool>(
-      elem.get<std::string>("state"),
-      elem.get<bool>("value")));
-    auto opt_header = elem.get_optional<std::string>("header");
-    if(opt_header != boost::none) {
-      headers_.insert(std::pair<std::string, std::string>(
-        elem.get<std::string>("state"),
-        opt_header.get()));
+    auto new_state = elem.get<std::string>("state");
+    if(states_.find(new_state) == states_.end()) {
+      states_.insert(std::pair<std::string, bool>(
+        new_state,
+        elem.get<bool>("value")));
+      auto opt_header = elem.get_optional<std::string>("header");
+      if(opt_header != boost::none) {
+        headers_.insert(std::pair<std::string, std::string>(
+          new_state,
+          opt_header.get()));
+      }
+      else {
+        headers_.insert(std::pair<std::string, std::string>(
+          new_state, 
+          ""));
+      }
     }
     else {
-      headers_.insert(std::pair<std::string, std::string>(
-        elem.get<std::string>("state"), ""));
+      states_[new_state] = elem.get<bool>("value");
     }
   }
 }

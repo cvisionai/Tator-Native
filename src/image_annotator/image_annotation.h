@@ -174,7 +174,13 @@ public:
   ///
   /// @param filenames Vector of paths, each containing the full path
   ///        to an image.
-  void read(const std::vector<boost::filesystem::path> &filenames);
+  /// @param states Initial global state values.
+  /// @param headers Global state headers.
+  void read(const std::vector<boost::filesystem::path> &filenames,
+      std::map<std::string, bool> states 
+        = std::map<std::string, bool>(),
+      std::map<std::string, std::string> headers 
+        = std::map<std::string, std::string>());
 private:
   /// For mapping strings to image annotations.
   typedef boost::bimap<

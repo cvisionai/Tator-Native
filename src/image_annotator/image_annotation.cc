@@ -325,7 +325,9 @@ void ImageAnnotationList::write(
 }
 
 void ImageAnnotationList::read(
-  const std::vector<fs::path> &filenames) {
+  const std::vector<fs::path> &filenames,
+  std::map<std::string, bool> states,
+  std::map<std::string, std::string> headers) {
   for(const auto &image_file : filenames) {
     fs::path json_file(image_file);
     json_file.replace_extension(".json");
@@ -351,7 +353,7 @@ void ImageAnnotationList::read(
         }
         auto it_new_gs = tree.find("global_state");
         if(it_new_gs != tree.not_found()) {
-          auto val = std::make_shared<GlobalStateAnnotation>();
+          auto val = std::make_shared<GlobalStateAnnotation>(states, headers);
           val->read(tree.get_child("global_state"));
           std::string fname = image_file.filename().string();
           if(global_states_.find(fname) == global_states_.end()) {

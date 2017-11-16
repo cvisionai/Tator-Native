@@ -241,7 +241,9 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   std::map<std::string, bool> global_state_init;
   std::string last_header = "";
   if(fs::exists(default_global_state)) {
-    std::ifstream input_file(default_global_state.string(), std::ifstream::in);
+    std::ifstream input_file(
+      default_global_state.string(), 
+      std::ifstream::in);
     std::string line;
     while(input_file >> line) {
       if(line.substr(0, 1) == std::string("*")) {
@@ -284,7 +286,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
     ui_->imageSlider->setSingleStep(1);
     ui_->imageSlider->setValue(0);
-    annotations_->read(image_files_);
+    annotations_->read(image_files_, global_state_init, global_state_headers);
     species_controls_->loadFromVector(annotations_->getAllSpecies());
     on_imageSlider_valueChanged();
     view_->setBoundingRect(scene_->sceneRect());

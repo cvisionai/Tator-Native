@@ -25,9 +25,6 @@ struct GlobalStateAnnotation : public Serialization {
       std::map<std::string, bool> states,
       std::map<std::string, std::string> headers);
 
-  /// Default constructor.
-  GlobalStateAnnotation();
-
   /// Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
