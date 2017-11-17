@@ -236,7 +236,6 @@ void MainWindow::on_upload_clicked() {
     if(image_state != "Original") {
       continue;
     }
-    std::string camera_control_camera_name = dir_parts[dir_len - 3];
     std::string area_control_short_name = dir_parts[dir_len - 4];
     std::string area_control_long_name = dir_parts[dir_len - 5];
     std::string area_control_year = dir_parts[dir_len - 6];
@@ -261,6 +260,7 @@ void MainWindow::on_upload_clicked() {
     }
     std::string survey_raw_data_station = file_parts[0].substr(0, 3);
     std::string survey_raw_data_quadrat_str = file_parts[1];
+    std::string camera_control_camera_name = file_parts.back().substr(0, 1);
     int survey_raw_data_quadrat = 0;
     if(1 != sscanf_s(
           survey_raw_data_quadrat_str.c_str(),
@@ -315,7 +315,7 @@ void MainWindow::on_upload_clicked() {
     QSqlQuery camera_control(*output_db_);
     camera_control.prepare(
         QString("SELECT cameraControlPK FROM CAMERA_CONTROL WHERE ") +
-        QString("cameraName = :camera_control_camera_name"));
+        QString("imageExtension = :camera_control_camera_name"));
     camera_control.bindValue(
         ":camera_control_camera_name",
         camera_control_camera_name.c_str());
@@ -324,7 +324,7 @@ void MainWindow::on_upload_clicked() {
       QMessageBox err;
       err.critical(0, "Error", std::string(
             std::string("Could not find a CAMERA_CONTROL entry") +
-            std::string(" for cameraName=") +
+            std::string(" for imageExtension=") +
             camera_control_camera_name +
             std::string("!")).c_str());
       ok = false;
