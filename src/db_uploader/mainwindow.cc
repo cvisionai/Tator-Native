@@ -82,15 +82,15 @@ void MainWindow::on_connectOutputDb_clicked() {
       ";password=" + ui_->outputPassword->text() + ";WSID=.");
   output_db_->setUserName(ui_->outputUsername->text());
   output_db_->setPassword(ui_->outputPassword->text());
-  if(output_db_->isValid() == false) {
-    ui_->outputDbStatus->setText("Not connected");
-    QMessageBox err;
-    err.critical(0, "Error", "Not a valid database!");
-  }
   if(output_db_->open() == false) {
     ui_->outputDbStatus->setText("Not connected");
     QMessageBox err;
     err.critical(0, "Error", output_db_->lastError().text());
+  }
+  if(output_db_->isValid() == false) {
+    ui_->outputDbStatus->setText("Not connected");
+    QMessageBox err;
+    err.critical(0, "Error", "Not a valid database!");
   }
   else {
     ui_->outputDbStatus->setText("Connected");
