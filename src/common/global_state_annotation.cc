@@ -2,11 +2,9 @@
 
 namespace fish_annotator {
 
-GlobalStateAnnotation::GlobalStateAnnotation(
-  std::map<std::string, bool> states,
-  std::map<std::string, std::string> headers)
-  : states_(states) 
-  , headers_(headers) {
+GlobalStateAnnotation::GlobalStateAnnotation()
+  : states_() 
+  , headers_() {
 }
 
 pt::ptree GlobalStateAnnotation::write() const {

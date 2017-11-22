@@ -18,12 +18,7 @@ namespace pt = boost::property_tree;
 /// Defines global state information for one image/frame.
 struct GlobalStateAnnotation : public Serialization {
   /// Constructor.
-  ///
-  /// @param states Global states of this image/frame.
-  /// @param headers Header associated with each state.
-  GlobalStateAnnotation(
-      std::map<std::string, bool> states,
-      std::map<std::string, std::string> headers);
+  GlobalStateAnnotation();
 
   /// Writes to a property tree.
   ///

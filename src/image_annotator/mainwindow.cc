@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include <boost/property_tree/json_parser.hpp>
+
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -237,32 +239,21 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   fs::directory_iterator dir_end;
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_global_state = current_path / fs::path("default.global");
-  std::map<std::string, std::string> global_state_headers;
-  std::map<std::string, bool> global_state_init;
-  std::string last_header = "";
+  pt::ptree tree;
   if(fs::exists(default_global_state)) {
-    std::ifstream input_file(
-      default_global_state.string(), 
-      std::ifstream::in);
-    std::string line;
-    while(input_file >> line) {
-      if(line.substr(0, 1) == std::string("*")) {
-        last_header = line.substr(1, line.size() - 1);
-        continue;
-      }
-      global_state_init[line] = false;
-      global_state_headers[line] = last_header;
-    }
+    pt::read_json(default_global_state.string(), tree);
   }
   for(; dir_it != dir_end; ++dir_it) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
+        auto val = std::make_shared<GlobalStateAnnotation>();
+        if(fs::exists(default_global_state)) {
+          val->read(tree.get_child("global_state"));
+        }
         annotations_->insertGlobalStateAnnotation(
           dir_it->path().filename().string(),
-          std::make_shared<GlobalStateAnnotation>(
-            global_state_init, 
-            global_state_headers));
+          val);
         image_files_.push_back(dir_it->path());
       }
     }
@@ -286,7 +277,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
     ui_->imageSlider->setSingleStep(1);
     ui_->imageSlider->setValue(0);
-    annotations_->read(image_files_, global_state_init, global_state_headers);
+    annotations_->read(image_files_);
     species_controls_->loadFromVector(annotations_->getAllSpecies());
     on_imageSlider_valueChanged();
     view_->setBoundingRect(scene_->sceneRect());
