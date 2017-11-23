@@ -425,11 +425,21 @@ void MainWindow::on_upload_clicked() {
           "0" : std::to_string(species_counts[species_lower]).c_str());
     }
     for(const auto &state : states_) {
-      survey_data.setData(
-          survey_data.index(
-            row_count,
-            survey_data.fieldIndex(state.c_str())),
-          global_state->states_[state]);
+      auto var = global_state->states_[state];
+      auto type_str = boost::apply_visitor(GetTypeVisitor(), var);
+      auto survey_index = survey_data.index(
+        row_count,
+        survey_data.fieldIndex(state.c_str()));
+      if(type_str == "bool") {
+        survey_data.setData(
+          survey_index, 
+          boost::get<bool>(var));
+      }
+      else if(type_str == "string") {
+        survey_data.setData(
+          survey_index, 
+          boost::get<std::string>(var).c_str());
+      }
     }
     for(const auto &raw_field : raw_fields_) {
       survey_data.setData(
