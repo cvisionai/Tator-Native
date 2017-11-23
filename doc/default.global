@@ -50,9 +50,9 @@
         },
         {
             "state": "comments",
-            "value": "false",
+            "value": "",
             "header": "Info",
-            "type": "bool"
+            "type": "string"
         },
         {
             "state": "coral",
