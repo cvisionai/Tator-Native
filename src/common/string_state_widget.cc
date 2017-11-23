@@ -10,6 +10,8 @@ StringStateWidget::StringStateWidget(
   : QWidget(parent)
   , ui_(new Ui::StringStateWidget) {
   ui_->setupUi(this);
+  ui_->label->setText(name);
+  ui_->value->setText(value);
 }
 
 void StringStateWidget::on_value_editingFinished() {
