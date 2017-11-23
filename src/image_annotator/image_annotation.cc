@@ -286,9 +286,18 @@ void ImageAnnotationList::write(
     if(range.first == range.second) {
       bool has_data = false;
       for(const auto &elem : global_state->states_) {
-        if(elem.second == true) {
-          has_data = true;
-          break;
+        auto type_str = boost::apply_visitor(GetTypeVisitor(), elem.second);
+        if(type_str == "bool") {
+          if(boost::get<bool>(elem.second) == true) {
+            has_data = true;
+            break;
+          }
+        }
+        else if(type_str == "string") {
+          if(boost::get<std::string>(elem.second) != "") {
+            has_data = true;
+            break;
+          }
         }
       }
       if(has_data == false) {
