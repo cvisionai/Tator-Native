@@ -436,14 +436,32 @@ void MainWindow::on_upload_clicked() {
             row_count,
             survey_data.fieldIndex(state.first.c_str()));
           if(this_type == "bool") {
-            survey_data.setData(
+            bool set_ok = survey_data.setData(
               survey_index, 
               boost::get<bool>(var));
+            if(set_ok == false) {
+              QMessageBox err;
+              err.critical(0, "Error", std::string(
+                std::string("Unable to set field ") +
+                state.first +
+                std::string(" to value ") +
+                std::string(boost::get<bool>(var) ? "true" : "false") +
+                std::string(".")).c_str());
+            }
           }
           else if(this_type == "string") {
-            survey_data.setData(
+            bool set_ok = survey_data.setData(
               survey_index, 
               boost::get<std::string>(var).c_str());
+            if(set_ok == false) {
+              QMessageBox err;
+              err.critical(0, "Error", std::string(
+                std::string("Unable to set field ") +
+                state.first +
+                std::string(" to value ") +
+                boost::get<std::string>(var) +
+                std::string(".")).c_str());
+            }
           }
         }
       }
