@@ -30,8 +30,8 @@ static const std::vector<std::string> kDirExtensions = {
 MainWindow::MainWindow(QWidget *parent)
   : ui_(new Ui::MainWindow)
   , output_db_(new QSqlDatabase())
-  , species_()
-  , states_()
+  , default_species_()
+  , default_states_()
   , raw_fields_() {
   ui_->setupUi(this);
   setWindowTitle("Database Uploader");
@@ -47,23 +47,22 @@ MainWindow::MainWindow(QWidget *parent)
     ui_->outputDatabase->setText(output.getDatabase().c_str());
     ui_->outputUsername->setText(output.getUsername().c_str());
   }
-  fs::path default_species = current_path / fs::path("default.species");
-  if(fs::exists(default_species)) {
-    SpeciesList species_list;
-    deserialize(species_list, default_species.string());
-    for(const auto &species : species_list.getSpecies()) {
-      species_.push_back(species.getName());
-    }
+  fs::path default_species_path = current_path / fs::path("default.species");
+  if(fs::exists(default_species_path)) {
+    deserialize(default_species_, default_species_path.string());
   }
-  fs::path default_global = current_path / fs::path("default.global");
-  if(fs::exists(default_global)) {
-    std::ifstream state_file(default_global.string());
-    std::string line;
-    while(state_file >> line) {
-      states_.push_back(line);
-    }
+  else {
+    QMessageBox err;
+    err.critical(0, "Error", "Could not find required default.species file!");
   }
-  raw_fields_.push_back("comments");
+  fs::path default_states_path = current_path / fs::path("default.global");
+  if(fs::exists(default_states_path)) {
+    deserialize(default_states_, default_states_path.string());
+  }
+  else {
+    QMessageBox err;
+    err.critical(0, "Error", "Could not find required default.global file!");
+  }
   raw_fields_.push_back("surveyRawDataPK");
 }
 
@@ -414,22 +413,57 @@ void MainWindow::on_upload_clicked() {
           row_count,
           survey_data.fieldIndex("rowIsLocked")),
         "0");
-    for(const auto &species : species_) {
-      std::string species_lower = species;
+    for(const auto &species : default_species_.getSpecies()) {
+      std::string species_lower = species.getName();
       boost::algorithm::to_lower(species_lower);
       survey_data.setData(
           survey_data.index(
             row_count,
-            survey_data.fieldIndex(species.c_str())),
+            survey_data.fieldIndex(species.getName().c_str())),
           species_counts.find(species_lower) == species_counts.end() ?
           "0" : std::to_string(species_counts[species_lower]).c_str());
     }
-    for(const auto &state : states_) {
-      survey_data.setData(
-          survey_data.index(
+    for(const auto &state : default_states_.states_) {
+      // Check if this state exists in the image annotation
+      if(global_state->states_.find(state.first) != global_state->states_.end()) {
+        // Check if the state has the same type
+        auto var = global_state->states_[state.first];
+        auto default_type = boost::apply_visitor(GetTypeVisitor(), var);
+        auto this_type = boost::apply_visitor(GetTypeVisitor(), state.second);
+        if(default_type == this_type) {
+          auto survey_index = survey_data.index(
             row_count,
-            survey_data.fieldIndex(state.c_str())),
-          global_state->states_[state]);
+            survey_data.fieldIndex(state.first.c_str()));
+          if(this_type == "bool") {
+            bool set_ok = survey_data.setData(
+              survey_index, 
+              boost::get<bool>(var));
+            if(set_ok == false) {
+              QMessageBox err;
+              err.critical(0, "Error", std::string(
+                std::string("Unable to set field ") +
+                state.first +
+                std::string(" to value ") +
+                std::string(boost::get<bool>(var) ? "true" : "false") +
+                std::string(".")).c_str());
+            }
+          }
+          else if(this_type == "string") {
+            bool set_ok = survey_data.setData(
+              survey_index, 
+              boost::get<std::string>(var).c_str());
+            if(set_ok == false) {
+              QMessageBox err;
+              err.critical(0, "Error", std::string(
+                std::string("Unable to set field ") +
+                state.first +
+                std::string(" to value ") +
+                boost::get<std::string>(var) +
+                std::string(".")).c_str());
+            }
+          }
+        }
+      }
     }
     for(const auto &raw_field : raw_fields_) {
       survey_data.setData(

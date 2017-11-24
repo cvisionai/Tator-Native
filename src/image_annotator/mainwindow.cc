@@ -1,7 +1,5 @@
 #include <algorithm>
 
-#include <boost/property_tree/json_parser.hpp>
-
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -239,17 +237,13 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   fs::directory_iterator dir_end;
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_global_state = current_path / fs::path("default.global");
-  pt::ptree tree;
-  if(fs::exists(default_global_state)) {
-    pt::read_json(default_global_state.string(), tree);
-  }
   for(; dir_it != dir_end; ++dir_it) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
         auto val = std::make_shared<GlobalStateAnnotation>();
         if(fs::exists(default_global_state)) {
-          val->read(tree.get_child("global_state"));
+          deserialize(*val, default_global_state.string());
         }
         annotations_->insertGlobalStateAnnotation(
           dir_it->path().filename().string(),

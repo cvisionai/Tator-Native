@@ -10,6 +10,8 @@
 #include <QtSql>
 #include <QSqlDatabase>
 
+#include "species.h"
+#include "global_state_annotation.h"
 #include "ui_mainwindow.h"
 
 namespace fish_annotator { namespace db_uploader {
@@ -41,10 +43,10 @@ private:
   std::unique_ptr<QSqlDatabase> output_db_;
 
   /// Species (must match database field name).
-  std::vector<std::string> species_;
+  SpeciesList default_species_;
 
   /// Global states (must match database field name).
-  std::vector<std::string> states_;
+  GlobalStateAnnotation default_states_;
 
   /// Fields from survey raw data table (must match database field names).
   std::vector<std::string> raw_fields_;

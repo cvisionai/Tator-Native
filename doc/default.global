@@ -1,214 +1,206 @@
-{
-   "global_state": [
-        {
-            "state": "ImageHasBeenChecked",
-            "value": "false",
-            "header": "Info",
-            "type": "bool"
-        },
-        {
-            "state": "ImageHasBeenMeasured",
-            "value": "false",
-            "header": "Info",
-            "type": "bool"
-        },
-        {
-            "state": "ad",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "anemone",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "bHydra",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "brittleStar",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "clams",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "cobble",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "comments",
-            "value": "false",
-            "header": "Info",
-            "type": "bool"
-        },
-        {
-            "state": "coral",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "ctenophores",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "detritus",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "echinodermOther",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "euphausids",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "filo",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "gravel",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "holes",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "jellyFish",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "mussels",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "otherCrustaceans",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "otherMolluscs",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "rock",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "sand",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "sandDollars",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "sandRipple",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "sandlance",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "scallopsAtEdge",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "seaweed",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "seed",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "shellDebris",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "silt",
-            "value": "false",
-            "header": "Substrates",
-            "type": "bool"
-        },
-        {
-            "state": "sponges",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "tunicate",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "urchin",
-            "value": "false",
-            "header": "Organisms",
-            "type": "bool"
-        },
-        {
-            "state": "wasVisible",
-            "value": "false",
-            "header": "Info",
-            "type": "bool"
-        }
-    ]
-}
+[
+    {
+        "state": "ImageHasBeenChecked",
+        "value": "false",
+        "header": "Info",
+        "type": "bool"
+    },
+    {
+        "state": "ImageHasBeenMeasured",
+        "value": "false",
+        "header": "Info",
+        "type": "bool"
+    },
+    {
+        "state": "ad",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "anemone",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "bHydra",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "brittleStar",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "clams",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "cobble",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "comments",
+        "value": "",
+        "header": "Info",
+        "type": "string"
+    },
+    {
+        "state": "coral",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "ctenophores",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "detritus",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "echinodermOther",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "euphausids",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "filo",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "gravel",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "holes",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "jellyFish",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "mussels",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "otherCrustaceans",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "otherMolluscs",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "rock",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "sand",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "sandDollars",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "sandRipple",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "sandlance",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "seaweed",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "seed",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "shellDebris",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "silt",
+        "value": "false",
+        "header": "Substrates",
+        "type": "bool"
+    },
+    {
+        "state": "sponges",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "tunicate",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "urchin",
+        "value": "false",
+        "header": "Organisms",
+        "type": "bool"
+    },
+    {
+        "state": "wasVisible",
+        "value": "false",
+        "header": "Info",
+        "type": "bool"
+    }
+]

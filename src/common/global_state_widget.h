@@ -1,10 +1,11 @@
 #ifndef GLOBAL_STATE_WIDGET_H
 #define GLOBAL_STATE_WIDGET_H
 
+#include <memory>
+
 #include <QWidget>
 #include <QCheckBox>
 
-#include <memory>
 #include "global_state_annotation.h"
 #include "ui_global_state_widget.h"
 
@@ -23,10 +24,15 @@ public:
   void setStates(std::shared_ptr<GlobalStateAnnotation> states);
 
 public slots:
-  /// Updates shared pointer to global states.
+  /// Updates shared pointer to bool global states.
   ///
   /// @param checked True if checked.
-  void updateGlobalState(int checked);
+  void updateBoolState(int checked);
+
+  /// Updates shared pointer to string global states.
+  ///
+  /// @param checked True if checked.
+  void updateStringState(const QPair<QString, QString> &name_and_value);
 
 private:
   /// Widget loaded from ui file.
