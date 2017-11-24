@@ -63,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
     QMessageBox err;
     err.critical(0, "Error", "Could not find required default.global file!");
   }
-  raw_fields_.push_back("comments");
   raw_fields_.push_back("surveyRawDataPK");
 }
 
