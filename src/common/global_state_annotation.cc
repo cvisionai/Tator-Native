@@ -1,3 +1,5 @@
+#include <boost/algorithm/string.hpp>
+
 #include "global_state_annotation.h"
 
 namespace fish_annotator {
@@ -52,6 +54,7 @@ void GlobalStateAnnotation::read(const pt::ptree &tree) {
   for(auto val : tree) {
     pt::ptree elem = val.second.get_child("");
     auto new_state = elem.get<std::string>("state");
+    boost::algorithm::to_lower(new_state);
     auto type_str = elem.get<std::string>("type");
     if(states_.find(new_state) == states_.end()) {
       if(type_str == "bool") {
