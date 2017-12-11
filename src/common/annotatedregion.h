@@ -168,8 +168,6 @@ AnnotatedRegion<Info>::AnnotatedRegion(
   pen_.setWidthF(std::min(
     bounding_rect_.width(), bounding_rect_.height()) * 0.005);
   updateAnnotation();
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsMovable | ItemIsSelectable);
 }
 
 template<typename Info>

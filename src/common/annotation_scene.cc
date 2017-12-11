@@ -153,7 +153,7 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void AnnotationScene::keyPressEvent(QKeyEvent *event) {
   if(mode_ == kDraw && event->key() == Qt::Key_Escape) {
-    mode_ = kSelect;
+    setMode(kSelect);
     QApplication::restoreOverrideCursor();
   }
   QGraphicsScene::keyPressEvent(event);
@@ -161,8 +161,14 @@ void AnnotationScene::keyPressEvent(QKeyEvent *event) {
 
 void AnnotationScene::makeItemsControllable(bool controllable) {
   foreach(QGraphicsItem *item, items()) {
-    item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
-    item->setFlag(QGraphicsItem::ItemIsMovable, controllable);
+    if(
+      dynamic_cast<QGraphicsRectItem*>(item) != nullptr ||
+      dynamic_cast<QGraphicsEllipseItem*>(item) != nullptr ||
+      dynamic_cast<QGraphicsLineItem*>(item) != nullptr) {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
+      item->setFlag(QGraphicsItem::ItemIsMovable, controllable);
+      item->setAcceptHoverEvents(controllable);
+    }
   }
 }
 
