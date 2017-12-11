@@ -178,6 +178,8 @@ void MainWindow::on_removeAnnotation_clicked() {
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   species_ = species;
   subspecies_ = subspecies;
+  scene_->setMode(kSelect);
+  QApplication::restoreOverrideCursor();
   scene_->setMode(kDraw);
 }
 
