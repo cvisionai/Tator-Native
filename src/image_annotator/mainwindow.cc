@@ -278,6 +278,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     on_imageSlider_valueChanged();
     view_->setBoundingRect(scene_->sceneRect());
     view_->fitInView();
+    scene_->setMode(kSelect);
   }
   else {
     QMessageBox err;
