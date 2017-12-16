@@ -317,6 +317,9 @@ private:
   /// Map of species names to colors.
   QMap<QString, QColor> color_map_;
 
+  /// True when zoom needs to be reset.
+  bool zoom_reset_needed_;
+
   /// Updates counts of each species in species controls.
   void updateSpeciesCounts();
 

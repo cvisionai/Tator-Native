@@ -40,7 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
   , fish_id_(0)
   , current_annotations_()
   , metadata_()
-  , color_map_() {
+  , color_map_() 
+  , zoom_reset_needed_(false) {
   ui_->setupUi(this);
   setWindowTitle("Video Annotator");
 #ifdef _WIN32
@@ -528,11 +529,14 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
   pixmap_item_->setPixmap(pixmap);
-  view_->fitInView();
   last_position_ = frame;
   ui_->currentTime->setText(frameToTime(frame));
   drawAnnotations();
   ui_->videoSlider->setValue(static_cast<int>(frame));
+  if(zoom_reset_needed_ == true) {
+    view_->fitInView();
+    zoom_reset_needed_ = false;
+  }
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -641,11 +645,11 @@ void MainWindow::handlePlayerMediaLoaded(
   QPixmap pixmap(width_, height_);
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
-  view_->fitInView();
   view_->show();
   updateSpeciesCounts();
   updateStats();
   drawAnnotations();
+  zoom_reset_needed_ = true;
   emit requestSetFrame(0);
 }
 
