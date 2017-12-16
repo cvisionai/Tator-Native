@@ -1551,6 +1551,21 @@ border-radius: 3px;</string>
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="globalStateDockWidget">
+   <property name="windowTitle">
+    <string>Global State</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <layout class="QVBoxLayout" name="globalStateLayout"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="loadVideo">
    <property name="text">
     <string>Load Video...</string>

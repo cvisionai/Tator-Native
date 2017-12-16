@@ -468,6 +468,29 @@ uint64_t VideoAnnotation::earliestTrackID() {
   }
 }
 
+void VideoAnnotation::insertGlobalStateAnnotation(
+  uint64_t frame,
+  std::shared_ptr<GlobalStateAnnotation> ann) {
+  global_states_[frame] = ann;
+}
+
+std::shared_ptr<GlobalStateAnnotation>
+VideoAnnotation::getGlobalStateAnnotation(const uint64_t frame) {
+  if(global_states_.find(frame) != global_states_.end()) {
+    return global_states_[frame];
+  }
+  else {
+    auto it = global_states_.upper_bound(frame);
+    if(it == global_states_.begin() || it == global_states_.end()) {
+      return nullptr;
+    }
+    else {
+      --it;
+      return it->second;
+    }
+  }
+}
+
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();
@@ -547,10 +570,15 @@ void VideoAnnotation::write(
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
+  for(const auto &g : global_states_) {
+    pt::ptree elem;
+    elem.put("frame", g.first);
+    elem.add_child("state", g.second->write());
+    global_state.push_back(std::make_pair("", elem));
+  } 
   tree.add_child("tracks", tracks);
   tree.add_child("detections", detections);
   tree.add_child("global_state", global_state);
-  // video state information here
   pt::write_json(json_path.string(), tree);
 }
 
@@ -646,6 +674,13 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
         detection->read(det.second.get_child(""));
         boundFrame(detection->frame_);
         insert(detection);
+      }
+      for(auto &gst : tree.get_child("global_state")) {
+        auto state = std::make_shared<GlobalStateAnnotation>();
+        auto frame = gst.second.get_child("").get<uint64_t>("frame");
+        boundFrame(frame);
+        state->read(gst.second.get_child("").get_child("states"));
+        insertGlobalStateAnnotation(frame, state);
       }
     }
   }

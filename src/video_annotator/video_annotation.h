@@ -19,6 +19,7 @@
 #include "rect.h"
 #include "species.h"
 #include "annotation_scene.h"
+#include "global_state_annotation.h"
 
 #ifndef NO_TESTING
 class TestVideoAnnotation;
