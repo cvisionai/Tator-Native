@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
   , view_(new AnnotationView)
   , scene_(new AnnotationScene(nullptr, false))
   , pixmap_item_(nullptr)
-  , visibility_box_(nullptr)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
@@ -791,9 +790,6 @@ void MainWindow::drawAnnotations() {
         break;
     }
   }
-  if(visibility_box_ != nullptr) {
-    scene_->removeItem(visibility_box_);
-    visibility_box_ = nullptr;
   }
   view_->setBoundingRect(scene_->sceneRect());
 }

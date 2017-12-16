@@ -263,9 +263,6 @@ private:
   /// Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
 
-  /// Border rect for indicating degraded state.
-  QGraphicsRectItem *visibility_box_;
-
   /// Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
 
