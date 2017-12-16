@@ -250,8 +250,6 @@ private slots:
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
 
-  /// Sets the degraded state for the current frame.
-  void on_degradedStatus_stateChanged(int state);
 private:
   /// Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
