@@ -21,6 +21,7 @@ namespace fs = boost::filesystem;
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
+  , view_(new AnnotationView)
   , scene_(new AnnotationScene(nullptr, false))
   , pixmap_item_(nullptr)
   , visibility_box_(nullptr)
@@ -70,9 +71,10 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
   ui_->reassignFish->setIcon(
       QIcon(":/icons/fish_navigation/reassign_fish.svg"));
+  ui_->videoWindowLayout->addWidget(view_.get());
   ui_->speciesLayout->addWidget(annotation_widget_.get());
   ui_->speciesLayout->addWidget(species_controls_.get());
-  ui_->videoWindow->setScene(scene_.get());
+  view_->setScene(scene_.get());
   tabifyDockWidget(ui_->navigationDockWidget, ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
@@ -136,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  view_->fitInView();
 }
 
 void MainWindow::on_play_clicked() {
@@ -494,7 +496,7 @@ void MainWindow::on_addRegion_clicked() {
     handlePlayerError("Please add a fish before adding a region!");
   }
   else {
-    ui_->videoWindow->setFocus();
+    view_->setFocus();
     scene_->setMode(kDraw);
   }
 }
@@ -538,7 +540,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
   pixmap_item_->setPixmap(pixmap);
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  view_->fitInView();
   last_position_ = frame;
   ui_->currentTime->setText(frameToTime(frame));
   drawAnnotations();
@@ -651,7 +653,8 @@ void MainWindow::handlePlayerMediaLoaded(
   QPixmap pixmap(width_, height_);
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
-  ui_->videoWindow->show();
+  view_->fitInView();
+  view_->show();
   updateSpeciesCounts();
   updateStats();
   drawAnnotations();
@@ -818,8 +821,8 @@ void MainWindow::drawAnnotations() {
   else {
     ui_->degradedStatus->setChecked(false);
   }
-  // This is needed to prevent clipping of text
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  view_->setBoundingRect(scene_->sceneRect());
+  view_->fitInView();
 }
 
 QString MainWindow::frameToTime(qint64 frame_number) {

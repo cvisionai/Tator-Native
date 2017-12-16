@@ -36,21 +36,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="videoWindowLayout">
-          <item>
-           <widget class="QGraphicsView" name="videoWindow">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="videoWindowLayout"/>
         </item>
         <item>
          <widget class="QDockWidget" name="dockWidget">

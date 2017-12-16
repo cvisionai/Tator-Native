@@ -20,6 +20,7 @@
 
 #include "species_controls.h"
 #include "annotation_widget.h"
+#include "annotation_view.h"
 #include "annotation_scene.h"
 #include "metadata.h"
 #include "video_annotation.h"
@@ -254,6 +255,9 @@ private slots:
 private:
   /// Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
+
+  /// Video window.
+  std::unique_ptr<AnnotationView> view_;
 
   /// Scene for displaying video.
   std::unique_ptr<AnnotationScene> scene_;
