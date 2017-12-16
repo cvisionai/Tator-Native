@@ -21,7 +21,7 @@ namespace fs = boost::filesystem;
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
-  , scene_(new AnnotationScene)
+  , scene_(new AnnotationScene(nullptr, false))
   , pixmap_item_(nullptr)
   , visibility_box_(nullptr)
   , ui_(new Ui::MainWindow)

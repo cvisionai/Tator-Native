@@ -4,14 +4,15 @@
 
 namespace fish_annotator {
 
-AnnotationScene::AnnotationScene(QObject *parent)
+AnnotationScene::AnnotationScene(QObject *parent, bool continual)
   : QGraphicsScene(parent)
   , mode_(kDoNothing)
   , type_(kBox)
   , start_pos_()
   , rect_item_(nullptr)
   , line_item_(nullptr)
-  , dot_item_(nullptr) {
+  , dot_item_(nullptr)
+  , continual_(continual) {
 }
 
 void AnnotationScene::setToolWidget(AnnotationWidget *widget) {
@@ -146,6 +147,10 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
           dot_item_ = nullptr;
         }
         break;
+    }
+    if(continual_ == false) {
+      setMode(kSelect);
+      QApplication::restoreOverrideCursor();
     }
   }
   QGraphicsScene::mouseReleaseEvent(event);
