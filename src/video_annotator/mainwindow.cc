@@ -796,7 +796,6 @@ void MainWindow::drawAnnotations() {
     visibility_box_ = nullptr;
   }
   view_->setBoundingRect(scene_->sceneRect());
-  view_->fitInView();
 }
 
 QString MainWindow::frameToTime(qint64 frame_number) {
