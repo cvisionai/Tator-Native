@@ -328,15 +328,14 @@ public:
   /// @param ann Global state annotation for this frame.
   void insertGlobalStateAnnotation(
     uint64_t frame,
-    std::shared_ptr<GlobalStateAnnotation> ann);
+    const GlobalStateAnnotation &ann);
 
   /// Gets global state annotation corresponding to a given frame.
   ///
   /// @param frame Frame to retrieve.  If this frame does not exist in the 
   ///   map, it returns the annotation corresponding to the nearest frame
   ///   that is less than the requested one.
-  std::shared_ptr<GlobalStateAnnotation>
-    getGlobalStateAnnotation(const uint64_t frame);
+  GlobalStateAnnotation getGlobalStateAnnotation(const uint64_t frame);
 
   /// Equality operator.
   ///
@@ -421,7 +420,7 @@ private:
   TracksByInteger tracks_by_frame_added_;
 
   /// Map between frame and global state annotations.
-  std::map<uint64_t, std::shared_ptr<GlobalStateAnnotation>> global_states_;
+  std::map<uint64_t, GlobalStateAnnotation> global_states_;
 
   /// Length of the video being annotated.
   uint64_t video_length_;
