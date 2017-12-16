@@ -236,7 +236,6 @@ VideoAnnotation::VideoAnnotation()
   , tracks_by_id_()
   , tracks_by_species_()
   , tracks_by_frame_added_()
-  , degraded_by_frame_() 
   , video_length_(0) {
 }
 
@@ -469,22 +468,6 @@ uint64_t VideoAnnotation::earliestTrackID() {
   }
 }
 
-void VideoAnnotation::setDegraded(uint64_t frame, bool degraded) {
-  degraded_by_frame_[frame] = degraded;
-}
-
-bool VideoAnnotation::isDegraded(uint64_t frame) {
-  if(degraded_by_frame_.size() == 0) return false;
-  auto it = degraded_by_frame_.upper_bound(frame);
-  if(it != degraded_by_frame_.begin()) {
-    --it;
-    return it->second;
-  }
-  else {
-    return false;
-  }
-}
-
 bool VideoAnnotation::operator==(VideoAnnotation &rhs) {
   if(track_list_.size() != rhs.track_list_.size()) return false;
   auto it = tracks_by_id_.left.begin();
@@ -564,13 +547,6 @@ void VideoAnnotation::write(
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
-  for(const auto &d : degraded_by_frame_) {
-    pt::ptree degraded;
-    degraded.put("frame", d.first);
-    degraded.put("state", "degraded");
-    degraded.put("value", d.second ? 1.0 : 0.0);
-    global_state.push_back(std::make_pair("", degraded));
-  }
   tree.add_child("tracks", tracks);
   tree.add_child("detections", detections);
   tree.add_child("global_state", global_state);
@@ -645,24 +621,6 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
           if(dlg->wasCanceled()) break;
         }
         dlg->setValue(2 * num_lines);
-        // Degraded state file
-        fs::path csv1_path(csv_path);
-        csv1_path.replace_extension(".csv1");
-        if(fs::exists(csv1_path)) {
-          std::ifstream csv1(csv1_path.string());
-          std::string line1;
-          std::getline(csv1, line1);
-          for(; std::getline(csv1, line1);) {
-            std::vector<std::string> tokens;
-            boost::split(tokens, line1, boost::is_any_of(","));
-            if(tokens[1] == "degraded") {
-              setDegraded(std::stoull(tokens[0]), true);
-            }
-            else if(tokens[1] == "visible") {
-              setDegraded(std::stoull(tokens[0]), false);
-            }
-          }
-        }
       }
     }
     else {
@@ -688,19 +646,6 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
         detection->read(det.second.get_child(""));
         boundFrame(detection->frame_);
         insert(detection);
-      }
-      for(auto &gst : tree.get_child("global_state")) {
-        auto state = gst.second.get_child("");
-        std::string state_str = "";
-        uint64_t frame = 0;
-        double value = 0;
-        getRequired(state, "state", state_str);
-        getRequired(state, "frame", frame);
-        boundFrame(frame);
-        getRequired(state, "value", value);
-        if(state_str == "degraded") {
-          setDegraded(frame, value > 0.5 ? true : false);
-        }
       }
     }
   }
