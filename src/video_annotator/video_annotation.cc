@@ -479,15 +479,16 @@ VideoAnnotation::getGlobalStateAnnotation(const uint64_t frame) {
   if(global_states_.find(frame) != global_states_.end()) {
     return global_states_[frame];
   }
+  else if(global_states_.size() == 0) {
+    return nullptr;
+  }
+  else if(global_states_.size() == 1) {
+    return global_states_.begin()->second;
+  }
   else {
     auto it = global_states_.upper_bound(frame);
-    if(it == global_states_.begin() || it == global_states_.end()) {
-      return nullptr;
-    }
-    else {
-      --it;
-      return it->second;
-    }
+    --it;
+    return it->second;
   }
 }
 

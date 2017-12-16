@@ -20,6 +20,7 @@
 
 #include "species_controls.h"
 #include "annotation_widget.h"
+#include "global_state_widget.h"
 #include "annotation_view.h"
 #include "annotation_scene.h"
 #include "metadata.h"
@@ -271,6 +272,9 @@ private:
 
   /// Annotation widget.
   std::unique_ptr<AnnotationWidget> annotation_widget_;
+
+  /// Global state widget.
+  std::unique_ptr<GlobalStateWidget> global_state_widget_;
 
   /// Load progress dialog.
   std::unique_ptr<QProgressDialog> load_progress_;

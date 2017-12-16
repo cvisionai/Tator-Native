@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
+  , global_state_widget_(new GlobalStateWidget)
   , load_progress_(nullptr)
   , video_path_()
   , width_(0)
@@ -74,8 +75,14 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->videoWindowLayout->addWidget(view_.get());
   ui_->speciesLayout->addWidget(annotation_widget_.get());
   ui_->speciesLayout->addWidget(species_controls_.get());
+  ui_->globalStateLayout->addWidget(global_state_widget_.get());
   view_->setScene(scene_.get());
-  tabifyDockWidget(ui_->navigationDockWidget, ui_->speciesDockWidget);
+  tabifyDockWidget(
+    ui_->globalStateDockWidget,
+    ui_->navigationDockWidget);
+  tabifyDockWidget(
+    ui_->navigationDockWidget,
+    ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
@@ -135,6 +142,11 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
+  fs::path default_global_state = current_path / fs::path("default.global");
+  if(fs::exists(default_global_state)) {
+    auto val = std::make_shared<GlobalStateAnnotation>();
+    deserialize(*val, default_global_state.string());
+    annotation_->insertGlobalStateAnnotation(0, val);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -794,6 +806,10 @@ void MainWindow::drawAnnotations() {
         break;
     }
   }
+  auto current_state = annotation_->getGlobalStateAnnotation(last_position_);
+  if(current_state != nullptr) {
+    global_state_widget_->setStates(
+      annotation_->getGlobalStateAnnotation(last_position_));
   }
   view_->setBoundingRect(scene_->sceneRect());
 }
