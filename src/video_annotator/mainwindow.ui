@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>822</width>
-    <height>564</height>
+    <width>871</width>
+    <height>572</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -548,7 +548,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>822</width>
+     <width>871</width>
      <height>21</height>
     </rect>
    </property>
