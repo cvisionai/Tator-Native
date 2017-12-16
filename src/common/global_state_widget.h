@@ -23,6 +23,10 @@ public:
   /// @param states Shared pointer to global state annotation.
   void setStates(std::shared_ptr<GlobalStateAnnotation> states);
 
+signals:
+  /// Indicates that global state annotations have changed.
+  void stateChanged();
+
 public slots:
   /// Updates shared pointer to bool global states.
   ///

@@ -66,6 +66,7 @@ void GlobalStateWidget::updateBoolState(int checked) {
   else if (checked == Qt::Checked) {
     states_->states_[name] = true;
   }
+  emit stateChanged();
 }
 
 void GlobalStateWidget::updateStringState(
@@ -73,6 +74,7 @@ void GlobalStateWidget::updateStringState(
   std::string name = name_and_value.first.toStdString();
   std::string value = name_and_value.second.toStdString();
   states_->states_[name] = value;
+  emit stateChanged();
 }
 
 } // namespace fish_annotator
