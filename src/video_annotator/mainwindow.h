@@ -251,6 +251,9 @@ private slots:
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
 
+  /// Records a change to global states.
+  void onGlobalStateChange();
+
 private:
   /// Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
@@ -275,6 +278,9 @@ private:
 
   /// Global state widget.
   std::unique_ptr<GlobalStateWidget> global_state_widget_;
+
+  /// Current global state annotations.
+  std::shared_ptr<GlobalStateAnnotation> current_global_state_;
 
   /// Load progress dialog.
   std::unique_ptr<QProgressDialog> load_progress_;

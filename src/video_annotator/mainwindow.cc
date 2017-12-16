@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
   , global_state_widget_(new GlobalStateWidget)
+  , current_global_state_(new GlobalStateAnnotation)
   , load_progress_(nullptr)
   , video_path_()
   , width_(0)
@@ -87,6 +88,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
       this, &MainWindow::colorChanged);
+  QObject::connect(global_state_widget_.get(), &GlobalStateWidget::stateChanged,
+      this, &MainWindow::onGlobalStateChange);
   scene_->setToolWidget(annotation_widget_.get());
   QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
       this, &MainWindow::addBoxAnnotation);
@@ -144,9 +147,10 @@ MainWindow::MainWindow(QWidget *parent)
   }
   fs::path default_global_state = current_path / fs::path("default.global");
   if(fs::exists(default_global_state)) {
-    auto val = std::make_shared<GlobalStateAnnotation>();
-    deserialize(*val, default_global_state.string());
-    annotation_->insertGlobalStateAnnotation(0, val);
+    deserialize(*current_global_state_, default_global_state.string());
+    annotation_->insertGlobalStateAnnotation(0, *current_global_state_);
+  }
+  global_state_widget_->setStates(current_global_state_);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -537,6 +541,12 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
+void MainWindow::onGlobalStateChange() {
+  annotation_->insertGlobalStateAnnotation(
+      last_position_, 
+      *current_global_state_);
+}
+
 void MainWindow::showFrame(QImage image, qint64 frame) {
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
@@ -806,11 +816,8 @@ void MainWindow::drawAnnotations() {
         break;
     }
   }
-  auto current_state = annotation_->getGlobalStateAnnotation(last_position_);
-  if(current_state != nullptr) {
-    global_state_widget_->setStates(
-      annotation_->getGlobalStateAnnotation(last_position_));
-  }
+  *current_global_state_ = annotation_->getGlobalStateAnnotation(last_position_);
+  global_state_widget_->setStates(current_global_state_);
   view_->setBoundingRect(scene_->sceneRect());
 }
 
