@@ -241,6 +241,13 @@ std::vector<Species> ImageAnnotationList::getAllSpecies() {
   return vec;
 }
 
+void ImageAnnotationList::clear() {
+  list_.clear();
+  by_file_.clear();
+  by_species_.clear();
+  global_states_.clear();
+}
+
 bool ImageAnnotationList::operator==(ImageAnnotationList &rhs) {
   if(list_.size() != rhs.list_.size()) return false;
   auto it = list_.begin();

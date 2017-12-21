@@ -149,6 +149,9 @@ public:
   /// Gets all species in the annotations.
   std::vector<Species> getAllSpecies();
 
+  /// Clears the annotations.
+  void clear();
+
   /// Equality operator.
   ///
   /// @param rhs Right hand side argument.

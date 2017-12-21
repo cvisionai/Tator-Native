@@ -235,6 +235,7 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
 
 void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   image_files_.clear();
+  annotations_->clear();
   fs::directory_iterator dir_it(image_dir.toStdString());
   fs::directory_iterator dir_end;
   fs::path current_path(QDir::currentPath().toStdString());
