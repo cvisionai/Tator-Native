@@ -1,3 +1,5 @@
+#include <set>
+
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -350,19 +352,25 @@ void ImageAnnotationList::read(
       pt::read_json(json_file.string(), tree);
       auto it = tree.find("annotation_list");
       if(it != tree.not_found()) {
+        std::set<uint64_t> found;
         for(auto &val : tree.get_child("annotation_list")) {
           auto annotation = std::make_shared<ImageAnnotation>();
           annotation->read(val.second);
-          insert(annotation);
+          if(found.insert(annotation->id_).second == true) {
+            insert(annotation);
+          }
         }
       }
       else {
         auto it_new = tree.find("detections");
         if(it_new != tree.not_found()) {
+          std::set<uint64_t> found;
           for(auto &val : tree.get_child("detections")) {
             auto annotation = std::make_shared<ImageAnnotation>();
             annotation->read(val.second.get_child(""));
-            insert(annotation);
+            if(found.insert(annotation->id_).second == true) {
+              insert(annotation);
+            }
           }
         }
         auto it_new_gs = tree.find("global_state");
