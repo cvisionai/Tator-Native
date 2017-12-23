@@ -6,10 +6,12 @@
 #define COLOR_SCHEME_H
 
 #include <string>
-#include <array>
 #include <vector>
+#include <map>
 
 #include <boost/property_tree/ptree.hpp>
+
+#include <QColor>
 
 #include "serialization.h"
 
@@ -26,7 +28,7 @@ public:
   /// @param color Color used to represent the species.
   ColorScheme(
     const std::string& name, 
-    const std::array<int, 3>& color);
+    const QColor& color);
 
   /// Default constructor.
   ColorScheme();
@@ -37,12 +39,12 @@ public:
   /// Gets a reference to the RGB color.
   ///
   /// @return Reference to the RGB color.
-  std::array<int, 3> &getColor();
+  QColor &getColor();
 
   /// Gets a const reference to the RGB color.
   ///
   /// @return Const reference to the RGB color.
-  const std::array<int, 3> &getColor() const;
+  const QColor &getColor() const;
 
   /// Equality operator.
   ///
@@ -70,7 +72,7 @@ private:
   std::string name_;
 
   /// RGB color of the species.
-  std::array<int, 3> color_;
+  QColor color_;
 };
 
 /// List of color schemes.
@@ -79,10 +81,13 @@ public:
   /// Constructor.
   ColorSchemeList();
 
-  /// Get a reference to species list.
+  /// Returns a map between species names and colors.
   ///
-  /// @return Reference to species list.
-  std::vector<ColorScheme> &getColorScheme();
+  /// @return Map between species names and colors.
+  std::map<std::string, QColor> getColorScheme();
+
+  /// Adds a scheme to the scheme list.
+  void addScheme(const std::string& name, const QColor& color);
 
   /// Equality operator.
   ///
