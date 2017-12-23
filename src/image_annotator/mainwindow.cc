@@ -71,6 +71,11 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
+  fs::path default_colors = current_path / fs::path("default.colors");
+  if(fs::exists(default_colors)) {
+    species_controls_->loadColorsFile(
+        QString(default_colors.string().c_str()));
+  }
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
