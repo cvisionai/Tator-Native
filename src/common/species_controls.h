@@ -55,6 +55,11 @@ public:
   /// @param in_file Path to input species file.
   void loadSpeciesFile(const QString &in_file);
 
+  /// Loads colors file.
+  ///
+  /// @param in_file Path to input species file.
+  void loadColorsFile(const QString &in_file);
+
 public slots:
   /// Handles color change in a species widget.
   void onColorChanged();

@@ -145,14 +145,18 @@ void SpeciesControls::on_loadColors_clicked() {
   QString in_file = QFileDialog::getOpenFileName(this,
       "Specify input colors file", QString(), "Colors File (*.colors)");
   if(!in_file.isEmpty()) {
-    ColorSchemeList list;
-    if(deserialize(list, in_file.toStdString())) {
-      auto mapping = list.getColorScheme();
-      for(auto &widget : species_widgets_) {
-        auto species = widget->getSpecies().getName();
-        if(mapping.find(species) != mapping.end()) {
-          widget->setColor(mapping[species]);
-        }
+    loadColorsFile(in_file);
+  }
+}
+
+void SpeciesControls::loadColorsFile(const QString &in_file) {
+  ColorSchemeList list;
+  if(deserialize(list, in_file.toStdString())) {
+    auto mapping = list.getColorScheme();
+    for(auto &widget : species_widgets_) {
+      auto species = widget->getSpecies().getName();
+      if(mapping.find(species) != mapping.end()) {
+        widget->setColor(mapping[species]);
       }
     }
   }
