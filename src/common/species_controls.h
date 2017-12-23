@@ -69,6 +69,12 @@ private slots:
   /// Brings up a dialog box to save a species file.
   void on_saveSpecies_clicked();
 
+  /// Brings up a dialog box to load a colors file.
+  void on_loadColors_clicked();
+
+  /// Brings up a dialog box to save a colors file.
+  void on_saveColors_clicked();
+
   /// Clears all species widgets after asking for confirmation.
   void onClearAllSpeciesWidgetsTriggered();
 
