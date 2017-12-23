@@ -57,9 +57,7 @@ void SpeciesWidget::on_changeColor_clicked() {
   dlg->setModal(true);
   dlg->setCurrentColor(color_);
   if(dlg->exec()) {
-    color_ = dlg->selectedColor();
-    updateButtonColor();
-    emit colorChanged();
+    setColor(dlg->selectedColor());
   }
 }
 
@@ -74,6 +72,12 @@ void SpeciesWidget::setCount(uint64_t count) {
 
 QColor SpeciesWidget::getColor() {
   return color_;
+}
+
+void SpeciesWidget::setColor(const QColor &color) {
+  color_ = color;
+  updateButtonColor();
+  emit colorChanged();
 }
 
 void SpeciesWidget::updateButtonColor() {

@@ -72,6 +72,7 @@ set( FISHDET_RES_FILE
   "${CMAKE_CURRENT_SOURCE_DIR}/res/resources.qrc" )
 
 add_subdirectory( "src" )
+add_subdirectory( "config" )
 if( ${BUILD_TESTS} )
   add_subdirectory( "test" )
 endif()

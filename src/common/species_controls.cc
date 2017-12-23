@@ -1,6 +1,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include "color_scheme.h"
 #include "species_dialog.h"
 #include "species_controls.h"
 #include "ui_species_controls.h"
@@ -23,6 +24,10 @@ SpeciesControls::SpeciesControls(QWidget *parent)
       QIcon(":/icons/species_controls/load_species.svg"));
   ui_->saveSpecies->setIcon(
       QIcon(":/icons/species_controls/save_species.svg"));
+  ui_->loadColors->setIcon(
+      QIcon(":/icons/species_controls/load_colors.svg"));
+  ui_->saveColors->setIcon(
+      QIcon(":/icons/species_controls/save_colors.svg"));
   ui_->clearSpecies->setMenu(clear_species_menu_.get());
   ui_->editSpecies->setMenu(edit_species_menu_.get());
   clearAllSpeciesWidgets();
@@ -125,6 +130,45 @@ void SpeciesControls::on_saveSpecies_clicked() {
     SpeciesList list;
     for(auto &widget : species_widgets_) {
       list.getSpecies().push_back(widget->getSpecies());
+    }
+    if(!serialize(list, out_file.toStdString())) {
+      QMessageBox err;
+      err.critical(0, "Error", std::string(
+            std::string("Could not save file ")
+          + out_file.toStdString()
+          + std::string(".")).c_str());
+    }
+  }
+}
+
+void SpeciesControls::on_loadColors_clicked() {
+  QString in_file = QFileDialog::getOpenFileName(this,
+      "Specify input colors file", QString(), "Colors File (*.colors)");
+  if(!in_file.isEmpty()) {
+    loadColorsFile(in_file);
+  }
+}
+
+void SpeciesControls::loadColorsFile(const QString &in_file) {
+  ColorSchemeList list;
+  if(deserialize(list, in_file.toStdString())) {
+    auto mapping = list.getColorScheme();
+    for(auto &widget : species_widgets_) {
+      auto species = widget->getSpecies().getName();
+      if(mapping.find(species) != mapping.end()) {
+        widget->setColor(mapping[species]);
+      }
+    }
+  }
+}
+
+void SpeciesControls::on_saveColors_clicked() {
+  QString out_file = QFileDialog::getSaveFileName(this, 
+      "Specify output colors file", QString(), "Colors File (*.colors)");
+  if(!out_file.isEmpty()) {
+    ColorSchemeList list;
+    for(auto &widget : species_widgets_) {
+      list.addScheme(widget->getSpecies().getName(), widget->getColor());
     }
     if(!serialize(list, out_file.toStdString())) {
       QMessageBox err;

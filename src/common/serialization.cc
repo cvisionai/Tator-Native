@@ -8,7 +8,7 @@ namespace fish_annotator {
 namespace pt = boost::property_tree;
 
 void serialize(const Serialization &obj, std::ostream &out) {
-  pt::write_json(out, obj.write(), false);
+  pt::write_json(out, obj.write());
 }
 
 void deserialize(Serialization &obj, std::istream &in) {
