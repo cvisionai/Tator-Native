@@ -1,0 +1,28 @@
+{
+    "color_scheme": [
+        {
+            "species": "round",
+            "red": "47",
+            "green": "17",
+            "blue": "21"
+        },
+        {
+            "species": "flat",
+            "red": "82",
+            "green": "58",
+            "blue": "45"
+        },
+        {
+            "species": "skate",
+            "red": "91",
+            "green": "109",
+            "blue": "82"
+        },
+        {
+            "species": "other",
+            "red": "67",
+            "green": "146",
+            "blue": "126"
+        }
+    ]
+}
