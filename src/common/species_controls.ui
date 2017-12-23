@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>158</width>
-    <height>109</height>
+    <height>145</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -383,7 +383,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="toolTip">
-               <string>Save species</string>
+               <string>Save colors</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(230, 230, 230);</string>
@@ -432,7 +432,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="toolTip">
-               <string>Load species</string>
+               <string>Load colors</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(230, 230, 230);</string>
@@ -461,7 +461,7 @@
                <x>0</x>
                <y>0</y>
                <width>150</width>
-               <height>34</height>
+               <height>69</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
