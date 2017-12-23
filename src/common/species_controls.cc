@@ -23,6 +23,10 @@ SpeciesControls::SpeciesControls(QWidget *parent)
       QIcon(":/icons/species_controls/load_species.svg"));
   ui_->saveSpecies->setIcon(
       QIcon(":/icons/species_controls/save_species.svg"));
+  ui_->loadColors->setIcon(
+      QIcon(":/icons/species_controls/load_colors.svg"));
+  ui_->saveColors->setIcon(
+      QIcon(":/icons/species_controls/save_colors.svg"));
   ui_->clearSpecies->setMenu(clear_species_menu_.get());
   ui_->editSpecies->setMenu(edit_species_menu_.get());
   clearAllSpeciesWidgets();
