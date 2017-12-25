@@ -218,6 +218,7 @@
     </property>
     <addaction name="loadImageDir"/>
     <addaction name="saveAnnotations"/>
+    <addaction name="saveAnnotatedImage"/>
     <addaction name="setMetadata"/>
    </widget>
    <addaction name="menuFile"/>
@@ -513,6 +514,14 @@
    </property>
    <property name="text">
     <string>Set Metadata...</string>
+   </property>
+  </action>
+  <action name="saveAnnotatedImage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save Annotated Image...</string>
    </property>
   </action>
  </widget>

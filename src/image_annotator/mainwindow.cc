@@ -110,6 +110,18 @@ void MainWindow::on_saveAnnotations_triggered() {
   }
 }
 
+void MainWindow::on_saveAnnotatedImage_triggered() {
+  QString file_path = QFileDialog::getSaveFileName(
+    this,
+    "Select output file.", 
+    QCoreApplication::applicationDirPath(),
+    "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp)");
+  if(!file_path.isEmpty()) {
+    QPixmap pixmap = view_->grab();
+    pixmap.save(file_path);
+  }
+}
+
 void MainWindow::on_setMetadata_triggered() {
   MetadataDialog *dlg = new MetadataDialog(this);
   dlg->setMetadata(metadata_);
@@ -274,6 +286,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->next->setEnabled(true);
     ui_->prev->setEnabled(true);
     ui_->saveAnnotations->setEnabled(true);
+    ui_->saveAnnotatedImage->setEnabled(true);
     ui_->imageSlider->setEnabled(true);
     ui_->imageSlider->setMinimum(0);
     ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
