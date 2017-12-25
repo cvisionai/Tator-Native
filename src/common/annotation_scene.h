@@ -30,7 +30,8 @@ public:
   /// Constructor.
   ///
   /// @param parent Parent widget.
-  AnnotationScene(QObject *parent = 0);
+  /// @param continual Whether annotation should be continual.
+  AnnotationScene(QObject *parent = 0, bool continual = true);
 
   /// Sets the widget that specifies the active annotation type.
   ///
@@ -97,6 +98,9 @@ private:
 
   /// Dot item.
   QGraphicsEllipseItem *dot_item_;
+
+  /// Whether annotation should be continual.
+  const bool continual_;
 
   ///Makes current items movable and selectable.
   ///

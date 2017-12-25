@@ -236,7 +236,6 @@ VideoAnnotation::VideoAnnotation()
   , tracks_by_id_()
   , tracks_by_species_()
   , tracks_by_frame_added_()
-  , degraded_by_frame_() 
   , video_length_(0) {
 }
 
@@ -469,19 +468,28 @@ uint64_t VideoAnnotation::earliestTrackID() {
   }
 }
 
-void VideoAnnotation::setDegraded(uint64_t frame, bool degraded) {
-  degraded_by_frame_[frame] = degraded;
+void VideoAnnotation::insertGlobalStateAnnotation(
+  uint64_t frame,
+  const GlobalStateAnnotation &ann) {
+  global_states_[frame] = ann;
 }
 
-bool VideoAnnotation::isDegraded(uint64_t frame) {
-  if(degraded_by_frame_.size() == 0) return false;
-  auto it = degraded_by_frame_.upper_bound(frame);
-  if(it != degraded_by_frame_.begin()) {
-    --it;
-    return it->second;
+GlobalStateAnnotation
+VideoAnnotation::getGlobalStateAnnotation(const uint64_t frame) {
+  if(global_states_.find(frame) != global_states_.end()) {
+    return global_states_[frame];
+  }
+  else if(global_states_.size() == 0) {
+    GlobalStateAnnotation empty;
+    return empty;
+  }
+  else if(global_states_.size() == 1) {
+    return global_states_.begin()->second;
   }
   else {
-    return false;
+    auto it = global_states_.upper_bound(frame);
+    --it;
+    return it->second;
   }
 }
 
@@ -564,17 +572,15 @@ void VideoAnnotation::write(
     dlg->setValue(++iter);
     if(dlg->wasCanceled()) break;
   }
-  for(const auto &d : degraded_by_frame_) {
-    pt::ptree degraded;
-    degraded.put("frame", d.first);
-    degraded.put("state", "degraded");
-    degraded.put("value", d.second ? 1.0 : 0.0);
-    global_state.push_back(std::make_pair("", degraded));
-  }
+  for(const auto &g : global_states_) {
+    pt::ptree elem;
+    elem.put("frame", g.first);
+    elem.add_child("states", g.second.write());
+    global_state.push_back(std::make_pair("", elem));
+  } 
   tree.add_child("tracks", tracks);
   tree.add_child("detections", detections);
   tree.add_child("global_state", global_state);
-  // video state information here
   pt::write_json(json_path.string(), tree);
 }
 
@@ -645,24 +651,6 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
           if(dlg->wasCanceled()) break;
         }
         dlg->setValue(2 * num_lines);
-        // Degraded state file
-        fs::path csv1_path(csv_path);
-        csv1_path.replace_extension(".csv1");
-        if(fs::exists(csv1_path)) {
-          std::ifstream csv1(csv1_path.string());
-          std::string line1;
-          std::getline(csv1, line1);
-          for(; std::getline(csv1, line1);) {
-            std::vector<std::string> tokens;
-            boost::split(tokens, line1, boost::is_any_of(","));
-            if(tokens[1] == "degraded") {
-              setDegraded(std::stoull(tokens[0]), true);
-            }
-            else if(tokens[1] == "visible") {
-              setDegraded(std::stoull(tokens[0]), false);
-            }
-          }
-        }
       }
     }
     else {
@@ -690,17 +678,11 @@ void VideoAnnotation::read(const boost::filesystem::path &json_path) {
         insert(detection);
       }
       for(auto &gst : tree.get_child("global_state")) {
-        auto state = gst.second.get_child("");
-        std::string state_str = "";
-        uint64_t frame = 0;
-        double value = 0;
-        getRequired(state, "state", state_str);
-        getRequired(state, "frame", frame);
+        GlobalStateAnnotation state;
+        auto frame = gst.second.get_child("").get<uint64_t>("frame");
         boundFrame(frame);
-        getRequired(state, "value", value);
-        if(state_str == "degraded") {
-          setDegraded(frame, value > 0.5 ? true : false);
-        }
+        state.read(gst.second.get_child("").get_child("states"));
+        insertGlobalStateAnnotation(frame, state);
       }
     }
   }

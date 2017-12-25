@@ -20,6 +20,8 @@
 
 #include "species_controls.h"
 #include "annotation_widget.h"
+#include "global_state_widget.h"
+#include "annotation_view.h"
 #include "annotation_scene.h"
 #include "metadata.h"
 #include "video_annotation.h"
@@ -249,20 +251,21 @@ private slots:
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
 
-  /// Sets the degraded state for the current frame.
-  void on_degradedStatus_stateChanged(int state);
+  /// Records a change to global states.
+  void onGlobalStateChange();
+
 private:
   /// Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
+
+  /// Video window.
+  std::unique_ptr<AnnotationView> view_;
 
   /// Scene for displaying video.
   std::unique_ptr<AnnotationScene> scene_;
 
   /// Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
-
-  /// Border rect for indicating degraded state.
-  QGraphicsRectItem *visibility_box_;
 
   /// Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWindow> ui_;
@@ -272,6 +275,12 @@ private:
 
   /// Annotation widget.
   std::unique_ptr<AnnotationWidget> annotation_widget_;
+
+  /// Global state widget.
+  std::unique_ptr<GlobalStateWidget> global_state_widget_;
+
+  /// Current global state annotations.
+  std::shared_ptr<GlobalStateAnnotation> current_global_state_;
 
   /// Load progress dialog.
   std::unique_ptr<QProgressDialog> load_progress_;
@@ -317,6 +326,9 @@ private:
 
   /// Map of species names to colors.
   QMap<QString, QColor> color_map_;
+
+  /// True when zoom needs to be reset.
+  bool zoom_reset_needed_;
 
   /// Updates counts of each species in species controls.
   void updateSpeciesCounts();

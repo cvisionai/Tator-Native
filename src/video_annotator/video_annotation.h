@@ -19,6 +19,7 @@
 #include "rect.h"
 #include "species.h"
 #include "annotation_scene.h"
+#include "global_state_annotation.h"
 
 #ifndef NO_TESTING
 class TestVideoAnnotation;
@@ -321,20 +322,20 @@ public:
   /// @return ID of earliest track.
   uint64_t earliestTrackID();
 
-  /// Sets degraded state for a particular frame.
+  /// Inserts global state annotation.
   ///
-  /// Subsequent frames have the same degraded state until another
-  /// degraded state is inserted.
-  ///
-  /// @param frame Frame for which the degraded state is specified.
-  /// @param degraded True if degraded, false otherwise.
-  void setDegraded(uint64_t frame, bool degraded);
+  /// @param frame Frame to insert.
+  /// @param ann Global state annotation for this frame.
+  void insertGlobalStateAnnotation(
+    uint64_t frame,
+    const GlobalStateAnnotation &ann);
 
-  /// Gets recent degraded state.
+  /// Gets global state annotation corresponding to a given frame.
   ///
-  /// @param frame Current frame.
-  /// @return Most recent degraded state.
-  bool isDegraded(uint64_t frame);
+  /// @param frame Frame to retrieve.  If this frame does not exist in the 
+  ///   map, it returns the annotation corresponding to the nearest frame
+  ///   that is less than the requested one.
+  GlobalStateAnnotation getGlobalStateAnnotation(const uint64_t frame);
 
   /// Equality operator.
   ///
@@ -418,8 +419,8 @@ private:
   /// Map between frame added and iterator to track annotations.
   TracksByInteger tracks_by_frame_added_;
 
-  /// Degraded state by frame.
-  std::map<uint64_t, bool> degraded_by_frame_;
+  /// Map between frame and global state annotations.
+  std::map<uint64_t, GlobalStateAnnotation> global_states_;
 
   /// Length of the video being annotated.
   uint64_t video_length_;

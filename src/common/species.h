@@ -95,12 +95,12 @@ public:
   /// Writes to a property tree.
   ///
   /// @return Property tree constructed from the object.
-  pt::ptree write() const;
+  pt::ptree write() const override final;
 
   /// Reads from a property tree.
   ///
   /// @param tree Property tree to be read.
-  void read(const pt::ptree &tree);
+  void read(const pt::ptree &tree) override final;
 private:
   /// List of species.
   std::vector<Species> species_;

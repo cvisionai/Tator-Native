@@ -30,11 +30,12 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls(this))
   , annotation_widget_(new AnnotationWidget(this))
+  , global_state_widget_(new GlobalStateWidget(this))
   , image_files_()
   , metadata_()
   , species_()
   , subspecies_()
-  , current_annotations_() 
+  , current_annotations_()
   , color_map_() {
   ui_->setupUi(this);
   setWindowTitle("Image Annotator");
@@ -44,8 +45,15 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->next->setIcon(QIcon(":/icons/image_controls/next.svg"));
   ui_->prev->setIcon(QIcon(":/icons/image_controls/prev.svg"));
   ui_->videoWindowLayout->addWidget(view_.get());
-  ui_->sideBarLayout->addWidget(annotation_widget_.get());
-  ui_->sideBarLayout->addWidget(species_controls_.get());
+  ui_->speciesLayout->addWidget(annotation_widget_.get());
+  ui_->speciesLayout->addWidget(species_controls_.get());
+  ui_->globalStateLayout->addWidget(global_state_widget_.get());
+  tabifyDockWidget(
+    ui_->globalStateDockWidget,
+    ui_->navigationDockWidget);
+  tabifyDockWidget(
+    ui_->navigationDockWidget,
+    ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
@@ -170,6 +178,8 @@ void MainWindow::on_removeAnnotation_clicked() {
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
   species_ = species;
   subspecies_ = subspecies;
+  scene_->setMode(kSelect);
+  QApplication::restoreOverrideCursor();
   scene_->setMode(kDraw);
 }
 
@@ -225,12 +235,22 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
 
 void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   image_files_.clear();
+  annotations_->clear();
   fs::directory_iterator dir_it(image_dir.toStdString());
   fs::directory_iterator dir_end;
+  fs::path current_path(QDir::currentPath().toStdString());
+  fs::path default_global_state = current_path / fs::path("default.global");
   for(; dir_it != dir_end; ++dir_it) {
     fs::path ext(dir_it->path().extension());
     for(auto &ok_ext : kDirExtensions) {
       if(ext == ok_ext) {
+        auto val = std::make_shared<GlobalStateAnnotation>();
+        if(fs::exists(default_global_state)) {
+          deserialize(*val, default_global_state.string());
+        }
+        annotations_->insertGlobalStateAnnotation(
+          dir_it->path().filename().string(),
+          val);
         image_files_.push_back(dir_it->path());
       }
     }
@@ -259,6 +279,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     on_imageSlider_valueChanged();
     view_->setBoundingRect(scene_->sceneRect());
     view_->fitInView();
+    scene_->setMode(kSelect);
   }
   else {
     QMessageBox err;
@@ -314,6 +335,8 @@ void MainWindow::drawAnnotations() {
     QImage current(filename.c_str());
     if(!current.isNull()) {
       fs::path img_path(filename);
+      global_state_widget_->setStates(
+        annotations_->getGlobalStateAnnotation(img_path.filename().string()));
       auto annotations =
         annotations_->getImageAnnotations(img_path.filename());
       for(auto annotation : annotations) {

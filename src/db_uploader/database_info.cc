@@ -1,4 +1,4 @@
-#include "fish_annotator/db_uploader/database_info.h"
+#include "database_info.h"
 
 namespace fish_annotator { namespace db_uploader {
 

@@ -1,0 +1,106 @@
+{
+	"species_list": {
+		"species": {
+			"name": "scallops"
+		},
+		"species": {
+			"name": "clappers"
+		},
+		"species": {
+			"name": "seastars"
+		},
+		"species": {
+			"name": "crabs"
+		},
+		"species": {
+			"name": "hermitcrabs"
+		},
+		"species": {
+			"name": "lobster"
+		},
+		"species": {
+			"name": "buccinum"
+		},
+		"species": {
+			"name": "moonsnail"
+		},
+		"species": {
+			"name": "moonsnaileggcase"
+		},
+		"species": {
+			"name": "mouse"
+		},
+		"species": {
+			"name": "skateeggcase"
+		},
+		"species": {
+			"name": "squid"
+		},
+		"species": {
+			"name": "cod"
+		},
+		"species": {
+			"name": "dogfish"
+		},
+		"species": {
+			"name": "eel"
+		},
+		"species": {
+			"name": "oceanpout"
+		},
+		"species": {
+			"name": "flounder"
+		},
+		"species": {
+			"name": "haddock"
+		},
+		"species": {
+			"name": "hagfish"
+		},
+		"species": {
+			"name": "hake"
+		},
+		"species": {
+			"name": "herring"
+		},
+		"species": {
+			"name": "mackerel"
+		},
+		"species": {
+			"name": "monkfish"
+		},
+		"species": {
+			"name": "otherfish"
+		},
+		"species": {
+			"name": "sculpin"
+		},
+		"species": {
+			"name": "searaven"
+		},
+		"species": {
+			"name": "searobin"
+		},
+		"species": {
+			"name": "skate"
+		},
+		"species": {
+			"name": "silverhake"
+		},
+		"species": {
+			"name": "unidentifiedfish"
+		},
+		"species": {
+			"name": "scallopsatedge"
+		},
+		"species": {
+			"name": "icelandic"
+		},
+		"species": {
+			"name": "seacuke"
+		},
+		"species": {
+			"name": "scallop"
+		}
+	}
+}

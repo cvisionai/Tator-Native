@@ -21,12 +21,14 @@ namespace fs = boost::filesystem;
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
-  , scene_(new AnnotationScene)
+  , view_(new AnnotationView)
+  , scene_(new AnnotationScene(nullptr, false))
   , pixmap_item_(nullptr)
-  , visibility_box_(nullptr)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
+  , global_state_widget_(new GlobalStateWidget)
+  , current_global_state_(new GlobalStateAnnotation)
   , load_progress_(nullptr)
   , video_path_()
   , width_(0)
@@ -40,7 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
   , fish_id_(0)
   , current_annotations_()
   , metadata_()
-  , color_map_() {
+  , color_map_() 
+  , zoom_reset_needed_(false) {
   ui_->setupUi(this);
   setWindowTitle("Video Annotator");
 #ifdef _WIN32
@@ -70,14 +73,23 @@ MainWindow::MainWindow(QWidget *parent)
       QIcon(":/icons/fish_navigation/prev_fish.svg"));
   ui_->reassignFish->setIcon(
       QIcon(":/icons/fish_navigation/reassign_fish.svg"));
+  ui_->videoWindowLayout->addWidget(view_.get());
   ui_->speciesLayout->addWidget(annotation_widget_.get());
   ui_->speciesLayout->addWidget(species_controls_.get());
-  ui_->videoWindow->setScene(scene_.get());
-  tabifyDockWidget(ui_->navigationDockWidget, ui_->speciesDockWidget);
+  ui_->globalStateLayout->addWidget(global_state_widget_.get());
+  view_->setScene(scene_.get());
+  tabifyDockWidget(
+    ui_->globalStateDockWidget,
+    ui_->navigationDockWidget);
+  tabifyDockWidget(
+    ui_->navigationDockWidget,
+    ui_->speciesDockWidget);
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
   QObject::connect(species_controls_.get(), &SpeciesControls::colorChanged,
       this, &MainWindow::colorChanged);
+  QObject::connect(global_state_widget_.get(), &GlobalStateWidget::stateChanged,
+      this, &MainWindow::onGlobalStateChange);
   scene_->setToolWidget(annotation_widget_.get());
   QObject::connect(scene_.get(), &AnnotationScene::boxFinished,
       this, &MainWindow::addBoxAnnotation);
@@ -133,10 +145,16 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
+  fs::path default_global_state = current_path / fs::path("default.global");
+  if(fs::exists(default_global_state)) {
+    deserialize(*current_global_state_, default_global_state.string());
+    annotation_->insertGlobalStateAnnotation(0, *current_global_state_);
+  }
+  global_state_widget_->setStates(current_global_state_);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  view_->fitInView();
 }
 
 void MainWindow::on_play_clicked() {
@@ -494,7 +512,7 @@ void MainWindow::on_addRegion_clicked() {
     handlePlayerError("Please add a fish before adding a region!");
   }
   else {
-    ui_->videoWindow->setFocus();
+    view_->setFocus();
     scene_->setMode(kDraw);
   }
 }
@@ -523,26 +541,24 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
-void MainWindow::on_degradedStatus_stateChanged(int state) {
-  if(state == Qt::Checked) {
-    annotation_->setDegraded(last_position_, true);
-    drawAnnotations();
-  }
-  else if(state == Qt::Unchecked) {
-    annotation_->setDegraded(last_position_, false);
-    drawAnnotations();
-  }
+void MainWindow::onGlobalStateChange() {
+  annotation_->insertGlobalStateAnnotation(
+      last_position_, 
+      *current_global_state_);
 }
 
 void MainWindow::showFrame(QImage image, qint64 frame) {
   last_frame_ = image;
   auto pixmap = QPixmap::fromImage(image);
   pixmap_item_->setPixmap(pixmap);
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
   last_position_ = frame;
   ui_->currentTime->setText(frameToTime(frame));
   drawAnnotations();
   ui_->videoSlider->setValue(static_cast<int>(frame));
+  if(zoom_reset_needed_ == true) {
+    view_->fitInView();
+    zoom_reset_needed_ = false;
+  }
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -651,10 +667,11 @@ void MainWindow::handlePlayerMediaLoaded(
   QPixmap pixmap(width_, height_);
   pixmap_item_ = scene_->addPixmap(pixmap);
   scene_->setSceneRect(0, 0, width_, height_);
-  ui_->videoWindow->show();
+  view_->show();
   updateSpeciesCounts();
   updateStats();
   drawAnnotations();
+  zoom_reset_needed_ = true;
   emit requestSetFrame(0);
 }
 
@@ -799,27 +816,9 @@ void MainWindow::drawAnnotations() {
         break;
     }
   }
-  if(visibility_box_ != nullptr) {
-    scene_->removeItem(visibility_box_);
-    visibility_box_ = nullptr;
-  }
-  if(annotation_->isDegraded(last_position_) == true) {
-    auto pen_width = 0.03 * std::min(
-        scene_->sceneRect().width(),
-        scene_->sceneRect().height());
-    QPen pen;
-    pen.setWidth(pen_width);
-		pen.setColor(QColor(255, 92, 33));
-    visibility_box_ = scene_->addRect(
-        0.5 * pen_width, 0.5 * pen_width,
-        width_ - pen_width, height_ - pen_width, pen);
-    ui_->degradedStatus->setChecked(true);
-  }
-  else {
-    ui_->degradedStatus->setChecked(false);
-  }
-  // This is needed to prevent clipping of text
-  ui_->videoWindow->fitInView(scene_->sceneRect(), Qt::KeepAspectRatio);
+  *current_global_state_ = annotation_->getGlobalStateAnnotation(last_position_);
+  global_state_widget_->setStates(current_global_state_);
+  view_->setBoundingRect(scene_->sceneRect());
 }
 
 QString MainWindow::frameToTime(qint64 frame_number) {

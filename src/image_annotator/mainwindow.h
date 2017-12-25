@@ -15,9 +15,11 @@
 #include <QGraphicsPixmapItem>
 #include <QMap>
 #include <QColor>
+#include <QCheckBox>
 
 #include "species_controls.h"
 #include "annotation_widget.h"
+#include "global_state_widget.h"
 #include "annotation_view.h"
 #include "annotation_scene.h"
 #include "metadata.h"
@@ -125,6 +127,9 @@ private:
 
   /// Annotation widget.
   std::unique_ptr<AnnotationWidget> annotation_widget_;
+
+  /// Global state widget
+  std::unique_ptr<GlobalStateWidget> global_state_widget_;
 
   /// Vector of image files in a directory.
   std::vector<boost::filesystem::path> image_files_;

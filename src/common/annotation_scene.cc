@@ -4,14 +4,15 @@
 
 namespace fish_annotator {
 
-AnnotationScene::AnnotationScene(QObject *parent)
+AnnotationScene::AnnotationScene(QObject *parent, bool continual)
   : QGraphicsScene(parent)
   , mode_(kDoNothing)
   , type_(kBox)
   , start_pos_()
   , rect_item_(nullptr)
   , line_item_(nullptr)
-  , dot_item_(nullptr) {
+  , dot_item_(nullptr)
+  , continual_(continual) {
 }
 
 void AnnotationScene::setToolWidget(AnnotationWidget *widget) {
@@ -147,15 +148,17 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         }
         break;
     }
-    mode_ = kSelect;
-    QApplication::restoreOverrideCursor();
+    if(continual_ == false) {
+      setMode(kSelect);
+      QApplication::restoreOverrideCursor();
+    }
   }
   QGraphicsScene::mouseReleaseEvent(event);
 }
 
 void AnnotationScene::keyPressEvent(QKeyEvent *event) {
   if(mode_ == kDraw && event->key() == Qt::Key_Escape) {
-    mode_ = kSelect;
+    setMode(kSelect);
     QApplication::restoreOverrideCursor();
   }
   QGraphicsScene::keyPressEvent(event);
@@ -163,8 +166,14 @@ void AnnotationScene::keyPressEvent(QKeyEvent *event) {
 
 void AnnotationScene::makeItemsControllable(bool controllable) {
   foreach(QGraphicsItem *item, items()) {
-    item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
-    item->setFlag(QGraphicsItem::ItemIsMovable, controllable);
+    if(
+      dynamic_cast<QGraphicsRectItem*>(item) != nullptr ||
+      dynamic_cast<QGraphicsEllipseItem*>(item) != nullptr ||
+      dynamic_cast<QGraphicsLineItem*>(item) != nullptr) {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, controllable);
+      item->setFlag(QGraphicsItem::ItemIsMovable, controllable);
+      item->setAcceptHoverEvents(controllable);
+    }
   }
 }
 
