@@ -4,7 +4,8 @@ Mac build instructions
 Building the application on Mac
 -------------------------------
 
-1\. Install required libraries:
+1\. Install required libraries.  First make sure you install
+    [Homebrew][Homebrew], then in a terminal run the following commands:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 brew install qt5
@@ -37,3 +38,4 @@ make -j4
 make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+[Homebrew]: https://brew.sh/
