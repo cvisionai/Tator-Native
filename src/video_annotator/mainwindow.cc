@@ -145,12 +145,7 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
-  fs::path default_global_state = current_path / fs::path("default.global");
-  if(fs::exists(default_global_state)) {
-    deserialize(*current_global_state_, default_global_state.string());
-    annotation_->insertGlobalStateAnnotation(0, *current_global_state_);
-  }
-  global_state_widget_->setStates(current_global_state_);
+  initGlobalStateAnnotations();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -227,6 +222,7 @@ void MainWindow::on_loadAnnotationFile_triggered() {
   if(file.exists() && file.isFile()) {
     annotation_->clear();
     annotation_->read(file_str.toStdString());
+    initGlobalStateAnnotations();
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     fish_id_ = annotation_->earliestTrackID();
     if(fish_id_ != 0) {
@@ -663,6 +659,7 @@ void MainWindow::handlePlayerMediaLoaded(
   ui_->currentSpeed->setText("Current Speed: 100%");
   this->setWindowTitle(video_path_);
   annotation_->clear();
+  initGlobalStateAnnotations();
   scene_->clear();
   QPixmap pixmap(width_, height_);
   pixmap_item_ = scene_->addPixmap(pixmap);
@@ -829,6 +826,16 @@ QString MainWindow::frameToTime(qint64 frame_number) {
       .arg(mm, 2, 10, QChar('0'))
       .arg(ss, 2, 10, QChar('0'))
       .arg(QString::number(frame_number));
+}
+
+void MainWindow::initGlobalStateAnnotations() {
+  fs::path current_path(QDir::currentPath().toStdString());
+  fs::path default_global_state = current_path / fs::path("default.global");
+  if(fs::exists(default_global_state)) {
+    deserialize(*current_global_state_, default_global_state.string());
+    annotation_->insertGlobalStateAnnotation(0, *current_global_state_);
+  }
+  global_state_widget_->setStates(current_global_state_);
 }
 
 #include "moc_mainwindow.cpp"

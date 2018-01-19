@@ -376,6 +376,7 @@ void VideoAnnotation::clear() {
   tracks_by_id_.clear();
   tracks_by_species_.clear();
   tracks_by_frame_added_.clear();
+  global_states_.clear();
 }
 
 std::shared_ptr<DetectionAnnotation>

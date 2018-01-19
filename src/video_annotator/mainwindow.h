@@ -351,6 +351,10 @@ private:
   ///
   /// @param id Track ID.
   std::string getSpecies(qint64 id);
+
+  /// Initializes global state annotations by setting first frame
+  /// to the default.
+  void initGlobalStateAnnotations();
 };
 
 }} // namespace fish_annotator::video_annotator
