@@ -71,6 +71,11 @@ MainWindow::MainWindow(QWidget *parent)
     species_controls_->loadSpeciesFile(
         QString(default_species.string().c_str()));
   }
+  fs::path default_colors = current_path / fs::path("default.colors");
+  if(fs::exists(default_colors)) {
+    species_controls_->loadColorsFile(
+        QString(default_colors.string().c_str()));
+  }
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -102,6 +107,18 @@ void MainWindow::on_loadImageDir_triggered() {
 void MainWindow::on_saveAnnotations_triggered() {
   if(image_files_.size() > 0) {
     annotations_->write(image_files_);
+  }
+}
+
+void MainWindow::on_saveAnnotatedImage_triggered() {
+  QString file_path = QFileDialog::getSaveFileName(
+    this,
+    "Select output file.", 
+    QCoreApplication::applicationDirPath(),
+    "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp)");
+  if(!file_path.isEmpty()) {
+    QPixmap pixmap = view_->grab();
+    pixmap.save(file_path);
   }
 }
 
@@ -269,6 +286,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->next->setEnabled(true);
     ui_->prev->setEnabled(true);
     ui_->saveAnnotations->setEnabled(true);
+    ui_->saveAnnotatedImage->setEnabled(true);
     ui_->imageSlider->setEnabled(true);
     ui_->imageSlider->setMinimum(0);
     ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));

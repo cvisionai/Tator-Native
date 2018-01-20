@@ -61,6 +61,9 @@ private slots:
   /// Saves annotations.
   void on_saveAnnotations_triggered();
 
+  /// Saves an annotated image.
+  void on_saveAnnotatedImage_triggered();
+
   /// Sets metadata for the annotations.
   void on_setMetadata_triggered();
 

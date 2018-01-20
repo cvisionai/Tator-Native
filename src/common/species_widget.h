@@ -36,6 +36,9 @@ public:
   /// Gets color used to represent this species.
   QColor getColor();
 
+  /// Sets color used to represent this species.
+  void setColor(const QColor &color);
+
 private slots:
   /// Adds an individual of this species.
   void on_addIndividual_clicked();
