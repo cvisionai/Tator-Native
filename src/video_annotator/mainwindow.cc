@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
   , fish_id_(0)
   , current_annotations_()
   , metadata_()
-  , color_map_() 
+  , color_map_()
   , zoom_reset_needed_(false) {
   ui_->setupUi(this);
   setWindowTitle("Video Annotator");
@@ -221,8 +221,8 @@ void MainWindow::on_loadAnnotationFile_triggered() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     annotation_->clear();
-    annotation_->read(file_str.toStdString());
     initGlobalStateAnnotations();
+    annotation_->read(file_str.toStdString());
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     fish_id_ = annotation_->earliestTrackID();
     if(fish_id_ != 0) {
@@ -289,14 +289,14 @@ void MainWindow::on_writeImage_triggered() {
     images_save_path_ = QFileDialog::getExistingDirectory(
         this, tr("Choose save directory"));
   }
-  QImage img(scene_->sceneRect().size().toSize(), 
+  QImage img(scene_->sceneRect().size().toSize(),
       QImage::Format_ARGB32_Premultiplied);
   QPainter p(&img);
   scene_->render(&p);
   p.end();
   img.save(
-      images_save_path_ + 
-      QStringLiteral("/") + 
+      images_save_path_ +
+      QStringLiteral("/") +
       QStringLiteral("/Fish_%1.png").arg(fish_id_));
 }
 
@@ -430,11 +430,11 @@ void MainWindow::on_reassignFish_clicked() {
       annotation_->insert(new_trk);
     }
     else {
-      // Detections assigned to existing track, check for 
+      // Detections assigned to existing track, check for
       // overwrite of existing detections
       bool need_new = false;
       for(auto& det : from_det) {
-        if(det->frame_ >= reassign.from_frame_ && 
+        if(det->frame_ >= reassign.from_frame_ &&
             det->frame_ <= reassign.to_frame_) {
           auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
           if(exist != nullptr) {
@@ -455,7 +455,7 @@ void MainWindow::on_reassignFish_clicked() {
       }
     }
     for(auto& det : from_det) {
-      if(det->frame_ >= reassign.from_frame_ && 
+      if(det->frame_ >= reassign.from_frame_ &&
           det->frame_ <= reassign.to_frame_) {
         auto exist = annotation_->findDetection(det->frame_, reassign.to_id_);
         if(exist != nullptr) {
@@ -539,7 +539,7 @@ void MainWindow::on_nextAndCopy_clicked() {
 
 void MainWindow::onGlobalStateChange() {
   annotation_->insertGlobalStateAnnotation(
-      last_position_, 
+      last_position_,
       *current_global_state_);
 }
 
@@ -598,7 +598,7 @@ void MainWindow::handlePlayerStateChanged(bool stopped) {
 void MainWindow::handlePlayerMediaLoadStart(int max_progress) {
   if(load_progress_ == nullptr) {
     load_progress_.reset(new QProgressDialog(
-          "Extracting video timestamps...", 
+          "Extracting video timestamps...",
           "",
           0,
           max_progress,
@@ -683,7 +683,7 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
     last_position_,
     fish_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
-    kBox, 
+    kBox,
     getSpecies(fish_id_),
     1.0));
   drawAnnotations();
@@ -694,7 +694,7 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
     last_position_,
     fish_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
-    kLine, 
+    kLine,
     getSpecies(fish_id_),
     1.0));
   drawAnnotations();
@@ -704,8 +704,8 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
     fish_id_,
-    Rect(dot.x(), dot.y(), 0, 0), 
-    kDot, 
+    Rect(dot.x(), dot.y(), 0, 0),
+    kDot,
     getSpecies(fish_id_),
     1.0));
   drawAnnotations();
@@ -787,8 +787,8 @@ void MainWindow::drawAnnotations() {
     switch(ann->type_) {
       case kBox:
         box = new AnnotatedRegion<DetectionAnnotation>(
-            ann->id_, 
-            ann, 
+            ann->id_,
+            ann,
             pixmap_item_->pixmap().toImage().rect(), color);
         if (box->isValid() == true) {
           scene_->addItem(box);
