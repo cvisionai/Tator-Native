@@ -113,7 +113,7 @@ void MainWindow::on_saveAnnotations_triggered() {
 void MainWindow::on_saveAnnotatedImage_triggered() {
   QString file_path = QFileDialog::getSaveFileName(
     this,
-    "Select output file.", 
+    "Select output file.",
     QCoreApplication::applicationDirPath(),
     "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp)");
   if(!file_path.isEmpty()) {
@@ -149,6 +149,7 @@ void MainWindow::on_imageSlider_valueChanged() {
     drawAnnotations();
     updateSpeciesCounts();
     updateTypeMenus();
+    scene_->setMode(kSelect);
   }
   else {
     QMessageBox err;
