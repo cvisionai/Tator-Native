@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
   , view_(new AnnotationView)
   , scene_(new AnnotationScene(nullptr, false))
   , pixmap_item_(nullptr)
+  , count_text_(nullptr)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
@@ -549,6 +550,10 @@ void MainWindow::on_viewProbability_changed() {
   drawAnnotations();
 }
 
+void MainWindow::on_viewCount_changed() {
+  drawAnnotations();
+}
+
 void MainWindow::onGlobalStateChange() {
   annotation_->insertGlobalStateAnnotation(
       last_position_,
@@ -843,6 +848,27 @@ void MainWindow::drawAnnotations() {
   *current_global_state_ = annotation_->getGlobalStateAnnotation(last_position_);
   global_state_widget_->setStates(current_global_state_);
   view_->setBoundingRect(scene_->sceneRect());
+  if(count_text_ != nullptr) {
+    scene_->removeItem(count_text_);
+    count_text_ = nullptr;
+  }
+  if(ui_->viewCount->isChecked()) {
+    auto counts = annotation_->getCounts(0, 
+      static_cast<uint64_t>(last_position_));
+    if(counts.size() > 0) {
+      QString count_str;
+      for(const auto& cnt : counts) {
+        QString species_str = QString(
+          "%1: %2\n").arg(cnt.first.c_str()).arg(cnt.second);
+        count_str.append(species_str);
+      }
+      QFont font;
+      font.setPixelSize(100);
+      font.setBold(true);
+      count_text_ = scene_->addText(count_str, font);
+      count_text_->setDefaultTextColor(QColor(255, 0, 0));
+    }
+  }
 }
 
 QString MainWindow::frameToTime(qint64 frame_number) {

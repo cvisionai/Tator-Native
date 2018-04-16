@@ -260,6 +260,9 @@ private slots:
   /// Redraws annotations.
   void on_viewProbability_changed();
 
+  /// Redraws annotations.
+  void on_viewCount_changed();
+
   /// Records a change to global states.
   void onGlobalStateChange();
 
@@ -275,6 +278,9 @@ private:
 
   /// Pixmap item for displaying video frames.
   QGraphicsPixmapItem *pixmap_item_;
+
+  /// Count text.
+  QGraphicsTextItem* count_text_;
 
   /// Widget loaded from the ui file.
   std::unique_ptr<Ui::MainWindow> ui_;

@@ -321,16 +321,21 @@ VideoAnnotation::getDetectionAnnotationsById(uint64_t id) {
   return annotations;
 }
 
-std::map<std::string, uint64_t> VideoAnnotation::getCounts() {
+std::map<std::string, uint64_t> VideoAnnotation::getCounts(uint64_t start, 
+  uint64_t stop) {
   std::map<std::string, uint64_t> counts;
   for(auto const &t : tracks_by_species_.left) {
-    const std::string &species = t.first.first;
-    auto count_it = counts.find(species);
-    if(count_it != counts.end()) {
-      count_it->second++;
-    }
-    else {
-      counts.insert({species, 1});
+    bool past_start = (*(t.second))->frame_added_ >= start;
+    bool before_stop = (*(t.second))->frame_added_ <= stop || stop == -1;
+    if(past_start && before_stop) {
+      const std::string &species = t.first.first;
+      auto count_it = counts.find(species);
+      if(count_it != counts.end()) {
+        count_it->second++;
+      }
+      else {
+        counts.insert({species, 1});
+      }
     }
   }
   return counts;
