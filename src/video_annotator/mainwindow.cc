@@ -789,7 +789,10 @@ void MainWindow::drawAnnotations() {
         box = new AnnotatedRegion<DetectionAnnotation>(
             ann->id_,
             ann,
-            pixmap_item_->pixmap().toImage().rect(), color);
+            pixmap_item_->pixmap().toImage().rect(), 
+            color,
+            ann->species_.c_str(),
+            ann->prob_);
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);

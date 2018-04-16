@@ -40,10 +40,15 @@ public:
   /// @param annotation Annotation associated with this region.
   /// @param bounding_rect Bounding rect for this region.
   /// @param box_color Color of the box.
-  AnnotatedRegion(uint64_t uid,
-                  std::shared_ptr<Info> annotation,
-                  const QRectF &bounding_rect,
-                  QColor box_color);
+  /// @param species Species of this detection.
+  /// @param prob Probability of this detection for the given species.
+  AnnotatedRegion(
+    uint64_t uid,
+    std::shared_ptr<Info> annotation,
+    const QRectF &bounding_rect,
+    QColor box_color,
+    const QString& species="",
+    double prob=-1.0);
 
   /// Reimplemented from QGraphicsItem.
   ///
@@ -88,6 +93,12 @@ private:
   /// ID associated with this object.
   uint64_t uid_;
 
+  /// Species of this annotation.
+  QString species_;
+
+  /// Probability of this annotation.
+  double prob_;
+
   /// Bounding rectangle.
   QRectF bounding_rect_;
 
@@ -122,9 +133,13 @@ AnnotatedRegion<Info>::AnnotatedRegion(
   uint64_t uid,
   std::shared_ptr<Info> annotation,
   const QRectF &bounding_rect,
-  QColor box_color)
+  QColor box_color,
+  const QString& species,
+  double prob)
   : annotation_(annotation)
   , uid_(uid)
+  , species_(species)
+  , prob_(prob)
   , bounding_rect_(bounding_rect)
   , drag_()
   , min_dim_(std::min(bounding_rect_.width(), bounding_rect_.height()))
@@ -342,20 +357,27 @@ void AnnotatedRegion<Info>::paint(QPainter *painter,
   painter->drawRect(rect());
   // draw UID
   QString text("000000");
+  QString info = QString::number(uid_);
+  if(prob_ > -0.5) {
+    info = QString::number(prob_, 'G', 4) + "\n" + info;
+  }
+  if(species_ != "") {
+    info = species_ + "\n" + info;
+  }
   QFontMetrics fm = painter->fontMetrics();
   int width = fm.width(text);
   QBrush brush;
   brush.setColor(Qt::gray);
   QRectF text_area = QRectF(
     rect().right() - width,
-    rect().bottom() - fm.height(),
+    rect().bottom() - 3 * fm.height(),
     width,
-    fm.height()
+    3 * fm.height()
     );
   painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
   painter->drawText(
       text_area,
-      QString::number(uid_),
+      info,
       QTextOption(Qt::AlignRight));
 }
 
