@@ -251,6 +251,15 @@ private slots:
   ///        the current fish and frame.
   void on_nextAndCopy_clicked();
 
+  /// Redraws annotations.
+  void on_viewId_changed();
+
+  /// Redraws annotations.
+  void on_viewSpecies_changed();
+
+  /// Redraws annotations.
+  void on_viewProbability_changed();
+
   /// Records a change to global states.
   void onGlobalStateChange();
 

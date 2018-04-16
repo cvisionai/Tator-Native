@@ -537,6 +537,18 @@ void MainWindow::on_nextAndCopy_clicked() {
   }
 }
 
+void MainWindow::on_viewId_changed() {
+  drawAnnotations();
+}
+
+void MainWindow::on_viewSpecies_changed() {
+  drawAnnotations();
+}
+
+void MainWindow::on_viewProbability_changed() {
+  drawAnnotations();
+}
+
 void MainWindow::onGlobalStateChange() {
   annotation_->insertGlobalStateAnnotation(
       last_position_,
@@ -784,15 +796,27 @@ void MainWindow::drawAnnotations() {
     AnnotatedLine<DetectionAnnotation> *line = nullptr;
     AnnotatedDot<DetectionAnnotation> *dot = nullptr;
     QColor color = getColor(ann->id_);
+    int64_t id = -1;
+    if(ui_->viewId->isChecked()) {
+      id = ann->id_;
+    }
+    QString species = "";
+    if(ui_->viewSpecies->isChecked()) {
+      species = ann->species_.c_str();
+    }
+    double prob = -1.0;
+    if(ui_->viewProbability->isChecked()) {
+      prob = ann->prob_;
+    }
     switch(ann->type_) {
       case kBox:
         box = new AnnotatedRegion<DetectionAnnotation>(
-            ann->id_,
+            id,
             ann,
             pixmap_item_->pixmap().toImage().rect(), 
             color,
-            ann->species_.c_str(),
-            ann->prob_);
+            species,
+            prob);
         if (box->isValid() == true) {
           scene_->addItem(box);
           current_annotations_.push_back(box);
