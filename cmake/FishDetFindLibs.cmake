@@ -2,9 +2,9 @@
 find_package( Qt5 REQUIRED COMPONENTS 
   Core Gui Widgets PrintSupport OpenGL Sql )
 if( NOT APPLE )
-  find_package( Qt5DBus REQUIRED )
+  find_package( Qt5 REQUIRED COMPONENTS DBus )
 endif()
-find_package( Qt5Test REQUIRED )
+find_package( Qt5 REQUIRED COMPONENTS Test )
 get_target_property(QT5_WIDGETS_LOCATION Qt5::Widgets LOCATION )
 message( STATUS "Found Qt5 at ${QT5_WIDGETS_LOCATION}" )
 if( WIN32 )
