@@ -62,7 +62,7 @@
            <enum>Qt::LeftToRight</enum>
           </property>
           <property name="features">
-           <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+           <set>QDockWidget::NoDockWidgetFeatures</set>
           </property>
           <widget class="QWidget" name="videoControlsDockWidget">
            <property name="layoutDirection">
@@ -549,7 +549,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
      <x>0</x>
      <y>0</y>
      <width>871</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
