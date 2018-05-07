@@ -36,8 +36,20 @@ SpeciesControls::SpeciesControls(QWidget *parent)
 void SpeciesControls::insertSpeciesWidget(const Species &species) {
   bool widget_exists = false;
   for(auto &widget : species_widgets_) {
-    if(widget->getSpecies().getName() == species.getName()) {
+    Species widget_species = widget->getSpecies();
+    if(widget_species.getName() == species.getName()) {
       widget_exists = true;
+      std::vector<std::string>& widget_subspecies =
+        widget_species.getSubspecies();
+      for(auto sub : species.getSubspecies()) {
+        if(std::find(
+          widget_subspecies.begin(),
+          widget_subspecies.end(),
+          sub) == widget_subspecies.end()) {
+            widget_subspecies.push_back(sub);
+          }
+      }
+      widget->setSpecies(widget_species);
       break;
     }
   }
@@ -45,16 +57,16 @@ void SpeciesControls::insertSpeciesWidget(const Species &species) {
     species_widgets_.push_back(std::move(std::unique_ptr<SpeciesWidget>(
             new SpeciesWidget(species, this))));
     ui_->speciesLayout->insertWidget(
-        static_cast<int>(species_widgets_.size()) - 1, 
+        static_cast<int>(species_widgets_.size()) - 1,
         species_widgets_.back().get());
     QAction *edit = edit_species_menu_->addAction(species.getName().c_str());
-    QObject::connect(edit, SIGNAL(triggered()), 
+    QObject::connect(edit, SIGNAL(triggered()),
         this, SLOT(editSpeciesWidget()));
     QAction *clear = clear_species_menu_->addAction(species.getName().c_str());
-    QObject::connect(clear, SIGNAL(triggered()), 
+    QObject::connect(clear, SIGNAL(triggered()),
         this, SLOT(clearSpeciesWidget()));
     QObject::connect(
-        species_widgets_.back().get(), 
+        species_widgets_.back().get(),
         SIGNAL(individualAdded(std::string, std::string)),
         this, SIGNAL(individualAdded(std::string, std::string)));
     QObject::connect(
@@ -103,7 +115,7 @@ void SpeciesControls::onColorChanged() {
   QMap<QString, QColor> colors;
   for(const auto& widget : species_widgets_) {
     colors.insert(
-        widget->getSpecies().getName().c_str(), 
+        widget->getSpecies().getName().c_str(),
         widget->getColor());
   }
   emit colorChanged(colors);
@@ -124,7 +136,7 @@ std::vector<Species> SpeciesControls::getSpecies() {
 }
 
 void SpeciesControls::on_saveSpecies_clicked() {
-  QString out_file = QFileDialog::getSaveFileName(this, 
+  QString out_file = QFileDialog::getSaveFileName(this,
       "Specify output species file", QString(), "Species File (*.species)");
   if(!out_file.isEmpty()) {
     SpeciesList list;
@@ -163,7 +175,7 @@ void SpeciesControls::loadColorsFile(const QString &in_file) {
 }
 
 void SpeciesControls::on_saveColors_clicked() {
-  QString out_file = QFileDialog::getSaveFileName(this, 
+  QString out_file = QFileDialog::getSaveFileName(this,
       "Specify output colors file", QString(), "Colors File (*.colors)");
   if(!out_file.isEmpty()) {
     ColorSchemeList list;
@@ -194,7 +206,7 @@ void SpeciesControls::clearAllSpeciesWidgets() {
   edit_species_menu_->clear();
   species_widgets_.clear();
   QAction *all = clear_species_menu_->addAction("All");
-  QObject::connect(all, SIGNAL(triggered()), 
+  QObject::connect(all, SIGNAL(triggered()),
       this, SLOT(onClearAllSpeciesWidgetsTriggered()));
   clear_species_menu_->addSeparator();
 }
@@ -249,4 +261,3 @@ void SpeciesControls::setCount(uint64_t count, const std::string &species) {
 #include "moc_species_controls.cpp"
 
 } // namespace fish_annotator
-

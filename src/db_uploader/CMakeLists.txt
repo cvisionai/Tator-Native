@@ -1,5 +1,6 @@
 include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/../common/common_autogen/include_${CMAKE_BUILD_TYPE}"
   "${CMAKE_CURRENT_BINARY_DIR}/../common"
   "../common"
   "../image_annotator"
