@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>871</width>
-    <height>572</height>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@
            <enum>Qt::LeftToRight</enum>
           </property>
           <property name="features">
-           <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+           <set>QDockWidget::NoDockWidgetFeatures</set>
           </property>
           <widget class="QWidget" name="videoControlsDockWidget">
            <property name="layoutDirection">
@@ -562,7 +562,17 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <addaction name="writeImage"/>
     <addaction name="setMetadata"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="viewId"/>
+    <addaction name="viewSpecies"/>
+    <addaction name="viewProbability"/>
+    <addaction name="viewCount"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1601,6 +1611,41 @@ border-radius: 3px;</string>
    </property>
    <property name="text">
     <string>Set Metadata...</string>
+   </property>
+  </action>
+  <action name="viewId">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>ID</string>
+   </property>
+  </action>
+  <action name="viewSpecies">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Species</string>
+   </property>
+  </action>
+  <action name="viewProbability">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Probability</string>
+   </property>
+  </action>
+  <action name="viewCount">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Count</string>
    </property>
   </action>
  </widget>
