@@ -572,6 +572,7 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
     view_->fitInView();
     zoom_reset_needed_ = false;
   }
+  scene_->setMode(kSelect);
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -818,7 +819,7 @@ void MainWindow::drawAnnotations() {
         box = new AnnotatedRegion<DetectionAnnotation>(
             id,
             ann,
-            pixmap_item_->pixmap().toImage().rect(), 
+            pixmap_item_->pixmap().toImage().rect(),
             color,
             species,
             prob);
@@ -853,7 +854,7 @@ void MainWindow::drawAnnotations() {
     count_text_ = nullptr;
   }
   if(ui_->viewCount->isChecked()) {
-    auto counts = annotation_->getCounts(0, 
+    auto counts = annotation_->getCounts(0,
       static_cast<uint64_t>(last_position_));
     if(counts.size() > 0) {
       QString count_str;
