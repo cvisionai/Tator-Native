@@ -17,6 +17,9 @@
 #include <QWaitCondition>
 
 extern "C" {
+#include <libavutil/attributes.h>
+#undef attribute_deprecated
+#define attribute_deprecated
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/frame.h>
