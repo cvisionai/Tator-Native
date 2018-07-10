@@ -235,6 +235,9 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       updateStats();
       drawAnnotations();
     }
+    for (auto trk : annotation_->getTrackIDs()) {
+      ui_->fishNumVal->addItem(QString::number(trk));
+    }
   }
 }
 
@@ -777,15 +780,19 @@ void MainWindow::deleteCurrentAnn() {
 void MainWindow::updateStats() {
   ui_->typeMenu->clear();
   ui_->subTypeMenu->clear();
+  ui_->fishNumVal->clear();
   auto trk = annotation_->findTrack(fish_id_);
   if(trk == nullptr) {
-    ui_->fishNumVal->setText("-");
+    ui_->fishNumVal->setCurrentText("-");
     ui_->totalFishVal->setText("-");
     ui_->frameCountedVal->setText("-");
     return;
   }
   else {
-    ui_->fishNumVal->setText(QString::number(fish_id_));
+    for (auto trkid : annotation_->getTrackIDs()) {
+      ui_->fishNumVal->addItem(QString::number(trkid));
+    }
+    ui_->fishNumVal->setCurrentText(QString::number(fish_id_));
     ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
     ui_->frameCountedVal->setText(QString::number(trk->frame_added_));
     auto species = species_controls_->getSpecies();

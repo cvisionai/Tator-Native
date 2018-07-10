@@ -474,6 +474,14 @@ uint64_t VideoAnnotation::earliestTrackID() {
   }
 }
 
+std::list<uint64_t> VideoAnnotation::getTrackIDs() {
+  std::list<uint64_t> id_list;
+  for (auto track : track_list_) {
+    id_list.push_back(track->id_);
+  }
+  return id_list;
+}
+
 void VideoAnnotation::insertGlobalStateAnnotation(
   uint64_t frame,
   const GlobalStateAnnotation &ann) {

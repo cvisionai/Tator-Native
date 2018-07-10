@@ -325,6 +325,10 @@ public:
   /// @return ID of earliest track.
   uint64_t earliestTrackID();
 
+  /// Gets list of all IDs in the track list
+  ///
+  std::list<uint64_t> getTrackIDs();
+
   /// Inserts global state annotation.
   ///
   /// @param frame Frame to insert.
