@@ -10,6 +10,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
+#include <QTransform>
 
 #include "annotation_widget.h"
 
@@ -60,6 +61,11 @@ signals:
   ///
   /// @param dot Location of completed annotation.
   void dotFinished(const QPointF &dot);
+
+  /// Notifies that an item has been made active.
+  ///
+  /// @param item Pointer to active item.
+  void itemActivated(const QGraphicsItem &item);
 protected:
   /// Initiates drawing of an annotation if mode is kDraw.
   ///
@@ -98,6 +104,9 @@ private:
 
   /// Dot item.
   QGraphicsEllipseItem *dot_item_;
+
+  /// QGraphicsItem
+  QGraphicsItem *active_item_;
 
   /// Whether annotation should be continual.
   const bool continual_;

@@ -65,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addLineAnnotation);
   QObject::connect(scene_.get(), &AnnotationScene::dotFinished,
       this, &MainWindow::addDotAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::itemActivated,
+      this, &MainWindow::setItemActive);
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_species = current_path / fs::path("default.species");
   if(fs::exists(default_species)) {
@@ -321,6 +323,16 @@ std::shared_ptr<ImageAnnotation> MainWindow::currentAnnotation() {
   return nullptr;
 }
 
+void MainWindow::setItemActive(
+  const QGraphicsItem &item) {
+  for(auto ann : current_annotations_) {
+    if(ann.second == &item) {
+      ui_->idSelection->setCurrentText(QString::number(ann.first));
+      updateTypeMenus();
+    }
+  }
+}
+
 void MainWindow::updateTypeMenus() {
   auto ann = currentAnnotation();
   ui_->typeMenu->clear();
@@ -345,7 +357,7 @@ void MainWindow::updateTypeMenus() {
 
 void MainWindow::drawAnnotations() {
   for(auto ann : current_annotations_) {
-    scene_->removeItem(ann);
+    scene_->removeItem(ann.second);
   }
   current_annotations_.clear();
   ui_->idSelection->clear();
@@ -370,19 +382,19 @@ void MainWindow::drawAnnotations() {
               box = new AnnotatedRegion<ImageAnnotation>(
                   annotation->id_, annotation, current.rect(), color);
               scene_->addItem(box);
-              current_annotations_.push_back(box);
+              current_annotations_.emplace_back(annotation->id_, box);
               break;
             case kLine:
               line = new AnnotatedLine<ImageAnnotation>(
                   annotation->id_, annotation, current.rect(), color);
               scene_->addItem(line);
-              current_annotations_.push_back(line);
+              current_annotations_.emplace_back(annotation->id_, line);
               break;
             case kDot:
               dot = new AnnotatedDot<ImageAnnotation>(
                   annotation->id_, annotation, current.rect(), color);
               scene_->addItem(dot);
-              current_annotations_.push_back(dot);
+              current_annotations_.emplace_back(annotation->id_, dot);
               break;
           }
         }

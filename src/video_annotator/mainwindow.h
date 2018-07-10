@@ -266,6 +266,9 @@ private slots:
   /// Records a change to global states.
   void onGlobalStateChange();
 
+  /// Sets current active annotation
+  void setItemActive(const QGraphicsItem &item);
+
 private:
   /// Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;
@@ -331,7 +334,7 @@ private:
   qint64 fish_id_;
 
   /// Current annotations.
-  std::list<QGraphicsItem*> current_annotations_;
+  std::list<std::pair<uint64_t, QGraphicsItem*>> current_annotations_;
 
   /// Annotation metadata.
   Metadata metadata_;

@@ -98,6 +98,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addLineAnnotation);
   QObject::connect(scene_.get(), &AnnotationScene::dotFinished,
       this, &MainWindow::addDotAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::itemActivated,
+    this, &MainWindow::setItemActive);
   Player *player = new Player();
   QThread *thread = new QThread();
   QObject::connect(player, &Player::processedImage,
@@ -752,6 +754,16 @@ void MainWindow::updateSpeciesCounts() {
   }
 }
 
+void MainWindow::setItemActive(
+  const QGraphicsItem &item) {
+  for(auto ann : current_annotations_) {
+    if(ann.second == &item) {
+      fish_id_ = ann.first;
+      updateStats();
+    }
+  }
+}
+
 void MainWindow::updateStats() {
   ui_->typeMenu->clear();
   ui_->subTypeMenu->clear();
@@ -794,7 +806,7 @@ void MainWindow::updateStats() {
 
 void MainWindow::drawAnnotations() {
   for(auto ann : current_annotations_) {
-    scene_->removeItem(ann);
+    scene_->removeItem(ann.second);
   }
   current_annotations_.clear();
   for(auto ann : annotation_->getDetectionAnnotationsByFrame(last_position_)) {
@@ -825,7 +837,7 @@ void MainWindow::drawAnnotations() {
             prob);
         if (box->isValid() == true) {
           scene_->addItem(box);
-          current_annotations_.push_back(box);
+          current_annotations_.emplace_back(ann->id_, box);
         }
         break;
       case kLine:
@@ -833,7 +845,7 @@ void MainWindow::drawAnnotations() {
             ann->id_, ann, pixmap_item_->pixmap().toImage().rect(), color);
         if(line->isValid() == true) {
           scene_->addItem(line);
-          current_annotations_.push_back(line);
+          current_annotations_.emplace_back(ann->id_, line);
         }
         break;
       case kDot:
@@ -841,7 +853,7 @@ void MainWindow::drawAnnotations() {
             ann->id_, ann, pixmap_item_->pixmap().toImage().rect(), color);
         if(dot->isValid() == true) {
           scene_->addItem(dot);
-          current_annotations_.push_back(dot);
+          current_annotations_.emplace_back(ann->id_, dot);
         }
         break;
     }

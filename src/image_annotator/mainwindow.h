@@ -147,7 +147,7 @@ private:
   std::string subspecies_;
 
   /// Current annotations.
-  std::vector<QGraphicsItem*> current_annotations_;
+  std::vector<std::pair<uint64_t, QGraphicsItem*>> current_annotations_;
 
   /// Map of species names to colors.
   QMap<QString, QColor> color_map_;
@@ -168,6 +168,9 @@ private:
 
   /// Updates species counts.
   void updateSpeciesCounts();
+
+  /// Sets current active annotation
+  void setItemActive(const QGraphicsItem &item);
 };
 
 }} // namespace fish_annotator::image_annotator
