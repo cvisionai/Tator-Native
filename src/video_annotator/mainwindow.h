@@ -269,6 +269,9 @@ private slots:
   /// Sets current active annotation
   void setItemActive(const QGraphicsItem &item);
 
+  /// Deletes current active annotation
+  void deleteCurrentAnn();
+
 private:
   /// Annotations associated with this video.
   std::unique_ptr<VideoAnnotation> annotation_;

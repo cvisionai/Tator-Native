@@ -100,6 +100,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addDotAnnotation);
   QObject::connect(scene_.get(), &AnnotationScene::itemActivated,
     this, &MainWindow::setItemActive);
+  QObject::connect(scene_.get(), &AnnotationScene::deleteAnn,
+    this, &MainWindow::deleteCurrentAnn);
   Player *player = new Player();
   QThread *thread = new QThread();
   QObject::connect(player, &Player::processedImage,
@@ -761,6 +763,14 @@ void MainWindow::setItemActive(
       fish_id_ = ann.first;
       updateStats();
     }
+  }
+}
+
+void MainWindow::deleteCurrentAnn() {
+  on_removeRegion_clicked();
+  auto current_fish_anns = annotation_->getDetectionAnnotationsById(fish_id_);
+  if (current_fish_anns.empty()) {
+    on_removeFish_clicked();
   }
 }
 

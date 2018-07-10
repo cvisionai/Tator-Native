@@ -170,6 +170,9 @@ void AnnotationScene::keyPressEvent(QKeyEvent *event) {
     setMode(kSelect);
     QApplication::restoreOverrideCursor();
   }
+  if (event->key() == Qt::Key_Delete) {
+    emit deleteAnn();
+  }
   QGraphicsScene::keyPressEvent(event);
 }
 

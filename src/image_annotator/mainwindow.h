@@ -171,6 +171,9 @@ private:
 
   /// Sets current active annotation
   void setItemActive(const QGraphicsItem &item);
+
+  /// Deletes current active annotation
+  void deleteCurrentAnn();
 };
 
 }} // namespace fish_annotator::image_annotator

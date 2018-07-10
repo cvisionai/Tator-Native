@@ -67,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addDotAnnotation);
   QObject::connect(scene_.get(), &AnnotationScene::itemActivated,
       this, &MainWindow::setItemActive);
+  QObject::connect(scene_.get(), &AnnotationScene::deleteAnn,
+      this, &MainWindow::deleteCurrentAnn);
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_species = current_path / fs::path("default.species");
   if(fs::exists(default_species)) {
@@ -331,6 +333,10 @@ void MainWindow::setItemActive(
       updateTypeMenus();
     }
   }
+}
+
+void MainWindow::deleteCurrentAnn() {
+  on_removeAnnotation_clicked();
 }
 
 void MainWindow::updateTypeMenus() {

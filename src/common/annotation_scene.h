@@ -10,7 +10,6 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
-#include <QTransform>
 
 #include "annotation_widget.h"
 
@@ -66,6 +65,10 @@ signals:
   ///
   /// @param item Pointer to active item.
   void itemActivated(const QGraphicsItem &item);
+
+  /// Notifies that an annotation should be deleted.
+  ///
+  void deleteAnn();
 protected:
   /// Initiates drawing of an annotation if mode is kDraw.
   ///
