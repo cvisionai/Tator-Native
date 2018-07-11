@@ -9,7 +9,7 @@ get_target_property(QT5_WIDGETS_LOCATION Qt5::Widgets LOCATION )
 message( STATUS "Found Qt5 at ${QT5_WIDGETS_LOCATION}" )
 if( WIN32 )
   set( QT_THIRD_PARTY_LIBS
-    "${_qt5Widgets_install_prefix}/lib/qtpcre.lib"
+    "${_qt5Widgets_install_prefix}/lib/qtpcre2.lib"
     "${_qt5Widgets_install_prefix}/lib/qtfreetype.lib"
     "${_qt5Widgets_install_prefix}/lib/qtlibpng.lib"
     "${_qt5Widgets_install_prefix}/lib/qtharfbuzz.lib"
@@ -72,6 +72,7 @@ if( MSVC )
     strmiids
     wmcodecdspuuid
     odbc32
+    version
     )
 
 # --- Mac ---

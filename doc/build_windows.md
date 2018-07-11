@@ -24,10 +24,10 @@ Building static Qt on Windows
 2\. Clone the [Qt5 repository][QtRepo] from github.
 
 3\. By default, the dev branch will be checked out.  Change the version to
-    v5.8.0:
+    v5.9.4:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-git checkout v5.8.0
+git checkout v5.9.4
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 4\. Navigate to the top level repository directory and type:
