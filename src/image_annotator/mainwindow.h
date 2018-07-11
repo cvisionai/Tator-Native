@@ -68,7 +68,7 @@ private slots:
   void on_setMetadata_triggered();
 
   /// Moves to the image indicated by image slider.
-  void on_imageSlider_valueChanged();
+  void on_imageSlider_sliderReleased();
 
   /// Updates display to show/hide annotations.
   void on_showAnnotations_stateChanged();
@@ -174,6 +174,9 @@ private:
 
   /// Deletes current active annotation
   void deleteCurrentAnn();
+
+  /// Updates image.
+  void updateImage();
 };
 
 }} // namespace fish_annotator::image_annotator

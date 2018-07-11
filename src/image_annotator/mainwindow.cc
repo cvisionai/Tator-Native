@@ -90,6 +90,7 @@ void MainWindow::on_next_clicked() {
   int next_val = ui_->imageSlider->value() + 1;
   if(next_val <= ui_->imageSlider->maximum()) {
     ui_->imageSlider->setValue(next_val);
+    updateImage();
   }
 }
 
@@ -97,6 +98,7 @@ void MainWindow::on_prev_clicked() {
   int prev_val = ui_->imageSlider->value() - 1;
   if(prev_val >= ui_->imageSlider->minimum()) {
     ui_->imageSlider->setValue(prev_val);
+    updateImage();
   }
 }
 
@@ -134,38 +136,12 @@ void MainWindow::on_setMetadata_triggered() {
   }
 }
 
-void MainWindow::on_imageSlider_valueChanged() {
-  scene_->clear();
-  current_annotations_.clear();
-  std::string filename = image_files_[ui_->imageSlider->value()].string();
-  QImage current(filename.c_str());
-  if(!current.isNull()) {
-    scene_->addPixmap(QPixmap::fromImage(current));
-    scene_->setSceneRect(current.rect());
-    view_->setScene(scene_.get());
-    view_->show();
-    ui_->fileNameValue->setText(filename.c_str());
-    fs::path img_path(filename);
-    auto annotations =
-      annotations_->getImageAnnotations(img_path.filename());
-    for(auto annotation : annotations) {
-    }
-    drawAnnotations();
-    updateSpeciesCounts();
-    updateTypeMenus();
-    scene_->setMode(kSelect);
-  }
-  else {
-    QMessageBox err;
-    err.critical(0, "Error", std::string(
-        std::string("Error loading image ")
-      + filename
-      + std::string(".")).c_str());
-  }
+void MainWindow::on_imageSlider_sliderReleased() {
+  updateImage();
 }
 
 void MainWindow::on_showAnnotations_stateChanged() {
-  on_imageSlider_valueChanged();
+  updateImage();
 }
 
 void MainWindow::on_idSelection_activated(const QString &id) {
@@ -193,7 +169,7 @@ void MainWindow::on_removeAnnotation_clicked() {
     auto current_image = image_files_[ui_->imageSlider->value()];
     int id = ui_->idSelection->currentText().toInt();
     annotations_->remove(current_image, id);
-    on_imageSlider_valueChanged();
+    updateImage();
   }
 }
 
@@ -299,7 +275,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setValue(0);
     annotations_->read(image_files_);
     species_controls_->loadFromVector(annotations_->getAllSpecies());
-    on_imageSlider_valueChanged();
+    updateImage();
     view_->setBoundingRect(scene_->sceneRect());
     view_->fitInView();
     scene_->setMode(kSelect);
@@ -423,6 +399,36 @@ void MainWindow::updateSpeciesCounts() {
     else {
       species_controls_->setCount(0, species.getName());
     }
+  }
+}
+
+void MainWindow::updateImage() {
+  scene_->clear();
+  current_annotations_.clear();
+  std::string filename = image_files_[ui_->imageSlider->value()].string();
+  QImage current(filename.c_str());
+  if(!current.isNull()) {
+    scene_->addPixmap(QPixmap::fromImage(current));
+    scene_->setSceneRect(current.rect());
+    view_->setScene(scene_.get());
+    view_->show();
+    ui_->fileNameValue->setText(filename.c_str());
+    fs::path img_path(filename);
+    auto annotations =
+      annotations_->getImageAnnotations(img_path.filename());
+    for(auto annotation : annotations) {
+    }
+    drawAnnotations();
+    updateSpeciesCounts();
+    updateTypeMenus();
+    scene_->setMode(kSelect);
+  }
+  else {
+    QMessageBox err;
+    err.critical(0, "Error", std::string(
+        std::string("Error loading image ")
+      + filename
+      + std::string(".")).c_str());
   }
 }
 
