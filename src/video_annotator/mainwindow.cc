@@ -235,9 +235,6 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       updateStats();
       drawAnnotations();
     }
-    for (auto trk : annotation_->getTrackIDs()) {
-      ui_->fishNumVal->addItem(QString::number(trk));
-    }
   }
 }
 
@@ -503,6 +500,14 @@ void MainWindow::on_goToFishVal_returnPressed() {
   }
   else {
     handlePlayerError("Fish with that ID does not exist!");
+  }
+}
+
+void MainWindow::on_fishNumVal_activated(const QString &text) {
+  fish_id_ = text.toInt();
+  auto trk = annotation_->findTrack(fish_id_);
+  if(trk != nullptr) {
+    updateStats();
   }
 }
 

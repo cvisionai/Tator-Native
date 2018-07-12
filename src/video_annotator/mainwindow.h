@@ -212,6 +212,11 @@ private slots:
   /// @param text Selected subspecies.
   void on_subTypeMenu_activated(const QString &text);
 
+  /// Updates the active track based on selected ID.
+  ///
+  /// @param text Selected ID.
+  void on_fishNumVal_activated(const QString &text);
+
   /// Updates the current fish with a new count label.
   ///
   /// @param text Selected count label.
