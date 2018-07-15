@@ -4,6 +4,7 @@
 
 #include <QtMath>
 #include <QTime>
+#include <QCoreApplication>
 
 #include "species_dialog.h"
 #include "metadata_dialog.h"
@@ -44,7 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
   , current_annotations_()
   , metadata_()
   , color_map_()
-  , zoom_reset_needed_(false) {
+  , zoom_reset_needed_(false)
+  , write_image_enabled_(false) {
   ui_->setupUi(this);
   setWindowTitle("Video Annotator");
 #ifdef _WIN32
@@ -303,6 +305,33 @@ void MainWindow::on_writeImage_triggered() {
       images_save_path_ +
       QStringLiteral("/") +
       QStringLiteral("/Fish_%1.png").arg(fish_id_));
+}
+
+void MainWindow::on_writeImageSequence_triggered() {
+  if (images_save_path_.isEmpty()) {
+    images_save_path_ = QFileDialog::getExistingDirectory(
+        this, tr("Choose save directory"));
+  }
+  write_image_enabled_ = true;
+  setEnabled(false);
+  qint64 max_frame = ui_->videoSlider->maximum();
+  std::unique_ptr<QProgressDialog> prog(new QProgressDialog(
+    "Writing images to disk...",
+    "",
+    0,
+    max_frame,
+    this,
+    Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+  prog->setCancelButton(0);
+  prog->setWindowTitle("Writing image sequence");
+  prog->setMinimumDuration(10);
+  for(qint64 frame = 0; frame <= max_frame; ++frame) {
+    QCoreApplication::processEvents();
+    prog->setValue(frame);
+    emit requestSetFrame(frame);
+  }
+  setEnabled(true);
+  write_image_enabled_ = false;
 }
 
 void MainWindow::on_setMetadata_triggered() {
@@ -585,6 +614,17 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
     zoom_reset_needed_ = false;
   }
   scene_->setMode(kSelect);
+  if(write_image_enabled_ == true) {
+    QImage img(scene_->sceneRect().size().toSize(),
+        QImage::Format_ARGB32_Premultiplied);
+    QPainter p(&img);
+    scene_->render(&p);
+    p.end();
+    img.save(
+        images_save_path_ +
+        QStringLiteral("/") +
+        QStringLiteral("/frame_%1.png").arg(frame, 5, 10, QChar('0')));
+  }
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
@@ -655,37 +695,7 @@ void MainWindow::handlePlayerMediaLoaded(
   }
   video_path_ = video_path;
   native_rate_ = native_rate;
-  ui_->videoSlider->setEnabled(true);
-  ui_->play->setEnabled(true);
-  ui_->faster->setEnabled(true);
-  ui_->slower->setEnabled(true);
-  ui_->minusOneSecond->setEnabled(true);
-  ui_->minusThreeSecond->setEnabled(true);
-  ui_->minusOneFrame->setEnabled(true);
-  ui_->plusOneFrame->setEnabled(true);
-  ui_->loadVideo->setEnabled(true);
-  ui_->loadAnnotationFile->setEnabled(true);
-  ui_->saveAnnotationFile->setEnabled(true);
-  ui_->writeImage->setEnabled(true);
-  ui_->setMetadata->setEnabled(true);
-  ui_->typeLabel->setEnabled(true);
-  ui_->typeMenu->setEnabled(true);
-  ui_->countLabelLabel->setEnabled(true);
-  ui_->subTypeLabel->setEnabled(true);
-  ui_->subTypeMenu->setEnabled(true);
-  ui_->countLabelMenu->setEnabled(true);
-  ui_->prevFish->setEnabled(true);
-  ui_->nextFish->setEnabled(true);
-  ui_->removeFish->setEnabled(true);
-  ui_->reassignFish->setEnabled(true);
-  ui_->goToFrame->setEnabled(true);
-  ui_->goToFishLabel->setEnabled(true);
-  ui_->goToFishVal->setEnabled(true);
-  ui_->goToFrameLabel->setEnabled(true);
-  ui_->goToFrameVal->setEnabled(true);
-  ui_->addRegion->setEnabled(true);
-  ui_->removeRegion->setEnabled(true);
-  ui_->nextAndCopy->setEnabled(true);
+  setEnabled(true);
   ui_->currentSpeed->setText("Current Speed: 100%");
   this->setWindowTitle(video_path_);
   annotation_->clear();
@@ -924,6 +934,41 @@ void MainWindow::initGlobalStateAnnotations() {
     annotation_->insertGlobalStateAnnotation(0, *current_global_state_);
   }
   global_state_widget_->setStates(current_global_state_);
+}
+
+void MainWindow::setEnabled(bool enable) {
+  ui_->videoSlider->setEnabled(enable);
+  ui_->play->setEnabled(enable);
+  ui_->faster->setEnabled(enable);
+  ui_->slower->setEnabled(enable);
+  ui_->minusOneSecond->setEnabled(enable);
+  ui_->minusThreeSecond->setEnabled(enable);
+  ui_->minusOneFrame->setEnabled(enable);
+  ui_->plusOneFrame->setEnabled(enable);
+  ui_->loadVideo->setEnabled(enable);
+  ui_->loadAnnotationFile->setEnabled(enable);
+  ui_->saveAnnotationFile->setEnabled(enable);
+  ui_->writeImage->setEnabled(enable);
+  ui_->writeImageSequence->setEnabled(enable);
+  ui_->setMetadata->setEnabled(enable);
+  ui_->typeLabel->setEnabled(enable);
+  ui_->typeMenu->setEnabled(enable);
+  ui_->countLabelLabel->setEnabled(enable);
+  ui_->subTypeLabel->setEnabled(enable);
+  ui_->subTypeMenu->setEnabled(enable);
+  ui_->countLabelMenu->setEnabled(enable);
+  ui_->prevFish->setEnabled(enable);
+  ui_->nextFish->setEnabled(enable);
+  ui_->removeFish->setEnabled(enable);
+  ui_->reassignFish->setEnabled(enable);
+  ui_->goToFrame->setEnabled(enable);
+  ui_->goToFishLabel->setEnabled(enable);
+  ui_->goToFishVal->setEnabled(enable);
+  ui_->goToFrameLabel->setEnabled(enable);
+  ui_->goToFrameVal->setEnabled(enable);
+  ui_->addRegion->setEnabled(enable);
+  ui_->removeRegion->setEnabled(enable);
+  ui_->nextAndCopy->setEnabled(enable);
 }
 
 #include "moc_mainwindow.cpp"

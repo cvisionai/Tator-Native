@@ -187,6 +187,9 @@ private slots:
   /// Writes the current frame to file.
   void on_writeImage_triggered();
 
+  /// Writes sequence to file.
+  void on_writeImageSequence_triggered();
+
   /// Sets metadata for the annotation.
   void on_setMetadata_triggered();
 
@@ -356,6 +359,9 @@ private:
   /// True when zoom needs to be reset.
   bool zoom_reset_needed_;
 
+  /// If true, writes new frames to disk.
+  bool write_image_enabled_;
+
   /// Updates counts of each species in species controls.
   void updateSpeciesCounts();
 
@@ -381,6 +387,9 @@ private:
   /// Initializes global state annotations by setting first frame
   /// to the default.
   void initGlobalStateAnnotations();
+
+  /// Set enabled state of all ui controls.
+  void setEnabled(bool enable);
 };
 
 }} // namespace fish_annotator::video_annotator

@@ -560,6 +560,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <addaction name="loadAnnotationFile"/>
     <addaction name="saveAnnotationFile"/>
     <addaction name="writeImage"/>
+    <addaction name="writeImageSequence"/>
     <addaction name="setMetadata"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -1623,6 +1624,14 @@ border-radius: 3px;</string>
    </property>
    <property name="text">
     <string>Count</string>
+   </property>
+  </action>
+  <action name="writeImageSequence">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Write Image Sequence...</string>
    </property>
   </action>
  </widget>
