@@ -19,6 +19,29 @@ namespace fish_annotator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
 
+namespace {
+
+/// Used for colorization by track.
+static const std::vector<QColor> track_colors {
+  QColor(  0, 104, 132),
+  QColor(  0, 144, 158),
+  QColor(137, 219, 236),
+  QColor(237,   0,  38),
+  QColor(250, 157,   0),
+  QColor(255, 208, 141),
+  QColor(176,   0,  81),
+  QColor(246, 131, 112),
+  QColor(254, 171, 185),
+  QColor(110,   0, 108),
+  QColor(145,  39, 143),
+  QColor(207, 151, 215),
+  QColor(  0,   0,   0),
+  QColor( 91,  91,  91),
+  QColor(212, 212, 212)
+};
+
+} // namespace
+
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , annotation_(new VideoAnnotation)
@@ -332,6 +355,10 @@ void MainWindow::on_writeImageSequence_triggered() {
   }
   setEnabled(true);
   write_image_enabled_ = false;
+}
+
+void MainWindow::on_colorizeByTrack_toggled(bool checked) {
+  drawAnnotations();
 }
 
 void MainWindow::on_setMetadata_triggered() {
@@ -752,9 +779,13 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
 }
 
 QColor MainWindow::getColor(qint64 id) {
-  auto species = annotation_->findTrack(id)->getSpecies();
-  QString name = species.c_str();
-  return color_map_[name.toLower()];
+  if(ui_->colorizeByTrack->isChecked()) {
+    return track_colors[id % track_colors.size()];
+  } else {
+    auto species = annotation_->findTrack(id)->getSpecies();
+    QString name = species.c_str();
+    return color_map_[name.toLower()];
+  }
 }
 
 std::string MainWindow::getSpecies(qint64 id) {

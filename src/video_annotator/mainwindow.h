@@ -190,6 +190,9 @@ private slots:
   /// Writes sequence to file.
   void on_writeImageSequence_triggered();
 
+  /// Enables or disables colorization by track.
+  void on_colorizeByTrack_toggled(bool checked);
+
   /// Sets metadata for the annotation.
   void on_setMetadata_triggered();
 

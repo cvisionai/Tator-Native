@@ -571,6 +571,8 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <addaction name="viewSpecies"/>
     <addaction name="viewProbability"/>
     <addaction name="viewCount"/>
+    <addaction name="separator"/>
+    <addaction name="colorizeByTrack"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -1598,6 +1600,9 @@ border-radius: 3px;</string>
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>ID</string>
    </property>
@@ -1632,6 +1637,17 @@ border-radius: 3px;</string>
    </property>
    <property name="text">
     <string>Write Image Sequence...</string>
+   </property>
+  </action>
+  <action name="colorizeByTrack">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Colorize by track</string>
    </property>
   </action>
  </widget>
