@@ -345,13 +345,13 @@ void MainWindow::on_subTypeMenu_activated(const QString &text) {
 void MainWindow::on_countLabelMenu_activated(const QString &text) {
   auto trk = annotation_->findTrack(fish_id_);
   if(trk != nullptr) {
-    if(text.contains("Ignore") == true) {
+    if(text.contains("ignore") == true) {
       trk->count_label_ = kIgnore;
     }
-    else if(text.contains("Entering") == true) {
+    else if(text.contains("entering") == true) {
       trk->count_label_ = kEntering;
     }
-    else if(text.contains("Exiting") == true) {
+    else if(text.contains("exiting") == true) {
       trk->count_label_ = kExiting;
     }
   }
@@ -815,13 +815,13 @@ void MainWindow::updateStats() {
       }
     }
     if(trk->count_label_ == kIgnore) {
-      ui_->countLabelMenu->setCurrentText("Ignore");
+      ui_->countLabelMenu->setCurrentText("ignore");
     }
     else if(trk->count_label_ == kEntering) {
-      ui_->countLabelMenu->setCurrentText("Entering");
+      ui_->countLabelMenu->setCurrentText("entering");
     }
     else if(trk->count_label_ == kExiting) {
-      ui_->countLabelMenu->setCurrentText("Exiting");
+      ui_->countLabelMenu->setCurrentText("exiting");
     }
   }
 }
