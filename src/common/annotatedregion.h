@@ -12,7 +12,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 
-namespace fish_annotator {
+namespace tator {
 
 /// Possible types of mouse movements while dragging.
 enum Drag {
@@ -416,6 +416,6 @@ void AnnotatedRegion<Info>::updateAnnotation() {
   annotation_->area_.h = area.height();
 }
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATEDREGION_H

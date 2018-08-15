@@ -6,7 +6,7 @@
 
 #include <QGraphicsEllipseItem>
 
-namespace fish_annotator {
+namespace tator {
 
 /// Displays dot annotations.
 ///
@@ -175,7 +175,7 @@ void AnnotatedDot<Info>::updateAnnotation() {
   annotation_->area_.h = 0;
 }
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATED_DOT_H
 

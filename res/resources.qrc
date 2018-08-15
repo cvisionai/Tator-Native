@@ -17,11 +17,11 @@
   <file>icons/video_controls/plus_one_frame.svg</file>
   <!-- Created by Ruben Semedo thenounproject.com -->
   <file>icons/video_controls/slower.svg</file>
-  <file>icons/fish_navigation/go_to_frame.svg</file>
-  <file>icons/fish_navigation/next_fish.svg</file>
-  <file>icons/fish_navigation/prev_fish.svg</file>
-  <file>icons/fish_navigation/remove_fish.svg</file>
-  <file>icons/fish_navigation/reassign_fish.svg</file>
+  <file>icons/navigation/go_to_frame.svg</file>
+  <file>icons/navigation/next_track.svg</file>
+  <file>icons/navigation/prev_track.svg</file>
+  <file>icons/navigation/remove_track.svg</file>
+  <file>icons/navigation/reassign_track.svg</file>
   <file>icons/species_controls/add_species.svg</file>
   <file>icons/species_controls/clear_species.svg</file>
   <file>icons/species_controls/edit_species.svg</file>

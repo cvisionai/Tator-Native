@@ -25,7 +25,7 @@
 class TestVideoAnnotation;
 #endif
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -119,7 +119,7 @@ inline bool operator<(
   return &(*lhs) < &(*rhs);
 }
 
-/// Specifies how a track should contribute to overall fish count.
+/// Specifies how a track should contribute to overall track count.
 enum CountLabel {
   kIgnore,
   kEntering,
@@ -440,6 +440,6 @@ private:
   void boundFrame(uint64_t &frame);
 };
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator
 
 #endif // VIDEO_ANNOTATION_H

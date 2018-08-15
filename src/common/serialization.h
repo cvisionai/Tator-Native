@@ -8,7 +8,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace fish_annotator {
+namespace tator {
 
 /// Class for serializing data.
 ///
@@ -53,7 +53,7 @@ bool serialize(const Serialization &obj, const std::string &out);
 /// @return True if successful, false otherwise.
 bool deserialize(Serialization &obj, const std::string &in);
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // SERIALIZATION_H
 

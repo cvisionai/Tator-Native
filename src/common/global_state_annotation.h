@@ -12,7 +12,7 @@
 
 #include "serialization.h"
 
-namespace fish_annotator {
+namespace tator {
 
 namespace pt = boost::property_tree;
 
@@ -84,6 +84,6 @@ struct GlobalStateAnnotation : public Serialization {
   std::map<std::string, std::string> headers_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // GLOBAL_STATE_ANNOTATION_H

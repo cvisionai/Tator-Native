@@ -3,7 +3,7 @@
 
 #include "color_scheme.h"
 
-namespace fish_annotator {
+namespace tator {
 
 ColorScheme::ColorScheme(
     const std::string& name, 
@@ -107,4 +107,4 @@ void ColorSchemeList::read(const pt::ptree &tree) {
   }
 }
 
-} // namespace fish_annotator
+} // namespace tator

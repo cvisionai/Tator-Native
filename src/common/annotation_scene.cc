@@ -2,7 +2,7 @@
 #include <QTransform>
 #include "annotation_scene.h"
 
-namespace fish_annotator {
+namespace tator {
 
 AnnotationScene::AnnotationScene(QObject *parent, bool continual)
   : QGraphicsScene(parent)
@@ -191,4 +191,4 @@ void AnnotationScene::makeItemsControllable(bool controllable) {
 
 #include "moc_annotation_scene.cpp"
 
-} // namespace fish_annotator
+} // namespace tator

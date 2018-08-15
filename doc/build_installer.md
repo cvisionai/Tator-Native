@@ -5,7 +5,7 @@ Building the installer on Windows requires installing [NSIS][nsissite].
 
 When running cmake, the option BUILD_INSTALLER must be enabled.
 
-After FishAnnotator has been built and installed, the installer can be built
+After Tator has been built and installed, the installer can be built
 by typing the following from a command prompt:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}

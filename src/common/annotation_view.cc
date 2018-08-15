@@ -1,6 +1,6 @@
 #include "annotation_view.h"
 
-namespace fish_annotator {
+namespace tator {
 
 AnnotationView::AnnotationView(QWidget *parent)
   : QGraphicsView(parent)
@@ -52,5 +52,5 @@ void AnnotationView::setBoundingRect(const QRectF &rect) {
 
 #include "moc_annotation_view.cpp"
 
-} // namespace fish_annotator
+} // namespace tator
 

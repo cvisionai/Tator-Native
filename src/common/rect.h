@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-namespace fish_annotator {
+namespace tator {
 
 /// Geometric definition of a rectangle.
 struct Rect {
@@ -29,7 +29,7 @@ struct Rect {
   int64_t h; ///< Height.
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // RECT_H
 

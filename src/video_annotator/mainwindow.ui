@@ -836,7 +836,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="2" column="0">
-         <widget class="QLabel" name="totalFishLabel">
+         <widget class="QLabel" name="totalTrackLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -851,7 +851,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
            </font>
           </property>
           <property name="text">
-           <string>Total Fish</string>
+           <string>Total Track</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -859,7 +859,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QLabel" name="fishNumLabel">
+         <widget class="QLabel" name="trackNumLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -874,7 +874,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
            </font>
           </property>
           <property name="text">
-           <string>Fish ID</string>
+           <string>Track ID</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -882,7 +882,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="totalFishVal">
+         <widget class="QLabel" name="totalTrackVal">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -963,7 +963,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="fishNumVal">
+         <widget class="QComboBox" name="trackNumVal">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -993,7 +993,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="prevFish">
+        <widget class="QPushButton" name="prevTrack">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1026,7 +1026,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="toolTip">
-          <string>Prev fish</string>
+          <string>Prev track</string>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: rgb(230, 230, 230);</string>
@@ -1043,7 +1043,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="nextFish">
+        <widget class="QPushButton" name="nextTrack">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1076,7 +1076,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="toolTip">
-          <string>Next fish</string>
+          <string>Next track</string>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: rgb(230, 230, 230);</string>
@@ -1152,7 +1152,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="removeFish">
+        <widget class="QPushButton" name="removeTrack">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1185,7 +1185,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="toolTip">
-          <string>Remove fish</string>
+          <string>Remove track</string>
          </property>
          <property name="autoFillBackground">
           <bool>false</bool>
@@ -1205,7 +1205,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="reassignFish">
+        <widget class="QPushButton" name="reassignTrack">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1265,7 +1265,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="goToFishLabel">
+        <widget class="QLabel" name="goToTrackLabel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1305,7 +1305,7 @@ border-radius: 2px;</string>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="goToFishVal">
+        <widget class="QLineEdit" name="goToTrackVal">
          <property name="enabled">
           <bool>false</bool>
          </property>

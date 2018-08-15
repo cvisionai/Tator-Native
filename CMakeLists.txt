@@ -1,10 +1,9 @@
 cmake_minimum_required( VERSION 3.5.1 FATAL_ERROR )
 
-project( fish_annotator )
+project( tator )
 
 set( CMAKE_BUILD_TYPE Release )
 
-option( BUILD_TESTS           "Whether to build unit tests."            OFF )
 option( BUILD_DOCS            "Whether to enable documentation target." ON  )
 option( BUILD_VIDEO_ANNOTATOR "Whether to build video annotator."       ON  )
 option( BUILD_IMAGE_ANNOTATOR "Whether to build image annotator."       ON  )
@@ -34,7 +33,7 @@ set( CMAKE_AUTOUIC ON )
 set( CMAKE_AUTORCC ON )
 
 # Generate the library hints file if necessary
-set( HINTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FishDetFindLibsHints.cmake" )
+set( HINTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/TatorFindLibsHints.cmake" )
 if( EXISTS "${HINTS_PATH}" )
   message( STATUS "Found library hints file at ${HINTS_PATH}" )
 else()
@@ -44,8 +43,8 @@ else()
 endif()
 
 # Find necessary third party libraries
-include( "cmake/FishDetFindLibsHints.cmake" )
-include( "cmake/FishDetFindLibs.cmake" )
+include( "cmake/TatorFindLibsHints.cmake" )
+include( "cmake/TatorFindLibs.cmake" )
 
 # Add necessary include directories
 include_directories(
@@ -54,28 +53,21 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-if(${BUILD_TESTS})
-  enable_testing()
-endif()
-
 if( WIN32 )
-  set( FISHDET_ICON 
+  set( TATOR_ICON 
     "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision\\\\cvision_no_text.ico" )
-  set( FISHDET_BMP 
+  set( TATOR_BMP 
     "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision\\\\cvision_no_text.bmp" )
 elseif( APPLE )
-  set( FISHDET_ICON "cvision_no_text.icns" )
-  set( FISHDET_ICON_FULL 
+  set( TATOR_ICON "cvision_no_text.icns" )
+  set( TATOR_ICON_FULL 
     "${CMAKE_CURRENT_SOURCE_DIR}/res/icons/cvision/cvision_no_text.icns" )
 endif()
-set( FISHDET_RES_FILE 
+set( TATOR_RES_FILE 
   "${CMAKE_CURRENT_SOURCE_DIR}/res/resources.qrc" )
 
 add_subdirectory( "src" )
 add_subdirectory( "config" )
-if( ${BUILD_TESTS} )
-  add_subdirectory( "test" )
-endif()
 if( ${BUILD_DOCS} )
   add_subdirectory( "doc" )
 endif()
@@ -84,10 +76,10 @@ endif()
 if( ${BUILD_INSTALLER} )
   set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "." )
   include( InstallRequiredSystemLibraries )
-  set( CPACK_PACKAGE_NAME "FishAnnotator" )
+  set( CPACK_PACKAGE_NAME "Tator" )
   set( CPACK_PACKAGE_DESCRIPTION_SUMMARY 
-       "An application for assisting estimation of fish populations." )
-  set( CPACK_PACKAGE_VENDOR "CVision Consulting LLC" )
+       "An application for video and image annotation." )
+  set( CPACK_PACKAGE_VENDOR "CVision AI" )
   set( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
   set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md" )
   set( CPACK_PACKAGE_VERSION "1.0.0" )
@@ -97,15 +89,15 @@ if( ${BUILD_INSTALLER} )
   set( CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME} )
   if( WIN32 )
     set( CPACK_GENERATOR "NSIS" )
-    set( CPACK_NSIS_MUI_ICON ${FISHDET_ICON} )
-    set( CPACK_NSIS_MUI_HEADERIMAGE_BITMAP ${FISHDET_ICON} )
+    set( CPACK_NSIS_MUI_ICON ${TATOR_ICON} )
+    set( CPACK_NSIS_MUI_HEADERIMAGE_BITMAP ${TATOR_ICON} )
     set( CPACK_NSIS_MUI_HEADERIMAGE_RIGHT ON )
-    set( CPACK_NSIS_MUI_UNIICON ${FISHDET_ICON} )
-    set( CPACK_NSIS_MUI_UNIHEADERIMAGE_BITMAP ${FISHDET_ICON} )
+    set( CPACK_NSIS_MUI_UNIICON ${TATOR_ICON} )
+    set( CPACK_NSIS_MUI_UNIHEADERIMAGE_BITMAP ${TATOR_ICON} )
     set( CPACK_NSIS_MUI_UNIHEADERIMAGE_RIGHT ON )
-    set( CPACK_NSIS_INSTALLED_ICON_NAME ${FISHDET_ICON} )
+    set( CPACK_NSIS_INSTALLED_ICON_NAME ${TATOR_ICON} )
     set( CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_NAME} )
-    set( CPACK_NSIS_CONTACT "benjamin.woodward@cvisionconsulting.com" )
+    set( CPACK_NSIS_CONTACT "info@cvisionai.com" )
     set( CPACK_NSIS_MODIFY_PATH ON )
     set( CPACK_NSIS_EXECUTABLES_DIRECTORY "." )
     set( CPACK_CREATE_DESKTOP_LINKS video_annotator video_slicer image_annotator Uninstall)

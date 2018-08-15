@@ -13,7 +13,7 @@
 
 #include "annotation_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Defines mouse behavior based on current drawing state.
 enum Mode {
@@ -120,6 +120,6 @@ private:
   void makeItemsControllable(bool controllable);
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATION_SCENE_H

@@ -30,7 +30,7 @@
 class TestImageAnnotator;
 #endif
 
-namespace fish_annotator { namespace image_annotator {
+namespace tator { namespace image_annotator {
 
 /// Main window for image annotator.
 class MainWindow : public QMainWindow {
@@ -179,6 +179,6 @@ private:
   void updateImage();
 };
 
-}} // namespace fish_annotator::image_annotator
+}} // namespace tator::image_annotator
 
 #endif //IMAGE_ANNOTATOR_MAINWINDOW_H

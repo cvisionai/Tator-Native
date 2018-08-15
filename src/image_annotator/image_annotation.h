@@ -26,7 +26,7 @@
 class TestImageAnnotation;
 #endif
 
-namespace fish_annotator { namespace image_annotator {
+namespace tator { namespace image_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -202,6 +202,6 @@ private:
   std::map<std::string, std::shared_ptr<GlobalStateAnnotation>> global_states_;
 };
 
-}} // namespace fish_annotator::image_annotator
+}} // namespace tator::image_annotator
 
 #endif // IMAGE_ANNOTATION_H

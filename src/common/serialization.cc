@@ -3,7 +3,7 @@
 
 #include "serialization.h"
 
-namespace fish_annotator {
+namespace tator {
 
 namespace pt = boost::property_tree;
 
@@ -31,5 +31,5 @@ bool deserialize(Serialization &obj, const std::string &in) {
   return true;
 }
 
-} // namespace fish_annotator
+} // namespace tator
 

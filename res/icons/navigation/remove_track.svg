@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <title>2Artboard 3</title>
+  <title>all</title>
+  <g transform="matrix(2.745246, 0, 0, 2.745246, 26.624826, 102.382607)">
+    <g>
+      <g data-name="Zoom In">
+        <g data-name="Calendar">
+          <g>
+            <g>
+              <g>
+                <g>
+                  <path d="M50,0a50,50,0,1,0,50,50A50,50,0,0,0,50,0ZM76.68,58H23.32V42H76.68V58Z"/>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g data-name="66.target" id="g-1" transform="matrix(9.272727, 0, 0, 9.272727, 264.172119, 260.613403)" style="">
+    <circle class="cls-1" cx="12" cy="12" r="9" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="12" x2="12" y1="1" y2="7" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="12" x2="12" y1="17" y2="23" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="1" x2="7" y1="12" y2="12" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="17" x2="23" y1="12" y2="12" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+  </g>
+</svg>

@@ -14,7 +14,7 @@
 #include "global_state_annotation.h"
 #include "ui_mainwindow.h"
 
-namespace fish_annotator { namespace db_uploader {
+namespace tator { namespace db_uploader {
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -52,7 +52,7 @@ private:
   std::vector<std::string> raw_fields_;
 };
 
-}} // namespace fish_annotator::db_uploader
+}} // namespace tator::db_uploader
 
 #endif // DB_UPLOADER_MAINWINDOW_H
 

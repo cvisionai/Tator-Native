@@ -1,7 +1,7 @@
 #include "string_state_widget.h"
 #include "ui_string_state_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 StringStateWidget::StringStateWidget(
   const QString &name,
@@ -20,4 +20,4 @@ void StringStateWidget::on_value_editingFinished() {
     ui_->value->text()));
 }
 
-} // namespace fish_annotator
+} // namespace tator

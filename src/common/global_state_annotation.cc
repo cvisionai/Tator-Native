@@ -2,7 +2,7 @@
 
 #include "global_state_annotation.h"
 
-namespace fish_annotator {
+namespace tator {
 
 std::string GetValueVisitor::operator()(bool val) const {
   return val ? "true" : "false";
@@ -110,4 +110,4 @@ std::string GlobalStateAnnotation::writeCsvValues() {
   return values;
 }
 
-} // namespace fish_annotator
+} // namespace tator

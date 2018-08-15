@@ -4,7 +4,7 @@ General build instructions
 Dependencies
 ------------
 
-FishAnnotator uses the following 3rd party libraries:
+Tator uses the following 3rd party libraries:
 
 * [Qt5][Qt5] 5.9.4
 * [Boost][Boost] 1.62

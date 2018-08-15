@@ -6,7 +6,7 @@
 
 #include "player.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace {
   static const int kMaxBufferSize = 50;
@@ -405,5 +405,5 @@ void Player::reinit() {
 
 #include "moc_player.cpp"
 
-}} // namespace fish_annotator::gui
+}} // namespace tator::gui
 

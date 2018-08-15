@@ -6,7 +6,7 @@
 
 #include "video_annotation.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace {
   template<typename L, typename R>
@@ -563,7 +563,7 @@ void VideoAnnotation::write(
     meta += tow_type;
     std::ofstream csv(csv_path.string());
     csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
-    csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
+    csv << "Track_Number,Track_Type,Species,Frame,Time_In_Video";
     csv << std::endl;
     for(const auto &t : tracks_by_id_.left) {
       csv << meta;
@@ -712,4 +712,4 @@ void VideoAnnotation::boundFrame(uint64_t &frame) {
   }
 }
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator

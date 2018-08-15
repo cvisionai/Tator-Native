@@ -2,7 +2,7 @@
 
 #include "species.h"
 
-namespace fish_annotator {
+namespace tator {
 
 Species::Species(const std::string& name)
   : name_(name)
@@ -92,4 +92,4 @@ void SpeciesList::read(const pt::ptree &tree) {
   }
 }
 
-} // namespace fish_annotator
+} // namespace tator

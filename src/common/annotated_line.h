@@ -6,7 +6,7 @@
 
 #include <QGraphicsLineItem>
 
-namespace fish_annotator {
+namespace tator {
 
 /// Displays line annotations.
 ///
@@ -173,7 +173,7 @@ void AnnotatedLine<Info>::updateAnnotation() {
   annotation_->area_.h = line().y2();
 }
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATED_LINE_H
 
