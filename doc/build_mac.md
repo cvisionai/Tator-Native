@@ -20,7 +20,7 @@ cd build
 cmake ..
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-3\. Update the library hints file (cmake/FishDetFindLibsHints.cmake)
+3\. Update the library hints file (cmake/TatorFindLibsHints.cmake)
     to point to brew's qt5:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cmake}
 # Qt5

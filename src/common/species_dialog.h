@@ -12,7 +12,7 @@
 #include "species.h"
 #include "ui_species_dialog.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Dialog for adding a new species.
 class SpeciesDialog : public QDialog {
@@ -51,6 +51,6 @@ private:
   std::unique_ptr<Ui::SpeciesDialog> ui_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // SPECIES_DIALOG_H

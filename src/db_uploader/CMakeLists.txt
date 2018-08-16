@@ -8,14 +8,14 @@ include_directories(
 
 # Add db_uploader executable
 if( WIN32 )
-  file( COPY ${FISHDET_ICON} DESTINATION . )
+  file( COPY ${TATOR_ICON} DESTINATION . )
   add_executable( db_uploader WIN32 
     database_info.cc
     mainwindow.cc
     main.cc
     ../image_annotator/image_annotation.cc
     db_uploader.rc
-    ${FISHDET_RES_FILE} 
+    ${TATOR_RES_FILE} 
     )
   target_link_libraries(
     db_uploader

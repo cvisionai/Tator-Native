@@ -9,7 +9,7 @@
 #include "global_state_annotation.h"
 #include "ui_global_state_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Represents global states.
 class GlobalStateWidget : public QWidget {
@@ -46,6 +46,6 @@ private:
   std::shared_ptr<GlobalStateAnnotation> states_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // GLOBAL_STATE_WIDGET_H

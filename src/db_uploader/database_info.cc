@@ -1,6 +1,6 @@
 #include "database_info.h"
 
-namespace fish_annotator { namespace db_uploader {
+namespace tator { namespace db_uploader {
 
 DatabaseInfo::DatabaseInfo()
   : server_()
@@ -22,5 +22,5 @@ void DatabaseInfo::read(const pt::ptree &tree) {
   username_ = tree.get<std::string>("username");
 }
 
-}} // namespace fish_annotator::db_uploader
+}} // namespace tator::db_uploader
 

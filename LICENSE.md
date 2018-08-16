@@ -1,12 +1,12 @@
   GNU GENERAL PUBLIC LICENSE
 
- The FishAnnotator software is Copyright (C) 2015-2017 CVision Consulting LLC.
- Contact: bgwoodward@gmail.com
+ The Tator software is Copyright (C) 2015-2017 CVision AI, Inc.
+ Contact: info@cvisionai.com
 
- You may use, distribute and copy the FishAnnotator under the terms of
+ You may use, distribute and copy Tator under the terms of
  GNU General Public License version 3. That license references
  the General Public License version 3, that is displayed below. Other
- portions of the FishAnnotator may be licensed directly under this license.
+ portions of Tator may be licensed directly under this license.
  
  
  GNU GENERAL PUBLIC LICENSE

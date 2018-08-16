@@ -12,7 +12,7 @@
 #include "metadata.h"
 #include "ui_metadata_dialog.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Dialog for specifying annotatoin metadata.
 class MetadataDialog : public QDialog {
@@ -45,7 +45,7 @@ private:
   std::unique_ptr<Ui::MetadataDialog> ui_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // METADATA_DIALOG_H
 

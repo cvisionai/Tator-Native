@@ -12,7 +12,7 @@
 #include "species.h"
 #include "ui_species_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Widget containing all controls associated with a single species.
 class SpeciesWidget : public QWidget {
@@ -73,6 +73,6 @@ private:
   void updateButtonColor();
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // SPECIES_WIDGET_H

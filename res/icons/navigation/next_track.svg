@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <title>2Artboard 3</title>
+  <title>1Artboard 66</title>
+  <path d="M 160.801 103.259 C 55.864 103.259 -9.726 216.859 42.743 307.738 C 95.213 398.616 226.387 398.616 278.857 307.738 C 290.823 287.012 297.12 263.506 297.12 239.578 C 297.12 164.291 236.087 103.259 160.801 103.259 Z M 238.375 246.266 L 190.364 288.269 C 186.011 292.108 179.135 289.791 177.99 284.099 C 177.888 283.593 177.836 283.077 177.84 282.562 L 177.84 265.138 L 95.027 265.138 C 91.358 265.138 88.381 262.161 88.381 258.493 L 88.381 220.664 C 88.381 216.991 91.358 214.019 95.027 214.019 L 177.84 214.019 L 177.84 196.595 C 177.802 190.789 184.06 187.121 189.108 189.988 C 189.555 190.244 189.977 190.545 190.364 190.887 L 238.332 232.89 C 242.378 236.421 242.4 242.71 238.375 246.266 Z"/>
+  <title/>
+  <g data-name="66.target" id="_66.target" transform="matrix(9.272727, 0, 0, 9.272727, 267.736877, 270.858978)" style="">
+    <circle class="cls-1" cx="12" cy="12" r="9" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="12" x2="12" y1="1" y2="7" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="12" x2="12" y1="17" y2="23" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="1" x2="7" y1="12" y2="12" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="17" x2="23" y1="12" y2="12" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+  </g>
+</svg>

@@ -9,7 +9,7 @@
 #include "annotation_widget.h"
 #include "ui_annotation_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Shape of the annotation.
 enum AnnotationType {
@@ -52,6 +52,6 @@ private:
   std::unique_ptr<Ui::AnnotationWidget> ui_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATION_WIDGET_H

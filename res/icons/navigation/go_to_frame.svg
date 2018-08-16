@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <title>2Artboard 3</title>
+  <g transform="matrix(2.327878, 0, 0, 2.327878, 49.710041, 102.3274)">
+    <path d="M0,1.3v97.3h100V1.3H0z M91.2,89.8H8.8V10.2h82.4V89.8z"/>
+    <polygon points="67.5,58 53.8,64.3 31.4,51.7 11.8,84.9 88.5,84.9  "/>
+    <circle cx="69.1" cy="35.4" r="8.7"/>
+  </g>
+  <g data-name="66.target" id="_66.target" transform="matrix(9.272727, 0, 0, 9.272727, 267.17569, 270.510193)" style="">
+    <circle class="cls-1" cx="12" cy="12" r="9" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="12" x2="12" y1="1" y2="7" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="12" x2="12" y1="17" y2="23" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="1" x2="7" y1="12" y2="12" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+    <line class="cls-1" x1="17" x2="23" y1="12" y2="12" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px;"/>
+  </g>
+</svg>

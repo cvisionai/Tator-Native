@@ -15,7 +15,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace fs = boost::filesystem;
 
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
   , was_stopped_(true)
   , rate_(0.0)
   , native_rate_(0.0)
-  , fish_id_(0)
+  , track_id_(0)
   , current_annotations_()
   , metadata_()
   , color_map_()
@@ -90,15 +90,15 @@ MainWindow::MainWindow(QWidget *parent)
   ui_->minusOneFrame->setIcon(
       QIcon(":/icons/video_controls/minus_one_frame.svg"));
   ui_->goToFrame->setIcon(
-      QIcon(":/icons/fish_navigation/go_to_frame.svg"));
-  ui_->removeFish->setIcon(
-      QIcon(":/icons/fish_navigation/remove_fish.svg"));
-  ui_->nextFish->setIcon(
-      QIcon(":/icons/fish_navigation/next_fish.svg"));
-  ui_->prevFish->setIcon(
-      QIcon(":/icons/fish_navigation/prev_fish.svg"));
-  ui_->reassignFish->setIcon(
-      QIcon(":/icons/fish_navigation/reassign_fish.svg"));
+      QIcon(":/icons/navigation/go_to_frame.svg"));
+  ui_->removeTrack->setIcon(
+      QIcon(":/icons/navigation/remove_track.svg"));
+  ui_->nextTrack->setIcon(
+      QIcon(":/icons/navigation/next_track.svg"));
+  ui_->prevTrack->setIcon(
+      QIcon(":/icons/navigation/prev_track.svg"));
+  ui_->reassignTrack->setIcon(
+      QIcon(":/icons/navigation/reassign_track.svg"));
   ui_->videoWindowLayout->addWidget(view_.get());
   ui_->speciesLayout->addWidget(annotation_widget_.get());
   ui_->speciesLayout->addWidget(species_controls_.get());
@@ -254,8 +254,8 @@ void MainWindow::on_loadAnnotationFile_triggered() {
     initGlobalStateAnnotations();
     annotation_->read(file_str.toStdString());
     species_controls_->loadFromVector(annotation_->getAllSpecies());
-    fish_id_ = annotation_->earliestTrackID();
-    if(fish_id_ != 0) {
+    track_id_ = annotation_->earliestTrackID();
+    if(track_id_ != 0) {
       updateSpeciesCounts();
       updateStats();
       drawAnnotations();
@@ -327,7 +327,7 @@ void MainWindow::on_writeImage_triggered() {
   img.save(
       images_save_path_ +
       QStringLiteral("/") +
-      QStringLiteral("/Fish_%1.png").arg(fish_id_));
+      QStringLiteral("/Track_%1.png").arg(track_id_));
 }
 
 void MainWindow::on_writeImageSequence_triggered() {
@@ -384,7 +384,7 @@ void MainWindow::on_videoSlider_actionTriggered(int action) {
 }
 
 void MainWindow::on_typeMenu_activated(const QString &text) {
-  auto trk = annotation_->findTrack(fish_id_);
+  auto trk = annotation_->findTrack(track_id_);
   if(trk != nullptr) {
     trk->species_ = text.toStdString();
     updateStats();
@@ -392,67 +392,67 @@ void MainWindow::on_typeMenu_activated(const QString &text) {
 }
 
 void MainWindow::on_subTypeMenu_activated(const QString &text) {
-  auto trk = annotation_->findTrack(fish_id_);
+  auto trk = annotation_->findTrack(track_id_);
   if(trk != nullptr) {
     trk->subspecies_ = text.toStdString();
   }
 }
 
 void MainWindow::on_countLabelMenu_activated(const QString &text) {
-  auto trk = annotation_->findTrack(fish_id_);
+  auto trk = annotation_->findTrack(track_id_);
   if(trk != nullptr) {
-    if(text.contains("Ignore") == true) {
+    if(text.contains("ignore") == true) {
       trk->count_label_ = kIgnore;
     }
-    else if(text.contains("Entering") == true) {
+    else if(text.contains("entering") == true) {
       trk->count_label_ = kEntering;
     }
-    else if(text.contains("Exiting") == true) {
+    else if(text.contains("exiting") == true) {
       trk->count_label_ = kExiting;
     }
   }
 }
 
-void MainWindow::on_prevFish_clicked() {
-  auto trk = annotation_->prevTrack(fish_id_);
+void MainWindow::on_prevTrack_clicked() {
+  auto trk = annotation_->prevTrack(track_id_);
   if(trk != nullptr) {
-    fish_id_ = trk->id_;
+    track_id_ = trk->id_;
     updateStats();
   }
 }
 
-void MainWindow::on_nextFish_clicked() {
-  auto trk = annotation_->nextTrack(fish_id_);
+void MainWindow::on_nextTrack_clicked() {
+  auto trk = annotation_->nextTrack(track_id_);
   if(trk != nullptr) {
-    fish_id_ = trk->id_;
+    track_id_ = trk->id_;
     updateStats();
   }
 }
 
-void MainWindow::on_removeFish_clicked() {
-  auto remove_id = fish_id_;
-  auto prev = annotation_->prevTrack(fish_id_);
-  auto next = annotation_->nextTrack(fish_id_);
+void MainWindow::on_removeTrack_clicked() {
+  auto remove_id = track_id_;
+  auto prev = annotation_->prevTrack(track_id_);
+  auto next = annotation_->nextTrack(track_id_);
   if(prev != nullptr) {
-    if(fish_id_ == prev->id_) {
+    if(track_id_ == prev->id_) {
       annotation_->remove(remove_id);
-      fish_id_ = annotation_->earliestTrackID();
+      track_id_ = annotation_->earliestTrackID();
     }
     else {
-      fish_id_ = prev->id_;
+      track_id_ = prev->id_;
     }
   }
   else if(next != nullptr) {
-    if(fish_id_ == next->id_) {
+    if(track_id_ == next->id_) {
       annotation_->remove(remove_id);
-      fish_id_ = annotation_->earliestTrackID();
+      track_id_ = annotation_->earliestTrackID();
     }
     else {
-      fish_id_ = next->id_;
+      track_id_ = next->id_;
     }
   }
   else {
-    fish_id_ = 0;
+    track_id_ = 0;
   }
   annotation_->remove(remove_id);
   updateStats();
@@ -461,17 +461,17 @@ void MainWindow::on_removeFish_clicked() {
 }
 
 void MainWindow::on_goToFrame_clicked() {
-  qint64 frame = annotation_->trackFirstFrame(fish_id_);
+  qint64 frame = annotation_->trackFirstFrame(track_id_);
   emit requestSetFrame(frame);
 }
 
-void MainWindow::on_reassignFish_clicked() {
+void MainWindow::on_reassignTrack_clicked() {
   auto new_id = annotation_->nextId();
   ReassignDialog *dlg = new ReassignDialog(
       last_position_,
-      annotation_->trackFirstFrame(fish_id_),
-      annotation_->trackLastFrame(fish_id_),
-      fish_id_,
+      annotation_->trackFirstFrame(track_id_),
+      annotation_->trackLastFrame(track_id_),
+      track_id_,
       new_id,
       this);
   if(dlg->exec()) {
@@ -548,20 +548,20 @@ void MainWindow::on_reassignFish_clicked() {
   drawAnnotations();
 }
 
-void MainWindow::on_goToFishVal_returnPressed() {
-  auto trk = annotation_->findTrack(ui_->goToFishVal->text().toInt());
+void MainWindow::on_goToTrackVal_returnPressed() {
+  auto trk = annotation_->findTrack(ui_->goToTrackVal->text().toInt());
   if(trk != nullptr) {
-    fish_id_ = ui_->goToFishVal->text().toInt();
+    track_id_ = ui_->goToTrackVal->text().toInt();
     updateStats();
   }
   else {
-    handlePlayerError("Fish with that ID does not exist!");
+    handlePlayerError("Track with that ID does not exist!");
   }
 }
 
-void MainWindow::on_fishNumVal_activated(const QString &text) {
-  fish_id_ = text.toInt();
-  auto trk = annotation_->findTrack(fish_id_);
+void MainWindow::on_trackNumVal_activated(const QString &text) {
+  track_id_ = text.toInt();
+  auto trk = annotation_->findTrack(track_id_);
   if(trk != nullptr) {
     updateStats();
   }
@@ -574,7 +574,7 @@ void MainWindow::on_goToFrameVal_returnPressed() {
 
 void MainWindow::on_addRegion_clicked() {
   if(annotation_->getTotal() < 1) {
-    handlePlayerError("Please add a fish before adding a region!");
+    handlePlayerError("Please add a track before adding a region!");
   }
   else {
     view_->setFocus();
@@ -583,16 +583,16 @@ void MainWindow::on_addRegion_clicked() {
 }
 
 void MainWindow::on_removeRegion_clicked() {
-  annotation_->remove(last_position_, fish_id_);
+  annotation_->remove(last_position_, track_id_);
   drawAnnotations();
 }
 
 void MainWindow::on_nextAndCopy_clicked() {
-  auto det = annotation_->findDetection(last_position_, fish_id_);
+  auto det = annotation_->findDetection(last_position_, track_id_);
   if(det != nullptr) {
     annotation_->insert(std::make_shared<DetectionAnnotation>(
           last_position_ + 1,
-          fish_id_,
+          track_id_,
           det->area_,
           det->type_,
           det->species_,
@@ -655,9 +655,9 @@ void MainWindow::showFrame(QImage image, qint64 frame) {
 }
 
 void MainWindow::addIndividual(std::string species, std::string subspecies) {
-  fish_id_ = annotation_->nextId();
+  track_id_ = annotation_->nextId();
   annotation_->insert(std::make_shared<TrackAnnotation>(
-        fish_id_, species, subspecies, last_position_, kIgnore));
+        track_id_, species, subspecies, last_position_, kIgnore));
   on_addRegion_clicked();
   updateSpeciesCounts();
   updateStats();
@@ -748,10 +748,10 @@ void MainWindow::handlePlayerError(QString err) {
 void MainWindow::addBoxAnnotation(const QRectF &rect) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
-    fish_id_,
+    track_id_,
     Rect(rect.x(), rect.y(), rect.width(), rect.height()),
     kBox,
-    getSpecies(fish_id_),
+    getSpecies(track_id_),
     1.0));
   drawAnnotations();
 }
@@ -759,10 +759,10 @@ void MainWindow::addBoxAnnotation(const QRectF &rect) {
 void MainWindow::addLineAnnotation(const QLineF &line) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
-    fish_id_,
+    track_id_,
     Rect(line.x1(), line.y1(), line.x2(), line.y2()),
     kLine,
-    getSpecies(fish_id_),
+    getSpecies(track_id_),
     1.0));
   drawAnnotations();
 }
@@ -770,10 +770,10 @@ void MainWindow::addLineAnnotation(const QLineF &line) {
 void MainWindow::addDotAnnotation(const QPointF &dot) {
   annotation_->insert(std::make_shared<DetectionAnnotation>(
     last_position_,
-    fish_id_,
+    track_id_,
     Rect(dot.x(), dot.y(), 0, 0),
     kDot,
-    getSpecies(fish_id_),
+    getSpecies(track_id_),
     1.0));
   drawAnnotations();
 }
@@ -809,7 +809,7 @@ void MainWindow::setItemActive(
   const QGraphicsItem &item) {
   for(auto ann : current_annotations_) {
     if(ann.second == &item) {
-      fish_id_ = ann.first;
+      track_id_ = ann.first;
       updateStats();
     }
   }
@@ -817,29 +817,29 @@ void MainWindow::setItemActive(
 
 void MainWindow::deleteCurrentAnn() {
   on_removeRegion_clicked();
-  auto current_fish_anns = annotation_->getDetectionAnnotationsById(fish_id_);
-  if (current_fish_anns.empty()) {
-    on_removeFish_clicked();
+  auto current_track_anns = annotation_->getDetectionAnnotationsById(track_id_);
+  if (current_track_anns.empty()) {
+    on_removeTrack_clicked();
   }
 }
 
 void MainWindow::updateStats() {
   ui_->typeMenu->clear();
   ui_->subTypeMenu->clear();
-  ui_->fishNumVal->clear();
-  auto trk = annotation_->findTrack(fish_id_);
+  ui_->trackNumVal->clear();
+  auto trk = annotation_->findTrack(track_id_);
   if(trk == nullptr) {
-    ui_->fishNumVal->setCurrentText("-");
-    ui_->totalFishVal->setText("-");
+    ui_->trackNumVal->setCurrentText("-");
+    ui_->totalTrackVal->setText("-");
     ui_->frameCountedVal->setText("-");
     return;
   }
   else {
     for (auto trkid : annotation_->getTrackIDs()) {
-      ui_->fishNumVal->addItem(QString::number(trkid));
+      ui_->trackNumVal->addItem(QString::number(trkid));
     }
-    ui_->fishNumVal->setCurrentText(QString::number(fish_id_));
-    ui_->totalFishVal->setText(QString::number(annotation_->getTotal()));
+    ui_->trackNumVal->setCurrentText(QString::number(track_id_));
+    ui_->totalTrackVal->setText(QString::number(annotation_->getTotal()));
     ui_->frameCountedVal->setText(QString::number(trk->frame_added_));
     auto species = species_controls_->getSpecies();
     for(auto &s : species) {
@@ -856,13 +856,13 @@ void MainWindow::updateStats() {
       }
     }
     if(trk->count_label_ == kIgnore) {
-      ui_->countLabelMenu->setCurrentText("Ignore");
+      ui_->countLabelMenu->setCurrentText("ignore");
     }
     else if(trk->count_label_ == kEntering) {
-      ui_->countLabelMenu->setCurrentText("Entering");
+      ui_->countLabelMenu->setCurrentText("entering");
     }
     else if(trk->count_label_ == kExiting) {
-      ui_->countLabelMenu->setCurrentText("Exiting");
+      ui_->countLabelMenu->setCurrentText("exiting");
     }
   }
 }
@@ -988,13 +988,13 @@ void MainWindow::setEnabled(bool enable) {
   ui_->subTypeLabel->setEnabled(enable);
   ui_->subTypeMenu->setEnabled(enable);
   ui_->countLabelMenu->setEnabled(enable);
-  ui_->prevFish->setEnabled(enable);
-  ui_->nextFish->setEnabled(enable);
-  ui_->removeFish->setEnabled(enable);
-  ui_->reassignFish->setEnabled(enable);
+  ui_->prevTrack->setEnabled(true);
+  ui_->nextTrack->setEnabled(true);
+  ui_->removeTrack->setEnabled(true);
+  ui_->reassignTrack->setEnabled(true);
   ui_->goToFrame->setEnabled(enable);
-  ui_->goToFishLabel->setEnabled(enable);
-  ui_->goToFishVal->setEnabled(enable);
+  ui_->goToTrackVal->setEnabled(true);
+  ui_->goToTrackVal->setEnabled(enable);
   ui_->goToFrameLabel->setEnabled(enable);
   ui_->goToFrameVal->setEnabled(enable);
   ui_->addRegion->setEnabled(enable);
@@ -1004,4 +1004,4 @@ void MainWindow::setEnabled(bool enable) {
 
 #include "moc_mainwindow.cpp"
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator

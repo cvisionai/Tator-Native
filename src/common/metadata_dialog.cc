@@ -3,7 +3,7 @@
 #include "metadata_dialog.h"
 #include "ui_metadata_dialog.h"
 
-namespace fish_annotator {
+namespace tator {
 
 MetadataDialog::MetadataDialog(QWidget *parent)
   : QDialog(parent)
@@ -54,5 +54,5 @@ void MetadataDialog::setMetadata(const Metadata &metadata) {
 
 #include "moc_metadata_dialog.cpp"
 
-} // namespace fish_annotator
+} // namespace tator
 

@@ -6,7 +6,7 @@
 
 #include "image_annotation.h"
 
-namespace fish_annotator { namespace image_annotator {
+namespace tator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
 
@@ -386,4 +386,4 @@ void ImageAnnotationList::read(
   }
 }
 
-}} // namespace fish_annotator::image_annotator
+}} // namespace tator::image_annotator

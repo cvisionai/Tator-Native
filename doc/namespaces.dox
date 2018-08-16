@@ -1,7 +1,7 @@
-/// @brief Top level namespace for FishAnnotator.
-namespace fish_annotator {
+/// @brief Top level namespace for Tator.
+namespace tator {
 
-/// @brief Namespace for the FishAnnotator GUI.
+/// @brief Namespace for the Tator GUI.
 namespace gui {}
 
 /// @brief Namespace for Video Slicer.

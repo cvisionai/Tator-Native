@@ -15,7 +15,7 @@
 
 #include "serialization.h"
 
-namespace fish_annotator {
+namespace tator {
 
 namespace pt = boost::property_tree;
 
@@ -115,7 +115,7 @@ private:
   std::vector<ColorScheme> schemes_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // COLOR_SCHEME_H
 

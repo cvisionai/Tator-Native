@@ -3,7 +3,7 @@
 #include "reassign_dialog.h"
 #include "ui_reassign_dialog.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 enum Presets {
   kCurrentToLast,
@@ -110,4 +110,4 @@ Reassignment ReassignDialog::getReassignment() {
 
 #include "moc_reassign_dialog.cpp"
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator

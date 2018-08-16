@@ -32,7 +32,7 @@
 class TestVideoAnnotator;
 #endif
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 /// Video annotation GUI.
 class MainWindow : public QMainWindow {
@@ -207,13 +207,13 @@ private slots:
   /// @param action Action that was done.
   void on_videoSlider_actionTriggered(int action);
 
-  /// Updates the current fish with a new species and updates the
+  /// Updates the current track with a new species and updates the
   ///        subtype options.
   ///
   /// @param text Selected species.
   void on_typeMenu_activated(const QString &text);
 
-  /// Updates the current fish with a new subspecies.
+  /// Updates the current track with a new subspecies.
   ///
   /// @param text Selected subspecies.
   void on_subTypeMenu_activated(const QString &text);
@@ -221,45 +221,45 @@ private slots:
   /// Updates the active track based on selected ID.
   ///
   /// @param text Selected ID.
-  void on_fishNumVal_activated(const QString &text);
+  void on_trackNumVal_activated(const QString &text);
 
-  /// Updates the current fish with a new count label.
+  /// Updates the current track with a new count label.
   ///
   /// @param text Selected count label.
   void on_countLabelMenu_activated(const QString &text);
 
-  /// Sets current fish to next lowest ID.
-  void on_prevFish_clicked();
+  /// Sets current track to next lowest ID.
+  void on_prevTrack_clicked();
 
-  /// Sets current fish to next highest ID.
-  void on_nextFish_clicked();
+  /// Sets current track to next highest ID.
+  void on_nextTrack_clicked();
 
-  /// Removes the current fish.
-  void on_removeFish_clicked();
+  /// Removes the current track.
+  void on_removeTrack_clicked();
 
-  /// Goes to the first frame where a detection for this fish
+  /// Goes to the first frame where a detection for this track
   ///        occurs, if any.
   void on_goToFrame_clicked();
 
-  /// Reassigns ID of current fish to another ID.
-  void on_reassignFish_clicked();
+  /// Reassigns ID of current track to another ID.
+  void on_reassignTrack_clicked();
 
-  /// Updates the current fish to the specified ID.
-  void on_goToFishVal_returnPressed();
+  /// Updates the current track to the specified ID.
+  void on_goToTrackVal_returnPressed();
 
   /// Updates the current frame.
   void on_goToFrameVal_returnPressed();
 
-  /// Adds a region for the current fish.  If a region already
-  ///        exists for this fish and frame, an error is raised.
+  /// Adds a region for the current track.  If a region already
+  ///        exists for this track and frame, an error is raised.
   void on_addRegion_clicked();
 
-  /// Removes a region for the current fish and frame.  If a
+  /// Removes a region for the current track and frame.  If a
   ///        region does not exist an error is raised.
   void on_removeRegion_clicked();
 
   /// Goes to next frame and copies the region corresponding to
-  ///        the current fish and frame.
+  ///        the current track and frame.
   void on_nextAndCopy_clicked();
 
   /// Redraws annotations.
@@ -344,8 +344,8 @@ private:
   /// Native playback rate.
   double native_rate_;
 
-  /// Currently selected fish ID.
-  qint64 fish_id_;
+  /// Currently selected track ID.
+  qint64 track_id_;
 
   /// Current annotations.
   std::list<std::pair<uint64_t, QGraphicsItem*>> current_annotations_;
@@ -368,7 +368,7 @@ private:
   /// Updates counts of each species in species controls.
   void updateSpeciesCounts();
 
-  /// Updates displayed fish statistics.
+  /// Updates displayed track statistics.
   void updateStats();
 
   /// Draws annotations for the last displayed frame.
@@ -395,6 +395,6 @@ private:
   void setEnabled(bool enable);
 };
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator
 
 #endif //VIDEO_ANNOTATOR_MAINWINDOW_H

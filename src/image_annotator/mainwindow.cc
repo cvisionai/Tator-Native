@@ -11,7 +11,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_annotator { namespace image_annotator {
+namespace tator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
 
@@ -434,4 +434,4 @@ void MainWindow::updateImage() {
 
 #include "moc_mainwindow.cpp"
 
-}} // namespace fish_annotator::image_annotator
+}} // namespace tator::image_annotator

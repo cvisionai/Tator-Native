@@ -15,7 +15,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_annotator { namespace db_uploader {
+namespace tator { namespace db_uploader {
 
 namespace fs = boost::filesystem;
 
@@ -623,4 +623,4 @@ void MainWindow::on_upload_clicked() {
 
 #include "moc_mainwindow.cpp"
 
-}} // namespace fish_annotator::db_uploader
+}} // namespace tator::db_uploader

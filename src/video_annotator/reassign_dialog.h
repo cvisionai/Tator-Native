@@ -11,7 +11,7 @@
 
 #include "ui_reassign_dialog.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 /// Contains data needed to do an ID reassignment.
 struct Reassignment {
@@ -75,7 +75,7 @@ private:
   /// Last frame.
   qint64 last_frame_;
 
-  /// ID of fish to be reassigned.
+  /// ID of track to be reassigned.
   qint64 id_;
 
   /// ID of new track.
@@ -88,6 +88,6 @@ private:
   std::unique_ptr<Ui::ReassignDialog> ui_;
 };
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator
 
 #endif // REASSIGN_DIALOG_H
