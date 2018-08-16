@@ -851,7 +851,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
            </font>
           </property>
           <property name="text">
-           <string>Total Track</string>
+           <string>Total Tracks</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
