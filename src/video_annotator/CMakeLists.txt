@@ -63,10 +63,10 @@ elseif( APPLE )
     Qt5::Widgets
     Qt5::PrintSupport
     ${Boost_LIBRARIES}
-    /usr/local/Cellar/ffmpeg/3.4.2/lib/libavformat.dylib
-    /usr/local/Cellar/ffmpeg/3.4.2/lib/libavcodec.dylib
-    /usr/local/Cellar/ffmpeg/3.4.2/lib/libavutil.dylib
-    /usr/local/Cellar/ffmpeg/3.4.2/lib/libswscale.dylib
+    /usr/local/lib/libavformat.dylib
+    /usr/local/lib/libavcodec.dylib
+    /usr/local/lib/libavutil.dylib
+    /usr/local/lib/libswscale.dylib
     )
 elseif( UNIX )
   add_executable( video_annotator
