@@ -67,13 +67,13 @@ The Qt5 static libraries should now be built.
 
 Boost Binaries on Windows
 ------------------------------------
-1\. Download the prebuilt binaries for [Boost 1.62][BoostBinaries].
+1\. Download the prebuilt binaries for [Boost 1.65.1][BoostBinaries].
 
 2\. Run the installer.
 
 FFMPEG Binaries on Windows
 --------------------------
-1\. Download the prebuilt binaries for [FFMPEG 3.3.2][FFMPEGBinaries], 
+1\. Download the prebuilt binaries for [FFMPEG 3.3.4][FFMPEGBinaries], 
     both the developer and shared versions.
 
 2\. Extract both.  Copy the contents of the bin directory in the shared
@@ -83,47 +83,29 @@ FFMPEG Binaries on Windows
 Building the application on Windows
 -----------------------------------
 
-1\. It is recommended on Windows to use the CMake GUI to configure the
-    build.  Open the CMake GUI, set the source directory to the top level
-    Tator repository directory, and set the build directory to a
-    subdirectory of this called *build*.  Something like:
+1\. Create a build directory and run cmake.  For example:
 
-    Where is the source code: C:/local/Tator
-    Where to build the binaries: C:/local/Tator/build
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
+mkdir build
+cd build
+cmake .. -G "Visual Studio 15 2017 Win64" ^
+-DBOOST_ROOT=C:/local/boost_1_65_1 ^
+-DBOOST_LIBRARYDIR=C:/local/boost_1_65_1/lib64-msvc-14.1 ^
+-DQt5_DIR=C:/local/qt5/qtbase/lib/cmake/Qt5 ^
+-DFFMPEG_LIBRARY_DIR=C:/local/ffmpeg_3_4_2/lib ^
+-DFFMPEG_INCLUDE_DIR=C:/local/ffmpeg_3_4_2/include
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2\. Press configure, allow CMake to create the build directory, and select
-    the same generator that was used to build the dependencies.
+Your library paths may differ depending on where you installed them.
 
-3\. Tator uses find_package commands to find dependencies.  Sometimes
-these libraries require hints to be found properly, especially on Windows.
-The first time Tator is built, it will generate a file at
-cmake/TatorFindLibsHints.cmake which contains the hints for these
-libraries.  The default values are set to the environment variables for
-the system, however if they are not set you can modify this file manually
-to point to the proper directories.  
-For example,  
-
-    set( CMAKE_PREFIX_PATH "D:/Projects/qt5/qtbase")
-    set( BOOST_ROOT "D:/Projects/boost_1_62_0"  )
-    set( BOOST_LIBRARYDIR "D:/Projects/boost_1_62_0/lib64-msvc-14.0" )
-    set( FFMPEG_LIBRARY_DIR "D:/Projects/ffmpeg/lib")
-    set( FFMPEG_INCLUDE_DIR "D:/Projects/ffmpeg/include")
-
-After the file is generated it will not be overwritten next time Tator is 
-built, so this manual modification is only necessary for fresh builds.  
-Modify this file until the libraries are found and the configure step 
-completes successfully.
-
-4\. Press generate.
-
-5\. From a Visual Studio command prompt, navigate to the build subdirectory
+3\. From a Visual Studio command prompt, navigate to the build subdirectory
     and type:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 cmake --build . --target INSTALL --config Release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-6\. When the build completes, the applications will be located in the
+4\. When the build completes, the applications will be located in the
     build/inst subdirectory.  If a different installation location is
     desired, cmake can be invoked with the variable CMAKE_INSTALL_PREFIX
     set to the install directory.
@@ -135,6 +117,6 @@ cmake --build . --target INSTALL --config Release
 [zlib]: https://github.com/madler/zlib
 [libjpeg]: https://github.com/LuaDist/libjpeg
 [libpng]: https://github.com/glennrp/libpng
-[BoostBinaries]: https://sourceforge.net/projects/boost/files/boost-binaries/1.62.0/
+[BoostBinaries]: https://sourceforge.net/projects/boost/files/boost-binaries/1.65.1/
 [FFMPEGBinaries]: https://ffmpeg.zeranoe.com/builds/
 
