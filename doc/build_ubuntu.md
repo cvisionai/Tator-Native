@@ -4,14 +4,13 @@ Ubuntu build instructions
 Building the application on Ubuntu
 ----------------------------------
 
+Note these instructions now only apply to Ubuntu 18.04 LTS.
+
 1\. Install required libraries:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-sudo apt install qtbase5-dev libboost-dev libboost-thread-dev \
-                 libboost-filesystem-dev 
-sudo add-apt-repository ppa:jonathonf/ffmpeg-3
-sudo apt update; sudo apt upgrade
-sudo apt install libavformat-dev libswscale-dev
+sudo apt install qtbase5-dev libboost-all-dev ffmpeg libavcodec-dev \
+libavformat-dev libswscale-dev
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
