@@ -11,7 +11,7 @@
 
 #include "serialization.h"
 
-namespace fish_annotator { namespace db_uploader {
+namespace tator { namespace db_uploader {
 
 namespace pt = boost::property_tree;
 
@@ -50,5 +50,5 @@ private:
   std::string username_;
 };
 
-}} // namespace fish_annotator::db_uploader
+}} // namespace tator::db_uploader
 #endif // DATABASE_INFO_H

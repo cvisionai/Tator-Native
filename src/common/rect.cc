@@ -1,6 +1,6 @@
 #include "rect.h"
 
-namespace fish_annotator {
+namespace tator {
 
 Rect::Rect(const Rect &r) {
   x = r.x;
@@ -16,5 +16,5 @@ Rect::Rect(int64_t x, int64_t y, int64_t w, int64_t h)
   , h(h) {
 }
 
-} // namespace fish_annotator
+} // namespace tator
 

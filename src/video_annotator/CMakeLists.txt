@@ -19,11 +19,11 @@ include_directories(
 
 # Add video annotator executable
 if( WIN32 )
-  file( COPY ${FISHDET_ICON} DESTINATION . )
+  file( COPY ${TATOR_ICON} DESTINATION . )
   add_executable( video_annotator WIN32 
     ${VIDEO_ANNOTATOR_SOURCES} 
     ${VIDEO_ANNOTATOR_RESOURCES}
-    ${FISHDET_RES_FILE} 
+    ${TATOR_RES_FILE} 
     )
   target_link_libraries(
     video_annotator
@@ -48,13 +48,13 @@ if( WIN32 )
 elseif( APPLE )
   add_executable( video_annotator MACOSX_BUNDLE
     ${VIDEO_ANNOTATOR_SOURCES} 
-    ${FISHDET_ICON_FULL}
-    ${FISHDET_RES_FILE} 
+    ${TATOR_ICON_FULL}
+    ${TATOR_RES_FILE} 
     )
   set_target_properties( video_annotator PROPERTIES
-    MACOSX_BUNDLE_ICON_FILE ${FISHDET_ICON}
+    MACOSX_BUNDLE_ICON_FILE ${TATOR_ICON}
     OUTPUT_NAME "Video Annotator" )
-  set_source_files_properties( ${FISHDET_ICON_FULL} PROPERTIES
+  set_source_files_properties( ${TATOR_ICON_FULL} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources" )
   target_link_libraries(
     video_annotator
@@ -63,15 +63,15 @@ elseif( APPLE )
     Qt5::Widgets
     Qt5::PrintSupport
     ${Boost_LIBRARIES}
-    avformat
-    avcodec
-    avutil
-    swscale
+    /usr/local/lib/libavformat.dylib
+    /usr/local/lib/libavcodec.dylib
+    /usr/local/lib/libavutil.dylib
+    /usr/local/lib/libswscale.dylib
     )
 elseif( UNIX )
   add_executable( video_annotator
     ${VIDEO_ANNOTATOR_SOURCES} 
-    ${FISHDET_RES_FILE}
+    ${TATOR_RES_FILE}
     )
   target_link_libraries(
     video_annotator

@@ -6,7 +6,7 @@
 #include "species_controls.h"
 #include "ui_species_controls.h"
 
-namespace fish_annotator {
+namespace tator {
 
 SpeciesControls::SpeciesControls(QWidget *parent)
   : ui_(new Ui::SpeciesControls)
@@ -260,4 +260,4 @@ void SpeciesControls::setCount(uint64_t count, const std::string &species) {
 
 #include "moc_species_controls.cpp"
 
-} // namespace fish_annotator
+} // namespace tator

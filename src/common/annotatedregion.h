@@ -12,7 +12,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 
-namespace fish_annotator {
+namespace tator {
 
 /// Possible types of mouse movements while dragging.
 enum Drag {
@@ -40,10 +40,15 @@ public:
   /// @param annotation Annotation associated with this region.
   /// @param bounding_rect Bounding rect for this region.
   /// @param box_color Color of the box.
-  AnnotatedRegion(uint64_t uid,
-                  std::shared_ptr<Info> annotation,
-                  const QRectF &bounding_rect,
-                  QColor box_color);
+  /// @param species Species of this detection.
+  /// @param prob Probability of this detection for the given species.
+  AnnotatedRegion(
+    int64_t uid,
+    std::shared_ptr<Info> annotation,
+    const QRectF &bounding_rect,
+    QColor box_color,
+    const QString& species="",
+    double prob=-1.0);
 
   /// Reimplemented from QGraphicsItem.
   ///
@@ -71,7 +76,7 @@ public:
   /// Gets the ID associated with this region.
   ///
   /// @return Unique ID associated with this region.
-  uint64_t getUID();
+  int64_t getUID();
 
   /// Gets the bounding box associated with this region.
   ///
@@ -86,7 +91,13 @@ private:
   std::shared_ptr<Info> annotation_;
 
   /// ID associated with this object.
-  uint64_t uid_;
+  int64_t uid_;
+
+  /// Species of this annotation.
+  QString species_;
+
+  /// Probability of this annotation.
+  double prob_;
 
   /// Bounding rectangle.
   QRectF bounding_rect_;
@@ -119,12 +130,16 @@ private:
 
 template<typename Info>
 AnnotatedRegion<Info>::AnnotatedRegion(
-  uint64_t uid,
+  int64_t uid,
   std::shared_ptr<Info> annotation,
   const QRectF &bounding_rect,
-  QColor box_color)
+  QColor box_color,
+  const QString& species,
+  double prob)
   : annotation_(annotation)
   , uid_(uid)
+  , species_(species)
+  , prob_(prob)
   , bounding_rect_(bounding_rect)
   , drag_()
   , min_dim_(std::min(bounding_rect_.width(), bounding_rect_.height()))
@@ -342,25 +357,39 @@ void AnnotatedRegion<Info>::paint(QPainter *painter,
   painter->drawRect(rect());
   // draw UID
   QString text("000000");
+  QString info = "";
+  int hfactor = 0;
+  if(uid_ > -1) {
+    info = QString::number(uid_) + "\n" + info;
+    hfactor++;
+  }
+  if(prob_ > -0.5) {
+    info = QString::number(prob_, 'G', 4) + "\n" + info;
+    hfactor++;
+  }
+  if(species_ != "") {
+    info = species_ + "\n" + info;
+    hfactor++;
+  }
   QFontMetrics fm = painter->fontMetrics();
   int width = fm.width(text);
   QBrush brush;
   brush.setColor(Qt::gray);
   QRectF text_area = QRectF(
     rect().right() - width,
-    rect().bottom() - fm.height(),
+    rect().bottom() - hfactor * fm.height(),
     width,
-    fm.height()
+    hfactor * fm.height()
     );
   painter->fillRect(text_area, QBrush(QColor(64, 64, 64, 64)));
   painter->drawText(
       text_area,
-      QString::number(uid_),
+      info,
       QTextOption(Qt::AlignRight));
 }
 
 template<typename Info>
-uint64_t AnnotatedRegion<Info>::getUID() {
+int64_t AnnotatedRegion<Info>::getUID() {
   return uid_;
 }
 
@@ -387,6 +416,6 @@ void AnnotatedRegion<Info>::updateAnnotation() {
   annotation_->area_.h = area.height();
 }
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATEDREGION_H

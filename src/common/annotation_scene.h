@@ -13,7 +13,7 @@
 
 #include "annotation_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Defines mouse behavior based on current drawing state.
 enum Mode {
@@ -60,6 +60,15 @@ signals:
   ///
   /// @param dot Location of completed annotation.
   void dotFinished(const QPointF &dot);
+
+  /// Notifies that an item has been made active.
+  ///
+  /// @param item Pointer to active item.
+  void itemActivated(const QGraphicsItem &item);
+
+  /// Notifies that an annotation should be deleted.
+  ///
+  void deleteAnn();
 protected:
   /// Initiates drawing of an annotation if mode is kDraw.
   ///
@@ -99,6 +108,9 @@ private:
   /// Dot item.
   QGraphicsEllipseItem *dot_item_;
 
+  /// QGraphicsItem
+  QGraphicsItem *active_item_;
+
   /// Whether annotation should be continual.
   const bool continual_;
 
@@ -108,6 +120,6 @@ private:
   void makeItemsControllable(bool controllable);
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATION_SCENE_H

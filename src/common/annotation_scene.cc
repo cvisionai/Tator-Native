@@ -1,8 +1,8 @@
 #include <QGraphicsView>
-
+#include <QTransform>
 #include "annotation_scene.h"
 
-namespace fish_annotator {
+namespace tator {
 
 AnnotationScene::AnnotationScene(QObject *parent, bool continual)
   : QGraphicsScene(parent)
@@ -12,6 +12,7 @@ AnnotationScene::AnnotationScene(QObject *parent, bool continual)
   , rect_item_(nullptr)
   , line_item_(nullptr)
   , dot_item_(nullptr)
+  , active_item_(nullptr)
   , continual_(continual) {
 }
 
@@ -71,6 +72,10 @@ void AnnotationScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         break;
     }
   }
+  else if (mode_ == kSelect && sceneRect().contains(event->scenePos()) == true) {
+    active_item_ = itemAt(event->scenePos(), QTransform());
+  }
+  
   QGraphicsScene::mousePressEvent(event);
 }
 
@@ -153,6 +158,10 @@ void AnnotationScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
       QApplication::restoreOverrideCursor();
     }
   }
+  else if (mode_ == kSelect && active_item_ != nullptr){
+    emit itemActivated(*active_item_);
+  }
+  
   QGraphicsScene::mouseReleaseEvent(event);
 }
 
@@ -160,6 +169,9 @@ void AnnotationScene::keyPressEvent(QKeyEvent *event) {
   if(mode_ == kDraw && event->key() == Qt::Key_Escape) {
     setMode(kSelect);
     QApplication::restoreOverrideCursor();
+  }
+  if (event->key() == Qt::Key_Delete) {
+    emit deleteAnn();
   }
   QGraphicsScene::keyPressEvent(event);
 }
@@ -179,4 +191,4 @@ void AnnotationScene::makeItemsControllable(bool controllable) {
 
 #include "moc_annotation_scene.cpp"
 
-} // namespace fish_annotator
+} // namespace tator

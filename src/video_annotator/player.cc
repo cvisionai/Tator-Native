@@ -6,7 +6,7 @@
 
 #include "player.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace {
   static const int kMaxBufferSize = 50;
@@ -143,17 +143,29 @@ void Player::loadVideo(QString filename) {
     nullptr, nullptr, nullptr);
   seek_map_.clear();
   qint64 frame_index = 0;
+  avcodec_flush_buffers(codec_context_);
   while(true) {
+    av_packet_unref(&packet_);
     status = av_read_frame(format_context_, &packet_);
     if(status < 0) {
       break;
     }
-    if(packet_.stream_index == stream_index_ && packet_.dts >= 0) {
+    if(packet_.stream_index == stream_index_) {
       if(frame_index % 1000 == 0) {
         emit loadProgress(frame_index / 1000);
       }
-      seek_map_.left.insert({frame_index, packet_.dts});
-      ++frame_index;
+      int got_picture = 1;
+      if(frame_index < 10) {
+        status = avcodec_decode_video2(
+          codec_context_, 
+          frame_,
+          &got_picture,
+          &packet_);
+      }
+      if(got_picture) {
+        seek_map_.left.insert({frame_index, packet_.dts});
+        ++frame_index;
+      }
     }
   }
   av_seek_frame(
@@ -207,69 +219,68 @@ void Player::stop() {
 
 void Player::getOneFrame() {
   QMutexLocker locker(&frame_mutex_);
-  while(true) {
+  bool valid = false;
+  int count_errs = 0;
+  const int max_errs = 1 << 9;
+  int got_picture;
+  while(!valid) {
+    av_packet_unref(&packet_);
     int status = av_read_frame(format_context_, &packet_);
+    if(status == AVERROR(EAGAIN)) {
+      continue;
+    }
     if(status < 0) {
+      stop();
       break;
     }
-    if(packet_.stream_index == stream_index_) {
+    if(packet_.stream_index != stream_index_) {
+      av_packet_unref(&packet_);
+    }
+    else {
       auto it = seek_map_.right.find(packet_.dts);
-      if(it == seek_map_.right.end() && packet_.dts >= 0) {
-        emit error("Could not find decompression timestamp!");
-        return;
-      }
-      else {
+      if(!(it == seek_map_.right.end())) {
         dec_frame_ = it->second;
       }
-      status = avcodec_send_packet(codec_context_, &packet_);
-      if(status < 0) {
-        // Intentionally neglecting to post an error message here
-        // as this may be a bad packet.
-        return;
+      status = avcodec_decode_video2(
+        codec_context_, 
+        frame_,
+        &got_picture,
+        &packet_);
+      if(got_picture) {
+        sws_scale(
+            sws_context_, 
+            frame_->data, 
+            frame_->linesize, 
+            0, 
+            codec_context_->height, 
+            frame_rgb_->data, 
+            frame_rgb_->linesize);
+        uint8_t *src = (uint8_t*)(frame_rgb_->data[0]);
+        for(int y = 0; y < codec_context_->height; ++y) {
+          QRgb *scan_line = (QRgb*)image_.scanLine(y);
+          for(int x = 0; x < codec_context_->width; ++x) {
+            scan_line[x] = qRgb(src[3*x], src[3*x+1], src[3*x+2]);
+          }
+          src += frame_rgb_->linesize[0];
+        }
+        frame_buffer_.insert({dec_frame_, image_});
+        if(frame_buffer_.size() > kMaxBufferSize) {
+          for(auto buf_it = frame_buffer_.cbegin(); 
+              buf_it != frame_buffer_.cend();) {
+            if(qAbs(buf_it->first - req_frame_) > kTrimBound) {
+              buf_it = frame_buffer_.erase(buf_it);
+            }
+            else {
+              ++buf_it;
+            }
+          }
+        }
+        valid = true;
       }
-      while(status >= 0) {
-        status = avcodec_receive_frame(codec_context_, frame_);
-        if(status == AVERROR_EOF) {
-          stopped_ = true;
+      else {
+        count_errs++;
+        if(count_errs > max_errs) {
           break;
-        }
-        else if(status == AVERROR(EAGAIN)) {
-          break;
-        }
-        else if(status < 0) {
-          emit error("Error while receiving a frame from the decoder!");
-          return;
-        }
-        else {
-          sws_scale(
-              sws_context_, 
-              frame_->data, 
-              frame_->linesize, 
-              0, 
-              codec_context_->height, 
-              frame_rgb_->data, 
-              frame_rgb_->linesize);
-          uint8_t *src = (uint8_t*)(frame_rgb_->data[0]);
-          for(int y = 0; y < codec_context_->height; ++y) {
-            QRgb *scan_line = (QRgb*)image_.scanLine(y);
-            for(int x = 0; x < codec_context_->width; ++x) {
-              scan_line[x] = qRgb(src[3*x], src[3*x+1], src[3*x+2]);
-            }
-            src += frame_rgb_->linesize[0];
-          }
-          frame_buffer_.insert({dec_frame_, image_});
-          if(frame_buffer_.size() > kMaxBufferSize) {
-            for(auto buf_it = frame_buffer_.cbegin(); 
-                buf_it != frame_buffer_.cend();) {
-              if(qAbs(buf_it->first - req_frame_) > kTrimBound) {
-                buf_it = frame_buffer_.erase(buf_it);
-              }
-              else {
-                ++buf_it;
-              }
-            }
-          }
-          return;
         }
       }
     }
@@ -394,5 +405,5 @@ void Player::reinit() {
 
 #include "moc_player.cpp"
 
-}} // namespace fish_annotator::gui
+}} // namespace tator::gui
 

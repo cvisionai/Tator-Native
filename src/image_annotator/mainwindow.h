@@ -30,7 +30,7 @@
 class TestImageAnnotator;
 #endif
 
-namespace fish_annotator { namespace image_annotator {
+namespace tator { namespace image_annotator {
 
 /// Main window for image annotator.
 class MainWindow : public QMainWindow {
@@ -68,7 +68,7 @@ private slots:
   void on_setMetadata_triggered();
 
   /// Moves to the image indicated by image slider.
-  void on_imageSlider_valueChanged();
+  void on_imageSlider_sliderReleased();
 
   /// Updates display to show/hide annotations.
   void on_showAnnotations_stateChanged();
@@ -147,7 +147,7 @@ private:
   std::string subspecies_;
 
   /// Current annotations.
-  std::vector<QGraphicsItem*> current_annotations_;
+  std::vector<std::pair<uint64_t, QGraphicsItem*>> current_annotations_;
 
   /// Map of species names to colors.
   QMap<QString, QColor> color_map_;
@@ -168,8 +168,17 @@ private:
 
   /// Updates species counts.
   void updateSpeciesCounts();
+
+  /// Sets current active annotation
+  void setItemActive(const QGraphicsItem &item);
+
+  /// Deletes current active annotation
+  void deleteCurrentAnn();
+
+  /// Updates image.
+  void updateImage();
 };
 
-}} // namespace fish_annotator::image_annotator
+}} // namespace tator::image_annotator
 
 #endif //IMAGE_ANNOTATOR_MAINWINDOW_H

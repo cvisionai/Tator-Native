@@ -3,7 +3,7 @@
 #include "species_widget.h"
 #include "ui_species_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 namespace {
   static const int default_colors[7][3] = {
@@ -87,4 +87,4 @@ void SpeciesWidget::updateButtonColor() {
 
 #include "moc_species_widget.cpp"
 
-} // namespace fish_annotator
+} // namespace tator

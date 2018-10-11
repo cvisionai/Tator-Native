@@ -1,10 +1,10 @@
-FishAnnotator                                                  {#mainpage}
-============
+Tator
+=====
 
 Introduction
 ============
 
-**FishAnnotator** is a standalone, cross-platform application for creating 
+**Tator** is a standalone, cross-platform application for creating 
 and visualizing video annotations.  It currently supports annotations in 
 the form of bounding boxes, lines, and dots.  Annotations are saved in the 
 widely supported JSON format, which can be imported separately for use in 
@@ -13,11 +13,12 @@ the user with the flexible graphical user interface.  It includes a single
 frame increment and decrement, and guarantees frame level accuracy for 
 annotations, even after seeking.  Videos are decoded using FFMPEG, so a 
 wide variety of codecs are supported; there is no need to convert your 
-videos to imagery or other format before annotating.
+videos to imagery or other format before annotating.  Tator also includes
+an image annotator.
 
-FishAnnotator is maintained and supported by [CVision][CVision].
+Tator is maintained and supported by [CVision AI][CVision].
 
-![fishannotatorscreenshot][Screenshot]
+![tatorscreenshot][Screenshot]
 
 Getting started
 ===============
@@ -27,7 +28,7 @@ Getting started
 * [Build from source](doc/build.md)
 * [Developer info](doc/developer.md)
 
-[CVision]: http://www.cvisionconsulting.com
+[CVision]: http://www.cvisionai.com
 [Screenshot]: https://user-images.githubusercontent.com/7937658/34340866-b71f8fea-e959-11e7-9b02-03bf2b43d483.png
-[Manual]: https://github.com/BGWoodward/FishAnnotator/releases/download/v0.3.0/Video.And.Image.Annotator.Manual.v0_3_0.pdf
-[LatestRelease]: http://github.com/BGWoodward/FishAnnotator/releases
+[Manual]: https://github.com/cvisionai/Tator/releases/download/v0.3.0/Video.And.Image.Annotator.Manual.v0_3_0.pdf
+[LatestRelease]: http://github.com/cvisionai/Tator/releases

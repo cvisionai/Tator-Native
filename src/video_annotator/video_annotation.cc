@@ -6,7 +6,7 @@
 
 #include "video_annotation.h"
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace {
   template<typename L, typename R>
@@ -321,16 +321,21 @@ VideoAnnotation::getDetectionAnnotationsById(uint64_t id) {
   return annotations;
 }
 
-std::map<std::string, uint64_t> VideoAnnotation::getCounts() {
+std::map<std::string, uint64_t> VideoAnnotation::getCounts(uint64_t start, 
+  uint64_t stop) {
   std::map<std::string, uint64_t> counts;
   for(auto const &t : tracks_by_species_.left) {
-    const std::string &species = t.first.first;
-    auto count_it = counts.find(species);
-    if(count_it != counts.end()) {
-      count_it->second++;
-    }
-    else {
-      counts.insert({species, 1});
+    bool past_start = (*(t.second))->frame_added_ >= start;
+    bool before_stop = (*(t.second))->frame_added_ <= stop || stop == -1;
+    if(past_start && before_stop) {
+      const std::string &species = t.first.first;
+      auto count_it = counts.find(species);
+      if(count_it != counts.end()) {
+        count_it->second++;
+      }
+      else {
+        counts.insert({species, 1});
+      }
     }
   }
   return counts;
@@ -469,6 +474,14 @@ uint64_t VideoAnnotation::earliestTrackID() {
   }
 }
 
+std::list<uint64_t> VideoAnnotation::getTrackIDs() {
+  std::list<uint64_t> id_list;
+  for (auto track : track_list_) {
+    id_list.push_back(track->id_);
+  }
+  return id_list;
+}
+
 void VideoAnnotation::insertGlobalStateAnnotation(
   uint64_t frame,
   const GlobalStateAnnotation &ann) {
@@ -550,7 +563,7 @@ void VideoAnnotation::write(
     meta += tow_type;
     std::ofstream csv(csv_path.string());
     csv << "Trip_ID,Tow_Number,Reviewer,Tow_Type,";
-    csv << "Fish_Number,Fish_Type,Species,Frame,Time_In_Video";
+    csv << "Track_Number,Track_Type,Species,Frame,Time_In_Video";
     csv << std::endl;
     for(const auto &t : tracks_by_id_.left) {
       csv << meta;
@@ -699,4 +712,4 @@ void VideoAnnotation::boundFrame(uint64_t &frame) {
   }
 }
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator

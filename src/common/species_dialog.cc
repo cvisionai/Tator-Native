@@ -1,7 +1,7 @@
 #include "species_dialog.h"
 #include "ui_species_dialog.h"
 
-namespace fish_annotator {
+namespace tator {
 
 SpeciesDialog::SpeciesDialog(QWidget *parent)
   : QDialog(parent) 
@@ -51,4 +51,4 @@ void SpeciesDialog::setSpecies(const Species &species) {
 
 #include "moc_species_dialog.cpp"
 
-} // namespace fish_annotator
+} // namespace tator

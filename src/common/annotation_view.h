@@ -7,7 +7,7 @@
 #include <QGraphicsView>
 #include <QWheelEvent>
 
-namespace fish_annotator {
+namespace tator {
 
 /// View that implements zoom.
 class AnnotationView : public QGraphicsView {
@@ -35,6 +35,6 @@ private:
   int32_t zoom_;
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // ANNOTATION_VIEW_H

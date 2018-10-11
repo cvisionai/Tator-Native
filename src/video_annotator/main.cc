@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
 #if __unix__
   QFontDatabase::addApplicationFont(":/fonts/DejaVuSansCondensed.ttf");
 #endif
-  fish_annotator::video_annotator::MainWindow* w = 
-    new fish_annotator::video_annotator::MainWindow();
+  tator::video_annotator::MainWindow* w = 
+    new tator::video_annotator::MainWindow();
   w->setAttribute(Qt::WA_DeleteOnClose, true);
   w->show();
   return a.exec();

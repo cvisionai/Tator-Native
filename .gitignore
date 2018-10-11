@@ -11,10 +11,9 @@
 *.dll
 *.app
 Makefile*
-fishguibuild*
 ui_*
 /build*
 .DS_Store
-cmake/FishDetFindLibsHints.cmake
+cmake/TatorFindLibsHints.cmake
 doc/manual.md
 doxygen

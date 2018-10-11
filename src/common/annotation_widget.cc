@@ -1,7 +1,7 @@
 #include "annotation_widget.h"
 #include "ui_annotation_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 AnnotationWidget::AnnotationWidget(QWidget *parent)
   : QWidget(parent)
@@ -56,5 +56,5 @@ void AnnotationWidget::on_makeDot_toggled(bool checked) {
 
 #include "moc_annotation_widget.cpp"
 
-} // namespace fish_annotator
+} // namespace tator
 

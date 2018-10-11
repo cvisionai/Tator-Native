@@ -17,7 +17,7 @@
 class TestImageAnnotator;
 #endif
 
-namespace fish_annotator {
+namespace tator {
 
 /// Widget containing all species controls.
 class SpeciesControls : public QWidget {
@@ -121,6 +121,6 @@ private:
   void insertSpeciesWidget(const Species &species);
 };
 
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // SPECIES_CONTROLS_H

@@ -24,10 +24,10 @@ Building static Qt on Windows
 2\. Clone the [Qt5 repository][QtRepo] from github.
 
 3\. By default, the dev branch will be checked out.  Change the version to
-    v5.8.0:
+    v5.9.4:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-git checkout v5.8.0
+git checkout v5.9.4
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 4\. Navigate to the top level repository directory and type:
@@ -54,7 +54,7 @@ corresponding to your current branch.
 configure.bat -static -release -prefix "your\working\dir\qtbase"
 -platform win32-msvc2015 -qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype
 -opengl desktop -no-openssl -opensource -confirm-license -make libs -nomake
-tools -nomake examples -nomake tests -sql-odbc -plugin-sql-odbc
+tools -nomake examples -nomake tests -sql-odbc -plugin-sql-odbc -skip qtquick1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 8\. Type:
@@ -85,19 +85,19 @@ Building the application on Windows
 
 1\. It is recommended on Windows to use the CMake GUI to configure the
     build.  Open the CMake GUI, set the source directory to the top level
-    FishAnnotator repository directory, and set the build directory to a
+    Tator repository directory, and set the build directory to a
     subdirectory of this called *build*.  Something like:
 
-    Where is the source code: C:/local/FishAnnotator
-    Where to build the binaries: C:/local/FishAnnotator/build
+    Where is the source code: C:/local/Tator
+    Where to build the binaries: C:/local/Tator/build
 
 2\. Press configure, allow CMake to create the build directory, and select
     the same generator that was used to build the dependencies.
 
-3\. FishAnnotator uses find_package commands to find dependencies.  Sometimes
+3\. Tator uses find_package commands to find dependencies.  Sometimes
 these libraries require hints to be found properly, especially on Windows.
-The first time FishAnnotator is built, it will generate a file at
-cmake/FishDetFindLibsHints.cmake which contains the hints for these
+The first time Tator is built, it will generate a file at
+cmake/TatorFindLibsHints.cmake which contains the hints for these
 libraries.  The default values are set to the environment variables for
 the system, however if they are not set you can modify this file manually
 to point to the proper directories.  
@@ -109,10 +109,10 @@ For example,
     set( FFMPEG_LIBRARY_DIR "D:/Projects/ffmpeg/lib")
     set( FFMPEG_INCLUDE_DIR "D:/Projects/ffmpeg/include")
 
-After the file is generated it will
-  not be overwritten next FishAnnotator is built, so this manual modification
-  is only necessary for fresh builds.  Modify this file until the libraries
-  are found and the configure step completes successfully.
+After the file is generated it will not be overwritten next time Tator is 
+built, so this manual modification is only necessary for fresh builds.  
+Modify this file until the libraries are found and the configure step 
+completes successfully.
 
 4\. Press generate.
 

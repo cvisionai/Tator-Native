@@ -9,7 +9,7 @@
 
 #include "ui_string_state_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 /// Represents a single global state with string type.
 class StringStateWidget : public QWidget {
@@ -40,6 +40,6 @@ private:
   std::unique_ptr<Ui::StringStateWidget> ui_;
 };
   
-} // namespace fish_annotator
+} // namespace tator
 
 #endif // STRING_STATE_WIDGET_H

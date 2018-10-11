@@ -11,7 +11,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-namespace fish_annotator { namespace image_annotator {
+namespace tator { namespace image_annotator {
 
 namespace fs = boost::filesystem;
 
@@ -65,6 +65,10 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::addLineAnnotation);
   QObject::connect(scene_.get(), &AnnotationScene::dotFinished,
       this, &MainWindow::addDotAnnotation);
+  QObject::connect(scene_.get(), &AnnotationScene::itemActivated,
+      this, &MainWindow::setItemActive);
+  QObject::connect(scene_.get(), &AnnotationScene::deleteAnn,
+      this, &MainWindow::deleteCurrentAnn);
   fs::path current_path(QDir::currentPath().toStdString());
   fs::path default_species = current_path / fs::path("default.species");
   if(fs::exists(default_species)) {
@@ -86,6 +90,7 @@ void MainWindow::on_next_clicked() {
   int next_val = ui_->imageSlider->value() + 1;
   if(next_val <= ui_->imageSlider->maximum()) {
     ui_->imageSlider->setValue(next_val);
+    updateImage();
   }
 }
 
@@ -93,6 +98,7 @@ void MainWindow::on_prev_clicked() {
   int prev_val = ui_->imageSlider->value() - 1;
   if(prev_val >= ui_->imageSlider->minimum()) {
     ui_->imageSlider->setValue(prev_val);
+    updateImage();
   }
 }
 
@@ -113,7 +119,7 @@ void MainWindow::on_saveAnnotations_triggered() {
 void MainWindow::on_saveAnnotatedImage_triggered() {
   QString file_path = QFileDialog::getSaveFileName(
     this,
-    "Select output file.", 
+    "Select output file.",
     QCoreApplication::applicationDirPath(),
     "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp)");
   if(!file_path.isEmpty()) {
@@ -130,37 +136,12 @@ void MainWindow::on_setMetadata_triggered() {
   }
 }
 
-void MainWindow::on_imageSlider_valueChanged() {
-  scene_->clear();
-  current_annotations_.clear();
-  std::string filename = image_files_[ui_->imageSlider->value()].string();
-  QImage current(filename.c_str());
-  if(!current.isNull()) {
-    scene_->addPixmap(QPixmap::fromImage(current));
-    scene_->setSceneRect(current.rect());
-    view_->setScene(scene_.get());
-    view_->show();
-    ui_->fileNameValue->setText(filename.c_str());
-    fs::path img_path(filename);
-    auto annotations =
-      annotations_->getImageAnnotations(img_path.filename());
-    for(auto annotation : annotations) {
-    }
-    drawAnnotations();
-    updateSpeciesCounts();
-    updateTypeMenus();
-  }
-  else {
-    QMessageBox err;
-    err.critical(0, "Error", std::string(
-        std::string("Error loading image ")
-      + filename
-      + std::string(".")).c_str());
-  }
+void MainWindow::on_imageSlider_sliderReleased() {
+  updateImage();
 }
 
 void MainWindow::on_showAnnotations_stateChanged() {
-  on_imageSlider_valueChanged();
+  updateImage();
 }
 
 void MainWindow::on_idSelection_activated(const QString &id) {
@@ -188,7 +169,7 @@ void MainWindow::on_removeAnnotation_clicked() {
     auto current_image = image_files_[ui_->imageSlider->value()];
     int id = ui_->idSelection->currentText().toInt();
     annotations_->remove(current_image, id);
-    on_imageSlider_valueChanged();
+    updateImage();
   }
 }
 
@@ -294,7 +275,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
     ui_->imageSlider->setValue(0);
     annotations_->read(image_files_);
     species_controls_->loadFromVector(annotations_->getAllSpecies());
-    on_imageSlider_valueChanged();
+    updateImage();
     view_->setBoundingRect(scene_->sceneRect());
     view_->fitInView();
     scene_->setMode(kSelect);
@@ -318,6 +299,20 @@ std::shared_ptr<ImageAnnotation> MainWindow::currentAnnotation() {
     }
   }
   return nullptr;
+}
+
+void MainWindow::setItemActive(
+  const QGraphicsItem &item) {
+  for(auto ann : current_annotations_) {
+    if(ann.second == &item) {
+      ui_->idSelection->setCurrentText(QString::number(ann.first));
+      updateTypeMenus();
+    }
+  }
+}
+
+void MainWindow::deleteCurrentAnn() {
+  on_removeAnnotation_clicked();
 }
 
 void MainWindow::updateTypeMenus() {
@@ -344,7 +339,7 @@ void MainWindow::updateTypeMenus() {
 
 void MainWindow::drawAnnotations() {
   for(auto ann : current_annotations_) {
-    scene_->removeItem(ann);
+    scene_->removeItem(ann.second);
   }
   current_annotations_.clear();
   ui_->idSelection->clear();
@@ -369,19 +364,19 @@ void MainWindow::drawAnnotations() {
               box = new AnnotatedRegion<ImageAnnotation>(
                   annotation->id_, annotation, current.rect(), color);
               scene_->addItem(box);
-              current_annotations_.push_back(box);
+              current_annotations_.emplace_back(annotation->id_, box);
               break;
             case kLine:
               line = new AnnotatedLine<ImageAnnotation>(
                   annotation->id_, annotation, current.rect(), color);
               scene_->addItem(line);
-              current_annotations_.push_back(line);
+              current_annotations_.emplace_back(annotation->id_, line);
               break;
             case kDot:
               dot = new AnnotatedDot<ImageAnnotation>(
                   annotation->id_, annotation, current.rect(), color);
               scene_->addItem(dot);
-              current_annotations_.push_back(dot);
+              current_annotations_.emplace_back(annotation->id_, dot);
               break;
           }
         }
@@ -407,6 +402,36 @@ void MainWindow::updateSpeciesCounts() {
   }
 }
 
+void MainWindow::updateImage() {
+  scene_->clear();
+  current_annotations_.clear();
+  std::string filename = image_files_[ui_->imageSlider->value()].string();
+  QImage current(filename.c_str());
+  if(!current.isNull()) {
+    scene_->addPixmap(QPixmap::fromImage(current));
+    scene_->setSceneRect(current.rect());
+    view_->setScene(scene_.get());
+    view_->show();
+    ui_->fileNameValue->setText(filename.c_str());
+    fs::path img_path(filename);
+    auto annotations =
+      annotations_->getImageAnnotations(img_path.filename());
+    for(auto annotation : annotations) {
+    }
+    drawAnnotations();
+    updateSpeciesCounts();
+    updateTypeMenus();
+    scene_->setMode(kSelect);
+  }
+  else {
+    QMessageBox err;
+    err.critical(0, "Error", std::string(
+        std::string("Error loading image ")
+      + filename
+      + std::string(".")).c_str());
+  }
+}
+
 #include "moc_mainwindow.cpp"
 
-}} // namespace fish_annotator::image_annotator
+}} // namespace tator::image_annotator

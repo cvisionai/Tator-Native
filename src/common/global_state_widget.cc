@@ -6,7 +6,7 @@
 #include "global_state_widget.h"
 #include "ui_global_state_widget.h"
 
-namespace fish_annotator {
+namespace tator {
 
 GlobalStateWidget::GlobalStateWidget(QWidget *parent)
   : QWidget(parent)
@@ -77,4 +77,4 @@ void GlobalStateWidget::updateStringState(
   emit stateChanged();
 }
 
-} // namespace fish_annotator
+} // namespace tator

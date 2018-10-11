@@ -17,6 +17,9 @@
 #include <QWaitCondition>
 
 extern "C" {
+#include <libavutil/attributes.h>
+#undef attribute_deprecated
+#define attribute_deprecated
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/frame.h>
@@ -25,7 +28,7 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 /// Class for playing video.
 class Player : public QObject {	
@@ -194,6 +197,6 @@ private:
     void reinit();
 };
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator
 
 #endif // VIDEO_ANNOTATOR_PLAYER_H

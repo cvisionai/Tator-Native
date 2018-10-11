@@ -25,7 +25,7 @@
 class TestVideoAnnotation;
 #endif
 
-namespace fish_annotator { namespace video_annotator {
+namespace tator { namespace video_annotator {
 
 namespace pt = boost::property_tree;
 
@@ -119,7 +119,7 @@ inline bool operator<(
   return &(*lhs) < &(*rhs);
 }
 
-/// Specifies how a track should contribute to overall fish count.
+/// Specifies how a track should contribute to overall track count.
 enum CountLabel {
   kIgnore,
   kEntering,
@@ -263,8 +263,11 @@ public:
 
   /// Gets counts for each species in a video.
   ///
+  /// @param start Frame to start counting.
+  /// @param stop Last frame to count, -1 means til end of video.
   /// @return Counts for each species in the annotations.
-  std::map<std::string, uint64_t> getCounts();
+  std::map<std::string, uint64_t> getCounts(uint64_t start = 0, 
+    uint64_t stop = -1);
 
   /// Gets all species in the annotations.
   ///
@@ -321,6 +324,10 @@ public:
   ///
   /// @return ID of earliest track.
   uint64_t earliestTrackID();
+
+  /// Gets list of all IDs in the track list
+  ///
+  std::list<uint64_t> getTrackIDs();
 
   /// Inserts global state annotation.
   ///
@@ -433,6 +440,6 @@ private:
   void boundFrame(uint64_t &frame);
 };
 
-}} // namespace fish_annotator::video_annotator
+}} // namespace tator::video_annotator
 
 #endif // VIDEO_ANNOTATION_H
