@@ -64,6 +64,9 @@ private slots:
   /// Saves an annotated image.
   void on_saveAnnotatedImage_triggered();
 
+  /// Saves series of annotated images.
+  void on_saveAnnotatedImageBatch_triggered();
+
   /// Sets metadata for the annotations.
   void on_setMetadata_triggered();
 
@@ -177,6 +180,9 @@ private:
 
   /// Updates image.
   void updateImage();
+
+  /// Enables or disables controls.
+  void setEnabled(bool enable);
 };
 
 }} // namespace tator::image_annotator

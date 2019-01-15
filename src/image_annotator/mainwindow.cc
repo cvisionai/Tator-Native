@@ -2,6 +2,7 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QProgressDialog>
 
 #include "species_dialog.h"
 #include "metadata_dialog.h"
@@ -128,6 +129,39 @@ void MainWindow::on_saveAnnotatedImage_triggered() {
   }
 }
 
+void MainWindow::on_saveAnnotatedImageBatch_triggered() {
+  QString save_path = QFileDialog::getExistingDirectory(
+      this, tr("Choose save directory"));
+  fs::path path = save_path.toStdString();
+  setEnabled(false);
+  qint64 max_pos = ui_->imageSlider->maximum();
+  std::unique_ptr<QProgressDialog> prog(new QProgressDialog(
+       "Writing images to disk...",
+       "",
+       0,
+       max_pos,
+       this,
+       Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint));
+  prog->setCancelButton(0);
+  prog->setWindowTitle("Writing images");
+  prog->setMinimumDuration(10);
+  for (qint64 pos = 0; pos <= max_pos; ++pos) {
+    QCoreApplication::processEvents();
+    prog->setValue(pos);
+    ui_->imageSlider->setValue(pos);
+    updateImage();
+    std::string fname = 
+      image_files_[ui_->imageSlider->value()].stem().string();
+    std::string ext =
+      image_files_[ui_->imageSlider->value()].extension().string();
+    fname += "_annotated";
+    fname += ext;
+    fs::path file_path = path / fname;
+    QPixmap pixmap = view_->grab();
+    pixmap.save(file_path.string().c_str());
+  }
+  setEnabled(true);
+}
 void MainWindow::on_setMetadata_triggered() {
   MetadataDialog *dlg = new MetadataDialog(this);
   dlg->setMetadata(metadata_);
@@ -231,6 +265,24 @@ void MainWindow::addDotAnnotation(const QPointF &dot) {
   }
 }
 
+void MainWindow::setEnabled(bool enable) {
+  ui_->idLabel->setEnabled(enable);
+  ui_->speciesLabel->setEnabled(enable);
+  ui_->subspeciesLabel->setEnabled(enable);
+  ui_->idSelection->setEnabled(enable);
+  ui_->typeMenu->setEnabled(enable);
+  ui_->subTypeMenu->setEnabled(enable);
+  ui_->removeAnnotation->setEnabled(enable);
+  ui_->showAnnotations->setEnabled(enable);
+  ui_->setMetadata->setEnabled(enable);
+  ui_->next->setEnabled(enable);
+  ui_->prev->setEnabled(enable);
+  ui_->saveAnnotations->setEnabled(enable);
+  ui_->saveAnnotatedImage->setEnabled(enable);
+  ui_->saveAnnotatedImageBatch->setEnabled(enable);
+  ui_->imageSlider->setEnabled(enable);
+}
+
 void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   image_files_.clear();
   annotations_->clear();
@@ -255,20 +307,7 @@ void MainWindow::onLoadDirectorySuccess(const QString &image_dir) {
   }
   std::sort(image_files_.begin(), image_files_.end());
   if(image_files_.size() > 0) {
-    ui_->idLabel->setEnabled(true);
-    ui_->speciesLabel->setEnabled(true);
-    ui_->subspeciesLabel->setEnabled(true);
-    ui_->idSelection->setEnabled(true);
-    ui_->typeMenu->setEnabled(true);
-    ui_->subTypeMenu->setEnabled(true);
-    ui_->removeAnnotation->setEnabled(true);
-    ui_->showAnnotations->setEnabled(true);
-    ui_->setMetadata->setEnabled(true);
-    ui_->next->setEnabled(true);
-    ui_->prev->setEnabled(true);
-    ui_->saveAnnotations->setEnabled(true);
-    ui_->saveAnnotatedImage->setEnabled(true);
-    ui_->imageSlider->setEnabled(true);
+    setEnabled(true);
     ui_->imageSlider->setMinimum(0);
     ui_->imageSlider->setMaximum(static_cast<int>(image_files_.size() - 1));
     ui_->imageSlider->setSingleStep(1);
