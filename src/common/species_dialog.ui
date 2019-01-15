@@ -20,7 +20,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>New Species</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>

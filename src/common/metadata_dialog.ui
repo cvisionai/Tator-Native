@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>392</width>
-    <height>161</height>
+    <height>164</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -20,7 +20,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Metadata</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>

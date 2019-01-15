@@ -32,18 +32,7 @@ set( CMAKE_AUTOMOC ON )
 set( CMAKE_AUTOUIC ON )
 set( CMAKE_AUTORCC ON )
 
-# Generate the library hints file if necessary
-set( HINTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/TatorFindLibsHints.cmake" )
-if( EXISTS "${HINTS_PATH}" )
-  message( STATUS "Found library hints file at ${HINTS_PATH}" )
-else()
-  message( STATUS "Generating library hints file at ${HINTS_PATH}" )
-  message( STATUS "This file can be modified to work with your build system" )
-  configure_file( "${HINTS_PATH}.in" "${HINTS_PATH}" )
-endif()
-
 # Find necessary third party libraries
-include( "cmake/TatorFindLibsHints.cmake" )
 include( "cmake/TatorFindLibs.cmake" )
 
 # Add necessary include directories
@@ -79,12 +68,12 @@ if( ${BUILD_INSTALLER} )
   set( CPACK_PACKAGE_NAME "Tator" )
   set( CPACK_PACKAGE_DESCRIPTION_SUMMARY 
        "An application for video and image annotation." )
-  set( CPACK_PACKAGE_VENDOR "CVision AI" )
+  set( CPACK_PACKAGE_VENDOR "CVision AI Inc" )
   set( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
   set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md" )
-  set( CPACK_PACKAGE_VERSION "1.0.0" )
-  set( CPACK_PACKAGE_VERSION_MAJOR "1" )
-  set( CPACK_PACKAGE_VERSION_MINOR "0" )
+  set( CPACK_PACKAGE_VERSION "0.4.0" )
+  set( CPACK_PACKAGE_VERSION_MAJOR "0" )
+  set( CPACK_PACKAGE_VERSION_MINOR "4" )
   set( CPACK_PACKAGE_VERSION_PATCH "0" )
   set( CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME} )
   if( WIN32 )

@@ -560,6 +560,7 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <addaction name="loadAnnotationFile"/>
     <addaction name="saveAnnotationFile"/>
     <addaction name="writeImage"/>
+    <addaction name="writeImageSequence"/>
     <addaction name="setMetadata"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -570,6 +571,8 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <addaction name="viewSpecies"/>
     <addaction name="viewProbability"/>
     <addaction name="viewCount"/>
+    <addaction name="separator"/>
+    <addaction name="colorizeByTrack"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -1597,6 +1600,9 @@ border-radius: 3px;</string>
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>ID</string>
    </property>
@@ -1623,6 +1629,25 @@ border-radius: 3px;</string>
    </property>
    <property name="text">
     <string>Count</string>
+   </property>
+  </action>
+  <action name="writeImageSequence">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Write Image Sequence...</string>
+   </property>
+  </action>
+  <action name="colorizeByTrack">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Colorize by track</string>
    </property>
   </action>
  </widget>
