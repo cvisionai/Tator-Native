@@ -10,7 +10,7 @@ Note these instructions now only apply to Ubuntu 18.04 LTS.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 sudo apt install qtbase5-dev libboost-all-dev ffmpeg libavcodec-dev \
-libavformat-dev libswscale-dev
+libavformat-dev libswscale-dev cmake
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
