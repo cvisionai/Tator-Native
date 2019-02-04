@@ -26,6 +26,7 @@
 #include "metadata.h"
 #include "video_annotation.h"
 #include "player.h"
+#include "playlist_view.h"
 #include "ui_mainwindow.h"
 
 #ifndef NO_TESTING
@@ -318,6 +319,8 @@ private:
 
   /// Annotation widget.
   std::unique_ptr<AnnotationWidget> annotation_widget_;
+
+  std::unique_ptr<PlaylistView> playlist_controls_;
 
   /// Global state widget.
   std::unique_ptr<GlobalStateWidget> global_state_widget_;
