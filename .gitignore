@@ -17,3 +17,4 @@ ui_*
 cmake/TatorFindLibsHints.cmake
 doc/manual.md
 doxygen
+*~
