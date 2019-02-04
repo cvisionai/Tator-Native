@@ -229,6 +229,19 @@ void MainWindow::on_minusOneFrame_clicked() {
   emit requestPrevFrame();
 }
 
+void MainWindow::on_loadPlaylist_triggered() {
+  QString file_str = QFileDialog::getOpenFileName(
+      this,
+      tr("Open Playlist"),
+      QFileInfo(video_path_).dir().canonicalPath(),
+      tr("Playlist Files (*.xspf)"));
+  QFileInfo file(file_str);
+  if(file.exists() && file.isFile()) {
+    ui_->currentSpeed->setText("Loading playlist, please wait...");
+    
+  }
+}
+    
 void MainWindow::on_loadVideo_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,

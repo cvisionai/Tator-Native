@@ -75,16 +75,7 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
+            <property name="margin">
              <number>0</number>
             </property>
             <item>
@@ -549,13 +540,14 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
      <x>0</x>
      <y>0</y>
      <width>871</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="loadPlaylist"/>
     <addaction name="loadVideo"/>
     <addaction name="loadAnnotationFile"/>
     <addaction name="saveAnnotationFile"/>
@@ -1648,6 +1640,11 @@ border-radius: 3px;</string>
    </property>
    <property name="text">
     <string>Colorize by track</string>
+   </property>
+  </action>
+  <action name="loadPlaylist">
+   <property name="text">
+    <string>Load Playlist...</string>
    </property>
   </action>
  </widget>

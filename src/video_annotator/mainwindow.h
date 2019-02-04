@@ -176,6 +176,9 @@ private slots:
   void on_minusOneFrame_clicked();
 
   /// Loads a video file.
+  void on_loadPlaylist_triggered();
+  
+  /// Loads a video file.
   void on_loadVideo_triggered();
 
   /// Loads an annotation file.
