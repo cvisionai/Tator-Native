@@ -3,9 +3,9 @@
 namespace tator {
 
   PlaylistView::PlaylistView(QWidget *parent) :
-    ui_(new Ui::PlaylistView)
+    QDockWidget(parent)
+    , ui_(new Ui::PlaylistView)
   {
-    setParent(parent);
     ui_->setupUi(this);
   }
 }
