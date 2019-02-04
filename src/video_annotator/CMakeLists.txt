@@ -6,6 +6,7 @@ set( VIDEO_ANNOTATOR_SOURCES
   "video_annotation.cc"
   "reassign_dialog.cc"
   "playlist_view.cc"
+  "playlist.cc"
 )
 set( VIDEO_ANNOTATOR_RESOURCES
   "video_annotator.rc"

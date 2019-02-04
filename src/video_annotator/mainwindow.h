@@ -320,6 +320,7 @@ private:
   /// Annotation widget.
   std::unique_ptr<AnnotationWidget> annotation_widget_;
 
+  /// Playlist control widget
   std::unique_ptr<PlaylistView> playlist_controls_;
 
   /// Global state widget.
