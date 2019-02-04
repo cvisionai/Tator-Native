@@ -554,6 +554,8 @@ QPushButton#plusOneFrame:pressed{background-color: rgb(190, 190, 190); border-st
     <addaction name="writeImage"/>
     <addaction name="writeImageSequence"/>
     <addaction name="setMetadata"/>
+    <addaction name="separator"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -1645,6 +1647,11 @@ border-radius: 3px;</string>
   <action name="loadPlaylist">
    <property name="text">
     <string>Load Playlist...</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>

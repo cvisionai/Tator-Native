@@ -132,6 +132,11 @@ signals:
   /// Requests stop.
   void requestStop();
 
+  /// Requests load playlist
+  ///
+  /// @param file Full path to file to be loaded.
+  void requestLoadPlaylist(QString file);
+  
   /// Requests load video.
   ///
   /// @param file Full path to file to be loaded.
@@ -175,6 +180,9 @@ private slots:
   /// Decrements the video by one frame.
   void on_minusOneFrame_clicked();
 
+  /// Loads a video file.
+  void on_exit_triggered();
+  
   /// Loads a video file.
   void on_loadPlaylist_triggered();
   

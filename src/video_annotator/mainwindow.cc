@@ -238,10 +238,15 @@ void MainWindow::on_loadPlaylist_triggered() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     ui_->currentSpeed->setText("Loading playlist, please wait...");
-    
+    emit requestLoadPlaylist(file_str);
   }
 }
-    
+
+void MainWindow::on_exit_triggered()
+{
+  QApplication::exit(0);
+}
+
 void MainWindow::on_loadVideo_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
