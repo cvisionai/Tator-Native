@@ -86,6 +86,7 @@ elseif( UNIX )
     Qt5::PrintSupport
     ${QT_THIRD_PARTY_LIBS}
     Qt5::DBus
+    Qt5::Xml
     ${Boost_LIBRARIES}
     avformat
     avcodec

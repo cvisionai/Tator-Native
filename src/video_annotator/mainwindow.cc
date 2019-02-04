@@ -153,6 +153,10 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadVideo,
       player, &Player::loadVideo);
+  QObject::connect(playlist_controls_->playlist(), &Playlist::error,
+      this, &MainWindow::handlePlayerError);
+  QObject::connect(this, &MainWindow::requestLoadPlaylist,
+		   playlist_controls_->playlist(), &Playlist::loadFromXSPF);
   QObject::connect(this, &MainWindow::requestPlay,
       player, &Player::play);
   QObject::connect(this, &MainWindow::requestStop,

@@ -1,6 +1,6 @@
 # --- Qt5 ---
 find_package( Qt5 REQUIRED COMPONENTS 
-  Core Gui Widgets PrintSupport OpenGL Sql )
+  Core Gui Widgets PrintSupport OpenGL Sql Xml)
 if( NOT APPLE )
   find_package( Qt5 REQUIRED COMPONENTS DBus )
 endif()
