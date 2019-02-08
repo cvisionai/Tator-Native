@@ -23,6 +23,7 @@ namespace tator
     QXmlStreamReader xml(&xmlFile);
     while (xml.readNextStartElement())
     {
+      //std::cout << xml.name().toString().toStdString() << std::endl;
       if (xml.name() == "title")
       {
 	// Do nothing with title for now
@@ -34,15 +35,27 @@ namespace tator
       }
       if (xml.name() == "track")
       {
-	std::cout << "Processing track." << std::endl;
-	xml.skipCurrentElement();
+	std::cout << "Inserting track" << std::endl;;
+	if (insertTrack(xml) != 0)
+	{
+	  error(QString("Error in '%1'. Near line=%2 col%3. ")
+		.arg(filename)
+		.arg(xml.lineNumber())
+		.arg(xml.columnNumber())
+	       );
+	  
+	  return -1;
+	}
       }
     }
+    
     if (xml.hasError())
     {
-	error(QString("Could not parse '%1'").arg(filename));
+      error(QString("Could not parse '%1'").arg(filename));
+      return -1;
     }
-    
+
+    return 0;
   }
 
   int Playlist::rowCount(const QModelIndex &parent) const
@@ -64,6 +77,21 @@ namespace tator
     }
 
     return QVariant();
+  }
+
+  int Playlist::insertTrack(QXmlStreamReader &xml)
+  {
+    auto type = xml.readNext();
+    while (!(type == QXmlStreamReader::EndElement && xml.name() == "track"))
+    {
+      if (type == QXmlStreamReader::StartElement)
+      {
+	std::cout << xml.name().toString().toStdString() << std::endl;
+      }
+      type = xml.readNext();
+    }
+    std::cout << "Done Track" << std::endl;
+    return 0;
   }
   
 } // end of namespace tator

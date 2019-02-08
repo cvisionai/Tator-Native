@@ -2,6 +2,8 @@
 #define PLAYLIST_H
 
 #include <QAbstractTableModel>
+class QXmlStreamReader;
+#include <QList>
 
 namespace tator
 {
@@ -17,6 +19,9 @@ namespace tator
 		  int role = Qt::DisplayRole) const override;
   signals:
     void error(const QString &error);
+
+  private:
+    int insertTrack(QXmlStreamReader &xml);
   };
 } // end of namespace tator
 #endif
