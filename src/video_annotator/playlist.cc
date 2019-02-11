@@ -8,7 +8,7 @@ namespace tator
 {
   Playlist::Playlist(QObject *parent) : QAbstractTableModel(parent)
   {
-    
+    //emit headerDataChanged(
   }
 
   int Playlist::loadFromXSPF(QString filename)
@@ -31,11 +31,10 @@ namespace tator
       }
       if (xml.name() == "trackList")
       {
-	std::cout << "Processing tracklist." << std::endl;
+	// Don't need to do anything for tracklist
       }
       if (xml.name() == "track")
       {
-	std::cout << "Inserting track" << std::endl;;
 	if (insertTrack(xml) != 0)
 	{
 	  error(QString("Error in '%1'. Near line=%2 col%3. ")
@@ -48,32 +47,75 @@ namespace tator
 	}
       }
     }
-    
+
     if (xml.hasError())
     {
       error(QString("Could not parse '%1'").arg(filename));
       return -1;
     }
 
+    emit dataChanged(index(0,0), index(size(), 1));
     return 0;
   }
 
   int Playlist::rowCount(const QModelIndex &parent) const
   {
-    return 1;
+    return trackList_.size();
   }
   
   int Playlist::columnCount(const QModelIndex &parent) const
   {
-    return 1;
+    return NUM_VISIBLE_COLUMNS;
   }
-  
-  QVariant Playlist::data(const QModelIndex &index,
-			  int role) const
+
+  QVariant Playlist::headerData(int section, Qt::Orientation orientation, int role) const
   {
+    if (role != Qt::DisplayRole)
+    {
+      return QVariant();
+    }
+
+    if (orientation == Qt::Horizontal)
+    {
+      switch (section)
+      {
+      case TITLE:
+	return "Time";
+	break;
+      case ALBUM:
+	return "UUID";
+	break;
+      }
+    }
+
+    return QVariant();
+  }
+  QVariant Playlist::data(const QModelIndex &index, int role) const
+  { 
+    if (index.isValid() == false)
+    {
+      return QVariant();
+    }
+    
+    const int row = index.row();
+    
+    if (row > rowCount() || row < 0)
+    {
+      return QVariant();
+    }
+
     if (role == Qt::DisplayRole)
     {
-      return QString("Test %1").arg(index.row());
+      std::cout << "Processing data request @ " << index.row() << std::endl;
+      switch (index.column())
+      {
+      case TITLE:
+	return trackList_[row].title;
+	break;
+      case ALBUM:
+	return trackList_[row].album;
+	break;
+      }
     }
 
     return QVariant();
@@ -81,16 +123,32 @@ namespace tator
 
   int Playlist::insertTrack(QXmlStreamReader &xml)
   {
+    trackList_.append(Track());
+    struct Track &newTrack = trackList_.back();
     auto type = xml.readNext();
     while (!(type == QXmlStreamReader::EndElement && xml.name() == "track"))
     {
       if (type == QXmlStreamReader::StartElement)
       {
-	std::cout << xml.name().toString().toStdString() << std::endl;
+	if (xml.name() == "location")
+	{
+	  newTrack.location = xml.readElementText();
+	}
+	else if (xml.name() == "title")
+	{
+	  newTrack.title = xml.readElementText();
+	}
+	else if (xml.name() == "album")
+	{
+	  newTrack.album = xml.readElementText();
+	}
+	else
+	{
+	  // Skip other track elements.
+	}
       }
       type = xml.readNext();
     }
-    std::cout << "Done Track" << std::endl;
     return 0;
   }
   
