@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>PlaylistView</class>
  <widget class="QDockWidget" name="PlaylistView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>442</height>
+   </rect>
+  </property>
   <property name="features">
    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
   </property>
@@ -9,19 +17,21 @@
    <string>Playlist</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <widget class="QTreeView" name="treeView">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>311</width>
-      <height>501</height>
-     </rect>
-    </property>
-    <attribute name="headerVisible">
-     <bool>true</bool>
-    </attribute>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTreeView" name="treeView">
+      <attribute name="headerVisible">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="headerDefaultSectionSize">
+       <number>200</number>
+      </attribute>
+      <attribute name="headerHighlightSections">
+       <bool>true</bool>
+      </attribute>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

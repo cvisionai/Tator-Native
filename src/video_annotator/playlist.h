@@ -41,6 +41,9 @@ namespace tator
     /// Return human readable definitions for colunmn descriptions
     QVariant headerData(int section, Qt::Orientation oritentation, int role) const override;
 
+    /// Return editable flag to make copy + paste easier. 
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+
     /// @returns the number of elements in the playlist.
     const size_t size() const {return trackList_.size();}
 

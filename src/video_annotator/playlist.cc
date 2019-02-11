@@ -104,9 +104,8 @@ namespace tator
       return QVariant();
     }
 
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole)
     {
-      std::cout << "Processing data request @ " << index.row() << std::endl;
       switch (index.column())
       {
       case TITLE:
@@ -149,7 +148,11 @@ namespace tator
       }
       type = xml.readNext();
     }
-    return 0;
+    return 0; 
   }
-  
+
+  Qt::ItemFlags Playlist::flags(const QModelIndex &index) const
+  {
+    return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+  }
 } // end of namespace tator
