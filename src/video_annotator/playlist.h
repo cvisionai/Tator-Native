@@ -42,7 +42,16 @@ namespace tator
     /// @returns Playlist::NUM_OF_VISABLE_COLUMNS
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    /// Returns the value of the data at a given index 
+    /// Returns the value of the data at a given index
+    ///
+    /// This also handles formatting of the data based on status:
+    /// - Processed == check mark
+    /// - In process == italicized
+    /// - Error == Red and bold
+    ///
+    /// It is up to an external entity to inform the playlist class of each track's status.
+    ///
+    /// @returns QVariant based on role input.
     QVariant data(const QModelIndex &index,
 		  int role = Qt::DisplayRole) const override;
 
