@@ -14,6 +14,14 @@ namespace tator
   {
     Q_OBJECT
   public:
+    enum Status
+    {
+      PROCESSED,
+      IN_PROCESS,
+      NOT_PROCESSED,
+      ERROR
+    };
+    
     Playlist(QObject *parent);
 
     /// Load a given XSPF file (clears current records)
@@ -47,8 +55,21 @@ namespace tator
     /// @returns the number of elements in the playlist.
     const size_t size() const {return trackList_.size();}
 
+    const QStringRef location(size_t idx)
+    {
+      if (idx < size())
+      {
+	return QStringRef(&trackList_[idx].location);
+      }
+      else
+      {
+	return nullptr;
+      }
+    }
+
   signals:
     void error(const QString &error);
+    void playlistLoaded();
 
   private:
     /// Struct representing the <track> object under <trackList>
@@ -62,13 +83,14 @@ namespace tator
       QString location; //< <location> File location on disk/server
       QString title; //< <title> Title to display of video file
       QString album; //< <album> Album of video recording
+      Status status = NOT_PROCESSED; //< Current state of the track
     };
 
     /// Enum to describe column positions
     enum 
     {
-      TITLE = 0,
-      ALBUM = 1,
+      TITLE,
+      ALBUM,
       NUM_VISIBLE_COLUMNS
     };
 

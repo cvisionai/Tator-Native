@@ -1,18 +1,23 @@
 #include "playlist.h"
 
-#include <QXmlStreamReader>
+#include <QBrush>
 #include <QFile>
+#include <QFont>
+#include <QXmlStreamReader>
+
 #include <iostream>
 
 namespace tator
 {
   Playlist::Playlist(QObject *parent) : QAbstractTableModel(parent)
   {
-    //emit headerDataChanged(
+    
   }
 
   int Playlist::loadFromXSPF(QString filename)
   {
+    trackList_.clear();
+    
     QFile xmlFile(filename);
     xmlFile.open(QIODevice::ReadOnly);
     if (xmlFile.isOpen() == false)
@@ -55,6 +60,7 @@ namespace tator
     }
 
     emit dataChanged(index(0,0), index(size(), 1));
+    emit playlistLoaded();
     return 0;
   }
 
@@ -77,6 +83,19 @@ namespace tator
 
     if (orientation == Qt::Horizontal)
     {
+      if (role == Qt::SizeHintRole)
+      {
+	switch (section)
+	{
+	case TITLE:
+	  return QSize(300,0);
+	  break;
+	case ALBUM:
+	  return QSize(100,0);
+	  break;
+	}
+      }
+
       switch (section)
       {
       case TITLE:
@@ -117,6 +136,58 @@ namespace tator
       }
     }
 
+    if (role == Qt::CheckStateRole)
+    {
+      switch(index.column())
+      {
+	//Errors don't get check boxes
+      case TITLE:
+	switch (trackList_[row].status)
+	{
+	case PROCESSED:
+	  return Qt::Checked;
+	  break;
+	case IN_PROCESS:
+	  return Qt::PartiallyChecked;
+	  break;
+	case NOT_PROCESSED:
+	  return Qt::Unchecked;
+	  break;
+	}
+
+      }
+    }
+
+
+
+    // Handle formatting of text
+    if (role == Qt::FontRole)
+    {
+      if (trackList_[row].status == ERROR)
+      {	
+	QFont font;
+	font.setBold(true);
+	return font;
+      }
+      if (trackList_[row].status == IN_PROCESS)
+      {	
+	QFont font;
+	font.setItalic(true);
+	return font;
+      }
+    }
+
+    if (role == Qt::ForegroundRole)
+    {
+      if (trackList_[row].status == ERROR)
+      {	
+	QBrush brush(Qt::red);
+	return brush;
+      }
+    }
+
+    
+  
     return QVariant();
   }
 
