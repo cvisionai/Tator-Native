@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
   , ui_(new Ui::MainWindow)
   , species_controls_(new SpeciesControls)
   , annotation_widget_(new AnnotationWidget)
-  , playlist_controls_(new PlaylistView)
+  , playlist_controls_(new PlaylistView(this))
   , global_state_widget_(new GlobalStateWidget)
   , current_global_state_(new GlobalStateAnnotation)
   , load_progress_(nullptr)
@@ -112,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui_->navigationDockWidget,
     ui_->speciesDockWidget);
   tabifyDockWidget(ui_->navigationDockWidget,
-		   playlist_controls_.get());
+  		   playlist_controls_.get());
   playlist_controls_->hide();
   QObject::connect(species_controls_.get(), &SpeciesControls::individualAdded,
       this, &MainWindow::addIndividual);
@@ -247,7 +247,10 @@ void MainWindow::on_loadPlaylist_triggered() {
   if(file.exists() && file.isFile()) {
     ui_->currentSpeed->setText("Loading playlist, please wait...");
     emit requestLoadPlaylist(file_str);
+    playlist_controls_->setFloating(true);
     playlist_controls_->show();
+    QPoint winPos=pos() + QPoint(size().width() + 10,0);
+    playlist_controls_->move(winPos);
   }
 }
 
