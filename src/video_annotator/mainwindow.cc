@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
   , global_state_widget_(new GlobalStateWidget)
   , current_global_state_(new GlobalStateAnnotation)
   , load_progress_(nullptr)
+  , workspace_(new Workspace(this))
   , video_path_()
   , width_(0)
   , height_(0)
@@ -157,6 +158,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadPlaylist,
 		   playlist_controls_->playlist(), &Playlist::loadFromXSPF);
+  QObject::connect(playlist_controls_->playlist(),&Playlist::playlistLoaded,
+		   workspace_.get(),&Workspace::validatePlaylist);
   QObject::connect(this, &MainWindow::requestPlay,
       player, &Player::play);
   QObject::connect(this, &MainWindow::requestStop,

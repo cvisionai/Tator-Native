@@ -28,6 +28,7 @@
 #include "player.h"
 #include "playlist_view.h"
 #include "ui_mainwindow.h"
+#include "workspace.h"
 
 #ifndef NO_TESTING
 class TestVideoAnnotator;
@@ -331,6 +332,8 @@ private:
 
   /// Load progress dialog.
   std::unique_ptr<QProgressDialog> load_progress_;
+
+  std::unique_ptr<Workspace> workspace_;
 
   /// Path to loaded video.
   QString video_path_;

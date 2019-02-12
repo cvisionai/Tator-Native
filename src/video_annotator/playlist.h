@@ -2,8 +2,9 @@
 #define PLAYLIST_H
 
 #include <QAbstractTableModel>
-class QXmlStreamReader;
 #include <QList>
+
+class QXmlStreamReader;
 
 namespace tator
 {
@@ -64,17 +65,24 @@ namespace tator
     /// @returns the number of elements in the playlist.
     const size_t size() const {return trackList_.size();}
 
-    const QStringRef location(size_t idx)
+    const QString &location(size_t idx)
     {
+      static const QString notFound = "NOT-FOUND";
       if (idx < size())
       {
-	return QStringRef(&trackList_[idx].location);
+	return trackList_[idx].location;
       }
       else
       {
-	return nullptr;
+	return notFound;
       }
     }
+
+    /// @returns Get the status for a given track
+    Status status(size_t idx) const;
+
+    /// @returns Sets the status for a given track
+    int setStatus(size_t idx, Status status);
 
   signals:
     void error(const QString &error);

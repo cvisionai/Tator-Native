@@ -226,4 +226,24 @@ namespace tator
   {
     return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
   }
+
+  Playlist::Status Playlist::status(size_t idx) const
+  {
+    if (idx < size())
+    {
+	return trackList_[idx].status;
+    }
+  }
+
+  int Playlist::setStatus(size_t idx, Playlist::Status status)
+  {
+    if (idx < size())
+    {
+	trackList_[idx].status = status;
+    }
+    else
+    {
+      return 0;
+    }
+  }
 } // end of namespace tator

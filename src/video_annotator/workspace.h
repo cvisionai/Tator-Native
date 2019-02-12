@@ -10,11 +10,13 @@ namespace tator
   ///
   /// Specifically this class determines what state a video file is in
   /// [annotated, not annotated, error]
-  class Workspace : QObject
+  class Workspace : public QObject
   {
     Q_OBJECT
   public:
     Workspace(QObject *parent = nullptr);
+  public slots:
+    void validatePlaylist();
   };
 }
 #endif
