@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "playlist.h"
+
 namespace tator
 {
   /// Workspace is a helper to Playlist to handle workflow related
@@ -17,6 +19,8 @@ namespace tator
     Workspace(QObject *parent = nullptr);
   public slots:
     void validatePlaylist();
+  private:
+    Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
   };
 }
 #endif

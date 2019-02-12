@@ -184,6 +184,12 @@ namespace tator
 	QBrush brush(Qt::red);
 	return brush;
       }
+
+      if (trackList_[row].status == PROCESSED)
+      {	
+	QBrush brush(Qt::darkGray);
+	return brush;
+      }
     }
 
     
