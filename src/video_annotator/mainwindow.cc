@@ -249,6 +249,8 @@ void MainWindow::on_loadPlaylist_triggered() {
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     ui_->currentSpeed->setText("Loading playlist, please wait...");
+    ui_->loadVideo->setVisible(false);
+    ui_->loadAnnotationFile->setVisible(false);
     emit requestLoadPlaylist(file_str);
     playlist_controls_->setFloating(true);
     playlist_controls_->show();
