@@ -16,11 +16,25 @@ namespace tator
   {
     Q_OBJECT
   public:
-    Workspace(QObject *parent = nullptr);
+    Workspace(QObject *parent, Playlist *playlist);
   public slots:
     void validatePlaylist();
+    void handleUserSelection(const QModelIndex &idx);
+  signals:
+    void requestLoadVideo(QString file);
+    
   private:
+    QString getJSONPath(const QString &mp4FilePath);
     Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
+
+    int currentIdx_;
+    enum FileState
+    {
+      SAVED,
+      NOT_SAVED
+    } fileState_;
+
+    Playlist *playlist_;
   };
 }
 #endif

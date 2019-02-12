@@ -237,7 +237,7 @@ namespace tator
   {
     if (idx < size())
     {
-	return trackList_[idx].status;
+      return trackList_[idx].status;
     }
   }
 
@@ -245,7 +245,8 @@ namespace tator
   {
     if (idx < size())
     {
-	trackList_[idx].status = status;
+      emit dataChanged(index(idx,0), index(idx, 1));
+      trackList_[idx].status = status;
     }
     else
     {

@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
   , global_state_widget_(new GlobalStateWidget)
   , current_global_state_(new GlobalStateAnnotation)
   , load_progress_(nullptr)
-  , workspace_(new Workspace(this))
+  , workspace_(new Workspace(this,playlist_controls_->playlist()))
   , video_path_()
   , width_(0)
   , height_(0)
@@ -154,12 +154,6 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadVideo,
       player, &Player::loadVideo);
-  QObject::connect(playlist_controls_->playlist(), &Playlist::error,
-      this, &MainWindow::handlePlayerError);
-  QObject::connect(this, &MainWindow::requestLoadPlaylist,
-		   playlist_controls_->playlist(), &Playlist::loadFromXSPF);
-  QObject::connect(playlist_controls_->playlist(),&Playlist::playlistLoaded,
-		   workspace_.get(),&Workspace::validatePlaylist);
   QObject::connect(this, &MainWindow::requestPlay,
       player, &Player::play);
   QObject::connect(this, &MainWindow::requestStop,
@@ -178,6 +172,27 @@ MainWindow::MainWindow(QWidget *parent)
       player, &Player::deleteLater);
   QObject::connect(thread, &QThread::finished,
       thread, &QThread::deleteLater);
+
+  /// Playlist connections
+  QObject::connect(playlist_controls_->playlist(), &Playlist::error,
+      this, &MainWindow::handlePlayerError);
+  QObject::connect(this, &MainWindow::requestLoadPlaylist,
+		   playlist_controls_->playlist(), &Playlist::loadFromXSPF);
+  QObject::connect(playlist_controls_->playlist(),&Playlist::playlistLoaded,
+		   workspace_.get(),&Workspace::validatePlaylist);
+
+  // Handle both key + mouse presses
+  QObject::connect(playlist_controls_->ui()->treeView,
+		   SIGNAL(activated(const QModelIndex &)),
+		   workspace_.get(),
+		   SLOT(handleUserSelection(const QModelIndex &)));
+  QObject::connect(playlist_controls_->ui()->treeView,
+		   SIGNAL(clicked(const QModelIndex &)),
+		   workspace_.get(),
+		   SLOT(handleUserSelection(const QModelIndex &)));
+  QObject::connect(workspace_.get(), &Workspace::requestLoadVideo,
+		   player, &Player::loadVideo);
+  
   player->moveToThread(thread);
   thread->start();
   fs::path current_path(QDir::currentPath().toStdString());
