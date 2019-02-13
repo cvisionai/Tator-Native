@@ -52,8 +52,16 @@ namespace tator
       playlist_->setStatus(currentIdx_, status);
 
       emit requestLoadVideo(playlist_->location(currentIdx_));
-      
-      
+      QString jsonFile = getJSONPath(playlist_->location(currentIdx_));
+      QFileInfo info(jsonFile);
+      if (info.exists())
+      {
+	emit requestLoadAnnotationFile(jsonFile);
+      }
+      else
+      {
+	emit error(QString("Couldn't load %1").arg(jsonFile));
+      }
     }
 
     //Update current

@@ -53,6 +53,11 @@ protected:
   /// @param event Qt resize event pointer.
   void resizeEvent(QResizeEvent *event) override final;
 public slots:
+  /// Loads an annotation file
+  ///
+  ///
+  void loadAnnotationFile_request(QString file);
+  
   /// Displays a video frame.
   ///
   /// @param image Video frame to display.
@@ -143,6 +148,11 @@ signals:
   ///
   /// @param file Full path to file to be loaded.
   void requestLoadVideo(QString file);
+
+  /// Requests load annotation file
+  /// 
+  /// @param file Full path to the file to be loaded
+  void requestLoadAnnotationFile(QString file);
 
   /// Requests speed up.
   void requestSpeedUp();

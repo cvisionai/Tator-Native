@@ -154,6 +154,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadVideo,
       player, &Player::loadVideo);
+  QObject::connect(this, &MainWindow::requestLoadAnnotationFile,
+		   this, &MainWindow::loadAnnotationFile_request);
   QObject::connect(this, &MainWindow::requestPlay,
       player, &Player::play);
   QObject::connect(this, &MainWindow::requestStop,
@@ -180,7 +182,7 @@ MainWindow::MainWindow(QWidget *parent)
 		   playlist_controls_->playlist(), &Playlist::loadFromXSPF);
   QObject::connect(playlist_controls_->playlist(),&Playlist::playlistLoaded,
 		   workspace_.get(),&Workspace::validatePlaylist);
-
+  
   // Handle both key + mouse presses
   QObject::connect(playlist_controls_->ui()->treeView,
 		   SIGNAL(activated(const QModelIndex &)),
@@ -191,7 +193,14 @@ MainWindow::MainWindow(QWidget *parent)
 		   workspace_.get(),
 		   SLOT(handleUserSelection(const QModelIndex &)));
   QObject::connect(workspace_.get(), &Workspace::requestLoadVideo,
-		   player, &Player::loadVideo);
+		   player, &Player::loadVideo,
+		   Qt::BlockingQueuedConnection);
+  QObject::connect(workspace_.get(), &Workspace::requestLoadAnnotationFile,
+		   this, &MainWindow::loadAnnotationFile_request,
+		   Qt::BlockingQueuedConnection);
+  
+  QObject::connect(workspace_.get(), &Workspace::error,
+		   this, &MainWindow::handlePlayerError);
   
   player->moveToThread(thread);
   thread->start();
@@ -298,6 +307,11 @@ void MainWindow::on_loadAnnotationFile_triggered() {
       tr("Open Annotation File"),
       QFileInfo(video_path_).dir().canonicalPath(),
       tr("Annotation Files (*.json)"));
+  emit requestLoadAnnotationFile(file_str);
+}
+
+void MainWindow::loadAnnotationFile_request(QString file_str)
+{
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
     annotation_->clear();

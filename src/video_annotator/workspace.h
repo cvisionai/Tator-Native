@@ -22,6 +22,8 @@ namespace tator
     void handleUserSelection(const QModelIndex &idx);
   signals:
     void requestLoadVideo(QString file);
+    void requestLoadAnnotationFile(QString file);
+    void error(QString error);
     
   private:
     QString getJSONPath(const QString &mp4FilePath);
