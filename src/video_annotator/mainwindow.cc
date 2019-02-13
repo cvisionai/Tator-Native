@@ -268,7 +268,7 @@ void MainWindow::on_loadPlaylist_triggered() {
   QString file_str = QFileDialog::getOpenFileName(
       this,
       tr("Open Playlist"),
-      QFileInfo(video_path_).dir().canonicalPath(),
+      QDir::homePath(),
       tr("Playlist Files (*.xspf)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
