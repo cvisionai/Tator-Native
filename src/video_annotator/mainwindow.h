@@ -173,6 +173,9 @@ signals:
 
   /// Sent when an annotation file is updated
   void annotationFileUpdated();
+
+  /// Sent when an annotation file is saved.
+  void annotationFileSaved();
   
 private slots:
   /// Plays/pauses the video.

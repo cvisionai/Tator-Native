@@ -195,6 +195,8 @@ MainWindow::MainWindow(QWidget *parent)
 		   workspace_.get(), &Workspace::mediaLoaded);
   QObject::connect(this, &MainWindow::annotationFileUpdated,
 		   workspace_.get(), &Workspace::annotationFileUpdated);
+  QObject::connect(this, &MainWindow::annotationFileSaved,
+		   workspace_.get(), &Workspace::annotationFileSaved);
   QObject::connect(workspace_.get(), &Workspace::error,
 		   this, &MainWindow::handlePlayerError);
   
@@ -373,6 +375,8 @@ void MainWindow::on_saveAnnotationFile_triggered() {
         native_rate_,
         include_csv == QMessageBox::Yes);
   }
+
+  emit annotationFileSaved();
 }
 
 void MainWindow::on_writeImage_triggered() {

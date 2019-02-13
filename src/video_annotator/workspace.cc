@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QMessageBox>
 
 #include "playlist.h"
 
@@ -42,43 +43,7 @@ namespace tator
   void Workspace::handleUserSelection(const QModelIndex &modelIdx)
   {
     int idx = modelIdx.row();
-    if (currentIdx_ != -1)
-    {
-      //if (fileState_ == NOT_SAVED)
-      //{
-	//QDialog
-	//return;
-      //}
-      
-      Playlist::Status status =
-	validateMP4JsonPair(playlist_->location(currentIdx_));
-      playlist_->setStatus(currentIdx_, status);
-    }
-
-    newIdx_ = idx;
-    QString mp4File = playlist_->location(idx);
-    QFileInfo mp4Info(mp4File);
-    if (mp4Info.exists())
-    {
-      std::cout << " -- Workspace: Loading " << mp4File.toStdString()
-		<< std::endl;
-      progressDialog_ =
-	std::unique_ptr<QProgressDialog>(
-	  new QProgressDialog(QString("Loading %1").arg(mp4Info.fileName()),
-			      QString(), //no cancel
-			      0,
-			      100,
-			      parent_,
-			      Qt::Popup));
-      
-      emit requestLoadVideo(mp4File);
-    }
-    else
-    {
-      emit error(QString("Couldn't load %1").arg(mp4File));
-    }
-    // handle rest in mediaLoaded slot
-
+    updateToNewIdx(idx);
   }
 
   void Workspace::mediaLoaded(QString filename, qreal rate)
@@ -108,6 +73,19 @@ namespace tator
     progressDialog_->setValue(100);
     progressDialog_->close();
     progressDialog_.reset();
+  }
+
+  void Workspace::annotationFileSaved()
+  {
+    if (currentIdx_ != -1)
+    {
+      fileState_ = SAVED;
+      QString mp4File = playlist_->location(currentIdx_);
+      Playlist::Status status = validateMP4JsonPair(mp4File);
+      playlist_->setStatus(currentIdx_, status);
+
+      updateToNewIdx(currentIdx_+1);
+    }
   }
   
   QString Workspace::getJSONPath(const QString &mp4FilePath)
@@ -172,5 +150,56 @@ namespace tator
     }
     
     return status;
+  }
+
+  void Workspace::updateToNewIdx(int idx)
+  {
+    if (idx >= playlist_->size())
+    {
+      currentIdx_=-1;
+      fileState_ = NOT_SAVED;
+      return;
+    }
+
+    if (currentIdx_ != -1)
+    {
+      if (fileState_ == NOT_SAVED)
+      {
+	QString jsonFile = getJSONPath(playlist_->location(currentIdx_));
+	QFileInfo jsonInfo(jsonFile);
+	QString msg = QString("Must save changes to '%1' before proceeding.")
+	  .arg(jsonInfo.fileName());
+	QMessageBox::warning(parent_, "Must save changes", msg);
+	return;
+      }
+      
+      Playlist::Status status =
+	validateMP4JsonPair(playlist_->location(currentIdx_));
+      playlist_->setStatus(currentIdx_, status);
+    }
+    
+    newIdx_ = idx;
+    QString mp4File = playlist_->location(idx);
+    QFileInfo mp4Info(mp4File);
+    if (mp4Info.exists())
+    {
+      std::cout << " -- Workspace: Loading " << mp4File.toStdString()
+		<< std::endl;
+      progressDialog_ =
+	std::unique_ptr<QProgressDialog>(
+	  new QProgressDialog(QString("Loading %1").arg(mp4Info.fileName()),
+			      QString(), //no cancel
+			      0,
+			      100,
+			      parent_,
+			      Qt::Popup));
+      
+      emit requestLoadVideo(mp4File);
+    }
+    else
+    {
+      emit error(QString("Couldn't load %1").arg(mp4File));
+    }
+    // handle rest in mediaLoaded slot
   }
 }

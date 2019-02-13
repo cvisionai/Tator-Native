@@ -26,6 +26,7 @@ namespace tator
     void handleUserSelection(const QModelIndex &idx);
     void mediaLoaded(QString filename, qreal rate);
     void annotationFileUpdated();
+    void annotationFileSaved();
 
   signals:
     void requestLoadVideo(QString file);
@@ -41,6 +42,7 @@ namespace tator
 
     QString getJSONPath(const QString &mp4FilePath);
     Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
+    void updateToNewIdx(int idx);
     QWidget *parent_;
     int currentIdx_;
     int newIdx_;
