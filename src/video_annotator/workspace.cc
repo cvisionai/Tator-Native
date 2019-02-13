@@ -17,6 +17,7 @@ namespace tator
   Workspace::Workspace(QObject *parent, Playlist * playlist) :
     QObject(parent),
     currentIdx_(-1),
+    newIdx_(-1),
     fileState_(NOT_SAVED),
     playlist_(playlist)
   {
@@ -50,27 +51,37 @@ namespace tator
       Playlist::Status status =
 	validateMP4JsonPair(playlist_->location(currentIdx_));
       playlist_->setStatus(currentIdx_, status);
+    }
 
-      emit requestLoadVideo(playlist_->location(currentIdx_));
-      QString jsonFile = getJSONPath(playlist_->location(currentIdx_));
-      QFileInfo info(jsonFile);
-      if (info.exists())
-      {
-	emit requestLoadAnnotationFile(jsonFile);
-      }
-      else
-      {
-	emit error(QString("Couldn't load %1").arg(jsonFile));
-      }
+    newIdx_ = idx;
+    QString mp4File = playlist_->location(idx);
+    std::cout << "Loading " << mp4File.toStdString() << std::endl;
+    emit requestLoadVideo(mp4File);
+
+    // handle rest in mediaLoaded slot
+
+  }
+
+  void Workspace::mediaLoaded(QString filename, qreal rate)
+  {
+    QString jsonFile = getJSONPath(filename);
+    QFileInfo info(jsonFile);
+    if (info.exists())
+    {
+      emit requestLoadAnnotationFile(jsonFile);
+      std::cout << "Loaded annotation file." << std::endl;
+    }
+    else
+    {
+      emit error(QString("Couldn't load %1").arg(jsonFile));
     }
 
     //Update current
-    currentIdx_ = idx;
+    currentIdx_ = newIdx_;
     fileState_ = NOT_SAVED;
-    playlist_->setStatus(idx, Playlist::IN_PROCESS);
-    
+    playlist_->setStatus(newIdx_, Playlist::IN_PROCESS);
   }
-
+  
   QString Workspace::getJSONPath(const QString &mp4FilePath)
   {
     const QString jsonExt = ".json";

@@ -5,6 +5,7 @@
 
 #include "playlist.h"
 
+
 namespace tator
 {
   /// Workspace is a helper to Playlist to handle workflow related
@@ -20,6 +21,7 @@ namespace tator
   public slots:
     void validatePlaylist();
     void handleUserSelection(const QModelIndex &idx);
+    void mediaLoaded(QString filename, qreal rate);
   signals:
     void requestLoadVideo(QString file);
     void requestLoadAnnotationFile(QString file);
@@ -30,6 +32,8 @@ namespace tator
     Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
 
     int currentIdx_;
+    int newIdx_;
+    
     enum FileState
     {
       SAVED,
@@ -37,6 +41,7 @@ namespace tator
     } fileState_;
 
     Playlist *playlist_;
+    
   };
 }
 #endif

@@ -153,7 +153,7 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(player, &Player::error,
       this, &MainWindow::handlePlayerError);
   QObject::connect(this, &MainWindow::requestLoadVideo,
-      player, &Player::loadVideo);
+		   player, &Player::loadVideo, Qt::BlockingQueuedConnection);
   QObject::connect(this, &MainWindow::requestLoadAnnotationFile,
 		   this, &MainWindow::loadAnnotationFile_request);
   QObject::connect(this, &MainWindow::requestPlay,
@@ -193,11 +193,11 @@ MainWindow::MainWindow(QWidget *parent)
 		   workspace_.get(),
 		   SLOT(handleUserSelection(const QModelIndex &)));
   QObject::connect(workspace_.get(), &Workspace::requestLoadVideo,
-		   player, &Player::loadVideo,
-		   Qt::BlockingQueuedConnection);
+		   player, &Player::loadVideo);
   QObject::connect(workspace_.get(), &Workspace::requestLoadAnnotationFile,
-		   this, &MainWindow::loadAnnotationFile_request,
-		   Qt::BlockingQueuedConnection);
+		   this, &MainWindow::loadAnnotationFile_request);
+  QObject::connect(player, &Player::mediaLoaded,
+		   workspace_.get(), &Workspace::mediaLoaded);
   
   QObject::connect(workspace_.get(), &Workspace::error,
 		   this, &MainWindow::handlePlayerError);
@@ -272,7 +272,6 @@ void MainWindow::on_loadPlaylist_triggered() {
       tr("Playlist Files (*.xspf)"));
   QFileInfo file(file_str);
   if(file.exists() && file.isFile()) {
-    ui_->currentSpeed->setText("Loading playlist, please wait...");
     ui_->loadVideo->setVisible(false);
     ui_->loadAnnotationFile->setVisible(false);
     emit requestLoadPlaylist(file_str);
@@ -298,6 +297,7 @@ void MainWindow::on_loadVideo_triggered() {
   if(file.exists() && file.isFile()) {
     ui_->currentSpeed->setText("Loading movie, please wait...");
     emit requestLoadVideo(file_str);
+    
   }
 }
 
