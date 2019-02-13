@@ -1,5 +1,7 @@
 #include "playlist_view.h"
 
+#include <chrono>
+
 namespace tator {
 
   PlaylistView::PlaylistView(QWidget *parent) :
@@ -15,8 +17,5 @@ namespace tator {
   {
     emit selection(idx);
   }
-  void PlaylistView::on_treeView_clicked(const QModelIndex &idx)
-  {
-    emit selection(idx);
-  }
+  
 }

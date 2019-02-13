@@ -21,7 +21,6 @@ namespace tator
     void selection(const QModelIndex &idx);
   private slots:
     void on_treeView_activated(const QModelIndex &idx);
-    void on_treeView_clicked(const QModelIndex &idx);
   private:
     std::unique_ptr<Ui::PlaylistView> ui_;
     std::unique_ptr<Playlist> playlist_;

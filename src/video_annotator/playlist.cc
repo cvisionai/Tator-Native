@@ -230,7 +230,7 @@ namespace tator
 
   Qt::ItemFlags Playlist::flags(const QModelIndex &index) const
   {
-    return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+    return QAbstractTableModel::flags(index);
   }
 
   Playlist::Status Playlist::status(size_t idx) const
