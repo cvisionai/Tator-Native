@@ -170,6 +170,10 @@ signals:
 
   /// Requests previous frame.
   void requestPrevFrame();
+
+  /// Sent when an annotation file is updated
+  void annotationFileUpdated();
+  
 private slots:
   /// Plays/pauses the video.
   void on_play_clicked();

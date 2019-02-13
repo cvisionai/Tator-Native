@@ -14,14 +14,16 @@
 
 namespace tator
 {
-  Workspace::Workspace(QObject *parent, Playlist * playlist) :
+  Workspace::Workspace(QWidget *parent, Playlist * playlist) :
     QObject(parent),
+    parent_(parent),
     currentIdx_(-1),
     newIdx_(-1),
-    fileState_(NOT_SAVED),
-    playlist_(playlist)
+    playlist_(playlist),
+    progressDialog_(nullptr),
+    fileState_(NOT_SAVED)
   {
-
+    
   }
   
   void Workspace::validatePlaylist()
@@ -55,9 +57,26 @@ namespace tator
 
     newIdx_ = idx;
     QString mp4File = playlist_->location(idx);
-    std::cout << "Loading " << mp4File.toStdString() << std::endl;
-    emit requestLoadVideo(mp4File);
-
+    QFileInfo mp4Info(mp4File);
+    if (mp4Info.exists())
+    {
+      std::cout << " -- Workspace: Loading " << mp4File.toStdString()
+		<< std::endl;
+      progressDialog_ =
+	std::unique_ptr<QProgressDialog>(
+	  new QProgressDialog(QString("Loading %1").arg(mp4Info.fileName()),
+			      QString(), //no cancel
+			      0,
+			      100,
+			      parent_,
+			      Qt::Popup));
+      
+      emit requestLoadVideo(mp4File);
+    }
+    else
+    {
+      emit error(QString("Couldn't load %1").arg(mp4File));
+    }
     // handle rest in mediaLoaded slot
 
   }
@@ -66,13 +85,15 @@ namespace tator
   {
     QString jsonFile = getJSONPath(filename);
     QFileInfo info(jsonFile);
+    progressDialog_->setValue(50);
     if (info.exists())
     {
+      progressDialog_->setLabelText(QString("Loading %1").arg(info.fileName()));
       emit requestLoadAnnotationFile(jsonFile);
-      std::cout << "Loaded annotation file." << std::endl;
     }
     else
     {
+      progressDialog_.reset();
       emit error(QString("Couldn't load %1").arg(jsonFile));
     }
 
@@ -80,6 +101,13 @@ namespace tator
     currentIdx_ = newIdx_;
     fileState_ = NOT_SAVED;
     playlist_->setStatus(newIdx_, Playlist::IN_PROCESS);
+  }
+
+  void Workspace::annotationFileUpdated()
+  {
+    progressDialog_->setValue(100);
+    progressDialog_->close();
+    progressDialog_.reset();
   }
   
   QString Workspace::getJSONPath(const QString &mp4FilePath)

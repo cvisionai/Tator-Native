@@ -2,6 +2,9 @@
 #define WORKSPACE_H
 
 #include <QObject>
+#include <QProgressDialog>
+
+#include <memory>
 
 #include "playlist.h"
 
@@ -17,30 +20,33 @@ namespace tator
   {
     Q_OBJECT
   public:
-    Workspace(QObject *parent, Playlist *playlist);
+    Workspace(QWidget *parent, Playlist *playlist);
   public slots:
     void validatePlaylist();
     void handleUserSelection(const QModelIndex &idx);
     void mediaLoaded(QString filename, qreal rate);
+    void annotationFileUpdated();
+
   signals:
     void requestLoadVideo(QString file);
     void requestLoadAnnotationFile(QString file);
     void error(QString error);
     
   private:
-    QString getJSONPath(const QString &mp4FilePath);
-    Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
-
-    int currentIdx_;
-    int newIdx_;
-    
     enum FileState
     {
       SAVED,
       NOT_SAVED
-    } fileState_;
+    }; 
 
+    QString getJSONPath(const QString &mp4FilePath);
+    Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
+    QWidget *parent_;
+    int currentIdx_;
+    int newIdx_;
     Playlist *playlist_;
+    std::unique_ptr<QProgressDialog> progressDialog_;
+    FileState fileState_;
     
   };
 }

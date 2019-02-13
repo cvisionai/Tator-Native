@@ -193,7 +193,8 @@ MainWindow::MainWindow(QWidget *parent)
 		   this, &MainWindow::loadAnnotationFile_request);
   QObject::connect(player, &Player::mediaLoaded,
 		   workspace_.get(), &Workspace::mediaLoaded);
-  
+  QObject::connect(this, &MainWindow::annotationFileUpdated,
+		   workspace_.get(), &Workspace::annotationFileUpdated);
   QObject::connect(workspace_.get(), &Workspace::error,
 		   this, &MainWindow::handlePlayerError);
   
@@ -320,6 +321,8 @@ void MainWindow::loadAnnotationFile_request(QString file_str)
       drawAnnotations();
     }
   }
+
+  emit annotationFileUpdated();
 }
 
 void MainWindow::on_saveAnnotationFile_triggered() {
