@@ -10,4 +10,13 @@ namespace tator {
     ui_->setupUi(this);
     ui_->treeView->setModel(playlist_.get());
   }
+
+  void PlaylistView::on_treeView_activated(const QModelIndex &idx)
+  {
+    emit selection(idx);
+  }
+  void PlaylistView::on_treeView_clicked(const QModelIndex &idx)
+  {
+    emit selection(idx);
+  }
 }

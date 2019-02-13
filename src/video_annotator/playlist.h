@@ -87,7 +87,7 @@ namespace tator
   signals:
     void error(const QString &error);
     void playlistLoaded();
-
+    
   private:
     /// Struct representing the <track> object under <trackList>
     ///

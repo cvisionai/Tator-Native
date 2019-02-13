@@ -183,13 +183,8 @@ MainWindow::MainWindow(QWidget *parent)
   QObject::connect(playlist_controls_->playlist(),&Playlist::playlistLoaded,
 		   workspace_.get(),&Workspace::validatePlaylist);
   
-  // Handle both key + mouse presses
-  QObject::connect(playlist_controls_->ui()->treeView,
-		   SIGNAL(activated(const QModelIndex &)),
-		   workspace_.get(),
-		   SLOT(handleUserSelection(const QModelIndex &)));
-  QObject::connect(playlist_controls_->ui()->treeView,
-		   SIGNAL(clicked(const QModelIndex &)),
+  QObject::connect(playlist_controls_.get(),
+		   SIGNAL(selection(const QModelIndex &)),
 		   workspace_.get(),
 		   SLOT(handleUserSelection(const QModelIndex &)));
   QObject::connect(workspace_.get(), &Workspace::requestLoadVideo,

@@ -16,8 +16,12 @@ namespace tator
     Q_OBJECT
   public:
     explicit PlaylistView(QWidget *parent = nullptr);
-    Ui::PlaylistView * ui() {return ui_.get();}
-Playlist *playlist() {return playlist_.get();}
+    Playlist *playlist() {return playlist_.get();}
+  signals:
+    void selection(const QModelIndex &idx);
+  private slots:
+    void on_treeView_activated(const QModelIndex &idx);
+    void on_treeView_clicked(const QModelIndex &idx);
   private:
     std::unique_ptr<Ui::PlaylistView> ui_;
     std::unique_ptr<Playlist> playlist_;
