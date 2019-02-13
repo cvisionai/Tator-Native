@@ -106,6 +106,9 @@ public slots:
   /// @param progress Progress update.
   void handlePlayerLoadProgress(int progress);
 
+  /// Handles when a file is loaded
+  void handlePlayerLoadDone();
+
   /// Handles new media loaded.
   ///
   /// @param video_path Path to loaded video.
@@ -176,6 +179,9 @@ signals:
 
   /// Sent when an annotation file is saved.
   void annotationFileSaved();
+
+  /// Sent when media is ready to go.
+  void mediaReady();
   
 private slots:
   /// Plays/pauses the video.

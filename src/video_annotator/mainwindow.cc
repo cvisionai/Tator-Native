@@ -148,6 +148,8 @@ MainWindow::MainWindow(QWidget *parent)
       this, &MainWindow::handlePlayerMediaLoadStart);
   QObject::connect(player, &Player::loadProgress,
       this, &MainWindow::handlePlayerLoadProgress);
+  QObject::connect(player, &Player::fileLoadDone,
+      this, &MainWindow::handlePlayerLoadDone);
   QObject::connect(player, &Player::mediaLoaded,
       this, &MainWindow::handlePlayerMediaLoaded);
   QObject::connect(player, &Player::error,
@@ -191,7 +193,7 @@ MainWindow::MainWindow(QWidget *parent)
 		   player, &Player::loadVideo);
   QObject::connect(workspace_.get(), &Workspace::requestLoadAnnotationFile,
 		   this, &MainWindow::loadAnnotationFile_request);
-  QObject::connect(player, &Player::mediaLoaded,
+  QObject::connect(this, &MainWindow::mediaReady,
 		   workspace_.get(), &Workspace::mediaLoaded);
   QObject::connect(this, &MainWindow::annotationFileUpdated,
 		   workspace_.get(), &Workspace::annotationFileUpdated);
@@ -777,6 +779,10 @@ void MainWindow::handlePlayerLoadProgress(int progress) {
   if(load_progress_ != nullptr) {
     load_progress_->setValue(progress);
   }
+}
+
+void MainWindow::handlePlayerLoadDone() {
+  emit mediaReady();
 }
 
 void MainWindow::handlePlayerMediaLoaded(

@@ -46,9 +46,16 @@ namespace tator
     updateToNewIdx(idx);
   }
 
-  void Workspace::mediaLoaded(QString filename, qreal rate)
+  void Workspace::mediaLoaded()
   {
-    QString jsonFile = getJSONPath(filename);
+    // If we didn't make the selection exit.
+    if (newIdx_ == -1)
+    {
+      return;
+    }
+
+    QString mp4File = playlist_->location(newIdx_);
+    QString jsonFile = getJSONPath(mp4File);
     QFileInfo info(jsonFile);
     progressDialog_->setValue(50);
     if (info.exists())

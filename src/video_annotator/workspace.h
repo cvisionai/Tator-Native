@@ -24,7 +24,7 @@ namespace tator
   public slots:
     void validatePlaylist();
     void handleUserSelection(const QModelIndex &idx);
-    void mediaLoaded(QString filename, qreal rate);
+    void mediaLoaded();
     void annotationFileUpdated();
     void annotationFileSaved();
 

@@ -115,6 +115,9 @@ signals:
     ///
     /// @param err Error message.
     void error(QString err);
+
+    /// Bookend signal for loading a file
+    void fileLoadDone();
 private:
     /// Path to loaded video.
     QString video_path_;

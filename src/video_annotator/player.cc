@@ -191,10 +191,12 @@ void Player::loadVideo(QString filename) {
       codec_context_->height,
       AV_PIX_FMT_RGB24,
       1);
+  
   emit mediaLoaded(filename, frame_rate_);
   emit playbackRateChanged(current_speed_);
   emit durationChanged(seek_map_.size());
   emit resolutionChanged(codec_context_->width, codec_context_->height);
+  emit fileLoadDone();
 }
 
 void Player::play() {
