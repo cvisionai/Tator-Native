@@ -5,12 +5,9 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonValue>
 #include <QMessageBox>
 
+#include "mainwindow.h"
 #include "playlist.h"
 
 namespace tator
@@ -22,7 +19,8 @@ namespace tator
     newIdx_(-1),
     playlist_(playlist),
     progressDialog_(nullptr),
-    fileState_(NOT_SAVED)
+    fileState_(NOT_SAVED),
+    seek_(false)
   {
     
   }
@@ -91,7 +89,16 @@ namespace tator
       Playlist::Status status = validateMP4JsonPair(mp4File);
       playlist_->setStatus(currentIdx_, status);
 
-      updateToNewIdx(currentIdx_+1);
+      if (seek_ == true)
+      {
+	// Gracefully handle when we are seeking
+	seek_=false;
+      }
+      else
+      {
+	// Else autoplay
+	updateToNewIdx(currentIdx_+1);
+      }
     }
   }
   
@@ -164,10 +171,19 @@ namespace tator
       {
 	QString jsonFile = getJSONPath(playlist_->location(currentIdx_));
 	QFileInfo jsonInfo(jsonFile);
-	QString msg = QString("Must save changes to '%1' before proceeding.")
+	QString msg = QString("Must save changes for '%1' to continue.")
 	  .arg(jsonInfo.fileName());
-	QMessageBox::warning(parent_, "Must save changes", msg);
-	return;
+	auto result = QMessageBox::question(parent_,
+					    "Proceed with save?", msg);
+	if (result == QMessageBox::Yes)
+	{
+	  seek_=true;
+	  emit requestFileSave();
+	}
+	else
+	{
+	  return;
+	}
       }
       
       Playlist::Status status =

@@ -8,7 +8,6 @@
 
 #include "playlist.h"
 
-
 namespace tator
 {
   /// Workspace is a helper to Playlist to handle workflow related
@@ -32,7 +31,8 @@ namespace tator
     void requestLoadVideo(QString file);
     void requestLoadAnnotationFile(QString file);
     void error(QString error);
-    
+    void requestFileSave();
+
   private:
     enum FileState
     {
@@ -50,6 +50,7 @@ namespace tator
     Playlist *playlist_;
     std::unique_ptr<QProgressDialog> progressDialog_;
     FileState fileState_;
+    bool seek_;
     
   };
 }

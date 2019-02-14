@@ -191,6 +191,8 @@ MainWindow::MainWindow(QWidget *parent)
 		   SLOT(handleUserSelection(const QModelIndex &)));
   QObject::connect(workspace_.get(), &Workspace::requestLoadVideo,
 		   player, &Player::loadVideo);
+  QObject::connect(workspace_.get(), &Workspace::requestFileSave,
+		   this, &MainWindow::on_saveAnnotationFile_triggered);
   QObject::connect(workspace_.get(), &Workspace::requestLoadAnnotationFile,
 		   this, &MainWindow::loadAnnotationFile_request);
   QObject::connect(this, &MainWindow::mediaReady,
