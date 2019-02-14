@@ -41,6 +41,7 @@ namespace tator
     }; 
 
     QString getJSONPath(const QString &mp4FilePath);
+    QString getCSVPath(const QString &mp4FilePath);
     Playlist::Status validateMP4JsonPair(const QString &mp4FilePath);
     void updateToNewIdx(int idx);
     QWidget *parent_;

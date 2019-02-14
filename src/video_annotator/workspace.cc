@@ -104,55 +104,45 @@ namespace tator
     return directory + "/" + basename + jsonExt;
   }
 
+  QString Workspace::getCSVPath(const QString &mp4FilePath)
+  {
+    const QString jsonExt = ".csv";
+    QFileInfo mp4Info(mp4FilePath);
+    QString directory = mp4Info.absoluteDir().absolutePath();
+    QString basename = mp4Info.baseName();
+    return directory + "/" + basename + jsonExt;
+  }
+
   Playlist::Status Workspace::validateMP4JsonPair(const QString &mp4FilePath)
   {
     Playlist::Status status = Playlist::ERROR;
     
     QString jsonFile = getJSONPath(mp4FilePath);
+    QString csvFile = getCSVPath(mp4FilePath);
+    
     QFileInfo jsonInfo(jsonFile);
-    QFile json(jsonFile);
-    if (jsonInfo.exists() == true && json.open(QIODevice::ReadOnly))
+    QFileInfo csvInfo(csvFile);
+    /// ## Truth table ##
+    ///
+    /// | JsonFile   |   CSV File   |   Status      |
+    /// |------------|--------------|---------------|
+    /// |  NO        | <ANY>        |    Error      |
+    /// |  YES       | NO           | Not Processed |
+    /// |  YES       | Yes          | Processed     |
+    ///
+    if (jsonInfo.exists() != true)
     {
-      QByteArray bytes = json.readAll();
-      json.close();
-      
-      // Parse JSON document
-      QJsonParseError error;
-      QJsonDocument jsonDoc = QJsonDocument::fromJson(bytes, &error);
-      if (jsonDoc.isNull())
+      status = Playlist::ERROR;
+    }
+    else
+    {
+      if (csvInfo.exists() == true)
       {
-	std::cerr << "JSON Parse Error: "
-		  << error.errorString().toStdString() << std::endl;
-	
+	status = Playlist::PROCESSED;
       }
-      const QJsonObject rootObj=jsonDoc.object();
-      QJsonValue detections=rootObj.value("detections");
-      if (detections.isArray())
+      else
       {
-	QJsonArray detectionsArray=detections.toArray();
-	if (detectionsArray.count() > 0)
-	{
-	  bool anyDots = false;
-	  for (auto detectionVar = detectionsArray.begin();
-	       detectionVar != detectionsArray.end();
-	       detectionVar++)
-	  {
-	    QJsonObject detection = detectionVar->toObject();
-	    if (detection["type"].toString() == "dot")
-	    {
-	      anyDots = true;
-	    }
-	  }
-
-	  if (anyDots == true)
-	  {
-	    status = Playlist::NOT_PROCESSED;
-	  }
-	  else
-	  {
-	    status = Playlist::PROCESSED;
-	  }
-	}
+	status = Playlist::NOT_PROCESSED;
       }
     }
     
