@@ -75,9 +75,12 @@ namespace tator
 
   void Workspace::annotationFileUpdated()
   {
-    progressDialog_->setValue(100);
-    progressDialog_->close();
-    progressDialog_.reset();
+    if (progressDialog_ != nullptr)
+    {
+      progressDialog_->setValue(100);
+      progressDialog_->close();
+      progressDialog_.reset();
+    }
   }
 
   void Workspace::annotationFileSaved()
