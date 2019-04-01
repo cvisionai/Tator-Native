@@ -321,7 +321,7 @@ void MainWindow::loadAnnotationFile_request(QString file_str)
     annotation_->read(file_str.toStdString());
     species_controls_->loadFromVector(annotation_->getAllSpecies());
     track_id_ = annotation_->earliestTrackID();
-    if(track_id_ != 0) {
+    if(annotation_->getTotal() > 0) {
       updateSpeciesCounts();
       updateStats();
       drawAnnotations();
