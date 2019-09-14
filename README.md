@@ -1,5 +1,7 @@
-Tator
-=====
+Tator Native
+============
+
+**Deprecated: Superseded by [Tator Online][TatorOnline].**
 
 Introduction
 ============
@@ -28,6 +30,7 @@ Getting started
 * [Build from source](doc/build.md)
 * [Developer info](doc/developer.md)
 
+[TatorOnline]: https://github.com/cvisionai/Tator
 [CVision]: http://www.cvisionai.com
 [Screenshot]: https://user-images.githubusercontent.com/7937658/34340866-b71f8fea-e959-11e7-9b02-03bf2b43d483.png
 [Manual]: https://github.com/cvisionai/Tator/releases/download/v0.3.0/Video.And.Image.Annotator.Manual.v0_3_0.pdf
